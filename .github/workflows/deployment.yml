@@ -121,7 +121,7 @@ jobs:
         - name: build docker image for server
           working-directory: server
           run: |
-            sudo docker build -t server .
+            docker build -t server .
         - name: export docker image in server
           run: |
             mkdir docker-files
