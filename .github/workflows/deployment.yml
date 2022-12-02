@@ -182,6 +182,7 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: docker-files
+            path: docker-files
         - name: check docker image
           run: |
             file server.img
