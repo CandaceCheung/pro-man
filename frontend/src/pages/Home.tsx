@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { loginThunk } from '../redux/auth/thunk';
-import { AppDispatch, useAppSelector } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
 
 export function Home() {
     const user = useAppSelector(state => state.auth.username);
-    const dispatch = useDispatch<AppDispatch>();
+    const dispatch = useAppDispatch();
 
     const login = (event: any) => {
         event.preventDefault();
