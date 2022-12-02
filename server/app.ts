@@ -17,7 +17,11 @@ const app = express()
 export const authService = new AuthService(knex);
 export const authController = new AuthController(authService);
 
-app.use(express.json(), cors());
+app.use(express.json(), cors({
+	origin: configMode === "development"
+}));
+
+console.log(process.env.NODE_ENV)
 
 app.post('/login', authRoutes());
 
