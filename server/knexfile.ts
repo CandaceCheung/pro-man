@@ -7,6 +7,7 @@ export const config: { [key: string]: Knex.Config } = {
 	development: {
 		client: 'postgresql',
 		connection: {
+			host: process.env.DB_HOST,
 			database: process.env.DB_NAME,
 			user: process.env.DB_USERNAME,
 			password: process.env.DB_PASSWORD
@@ -39,6 +40,7 @@ export const config: { [key: string]: Knex.Config } = {
 	production: {
 		client: 'postgresql',
 		connection: {
+			host: process.env.DB_HOST,
 			database: process.env.DB_NAME,
 			user: process.env.DB_USERNAME,
 			password: process.env.DB_PASSWORD
