@@ -121,12 +121,12 @@ jobs:
         - name: build docker image for server
           working-directory: server
           run: |
-            docker build -t server .
+            sudo docker build -t server .
         - name: export docker image in server
           run: |
             mkdir docker-files
             cp docker-compose.yml docker-files/
-            docker save server > docker-files/server.img
+            sudo docker save server > docker-files/server.img
         - name: archive docker files
           uses: actions/upload-artifact@v3
           with:
@@ -152,7 +152,7 @@ jobs:
             find
         - name: check ssh connection
           run: |
-            ssh server "docker ps"
+            ssh server "sudo docker ps"
         - name: archive ssh setup
           uses: actions/upload-artifact@v3
           with:
@@ -188,7 +188,7 @@ jobs:
         - name: upload docker files
           run: |
             rsync -SavLPz server.img server:${{env.SERVER_DIR}}
-            ssh server "docker load < ${{env.SERVER_DIR}}/server.img"
+            ssh server "sudo docker load < ${{env.SERVER_DIR}}/server.img"
             rsync -SavLPz docker-compose.yml server:${{env.SERVER_DIR}}
             ssh server "cd ${{env.SERVER_DIR}} && docker-compose up -d"
 
