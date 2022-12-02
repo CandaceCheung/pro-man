@@ -18,7 +18,8 @@
     "@types/express": "^4.17.14"
   },
   "scripts": {
-    "start": "ts-node-dev app.ts"
+    "start": "ts-node-dev app.ts",
+    "build": "rm -rf dist && tsc -p ."
   },
   "name": "pro-man",
   "version": "1.0.0",
