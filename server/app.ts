@@ -21,7 +21,7 @@ app.use(express.json(), cors());
 
 console.log(process.env.NODE_ENV)
 
-app.post('/login', authRoutes());
+app.use('/login', authRoutes());
 
 const PORT = 8080;
 app.listen(PORT, () => {
