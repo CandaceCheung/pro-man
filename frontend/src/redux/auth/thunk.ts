@@ -5,7 +5,7 @@ const { REACT_APP_API_SERVER } = process.env;
 
 export function loginThunk(username: string, password: string) {
     return async (dispatch: Dispatch) => {
-        const res = await fetch(`${REACT_APP_API_SERVER}/`,{
+        const res = await fetch(`${REACT_APP_API_SERVER}/login`,{
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

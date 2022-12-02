@@ -10,6 +10,8 @@ export const knex = Knex(knexConfig[configMode]);
 
 const app = express()
 
+app.post('/login', authRoutes());
+
 const PORT = 8080;
 app.listen(PORT, () => {
 	console.log(`Listening at http://localhost:${PORT}/`);
