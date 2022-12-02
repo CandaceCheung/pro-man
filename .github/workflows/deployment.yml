@@ -65,9 +65,9 @@ jobs:
         db:
           image: postgres:latest
           env:
-            POSTGRES_DB: ${{env.POSTGRES_DB}}
-            POSTGRES_USER: ${{env.POSTGRES_USER}}
-            POSTGRES_PASSWORD: ${{env.POSTGRES_PASSWORD}}
+            DB_NAME: ${{env.POSTGRES_DB}}
+            DB_USERNAME: ${{env.POSTGRES_USER}}
+            DB_PASSWORD: ${{env.POSTGRES_PASSWORD}}
           ports:
             - 5432:5432
       env:
@@ -86,11 +86,11 @@ jobs:
           run: |
             ls dist/knexfile.js
             ls dist/migrations/*.js
-            ls dist/src/server.js
+            ls dist/app.js
         - name: install deps
           working-directory: server
           run: |
-            npm i --omit=dev
+            yarn --omit=dev
         - name: migrate db
           working-directory: server/dist
           run: |
@@ -98,7 +98,7 @@ jobs:
         - name: run test
           working-directory: server
           run: |
-            npm run ci
+            yarn test
 
   build-docker:
       needs: 
@@ -123,11 +123,11 @@ jobs:
           run: |
             docker build -t server .
         - name: export docker image in server
+          working-directory: server
           run: |
             mkdir docker-files
-            pwd
             cp docker-compose.yml docker-files/
-            sudo docker save server > docker-files/server.img
+            docker save server > docker-files/server.img
         - name: archive docker files
           uses: actions/upload-artifact@v3
           with:
