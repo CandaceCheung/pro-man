@@ -86,11 +86,11 @@ jobs:
           run: |
             ls dist/knexfile.js
             ls dist/migrations/*.js
-            ls dist/src/server.js
+            ls dist/app.js
         - name: install deps
           working-directory: server
           run: |
-            npm i --omit=dev
+            yarn --omit=dev
         - name: migrate db
           working-directory: server/dist
           run: |
@@ -98,7 +98,7 @@ jobs:
         - name: run test
           working-directory: server
           run: |
-            npm run ci
+            yarn test
 
   build-docker:
       needs: 
