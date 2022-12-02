@@ -125,6 +125,7 @@ jobs:
         - name: export docker image in server
           run: |
             mkdir docker-files
+            pwd
             cp docker-compose.yml docker-files/
             sudo docker save server > docker-files/server.img
         - name: archive docker files
