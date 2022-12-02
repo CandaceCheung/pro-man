@@ -25,12 +25,14 @@ jobs:
       - uses: actions/checkout@v3
       - name: install deps
         working-directory: frontend
-        run: npm i
+        run: yarn install
       - name: build project
         working-directory: frontend
         env:
-          REACT_APP_DUMMY_ENVIRONMENTS: some_variables_in_project_dotenv_file
-        run: npm run build
+          REACT_APP_DUMMY_ENVIRONMENTS: 
+          REACT_APP_API_SERVER: 
+          REACT_APP_PUBLIC_HOSTNAME: https://pro-man.co
+        run: yarn build
       - name: archive react built files
         uses: actions/upload-artifact@v3
         with:
@@ -38,23 +40,23 @@ jobs:
           path: frontend/build
 
 build-node:
-    runs-on: ubuntu-latest
-    container: node:lts-alpine
-    steps:
-      - uses: actions/checkout@v3
-      - name: install deps
-        working-directory: server
-        run: |
-          npm i
-      - name: build project
-        working-directory: server
-        run: |
-          npm run build
-      - name: archive built files
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
-          path: server/dist
+  runs-on: ubuntu-latest
+  container: node:lts-alpine
+  steps:
+    - uses: actions/checkout@v3
+    - name: install deps
+      working-directory: server
+      run: |
+        yarn install
+    - name: build project
+      working-directory: server
+      run: |
+        yarn build
+    - name: archive built files
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: server/dist
 
 test-node:
     needs: build-node
@@ -192,32 +194,32 @@ deploy-docker:
           ssh server "cd ${{env.SERVER_DIR}} && docker-compose up -d"
 
 deploy-react:
-    needs:
-        - build-react
-        - test-react
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: restore built files frontend
-        uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: frontend/build
-      - name: check built files in server
-        working-directory: frontend
-        run: |
-          ls build/index.html
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-          cache: 'pip'
-      - run: pip install -r requirements.txt
-      - name: deploy to s3 and cloudfront
-        working-directory: frontend
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
-        run: |
-          aws s3 sync ./build s3://${{env.BUCKET_NAME}} --delete
-          aws cloudfront create-invalidation --distribution-id ${{env.CLOUDFRONT_DISTRIBUTION}} --paths "/*"
+  needs:
+      - build-react
+      - test-react
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v3
+    - name: restore built files frontend
+      uses: actions/download-artifact@v3
+      with:
+        name: build
+        path: frontend/build
+    - name: check built files in server
+      working-directory: frontend
+      run: |
+        ls build/index.html
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - name: deploy to s3 and cloudfront
+      working-directory: frontend
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+      run: |
+        aws s3 sync ./build s3://${{env.BUCKET_NAME}} --delete
+        aws cloudfront create-invalidation --distribution-id ${{env.CLOUDFRONT_DISTRIBUTION}} --paths "/*"
