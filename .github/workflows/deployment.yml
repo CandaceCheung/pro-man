@@ -117,7 +117,7 @@ jobs:
           run: |
             ls dist/knexfile.js
             ls dist/migrations/*.js
-            ls dist/src/server.js
+            ls dist/app.js
         - name: build docker image for server
           working-directory: server
           run: |
