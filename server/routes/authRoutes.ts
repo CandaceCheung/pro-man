@@ -4,7 +4,7 @@ import { authController } from "../app";
  export const authRoutes = () => {
     const authRoutes = express.Router();
 
-    authRoutes.post('/login', authController.login);
+    authRoutes.post('/', authController.login);
 
     return authRoutes;
  }
