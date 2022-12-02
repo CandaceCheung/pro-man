@@ -127,7 +127,7 @@ jobs:
           run: |
             mkdir docker-files
             cp docker-compose.yml docker-files/
-            sudo docker save server > docker-files/server.img
+            docker save server > docker-files/server.img
         - name: archive docker files
           uses: actions/upload-artifact@v3
           with:
