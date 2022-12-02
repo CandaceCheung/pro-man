@@ -2,7 +2,7 @@ version: '3'
 
 services:
     server:
-        depends_on: 
+        depends_on:
             - db
         env_file:
             - .env
