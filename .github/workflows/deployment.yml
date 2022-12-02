@@ -180,6 +180,7 @@ jobs:
             ssh server whoami
         - name: restore docker image
           uses: actions/download-artifact@v3
+          working-directory: server
           with:
             name: docker-files
             path: docker-files
