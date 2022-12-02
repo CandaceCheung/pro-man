@@ -10,8 +10,8 @@ export const authReducer = (state: AuthState = initState, action: AuthAction): A
     let result = JSON.parse(JSON.stringify(state));
     switch (action.type) {
         case "AUTH/LOGIN":
-            result.auth.username = action.username;
-            result.auth.isLoggedIn = true;
+            result.username = action.username;
+            result.isLoggedIn = true;
             break;
         case "AUTH/FAILED":
             console.error("Failed");

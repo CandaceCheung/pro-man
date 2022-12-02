@@ -5,7 +5,7 @@ const { REACT_APP_API_SERVER } = process.env;
 
 export function loginThunk(username: string, password: string) {
     return async (dispatch: Dispatch) => {
-        const res = await fetch(`${REACT_APP_API_SERVER}/`,{
+        const res = await fetch(`${REACT_APP_API_SERVER}/login`,{
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -18,7 +18,7 @@ export function loginThunk(username: string, password: string) {
         const result = await res.json();
         if (result.success) {
             dispatch(loginAction(username));
-            console.log("Logged In");
+            console.log(`${username} has logged in.`);
         } else {
             dispatch(failedLoginAction());
         }
