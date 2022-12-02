@@ -17,9 +17,7 @@ const app = express()
 export const authService = new AuthService(knex);
 export const authController = new AuthController(authService);
 
-app.use(express.json(), cors({
-	origin: configMode === "development"
-}));
+app.use(express.json(), cors());
 
 console.log(process.env.NODE_ENV)
 
