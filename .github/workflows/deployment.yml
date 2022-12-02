@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  POSTGRES_DB: postgres
+  POSTGRES_DB: proman
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   SERVER_HOST: 3.99.24.127
