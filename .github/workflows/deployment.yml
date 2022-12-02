@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  POSTGRES_DB: proman
+  POSTGRES_DB: postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   SERVER_HOST: 3.99.24.127
@@ -74,6 +74,9 @@ jobs:
         PORT: 8080
         DB_HOST: db
         DB_PORT: 5432
+        DB_NAME: postgres
+        DB_USERNAME: postgres
+        DB_PASSWORD: postgres
       steps:
         - uses: actions/checkout@v3
         - name: restore built files
