@@ -65,18 +65,15 @@ jobs:
         db:
           image: postgres:latest
           env:
-            DB_NAME: ${{env.POSTGRES_DB}}
-            DB_USERNAME: ${{env.POSTGRES_USER}}
-            DB_PASSWORD: ${{env.POSTGRES_PASSWORD}}
+            POSTGRES_DB: ${{env.POSTGRES_DB}}
+            POSTGRES_USER: ${{env.POSTGRES_USER}}
+            POSTGRES_PASSWORD: ${{env.POSTGRES_PASSWORD}}
           ports:
             - 5432:5432
       env:
         PORT: 8080
         DB_HOST: db
         DB_PORT: 5432
-        DB_NAME: postgres
-        DB_USERNAME: postgres
-        DB_PASSWORD: postgres
       steps:
         - uses: actions/checkout@v3
         - name: restore built files
@@ -97,7 +94,7 @@ jobs:
         - name: migrate db
           working-directory: server/dist
           run: |
-            npx knex migrate:latest
+            yarn knex migrate:latest
         - name: run test
           working-directory: server
           run: |
