@@ -183,7 +183,8 @@ jobs:
             cd ${{ env.SERVER_DIR }}
             sudo usermod -aG docker ${{ env.SERVER_USER }}
             sudo service docker restart
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker logout
+            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             sudo docker compose pull
             sudo docker compose up -d && sudo docker ps
 
