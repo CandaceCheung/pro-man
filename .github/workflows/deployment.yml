@@ -178,6 +178,17 @@ jobs:
         - setup-ssh
       runs-on: ubuntu-latest
       steps:
+      - name: restore ssh setup
+        uses: actions/download-artifact@v3
+        with:
+          name: .ssh
+          path: ssh-tmp
+      - name: check ssh connection
+        run: |
+          mv ssh-tmp ~/.ssh
+          cd ~/.ssh
+          chmod 400 id_rsa
+          ssh server whoami
       - name: restore built files
         uses: actions/download-artifact@v3
         with:
