@@ -139,6 +139,11 @@ jobs:
           run: |
             docker tag server:latest ${{ env.DOCKER_REPO_NAME }}
             docker push ${{ env.DOCKER_REPO_NAME }}
+        - name: Archive docker-compose.yml
+          uses: actions/upload-artifact@v3
+          with:
+            name: docker-compose
+            path: server/docker-compose.yml
 
   setup-ssh:
       runs-on: ubuntu-latest
@@ -173,6 +178,11 @@ jobs:
         - setup-ssh
       runs-on: ubuntu-latest
       steps:
+      - name: restore built files
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-compose
+          path: server
       - name: Executing remote ssh
         uses: appleboy/ssh-action@master
         with:
