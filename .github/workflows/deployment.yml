@@ -183,20 +183,14 @@ jobs:
         with:
           name: docker-compose
           path: server
-      - name: Copy docker-compose file to remote
-        uses: garygrossgarten/github-action-scp@release
-        with:
-          local: ${{ env.SERVER_DIR }}/server/docker-compose.yml
-          remote: server/docker-compose.yml
-          host: ${{ env.SERVER_HOST }}
-          username: ${{ env.SERVER_USER }}
-          privateKey : ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Executing remote ssh
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.SERVER_HOST }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           username: ${{ env.SERVER_USER }}
+          source: "server/docker-compose.yml"
+          target: ${{ env.SERVER_DIR }}/server
           script: |
             cd ${{ env.SERVER_DIR }}
             sudo usermod -aG docker ${{ env.SERVER_USER }}
