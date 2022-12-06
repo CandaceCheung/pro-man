@@ -16,7 +16,7 @@ env:
   BUCKET_NAME: pro-man
   CLOUDFRONT_DISTRIBUTION: EKRUAGLLBRRY0
   AWS_DEFAULT_REGION: us-east-1
-  DOCKER_REPO_NAME: 
+  DOCKER_REPO_NAME: cmyip6/pro-man:latest
 
 jobs:
   build-react:
