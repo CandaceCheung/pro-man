@@ -178,27 +178,27 @@ jobs:
         - setup-ssh
       runs-on: ubuntu-latest
       steps:
-      - name: restore built files
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-compose
-          path: server
-      - name: Executing remote ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.SERVER_HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          username: ${{ env.SERVER_USER }}
-          source: "server/docker-compose.yml"
-          target: ${{ env.SERVER_DIR }}/server
-          script: |
-            cd ${{ env.SERVER_DIR }}
-            sudo usermod -aG docker ${{ env.SERVER_USER }}
-            sudo service docker restart
-            sudo docker logout
-            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            sudo docker compose pull
-            sudo docker compose up -d && sudo docker ps
+        - name: restore built files
+          uses: actions/download-artifact@v3
+          with:
+            name: docker-compose
+            path: server
+        - name: Executing remote ssh
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ env.SERVER_HOST }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            username: ${{ env.SERVER_USER }}
+            source: "server/docker-compose.yml"
+            target: ${{ env.SERVER_DIR }}/server
+            script: |
+              cd ${{ env.SERVER_DIR }}
+              sudo usermod -aG docker ${{ env.SERVER_USER }}
+              sudo service docker restart
+              sudo docker logout
+              sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+              sudo docker compose pull
+              sudo docker compose up -d && sudo docker ps
 
   deploy-react:
     needs:
