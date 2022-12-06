@@ -190,7 +190,7 @@ jobs:
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             username: ${{ env.SERVER_USER }}
             source: "server/docker-compose.yml"
-            target: "server"
+            target: ${{ env.SERVER_DIR }}
         - name: Executing remote ssh
           uses: appleboy/ssh-action@master
           with:
