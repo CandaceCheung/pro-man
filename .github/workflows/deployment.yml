@@ -2,7 +2,7 @@ name: deployment
 
 on:
   push:
-    branch: production
+    branch: main
   workflow_dispatch:
 
 env:
