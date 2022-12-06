@@ -190,7 +190,7 @@ jobs:
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             username: ${{ env.SERVER_USER }}
             source: "server/docker-compose.yml"
-            target: ${{ env.SERVER_DIR }}/server
+            target: "server"
             script: |
               cd ${{ env.SERVER_DIR }}
               sudo usermod -aG docker ${{ env.SERVER_USER }}
