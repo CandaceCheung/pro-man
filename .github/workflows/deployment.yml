@@ -2,7 +2,8 @@ name: deployment
 
 on:
   push:
-    branch: production
+    branches:
+      - 'production'
   workflow_dispatch:
 
 env:
@@ -15,7 +16,7 @@ env:
   BUCKET_NAME: pro-man
   CLOUDFRONT_DISTRIBUTION: EKRUAGLLBRRY0
   AWS_DEFAULT_REGION: us-east-1
-  DOCKER_REPO_NAME: 
+  DOCKER_REPO_NAME: cmyip6/pro-man:latest
 
 jobs:
   build-react:
@@ -138,6 +139,11 @@ jobs:
           run: |
             docker tag server:latest ${{ env.DOCKER_REPO_NAME }}
             docker push ${{ env.DOCKER_REPO_NAME }}
+        - name: Archive docker-compose.yml
+          uses: actions/upload-artifact@v3
+          with:
+            name: docker-compose
+            path: server/docker-compose.yml
 
   setup-ssh:
       runs-on: ubuntu-latest
@@ -172,19 +178,35 @@ jobs:
         - setup-ssh
       runs-on: ubuntu-latest
       steps:
-      - name: Executing remote ssh
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.SERVER_HOST }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          username: ${{ env.SERVER_USER }}
-          script: |
-            cd ${{ env.SERVER_DIR }}
-            sudo usermod -aG docker ${{ env.SERVER_USER }}
-            sudo service docker restart
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            sudo docker-compose pull
-            sudo docker-compose up -d && sudo docker ps
+        - name: restore built files
+          uses: actions/download-artifact@v3
+          with:
+            name: docker-compose
+            path: server
+        - name: copy file via ssh key
+          uses: appleboy/scp-action@master
+          with:
+            host: ${{ env.SERVER_HOST }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            username: ${{ env.SERVER_USER }}
+            source: "server/docker-compose.yml"
+            target: ${{ env.SERVER_DIR }}
+        - name: Executing remote ssh
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ env.SERVER_HOST }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            username: ${{ env.SERVER_USER }}
+            script: |
+              cd ${{ env.SERVER_DIR }}
+              mv server/docker-compose.yml docker-compose.yml
+              rm -r server
+              sudo usermod -aG docker ${{ env.SERVER_USER }}
+              sudo service docker restart
+              sudo docker logout
+              sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+              sudo docker compose pull
+              sudo docker compose up -d && sudo docker ps && sudo docker image prune -f
 
   deploy-react:
     needs:

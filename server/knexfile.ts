@@ -7,7 +7,7 @@ export const config: { [key: string]: Knex.Config } = {
 	development: {
 		client: 'postgresql',
 		connection: {
-			// host: process.env.DB_HOST,
+			host: process.env.DB_HOST,
 			database: process.env.POSTGRES_DB,
 			user: process.env.POSTGRES_USER,
 			password: process.env.POSTGRES_PASSWORD
