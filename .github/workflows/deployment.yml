@@ -16,6 +16,7 @@ env:
   BUCKET_NAME: pro-man
   CLOUDFRONT_DISTRIBUTION: EKRUAGLLBRRY0
   AWS_DEFAULT_REGION: us-east-1
+  DOCKER_REPO_NAME: 
 
 jobs:
   build-react:
@@ -128,11 +129,16 @@ jobs:
             mkdir docker-files
             cp docker-compose.yml docker-files/
             docker save server > docker-files/server.img
-        - name: archive docker files
-          uses: actions/upload-artifact@v3
+        - name: Login to Docker Hub
+          uses: docker/login-action@v2
           with:
-            name: docker-files
-            path: server/docker-files
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+        - name: Do Docker tag and push
+          working-directory: server
+          run: |
+            docker tag server:latest ${{ env.DOCKER_REPO_NAME }}
+            docker push ${{ env.DOCKER_REPO_NAME }}
 
   setup-ssh:
       runs-on: ubuntu-latest
@@ -167,31 +173,19 @@ jobs:
         - setup-ssh
       runs-on: ubuntu-latest
       steps:
-        - name: restore ssh setup
-          uses: actions/download-artifact@v3
-          with:
-            name: .ssh
-            path: ssh-tmp
-        - name: check ssh connection
-          run: |
-            mv ssh-tmp ~/.ssh
-            cd ~/.ssh
-            chmod 400 id_rsa
-            ssh server whoami
-        - name: restore docker image
-          uses: actions/download-artifact@v3
-          with:
-            name: docker-files
-        - name: check docker image
-          run: |
-            file server.img
-            file docker-compose.yml
-        - name: upload docker files
-          run: |
-            rsync -SavLPz server.img server:${{env.SERVER_DIR}}
-            ssh server "sudo docker load < ${{env.SERVER_DIR}}/server.img"
-            rsync -SavLPz docker-compose.yml server:${{env.SERVER_DIR}}
-            ssh server "cd ${{env.SERVER_DIR}} && sudo docker compose up -d"
+      - name: Executing remote ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SERVER_HOST }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ env.SERVER_USER }}
+          script: |
+            cd ${{ env.SERVER_DIR }}
+            sudo usermod -aG docker ${{ env.SERVER_USER }}
+            sudo service docker restart
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker-compose pull
+            sudo docker-compose up -d && sudo docker ps
 
   deploy-react:
     needs:
