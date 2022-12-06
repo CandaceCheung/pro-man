@@ -200,7 +200,7 @@ jobs:
             script: |
               cd ${{ env.SERVER_DIR }}
               mv server/docker-compose.yml docker-compose.yml
-              rm server
+              rm -r server
               sudo usermod -aG docker ${{ env.SERVER_USER }}
               sudo service docker restart
               sudo docker logout
