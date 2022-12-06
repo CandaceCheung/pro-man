@@ -184,8 +184,8 @@ jobs:
             sudo usermod -aG docker ${{ env.SERVER_USER }}
             sudo service docker restart
             docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            sudo docker-compose pull
-            sudo docker-compose up -d && sudo docker ps
+            sudo docker compose pull
+            sudo docker compose up -d && sudo docker ps
 
   deploy-react:
     needs:
