@@ -198,7 +198,9 @@ jobs:
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             username: ${{ env.SERVER_USER }}
             script: |
-              cd ${{ env.SERVER_DIR }}/server
+              cd ${{ env.SERVER_DIR }}
+              mv server/docker-compose.yml docker-compose.yml
+              rm server
               sudo usermod -aG docker ${{ env.SERVER_USER }}
               sudo service docker restart
               sudo docker logout
