@@ -183,14 +183,20 @@ jobs:
           with:
             name: docker-compose
             path: server
-        - name: Executing remote ssh
-          uses: appleboy/ssh-action@master
+        - name: copy file via ssh key
+          uses: appleboy/scp-action@master
           with:
             host: ${{ env.SERVER_HOST }}
             key: ${{ secrets.SSH_PRIVATE_KEY }}
             username: ${{ env.SERVER_USER }}
             source: "server/docker-compose.yml"
             target: "server"
+        - name: Executing remote ssh
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ env.SERVER_HOST }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            username: ${{ env.SERVER_USER }}
             script: |
               cd ${{ env.SERVER_DIR }}
               sudo usermod -aG docker ${{ env.SERVER_USER }}
