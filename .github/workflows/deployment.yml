@@ -206,7 +206,7 @@ jobs:
               sudo docker logout
               sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
               sudo docker compose pull
-              sudo docker compose up -d && sudo docker ps
+              sudo docker compose up -d && sudo docker ps && sudo docker image prune -f
 
   deploy-react:
     needs:
