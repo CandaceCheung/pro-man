@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { MantineProvider } from '@mantine/core';
+import { themeObject } from './theme';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,22 +17,7 @@ root.render(
       <MantineProvider
         withNormalizeCSS
         withGlobalStyles
-        theme={
-          {
-            colors: {
-              lightViolet: ["#eeeefa"],
-              lightHoverVioloet: ["#e5e6f7"],
-              lightActiveViolet: ["#c9ccee"],
-              normalViolet: ["#5059c9"],
-              normalHoverViolet: ["#4850b5"],
-              normalActiveViolet: ["#4047a1"],
-              darkViolet: ["#3c4397"],
-              darkHoverViolet: ["#303579"],
-              darkActiveViolet: ["#24285a"],
-              darkerViolet: ["#1c1f46"]
-            }
-          }
-        }
+        theme={themeObject}
       >
         <App />
       </MantineProvider>
