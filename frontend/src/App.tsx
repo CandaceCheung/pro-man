@@ -1,19 +1,20 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import './App.scss';
-import { NavbarLayout } from './components/NavbarLayout';
 import { Auth } from './pages/Auth';
-import { IRootState } from './store';
+import { Dashboard } from './pages/Dashboard';
+import { useAppSelector } from './store';
 
 function App() {
 
-  const isLoggedIn = useSelector((state: IRootState) => state.auth.isLoggedIn)
+  const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
 
   return (
     <div className="App">
-      <div className='page-container'>
-        {isLoggedIn ? <NavbarLayout/>:<Auth/>}
-      </div>
+        {
+          isLoggedIn
+          ? <Dashboard/>
+          : <Auth/>
+        }
     </div>
   );
 }
