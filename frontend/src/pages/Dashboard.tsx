@@ -5,8 +5,8 @@ import ProjectNavbar from "../components/ProjectNavbar";
 export function Dashboard() {
     return (
         <div>
-            <LeftNavbar/>
             <ProjectNavbar/>
+            <LeftNavbar/>
         </div>
     )
 }
