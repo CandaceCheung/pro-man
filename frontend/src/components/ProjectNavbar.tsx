@@ -33,9 +33,9 @@ export default function ProjectNavbar() {
                     </span>
                     <FontAwesomeIcon id="like-button" icon={like ? faStarS : faStarR} onClick={() => setLike((like) => !like)} />
                 </span>
-                <span className='icon-hub'>
-                    <IconArticle id="logs-button" size={14} onClick={()=>setLogsOpen((open)=> !open)}/>
-                    <IconUsers id="add-users-button" size={14} onClick={()=>setInvitationOpen((open)=> !open)}/>
+                <span className='icon-hub' >
+                    <span title='Open Logs'><IconArticle id="logs-button" size={14} onClick={()=>setLogsOpen((open)=> !open)}/></span>
+                    <span title='Invite Users'><IconUsers id="add-users-button" size={14} onClick={()=>setInvitationOpen((open)=> !open)}/></span>
                 </span>
             </div>
             <LogsDrawer toggle={logsOpen} onRemove={onRemove}/>
