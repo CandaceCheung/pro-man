@@ -1,5 +1,5 @@
-import { createStyles } from '@mantine/core';
 import React from 'react';
+import { createStyles } from '@mantine/core';
 import { Logo } from '../components/Logo';
 import { loginThunk } from '../redux/auth/thunk';
 import { useAppDispatch, useAppSelector } from '../store';
@@ -19,6 +19,20 @@ const useStyles = createStyles(theme => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
+        fontFamily: 'Lalezar'
+    },
+    logo: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 40
+    },
+    logoChild: {
+        marginLeft: 10,
+        marginRight: 10,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 }))
 
@@ -36,7 +50,14 @@ export function Auth() {
         <div className={classes.wrapper}>
             {user.length > 0 && <div>Hi {user}!</div>}
             <div className={classes.header}>
-                <Logo size={50}/>
+                <div className={classes.logo}>
+                    <div className={classes.logoChild}>
+                        <Logo size={50}/>
+                    </div>
+                    <div className={classes.logoChild}>
+                        Proman                    
+                    </div>
+                </div>
             </div>
             <form onSubmit={login}>
                 <label htmlFor="username">Username</label>

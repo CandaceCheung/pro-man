@@ -1,13 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { Provider } from "react-redux";
-import { store } from "./store";
-import { MantineProvider } from "@mantine/core";
-import { themeObject } from "./theme";
-import { BrowserRouter } from "react-router-dom";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import { MantineProvider } from '@mantine/core';
+import { themeObject } from './theme';
+import { BrowserRouter } from 'react-router-dom';
+import { CustomFonts } from './fonts/CustomFonts';
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
@@ -20,6 +21,7 @@ root.render(
         withGlobalStyles
         theme={themeObject}
       ><BrowserRouter>
+          <CustomFonts />
           <App />
         </BrowserRouter>
       </MantineProvider>
