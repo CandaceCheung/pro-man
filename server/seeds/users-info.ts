@@ -1,8 +1,9 @@
 import { Knex } from "knex";
 import bcrypt from "bcryptjs";
+import {format} from "date-fns";
 
 export async function seed(knex: Knex): Promise<void> {
-    
+
     await knex('type_text').del();
     await knex('type_status').del();
     await knex('transactions').del();
@@ -130,13 +131,13 @@ export async function seed(knex: Knex): Promise<void> {
 
         insertArray = []
         insertArray.push(
-            { item_id: i.id, type_id: typeIDs[1].id, datetime: new Date(Date.now()+ Math.floor(Math.random()*600000000))},
+            { item_id: i.id, type_id: typeIDs[1].id, datetime: format(new Date(Date.now()+ Math.floor(Math.random()*600000000)),'yyyy-MM-dd')},
         )
         await knex('type_dates').insert(insertArray)
 
         insertArray = []
         insertArray.push(
-            { item_id: i.id, type_id: typeIDs[2].id, start_date: new Date(Date.now()).toLocaleDateString('en-us'), end_date: new Date(Date.now() + 300000000).toLocaleDateString('en-us') },
+            { item_id: i.id, type_id: typeIDs[2].id, start_date: format(new Date(),'yyyy-MM-dd'), end_date: format(new Date(Date.now() + 300000000), 'yyyy-MM-dd') },
         )
         await knex('type_times').insert(insertArray)
 
@@ -149,7 +150,7 @@ export async function seed(knex: Knex): Promise<void> {
         insertArray = []
         for (let moneyID of moneyIDs)
         insertArray.push(
-            { type_money_id: moneyID.id, date: new Date(Date.now() + Math.floor(Math.random()*300000000)+ 100000000).toLocaleDateString('en-us'), cash_flow: Math.random() > 0.5 ? 0 + Math.floor(Math.random()*50000) : 0 - Math.floor(Math.random()*50000)},
+            { type_money_id: moneyID.id, date: format(new Date(Date.now() + Math.floor(Math.random()*300000000)+ 100000000), 'yyyy-MM-dd'), cash_flow: Math.random() > 0.5 ? 0 + Math.floor(Math.random()*50000) : 0 - Math.floor(Math.random()*50000)},
         )
         await knex('transactions').insert(insertArray).returning('*')
 
