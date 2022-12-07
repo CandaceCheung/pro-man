@@ -3,4 +3,67 @@
     display: flex;
     flex-direction: column;
   }
+<<<<<<< HEAD
+=======
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.navbar-header{
+  display: flex;
+  justify-content: space-between;
+  padding-right: calc(20px + 2vw);
+  min-height:50px;
+}
+
+.icon-hub{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+
+#navbar-project-title{
+  padding-left: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: calc(20px + 1vw);
+}
+#project-title-container{
+  position: relative;
+}
+
+#like-button{
+  position: absolute;
+  right: -30px;
+  top: 30%
+}
+
+#add-users-button:hover,
+#logs-button:hover,
+#like-button:hover{
+  cursor: pointer;
+>>>>>>> 74c3fc220f90c89a61180441984fbcf5b221bd26
 }

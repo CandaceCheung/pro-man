@@ -1,5 +1,5 @@
 import { Tabs } from '@mantine/core';
-import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp } from '@tabler/icons'
+import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp, IconUsers, IconArticle } from '@tabler/icons'
 import { useState } from 'react';
 import { Cashflow } from '../pages/Cashflow';
 import { Home } from '../pages/Home';
@@ -8,16 +8,38 @@ import { TestTimeFrame } from '../pages/Timeline';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar as faStarS } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarR } from '@fortawesome/free-regular-svg-icons'
+import LogsDrawer from './ProjectNavbarComponents/LogsDrawer';
+import InvitationDrawer from './ProjectNavbarComponents/InvitationDrawer';
 
 
 export default function ProjectNavbar() {
 
     let projectNamePlaceHolder = "Reserved for Project name"
     const [like, setLike] = useState(false)
+    const [logsOpen, setLogsOpen] = useState<boolean>(false);
+    const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
+
+    function onRemove(){
+        setLogsOpen(false)
+        setInvitationOpen(false)
+    }
 
     return (
         <>
-            <div>{projectNamePlaceHolder} <span><FontAwesomeIcon icon={like? faStarS : faStarR} onClick={()=>setLike((like)=>!like)}/></span></div>
+            <div className='navbar-header'>
+                <span id="project-title-container">
+                    <span id='navbar-project-title'>
+                        {projectNamePlaceHolder ? projectNamePlaceHolder : "Project Title"}
+                    </span>
+                    <FontAwesomeIcon id="like-button" icon={like ? faStarS : faStarR} onClick={() => setLike((like) => !like)} />
+                </span>
+                <span className='icon-hub' >
+                    <span title='Open Logs'><IconArticle id="logs-button" size={14} onClick={()=>setLogsOpen((open)=> !open)}/></span>
+                    <span title='Invite Users'><IconUsers id="add-users-button" size={14} onClick={()=>setInvitationOpen((open)=> !open)}/></span>
+                </span>
+            </div>
+            <LogsDrawer toggle={logsOpen} onRemove={onRemove}/>
+            <InvitationDrawer toggle={invitationOpen} onRemove={onRemove}/>
             <Tabs defaultValue="home">
                 <Tabs.List>
                     <Tabs.Tab value="home" icon={<IconHome size={14} />}>Home</Tabs.Tab>
@@ -39,7 +61,7 @@ export default function ProjectNavbar() {
                 </Tabs.Panel>
 
                 <Tabs.Panel value="cashflow" pt="xs">
-                    <Cashflow/>
+                    <Cashflow />
                 </Tabs.Panel>
             </Tabs>
         </>
