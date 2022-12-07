@@ -154,7 +154,7 @@ jobs:
             mkdir -p .ssh
             cd .ssh
             echo "${{secrets.SSH_PRIVATE_KEY}}" > id_rsa
-            chmod 640 id_rsa
+            chmod 700 id_rsa
             ssh-keyscan ${{env.SERVER_HOST}} >> known_hosts
             echo "" >> config
             echo "Host server" >> config
