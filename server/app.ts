@@ -19,8 +19,6 @@ export const authController = new AuthController(authService);
 
 app.use(express.json(), cors());
 
-console.log(process.env.NODE_ENV)
-
 app.use('/login', authRoutes());
 
 const PORT = 8080;
