@@ -19,14 +19,14 @@ import { Logo, LogoProbs } from "./Logo";
 
 const useStyles = createStyles((theme) => ({
     link: {
-        width: 50,
-        height: 50,
         borderRadius: theme.radius.md,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         color: theme.white,
         opacity: 0.85,
+        padding: 8,
+        marginBottom: 30,
 
         "&:hover": {
             opacity: 1,
@@ -72,9 +72,10 @@ function NavbarLink({ icon:Icon, label, active, onClick }: NavbarLinkProps) {
     return (
         <Tooltip label={label} position="right" transitionDuration={0}>
             <UnstyledButton
+
                 onClick={onClick}
                 className={cx(classes.link, { [classes.active]: active })}
-            ><Icon stroke={1.5} size={30}/></UnstyledButton>
+            ><Icon stroke={1.5} size={32} /></UnstyledButton>
         </Tooltip>
     );
 }
