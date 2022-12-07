@@ -1,11 +1,7 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import './App.scss';
-import { LeftNavbar } from './components/LeftNavBar';
-import ProjectNavbar from './components/ProjectNavbar';
 import { Auth } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
-import { Home } from './pages/Home';
 import { useAppSelector } from './store';
 
 function App() {
