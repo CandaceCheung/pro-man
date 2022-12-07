@@ -1,5 +1,5 @@
-import { AppShell, Header, Navbar, Text } from "@mantine/core";
-import { LeftNavbar } from "./LeftNavbar";
+import { AppShell, Text } from "@mantine/core";
+import { LeftNavbar } from "./LeftNavBar";
 import ProjectNavbar from "./ProjectNavbar";
 
 export function NavbarLayout() {
