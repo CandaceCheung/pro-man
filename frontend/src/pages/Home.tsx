@@ -1,9 +1,10 @@
 import React from "react";
+import { LeftNavbar } from "../components/LeftNavbar";
 
 export function Home() {
     return (
         <div>
-            This is Home Page
+            <LeftNavbar />
         </div>
     )
 }
