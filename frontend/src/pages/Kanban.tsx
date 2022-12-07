@@ -1,3 +1,4 @@
+import { NavbarLayout } from "../components/NavbarLayout";
 
 
 export function Kanban(){
