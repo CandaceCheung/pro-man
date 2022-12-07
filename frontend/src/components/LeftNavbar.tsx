@@ -16,6 +16,7 @@ import {
     TablerIcon,
 } from "@tabler/icons";
 import { Logo, LogoProbs } from "./Logo";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -54,9 +55,8 @@ const useStyles = createStyles((theme) => ({
     },
 
     track: {
-        background: theme.fn.linearGradient(45, '#6871DB', '#24285A'),
-      },
-
+        background: theme.fn.linearGradient(45, "#6871DB", "#24285A"),
+    },
 }));
 
 interface NavbarLinkProps {
@@ -66,42 +66,48 @@ interface NavbarLinkProps {
     onClick?(): void;
 }
 
-function NavbarLink({ icon:Icon, label, active, onClick }: NavbarLinkProps) {
+function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
     const { classes, cx } = useStyles();
 
     return (
         <Tooltip label={label} position="right" transitionDuration={0}>
             <UnstyledButton
-
                 onClick={onClick}
                 className={cx(classes.link, { [classes.active]: active })}
-            ><Icon stroke={1.5} size={32} /></UnstyledButton>
+            >
+                <Icon stroke={1.5} size={32} />
+            </UnstyledButton>
         </Tooltip>
     );
 }
 
-const mockdata = [
-    { icon: Logo, label: "Home" },
-    { icon: IconGauge, label: "Dashboard" },
-    { icon: IconBell, label: "Notification" },
-    { icon: IconCalendarStats, label: "My Work" },
-    { icon: IconStar, label: "Favorite" },
+const navButton = [
+    { icon: Logo, label: "Home", path: "/home" },
+    { icon: IconGauge, label: "Dashboard", path: "/dashboard" },
+    { icon: IconBell, label: "Notification", path: "/notification" },
+    { icon: IconCalendarStats, label: "My Work", path: "/my-work" },
+    { icon: IconStar, label: "Favorite", path: "favorite" },
 ];
+
+
 
 export function LeftNavbar() {
     const [active, setActive] = useState(0);
-    const links = mockdata.map((link, index) => (
+    const navigate = useNavigate();
+    const iconLinks = navButton.map((item, index) => (
         <NavbarLink
-            {...link}
-            key={link.label}
+            {...item}
+            key={item.label}
             active={index === active}
-            onClick={() => setActive(index)}
+            onClick={() => {
+                setActive(index);
+                navigate(item.path);
+            }}
         />
     ));
 
     return (
         <Navbar
-
             width={{ base: 80 }}
             p="md"
             sx={(theme) => ({
@@ -113,15 +119,12 @@ export function LeftNavbar() {
         >
             <Navbar.Section grow mt={50}>
                 <Stack justify="center" spacing={0}>
-                    {links}
+                    {iconLinks}
                 </Stack>
             </Navbar.Section>
             <Navbar.Section>
                 <Stack justify="center" spacing={0}>
-                    <NavbarLink
-                        icon={IconUser}
-                        label="Profile"
-                    />
+                    <NavbarLink icon={IconUser} label="Profile" />
                     <NavbarLink icon={IconLogout} label="Logout" />
                 </Stack>
             </Navbar.Section>
