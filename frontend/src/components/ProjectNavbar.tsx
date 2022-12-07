@@ -1,5 +1,5 @@
-import { Tabs } from '@mantine/core';
-import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp, IconUsers, IconArticle } from '@tabler/icons'
+import { Tabs, Button } from '@mantine/core';
+import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp, IconUsers, IconUser, IconArticle, IconFilter, IconEyeOff } from '@tabler/icons'
 import { useState } from 'react';
 import { Cashflow } from '../pages/Cashflow';
 import { Home } from '../pages/Home';
@@ -19,7 +19,7 @@ export default function ProjectNavbar() {
     const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
 
-    function onRemove(){
+    function onRemove() {
         setLogsOpen(false)
         setInvitationOpen(false)
     }
@@ -34,12 +34,12 @@ export default function ProjectNavbar() {
                     <FontAwesomeIcon id="like-button" icon={like ? faStarS : faStarR} onClick={() => setLike((like) => !like)} />
                 </span>
                 <span className='icon-hub' >
-                    <span title='Open Logs'><IconArticle id="logs-button" size={14} onClick={()=>setLogsOpen((open)=> !open)}/></span>
-                    <span title='Invite Users'><IconUsers id="add-users-button" size={14} onClick={()=>setInvitationOpen((open)=> !open)}/></span>
+                    <span title='Open Logs'><IconArticle id="logs-button" size={14} onClick={() => setLogsOpen((open) => !open)} /></span>
+                    <span title='Invite Users'><IconUsers id="add-users-button" size={14} onClick={() => setInvitationOpen((open) => !open)} /></span>
                 </span>
             </div>
-            <LogsDrawer toggle={logsOpen} onRemove={onRemove}/>
-            <InvitationDrawer toggle={invitationOpen} onRemove={onRemove}/>
+            <LogsDrawer toggle={logsOpen} onRemove={onRemove} />
+            <InvitationDrawer toggle={invitationOpen} onRemove={onRemove} />
             <Tabs defaultValue="home">
                 <Tabs.List>
                     <Tabs.Tab value="home" icon={<IconHome size={14} />}>Home</Tabs.Tab>
@@ -48,6 +48,15 @@ export default function ProjectNavbar() {
                     <Tabs.Tab value="cashflow" icon={<IconBrandCashapp size={14} />}>Cashflow</Tabs.Tab>
                 </Tabs.List>
 
+                <div id="button-panel">
+                    <Button className='button-panel-group'>New Item</Button>
+                    <Button className='button-panel-group'>New Group</Button>
+                    <Button.Group>
+                        <Button className='button-panel-group' variant='subtle'><IconUser size={14} />Person</Button>
+                        <Button className='button-panel-group' variant='subtle'><IconFilter size={14} />Filter</Button>
+                        <Button className='button-panel-group' variant='subtle'><IconEyeOff size={14} />Hide</Button>
+                    </Button.Group>
+                </div>
                 <Tabs.Panel value="home" pt="xs">
                     <Home />
                 </Tabs.Panel>
@@ -64,6 +73,7 @@ export default function ProjectNavbar() {
                     <Cashflow />
                 </Tabs.Panel>
             </Tabs>
+
         </>
     )
 }
