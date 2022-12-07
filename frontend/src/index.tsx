@@ -20,8 +20,8 @@ root.render(
         withGlobalStyles
         theme={themeObject}
       ><BrowserRouter>
-        <App />
-      </BrowserRouter>
+          <App />
+        </BrowserRouter>
       </MantineProvider>
     </Provider>
   </React.StrictMode>
