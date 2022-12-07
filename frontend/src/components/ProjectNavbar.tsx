@@ -1,5 +1,5 @@
 import { Tabs } from '@mantine/core';
-import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp, IconStar} from '@tabler/icons'
+import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp } from '@tabler/icons'
 import { useState } from 'react';
 import { Cashflow } from '../pages/Cashflow';
 import { Home } from '../pages/Home';
