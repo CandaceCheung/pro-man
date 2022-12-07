@@ -100,7 +100,7 @@ export function LeftNavbar() {
 
     return (
         <Navbar
-            // height={750}
+
             width={{ base: 80 }}
             p="md"
             sx={(theme) => ({
