@@ -8,14 +8,12 @@ import {
     Stack,
 } from "@mantine/core";
 import {
-    IconHome2,
     IconGauge,
     IconBell,
     IconCalendarStats,
     IconUser,
     IconStar,
     IconLogout,
-    IconSwitchHorizontal,
     TablerIcon,
 } from "@tabler/icons";
 import { Logo, LogoProbs } from "./Logo";
@@ -83,7 +81,6 @@ const mockdata = [
     { icon: IconBell, label: "Notification" },
     { icon: IconCalendarStats, label: "My Work" },
     { icon: IconStar, label: "Favorite" },
-    { icon: IconUser, label: "Profile" },
 ];
 
 export function LeftNavbar() {
@@ -117,8 +114,8 @@ export function LeftNavbar() {
             <Navbar.Section>
                 <Stack justify="center" spacing={0}>
                     <NavbarLink
-                        icon={IconSwitchHorizontal}
-                        label="Change account"
+                        icon={IconUser}
+                        label="Profile"
                     />
                     <NavbarLink icon={IconLogout} label="Logout" />
                 </Stack>
