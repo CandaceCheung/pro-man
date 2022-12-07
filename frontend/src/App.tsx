@@ -1,8 +1,9 @@
 import React from 'react';
 import './App.scss';
-import { LeftNavbar } from './components/LeftNavbar';
+import { LeftNavbar } from './components/LeftNavBar';
 import ProjectNavbar from './components/ProjectNavbar';
 import { Auth } from './pages/Auth';
+import { Dashboard } from './pages/Dashboard';
 import { Home } from './pages/Home';
 import { useAppSelector } from './store';
 
@@ -10,10 +11,12 @@ function App() {
   const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
   return (
     <div className="App">
-      <LeftNavbar />
-      <ProjectNavbar/>
       <div className='page-container'>
-        {isLoggedIn ? <Auth/> : <Home/>}
+        {
+          isLoggedIn
+          ? <Dashboard/>
+          : <Auth/>
+        }
       </div>
     </div>
   );
