@@ -91,7 +91,7 @@ jobs:
         - name: install deps
           working-directory: server
           run: |
-            yarn --omit=dev
+            yarn install
         - name: migrate db
           working-directory: server
           run: |
