@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import logo from "../img/proman-logo.png";
+import React, { FC, useState } from "react";
 import {
     Navbar,
     Center,
@@ -16,52 +15,87 @@ import {
     IconUser,
     IconStar,
     IconLogout,
+    IconSwitchHorizontal,
+    TablerIcon,
 } from "@tabler/icons";
-
+import { Logo, LogoProbs } from "./Logo";
 
 const useStyles = createStyles((theme) => ({
     link: {
         width: 50,
         height: 50,
         borderRadius: theme.radius.md,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         color: theme.white,
         opacity: 0.85,
-    
-        '&:hover': {
-          opacity: 1,
-          backgroundColor: theme.fn.lighten(
-            theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
-            0.1
-          ),
-        },
-      },
 
-      active: {
+        "&:hover": {
+            opacity: 1,
+            backgroundColor: theme.fn.lighten(
+                theme.fn.variant({
+                    variant: "filled",
+                    color: theme.primaryColor,
+                }).background!,
+                0.1
+            ),
+        },
+    },
+
+    active: {
         opacity: 1,
-        '&, &:hover': {
-          backgroundColor: theme.fn.lighten(
-            theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
-            0.15
-          ),
+        "&, &:hover": {
+            backgroundColor: theme.fn.lighten(
+                theme.fn.variant({
+                    variant: "filled",
+                    color: theme.primaryColor,
+                }).background!,
+                0.15
+            ),
         },
-      },
-
+    },
 }));
 
+interface NavbarLinkProps {
+    icon: TablerIcon | FC<LogoProbs>;
+    label: string;
+    active?: boolean;
+    onClick?(): void;
+}
+
+function NavbarLink({ icon:Icon, label, active, onClick }: NavbarLinkProps) {
+    const { classes, cx } = useStyles();
+
+    return (
+        <Tooltip label={label} position="right" transitionDuration={0}>
+            <UnstyledButton
+                onClick={onClick}
+                className={cx(classes.link, { [classes.active]: active })}
+            ><Icon stroke={1.5} size={30}/></UnstyledButton>
+        </Tooltip>
+    );
+}
+
 const mockdata = [
-    { icon: IconHome2, label: 'Home' },
-    { icon: IconGauge, label: 'Dashboard' },
-    { icon: IconBell, label: 'Notification'},
-    { icon: IconCalendarStats, label: 'My Work' },
-    { icon: IconStar, label: 'Favourite'},
-    { icon: IconUser, label: 'Profile' },
- ];
+    { icon: Logo, label: "Home" },
+    { icon: IconGauge, label: "Dashboard" },
+    { icon: IconBell, label: "Notification" },
+    { icon: IconCalendarStats, label: "My Work" },
+    { icon: IconStar, label: "Favourite" },
+    { icon: IconUser, label: "Profile" },
+];
 
 export function LeftNavbar() {
-    const [active, setActive] = useState(2);
+    const [active, setActive] = useState(0);
+    const links = mockdata.map((link, index) => (
+        <NavbarLink
+            {...link}
+            key={link.label}
+            active={index === active}
+            onClick={() => setActive(index)}
+        />
+    ));
 
     return (
         <Navbar
@@ -75,11 +109,19 @@ export function LeftNavbar() {
                 }).background,
             })}
         >
-            <Center>
-                <img src={logo} alt="Logo" />
-            </Center>
+            <Navbar.Section grow mt={50}>
+                <Stack justify="center" spacing={0}>
+                    {links}
+                </Stack>
+            </Navbar.Section>
             <Navbar.Section>
-                
+                <Stack justify="center" spacing={0}>
+                    <NavbarLink
+                        icon={IconSwitchHorizontal}
+                        label="Change account"
+                    />
+                    <NavbarLink icon={IconLogout} label="Logout" />
+                </Stack>
             </Navbar.Section>
         </Navbar>
     );
