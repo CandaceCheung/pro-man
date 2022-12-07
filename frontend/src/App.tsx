@@ -1,11 +1,13 @@
 import React from 'react';
 import './App.scss';
-import ProjectNavbar from './components/ProjectNavbar';
+import { Auth } from './pages/Auth';
 
 function App() {
   return (
     <div className="App">
-      <ProjectNavbar/>
+      <div className='page-container'>
+        <Auth/>
+      </div>
     </div>
   );
 }
