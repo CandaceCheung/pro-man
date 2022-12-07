@@ -25,7 +25,9 @@
   "scripts": {
     "start": "ts-node-dev app.ts",
     "build": "rm -rf dist && tsc -p .",
-    "test": "jest"
+    "test": "jest",
+    "migrate": "knex migrate:latest",
+    "seed": "knex seed:run"
   },
   "name": "pro-man",
   "version": "1.0.0",

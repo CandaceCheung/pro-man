@@ -10,13 +10,11 @@ function App() {
 
   return (
     <div className="App">
-      <div className='page-container'>
         {
           isLoggedIn
           ? <Dashboard/>
           : <Auth/>
         }
-      </div>
     </div>
   );
 }
