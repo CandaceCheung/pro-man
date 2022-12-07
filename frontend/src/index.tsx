@@ -8,6 +8,7 @@ import { store } from './store';
 import { MantineProvider } from '@mantine/core';
 import { themeObject } from './theme';
 import { BrowserRouter } from 'react-router-dom';
+import { CustomFonts } from './fonts/CustomFonts';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -20,6 +21,7 @@ root.render(
         withGlobalStyles
         theme={themeObject}
       ><BrowserRouter>
+          <CustomFonts />
           <App />
         </BrowserRouter>
       </MantineProvider>
