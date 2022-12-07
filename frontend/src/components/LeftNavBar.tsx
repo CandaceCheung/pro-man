@@ -14,19 +14,40 @@ import {
     IconBell,
     IconCalendarStats,
     IconUser,
-    IconSettings,
     IconStar,
     IconLogout,
 } from "@tabler/icons";
 
-const useStyles = createStyles((theme) => ({
-    wrapper: {
-        display: "flex",
-    },
 
-    aside: {
-        flex: "0 0 60px",
-    },
+const useStyles = createStyles((theme) => ({
+    link: {
+        width: 50,
+        height: 50,
+        borderRadius: theme.radius.md,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: theme.white,
+        opacity: 0.85,
+    
+        '&:hover': {
+          opacity: 1,
+          backgroundColor: theme.fn.lighten(
+            theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
+            0.1
+          ),
+        },
+      },
+
+      active: {
+        opacity: 1,
+        '&, &:hover': {
+          backgroundColor: theme.fn.lighten(
+            theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
+            0.15
+          ),
+        },
+      },
 
 }));
 
@@ -37,7 +58,6 @@ const mockdata = [
     { icon: IconCalendarStats, label: 'My Work' },
     { icon: IconStar, label: 'Favourite'},
     { icon: IconUser, label: 'Profile' },
-    { icon: IconSettings, label: 'Settings' },
  ];
 
 export function LeftNavbar() {
@@ -58,7 +78,9 @@ export function LeftNavbar() {
             <Center>
                 <img src={logo} alt="Logo" />
             </Center>
-
+            <Navbar.Section>
+                
+            </Navbar.Section>
         </Navbar>
     );
 }
