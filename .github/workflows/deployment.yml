@@ -91,9 +91,9 @@ jobs:
         - name: install deps
           working-directory: server
           run: |
-            yarn --omit=dev
+            yarn install
         - name: migrate db
-          working-directory: server/dist
+          working-directory: server
           run: |
             yarn knex migrate:latest
         - name: run test
