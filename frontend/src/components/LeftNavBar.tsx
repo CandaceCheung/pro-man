@@ -52,6 +52,11 @@ const useStyles = createStyles((theme) => ({
             ),
         },
     },
+
+    track: {
+        background: theme.fn.linearGradient(45, '#6871DB', '#24285A'),
+      },
+
 }));
 
 interface NavbarLinkProps {
@@ -95,7 +100,7 @@ export function LeftNavbar() {
 
     return (
         <Navbar
-            height={750}
+
             width={{ base: 80 }}
             p="md"
             sx={(theme) => ({

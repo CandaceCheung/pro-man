@@ -1,12 +1,10 @@
 import React from "react";
-import { LeftNavbar } from "../components/LeftNavBar";
-import ProjectNavbar from "../components/ProjectNavbar";
+import { NavbarLayout } from "../components/NavbarLayout";
 
 export function Dashboard() {
     return (
         <div>
-            <ProjectNavbar/>
-            <LeftNavbar/>
+            <NavbarLayout />
         </div>
-    )
+    );
 }
