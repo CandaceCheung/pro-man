@@ -6,7 +6,7 @@ import { useAppSelector } from './store';
 
 function App() {
 
-  const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+  const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn);
 
   return (
     <div className="App">
