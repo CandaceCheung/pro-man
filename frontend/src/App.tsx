@@ -27,10 +27,6 @@ function App() {
     return (
         <div className="App">
             {
-                isLoggedIn === null &&
-                "loading"
-            }
-            {
                 isLoggedIn === true &&
                 (
                     <AppShell

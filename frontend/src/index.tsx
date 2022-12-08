@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
 import { themeObject } from './theme';
 import { BrowserRouter } from 'react-router-dom';
 import { CustomFonts } from './fonts/CustomFonts';
@@ -21,10 +22,12 @@ root.render(
         withGlobalStyles
         theme={themeObject}
       >
-        <BrowserRouter>
-          <CustomFonts />
-          <App />
-        </BrowserRouter>
+        <NotificationsProvider>
+          <BrowserRouter>
+            <CustomFonts />
+            <App />
+          </BrowserRouter>
+        </NotificationsProvider>
       </MantineProvider>
     </Provider>
   </React.StrictMode>

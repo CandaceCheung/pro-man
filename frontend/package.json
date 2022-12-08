@@ -12,6 +12,7 @@
     "@mantine/core": "^5.9.2",
     "@mantine/hooks": "^5.9.2",
     "@mantine/modals": "^5.9.2",
+    "@mantine/notifications": "^5.9.2",
     "@mui/icons-material": "^5.10.16",
     "@mui/styled-engine-sc": "^5.10.16",
     "@reduxjs/toolkit": "^1.9.1",

@@ -26,7 +26,7 @@ export const tableController = new TableController(tableService);
 
 app.use(express.json(), cors());
 
-app.use('/login', authRoutes());
+app.use('/auth', authRoutes());
 app.use('/table', tableRoutes());
 
 const PORT = 8080;

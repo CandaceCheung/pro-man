@@ -32,6 +32,29 @@ export class AuthController {
         }
     }
 
+    signUp = async (req: Request, res: Response) => {
+        try {
+            if (!req.body.username || !req.body.password) {
+                res.status(401).json({ msg: "Missing Username/Password" });
+                return;
+            }
+            const result = await this.authService.signUp(req.body.username, req.body.password);
+            if (result) {
+                res.json({
+                    success: true
+                });
+            } else {
+                res.status(401).json({
+                    success: false,
+                    msg: "Unable to sign up."
+                });
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "[LOG] Fail to sign up." });
+        }
+    }
+
     retrieveLogin = async (req: Request, res: Response) => {
         try {
             res.json({ payload: req.user });
