@@ -10,6 +10,8 @@ import { retriveLogin } from "./redux/auth/thunk";
 import { Notification } from "./pages/Notification";
 import { MyWork } from "./pages/MyWork";
 import { Favorite } from "./pages/Favorite";
+import { AppShell, Navbar } from "@mantine/core";
+import { LeftNavbar } from "./components/LeftNavbar";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -19,6 +21,7 @@ function App() {
     useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
+        // eslint-disable-next-line
     }, [isLoggedIn, dispatch]);
 
     return (
@@ -30,15 +33,19 @@ function App() {
             {
                 isLoggedIn === true &&
                 (
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/home" element={<Home />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/notification" element={<Notification />} />
-                        <Route path="/my-work" element={<MyWork />} />
-                        <Route path="/favorite" element={<Favorite />} />
-                        <Route path="/profile" element={<Profile />} />
-                    </Routes>
+                    <AppShell
+                        navbar={ <LeftNavbar/>}
+                    >
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/home" element={<Home />} />
+                            <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/notification" element={<Notification />} />
+                            <Route path="/my-work" element={<MyWork />} />
+                            <Route path="/favorite" element={<Favorite />} />
+                            <Route path="/profile" element={<Profile />} />
+                        </Routes>
+                    </AppShell>
                 )
             }
             {
