@@ -1,4 +1,4 @@
-import { LeftNavbar } from "../components/LeftNavbar";
+import React from "react"
 
 export function Profile() {
 

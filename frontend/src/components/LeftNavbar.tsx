@@ -88,7 +88,7 @@ const navButtons = [
     { icon: IconGauge, label: "Dashboard", path: "/dashboard"},
     { icon: IconBell, label: "Notification", path: "/notification"},
     { icon: IconCalendarStats, label: "My Work", path: "/my-work" },
-    { icon: IconStar, label: "Favorite", path: "favorite" },
+    { icon: IconStar, label: "Favorite", path: "favorite" }
 ];
 
 
@@ -127,7 +127,7 @@ export function LeftNavbar() {
             </Navbar.Section>
             <Navbar.Section>
                 <Stack justify="center" spacing={0}>
-                    <NavbarLink icon={IconUser} label="Profile" />
+                    <NavbarLink icon={IconUser} label="Profile" onClick={()=>navigate("/profile")} />
                     <NavbarLink icon={IconLogout} label="Logout" onClick={()=>dispatch(logout())}/>
                 </Stack>
             </Navbar.Section>
