@@ -18,7 +18,6 @@ export function loginThunk(username: string, password: string) {
         const result = await res.json();
         if (result.success) {
             dispatch(loginAction(username));
-            console.log(`${username} has logged in.`);
         } else {
             dispatch(failedLoginAction());
         }
