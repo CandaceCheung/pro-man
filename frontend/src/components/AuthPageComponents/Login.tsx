@@ -1,4 +1,3 @@
-import { ClassNames } from "@emotion/react";
 import { Button, createStyles, TextInput } from "@mantine/core";
 import React, { useState } from "react";
 import { loginThunk } from "../../redux/auth/thunk";
@@ -18,11 +17,12 @@ export function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
-    const { classes, theme } = useStyles();
+    const { classes } = useStyles();
 
     const login = () => {
         dispatch(loginThunk(username, password));
     }
+
     return (
         <div className={classes.wrapper}>
             <TextInput
