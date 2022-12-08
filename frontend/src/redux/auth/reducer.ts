@@ -4,7 +4,8 @@ import { AuthState } from "./state";
 const initState: AuthState = {
     userId: null,
     username: null,
-    isLoggedIn: null
+    isLoggedIn: null,
+    page: "home"
 };
 
 export const authReducer = (state: AuthState = initState, action: AuthAction): AuthState => {
