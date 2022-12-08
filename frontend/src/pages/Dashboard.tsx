@@ -5,6 +5,9 @@ export function Dashboard() {
     return (
         <div>
             <NavbarLayout />
+            <div>
+                dashboard
+            </div>
         </div>
     );
 }
