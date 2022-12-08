@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {  useState } from 'react';
 import { createStyles } from '@mantine/core';
 import { Logo } from '../components/Logo';
-import { loginThunk } from '../redux/auth/thunk';
-import { useAppDispatch, useAppSelector } from '../store';
+import { useAppSelector } from '../store';
 import SwitchSelector from "react-switch-selector";
-import { useSelector } from 'react-redux';
+import { Signup } from '../components/AuthPageComponents/Signup';
+import { Login } from '../components/AuthPageComponents/Login';
 
 const useStyles = createStyles(theme => ({
     wrapper: {
@@ -49,31 +49,25 @@ const useStyles = createStyles(theme => ({
 
 export function Auth() {
     const user = useAppSelector(state => state.auth.username);
-    const dispatch = useAppDispatch();
+    const [value, setValue] = useState("login");
     const { classes, theme } = useStyles();
 
     const toggleOptions = [
         {
-            label: "Foo",
-            value: "foo",
+            label: "Login",
+            value: "login",
             selectedBackgroundColor: theme.white
         },
         {
-            label: "Bar",
-            value: "bar",
+            label: "Sign up",
+            value: "signup",
             selectedBackgroundColor: theme.white
         }
     ];
 
     const onChange = (newValue: any) => {
-        console.log(newValue);
+        setValue(newValue);
     };
-
-
-    const login = (event: any) => {
-        event.preventDefault();
-        dispatch(loginThunk(event.target.username.value, event.target.password.value));
-    }
 
     return (
         <div className={classes.wrapper}>
@@ -95,16 +89,15 @@ export function Auth() {
                     backgroundColor={theme.colors.normalViolet[0]}
                     fontColor={theme.white}
                     selectedFontColor={theme.black}
-                    fontSize={20}
+                    fontSize={15}
+                    optionBorderRadius={20}
                 />
             </div>
-            <form onSubmit={login}>
-                <label htmlFor="username">Username</label>
-                <input name="username" id="username"></input>
-                <label htmlFor="password">Password</label>
-                <input type="password" name="password" id="password"></input>
-                <button type="submit">Login</button>
-            </form>
+            {
+                value === "signup"
+                ? <Signup/>
+                : <Login/>
+            }
         </div>
     )
 }
