@@ -1,7 +1,6 @@
 import React, {  useState } from 'react';
 import { createStyles } from '@mantine/core';
 import { Logo } from '../components/Logo';
-import { useAppSelector } from '../store';
 import SwitchSelector from "react-switch-selector";
 import { Signup } from '../components/AuthPageComponents/Signup';
 import { Login } from '../components/AuthPageComponents/Login';
@@ -48,7 +47,6 @@ const useStyles = createStyles(theme => ({
 }))
 
 export function Auth() {
-    const user = useAppSelector(state => state.auth.username);
     const [value, setValue] = useState("login");
     const { classes, theme } = useStyles();
 
