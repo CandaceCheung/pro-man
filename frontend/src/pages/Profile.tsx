@@ -1,10 +1,10 @@
-import { LeftNavbar } from "../components/LeftNavbar";
+import React from "react"
 
 export function Profile() {
 
     return(
         <div>
-            <LeftNavbar />
+            This is a profile page.
         </div>
     )
 } 

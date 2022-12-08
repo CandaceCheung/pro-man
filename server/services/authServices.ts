@@ -13,6 +13,22 @@ export class AuthService {
         }
     }
 
+    async signUp(username: string, password: string) {
+        const [user] = await this.knex("users").where("username", username);
+        if (!user) {
+            const hashedPassword = bcrypt.hashSync(password, 10);
+            const [result] = await this.knex("users").insert({
+                username: username,
+                password: hashedPassword,
+                role: "user"
+            }).returning('id');
+            if (result) {
+                return "success";
+            }
+        }
+        return;
+    }
+
     async getUser(id: number) {
         const [user] = await this.knex("users").where("id", id);
         if (user) {
