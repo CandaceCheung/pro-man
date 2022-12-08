@@ -3,4 +3,5 @@ WORKDIR /usr/src/app
 COPY . .
 EXPOSE 8080
 CMD yarn install && \ 
-    yarn start
+    yarn knex migrate:latest &&\
+    node app.js

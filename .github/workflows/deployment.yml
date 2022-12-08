@@ -92,6 +92,10 @@ jobs:
           working-directory: server
           run: |
             yarn install
+        - name: migrate db
+          working-directory: server
+          run: |
+            yarn knex migrate:latest
         - name: run test
           working-directory: server
           run: |
