@@ -17,6 +17,7 @@ import {
 } from "@tabler/icons";
 import { Logo, LogoProbs } from "./Logo";
 import { useNavigate } from "react-router-dom";
+import { Dashboard } from "../pages/Dashboard";
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -81,10 +82,10 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
     );
 }
 
-const navButton = [
+const navButtons = [
     { icon: Logo, label: "Home", path: "/home" },
-    { icon: IconGauge, label: "Dashboard", path: "/dashboard" },
-    { icon: IconBell, label: "Notification", path: "/notification" },
+    { icon: IconGauge, label: "Dashboard", path: "/dashboard", element:<Dashboard />},
+    { icon: IconBell, label: "Notification", path: "/notification"},
     { icon: IconCalendarStats, label: "My Work", path: "/my-work" },
     { icon: IconStar, label: "Favorite", path: "favorite" },
 ];
@@ -94,7 +95,7 @@ const navButton = [
 export function LeftNavbar() {
     const [active, setActive] = useState(0);
     const navigate = useNavigate();
-    const iconLinks = navButton.map((item, index) => (
+    const iconLinks = navButtons.map((item, index) => (
         <NavbarLink
             {...item}
             key={item.label}
