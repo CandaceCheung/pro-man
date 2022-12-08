@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { NavbarLayout } from "../components/NavbarLayout";
 import { getTable } from "../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
