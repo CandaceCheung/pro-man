@@ -15,6 +15,11 @@ export const authReducer = (state: AuthState = initState, action: AuthAction): A
             result.username = action.username;
             result.isLoggedIn = true;
             break;
+        case "AUTH/LOGOUT":
+            result.userId = null;
+            result.username = null;
+            result.isLoggedIn = false;
+            break;
         case "AUTH/FAILED":
             console.error("Failed");
             break;
