@@ -1,7 +1,7 @@
 import { DefaultMantineColor, MantineThemeOverride, Tuple } from "@mantine/core";
 
 type ExtendedCustomColors = 'lightViolet' | 
-                            'lightHoverVioloet' | 
+                            'lightHoverViolet' | 
                             'lightActiveViolet' | 
                             'normalViolet' | 
                             'normalHoverViolet' | 
@@ -21,7 +21,7 @@ declare module '@mantine/core' {
 export const themeObject: MantineThemeOverride = {
     colors: {
         lightViolet: ["#eeeefa"],
-        lightHoverVioloet: ["#e5e6f7"],
+        lightHoverViolet: ["#e5e6f7"],
         lightActiveViolet: ["#c9ccee"],
         normalViolet: ["#5059c9"],
         normalHoverViolet: ["#4850b5"],
