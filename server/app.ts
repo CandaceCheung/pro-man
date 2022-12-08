@@ -5,6 +5,9 @@ import { AuthService } from './services/authServices';
 import { AuthController } from './controllers/authControllers';
 import { authRoutes } from './routes/authRoutes';
 import cors from 'cors';
+import { TableService } from './services/tableService';
+import { TableController } from './controllers/tableControllers';
+import { tableRoutes } from './routes/tableRoutes';
 
 dotenv.config();
 
@@ -17,9 +20,14 @@ const app = express()
 export const authService = new AuthService(knex);
 export const authController = new AuthController(authService);
 
+export const tableService = new TableService(knex);
+export const tableController = new TableController(tableService);
+
+
 app.use(express.json(), cors());
 
 app.use('/login', authRoutes());
+app.use('/table', tableRoutes());
 
 const PORT = 8080;
 app.listen(PORT, () => {

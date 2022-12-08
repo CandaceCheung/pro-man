@@ -115,35 +115,37 @@ export async function seed(knex: Knex): Promise<void> {
 
     insertArray = []
     const typeArr = ['persons', 'dates', 'times', 'money', 'status', 'text']
-    for (let i = 0; i < 6; i++) {
-        insertArray.push({ type: typeArr[i], order: i + 1 })
+    for (let j = 0; j < projectIDs.length; ){
+        for (let i = 0; i < 6; i++) {
+            insertArray.push({ type: typeArr[i], order: i + 1 })
+        }
     }
     const typeIDs = await knex("types").insert(insertArray).returning('*');
 
-
+    let counter = 0
     for (let i of itemIDs) {
 
         insertArray = []
         insertArray.push(
-            { item_id: i.id, type_id: typeIDs[0].id, name: 'default' },
+            { item_id: i.id, type_id: typeIDs[0 + counter].id, name: 'default' },
         )
         await knex('type_persons').insert(insertArray)
 
         insertArray = []
         insertArray.push(
-            { item_id: i.id, type_id: typeIDs[1].id, datetime: format(new Date(Date.now()+ Math.floor(Math.random()*600000000)),'yyyy-MM-dd')},
+            { item_id: i.id, type_id: typeIDs[1 + counter].id, datetime: format(new Date(Date.now()+ Math.floor(Math.random()*600000000)),'yyyy-MM-dd')},
         )
         await knex('type_dates').insert(insertArray)
 
         insertArray = []
         insertArray.push(
-            { item_id: i.id, type_id: typeIDs[2].id, start_date: format(new Date(),'yyyy-MM-dd'), end_date: format(new Date(Date.now() + 300000000), 'yyyy-MM-dd') },
+            { item_id: i.id, type_id: typeIDs[2 + counter].id, start_date: format(new Date(),'yyyy-MM-dd'), end_date: format(new Date(Date.now() + 300000000), 'yyyy-MM-dd') },
         )
         await knex('type_times').insert(insertArray)
 
         insertArray = []
         insertArray.push(
-            { item_id: i.id, type_id: typeIDs[3].id },
+            { item_id: i.id, type_id: typeIDs[3 + counter].id },
         )
         const moneyIDs = await knex('type_money').insert(insertArray).returning('*')
 
@@ -158,7 +160,7 @@ export async function seed(knex: Knex): Promise<void> {
         for (let stateID of stateIDs) {
             if (stateID.project_id === i.project_id) {
                 insertArray.push(
-                    { item_id: i.id, type_id: typeIDs[4].id, state_id: stateID.id+Math.floor(Math.random()*4)},
+                    { item_id: i.id, type_id: typeIDs[4 + counter].id, state_id: stateID.id+Math.floor(Math.random()*4)},
                 )
                 break
             }
@@ -167,8 +169,10 @@ export async function seed(knex: Knex): Promise<void> {
 
         insertArray = []
         insertArray.push(
-            { item_id: i.id, type_id: typeIDs[5].id, text: "Default Text" },
+            { item_id: i.id, type_id: typeIDs[5 + counter].id, text: "Default Text" },
         )
         await knex('type_text').insert(insertArray)
+
+        counter += 6 
     }
 }
