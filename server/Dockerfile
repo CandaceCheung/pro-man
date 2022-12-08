@@ -4,4 +4,4 @@ COPY . .
 EXPOSE 8080
 CMD yarn install && \ 
     yarn knex migrate:latest &&\
-    node app.js
+    cd dist && node app.js
