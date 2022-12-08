@@ -3,6 +3,8 @@ import { createStyles } from '@mantine/core';
 import { Logo } from '../components/Logo';
 import { loginThunk } from '../redux/auth/thunk';
 import { useAppDispatch, useAppSelector } from '../store';
+import SwitchSelector from "react-switch-selector";
+import { useSelector } from 'react-redux';
 
 const useStyles = createStyles(theme => ({
     wrapper: {
@@ -33,13 +35,40 @@ const useStyles = createStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    toggle: {
+        width: 250,
+        height: 40,
+        fontFamily: "Lalezar",
+        margin: "30px 0",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 }))
 
 export function Auth() {
     const user = useAppSelector(state => state.auth.username);
     const dispatch = useAppDispatch();
-    const {classes} = useStyles();
+    const { classes, theme } = useStyles();
+
+    const toggleOptions = [
+        {
+            label: "Foo",
+            value: "foo",
+            selectedBackgroundColor: theme.white
+        },
+        {
+            label: "Bar",
+            value: "bar",
+            selectedBackgroundColor: theme.white
+        }
+    ];
+
+    const onChange = (newValue: any) => {
+        console.log(newValue);
+    };
+
 
     const login = (event: any) => {
         event.preventDefault();
@@ -48,16 +77,26 @@ export function Auth() {
 
     return (
         <div className={classes.wrapper}>
-            {user.length > 0 && <div>Hi {user}!</div>}
             <div className={classes.header}>
                 <div className={classes.logo}>
                     <div className={classes.logoChild}>
-                        <Logo size={50}/>
+                        <Logo size={50} />
                     </div>
                     <div className={classes.logoChild}>
-                        Proman                    
+                        Proman
                     </div>
                 </div>
+            </div>
+            <div className={classes.toggle}>
+                <SwitchSelector
+                    onChange={onChange}
+                    options={toggleOptions}
+                    initialSelectedIndex={0}
+                    backgroundColor={theme.colors.normalViolet[0]}
+                    fontColor={theme.white}
+                    selectedFontColor={theme.black}
+                    fontSize={20}
+                />
             </div>
             <form onSubmit={login}>
                 <label htmlFor="username">Username</label>
