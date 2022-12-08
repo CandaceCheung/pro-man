@@ -1728,6 +1728,13 @@
   resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-5.9.2.tgz#803df4d4f0b77bda14141b96c0a910f3b4cec52a"
   integrity sha512-XOG0rpfVYpe9eQtYiWtAHpDdAsC7TymcR+yHvS0kgoCOEbgBQLaQOcD4qn0pWADx9dxQXD87/3/1KKn4L3OGrg==
 
+"@mantine/modals@^5.9.2":
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/@mantine/modals/-/modals-5.9.2.tgz#d0db08b6b8f6c97297460805e75c7b1718db345f"
+  integrity sha512-P++azwhqhMG1MapqIUd0MCM5N/6rQJCVdOjXNVUYfXywvs2eabsuaDKwCC+Ug6WE+xN119agwtBv0SKui6Mg9A==
+  dependencies:
+    "@mantine/utils" "5.9.2"
+
 "@mantine/styles@5.9.2":
   version "5.9.2"
   resolved "https://registry.yarnpkg.com/@mantine/styles/-/styles-5.9.2.tgz#226dfdac1d40c31084f28eaf9a469498643a3f79"
