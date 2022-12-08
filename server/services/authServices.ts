@@ -12,4 +12,14 @@ export class AuthService {
             return user;
         }
     }
+
+    async getUser(id: number) {
+        const [user] = await this.knex("users").where("id", id);
+        if (user) {
+            delete user.password;
+            return user;
+        } else {
+            return
+        }
+    }
 }

@@ -17,6 +17,8 @@ import {
 } from "@tabler/icons";
 import { Logo, LogoProbs } from "./Logo";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../redux/auth/thunk";
+import { useAppDispatch } from "../store";
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -93,6 +95,7 @@ const navButtons = [
 
 export function LeftNavbar() {
     const [active, setActive] = useState(0);
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const iconLinks = navButtons.map((item, index) => (
         <NavbarLink
@@ -125,7 +128,7 @@ export function LeftNavbar() {
             <Navbar.Section>
                 <Stack justify="center" spacing={0}>
                     <NavbarLink icon={IconUser} label="Profile" />
-                    <NavbarLink icon={IconLogout} label="Logout" />
+                    <NavbarLink icon={IconLogout} label="Logout" onClick={()=>dispatch(logout())}/>
                 </Stack>
             </Navbar.Section>
         </Navbar>
