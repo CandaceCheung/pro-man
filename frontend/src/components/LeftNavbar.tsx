@@ -54,9 +54,9 @@ const useStyles = createStyles((theme) => ({
         },
     },
 
-    track: {
-        background: theme.fn.linearGradient(45, "#6871DB", "#24285A"),
-    },
+    // track: {
+    //     background: theme.fn.gradient({ from: '6871DB', to: '24285A', deg: 45 }),
+    // },
 }));
 
 interface NavbarLinkProps {
@@ -113,7 +113,7 @@ export function LeftNavbar() {
             sx={(theme) => ({
                 backgroundColor: theme.fn.variant({
                     variant: "filled",
-                    color: theme.primaryColor,
+                    color: theme.fn.gradient({ from: '6871DB', to: '24285A', deg: 45 }),
                 }).background,
             })}
         >
