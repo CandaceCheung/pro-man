@@ -11,6 +11,7 @@ export function getTable(userID: number) {
 
 		if (result.success) {
 			console.log("Passed")
+			console.log (result.table)
             dispatch(getTableAction(result.table))
 		} else {
 			dispatch(getTableFailedAction())

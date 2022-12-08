@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { NavbarLayout } from "../components/NavbarLayout";
 import { getTable } from "../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
@@ -7,7 +6,7 @@ export function Home() {
     
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId)
-    const projectDetail = useAppSelector((state) => state.table.project)
+    const projectDetail = useAppSelector((state) => state.table)
 
     useEffect(()=>{
         dispatch(getTable(userId as number))
@@ -15,8 +14,13 @@ export function Home() {
 
     return (
         <div>
-            testing
-            {projectDetail}
+            Example
+            {projectDetail.map((project, index)=> 
+            project.project_name === 'Project 1' && 
+            <div key={index}>
+                Project Name: {project.project_name}, Project ID: {project.project_id}
+            </div>
+            )}
         </div>
     )
 }
