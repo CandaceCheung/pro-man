@@ -2,7 +2,8 @@ import { AuthAction } from "./action";
 import { AuthState } from "./state";
 
 const initState: AuthState = {
-    username: "",
+    userId: null,
+    username: null,
     isLoggedIn: null
 };
 
@@ -10,6 +11,7 @@ export const authReducer = (state: AuthState = initState, action: AuthAction): A
     let result = JSON.parse(JSON.stringify(state));
     switch (action.type) {
         case "AUTH/LOGIN":
+            result.userId = action.userId;
             result.username = action.username;
             result.isLoggedIn = true;
             break;

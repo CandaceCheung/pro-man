@@ -1,6 +1,7 @@
-export function loginAction(username: string) {
+export function loginAction(userId: number, username: string) {
     return {
         type: "AUTH/LOGIN" as const,
+        userId,
         username
     }
 }

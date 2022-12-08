@@ -1,4 +1,5 @@
 export interface AuthState {
-    username: string,
-    isLoggedIn: null
+    userId: null | number,
+    username: null | string,
+    isLoggedIn: null | boolean
 }

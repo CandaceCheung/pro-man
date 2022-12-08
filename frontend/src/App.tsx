@@ -17,15 +17,21 @@ function App() {
 
     return (
         <div className="App">
-            {isLoggedIn || <Auth />}
-            <Routes>
-                <Route path="/home" element={<Home />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/notification" />
-                <Route path="/my-work" />
-                <Route path="/favorite" />
-                <Route path="/profile" element={<Profile />} />
-            </Routes>
+            {
+                isLoggedIn
+                ? (
+                    <Routes>
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/notification" />
+                        <Route path="/my-work" />
+                        <Route path="/favorite" />
+                        <Route path="/profile" element={<Profile />} />
+                    </Routes>
+                ) : (
+                    <Auth/>
+                )
+            }
         </div>
     );
 }

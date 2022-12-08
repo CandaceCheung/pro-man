@@ -8,7 +8,14 @@ export class AuthController {
         try {
             console.log(req.body)
             const result = await this.authService.login(req.body.username, req.body.password);
-            res.json({ success: !!result });
+            if (result) {
+                res.json({
+                    success: true,
+                    data: result
+                });
+            } else {
+                res.json({success: false})
+            }
         } catch (e) {
             console.error(e);
             res.status(500).json({ msg: "[LOG] Fail to login." });

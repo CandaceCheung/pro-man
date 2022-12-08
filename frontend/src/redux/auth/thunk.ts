@@ -17,7 +17,7 @@ export function loginThunk(username: string, password: string) {
         });
         const result = await res.json();
         if (result.success) {
-            dispatch(loginAction(username));
+            dispatch(loginAction(result.data.id, result.data.username));
         } else {
             dispatch(failedLoginAction());
         }
