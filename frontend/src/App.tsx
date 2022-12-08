@@ -12,7 +12,7 @@ function App() {
     const navigate = useNavigate();
 
     useEffect(()=>{
-        isLoggedIn && navigate('/home');
+        isLoggedIn && navigate('/');
     }, [isLoggedIn, navigate]);
 
     return (
@@ -21,6 +21,7 @@ function App() {
                 isLoggedIn
                 ? (
                     <Routes>
+                        <Route path="/" element={<Home />} />
                         <Route path="/home" element={<Home />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/notification" />
