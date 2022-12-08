@@ -10,7 +10,7 @@ import { retriveLogin } from "./redux/auth/thunk";
 import { Notification } from "./pages/Notification";
 import { MyWork } from "./pages/MyWork";
 import { Favorite } from "./pages/Favorite";
-import { AppShell, Navbar } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 
 function App() {
