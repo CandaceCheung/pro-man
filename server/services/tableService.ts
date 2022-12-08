@@ -37,6 +37,7 @@ export class TableService {
             'types.id as horizontal_order_id'
             )
             .from('members')
+            .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
             .join('items', 'items.project_id', '=', 'projects.id')
             .join('item_groups', 'items.item_group_id', '=', 'item_groups.id')
@@ -51,11 +52,11 @@ export class TableService {
             .join('types', function (){
                 this
                     .on('type_text.type_id', '=', 'types.id')
-                    .andOn('type_status.type_id', '=', 'types.id')
-                    .andOn('type_money.type_id', '=', 'types.id')
-                    .andOn('type_dates.type_id', '=', 'types.id')
-                    .andOn('type_persons.type_id', '=', 'types.id')
-                    .andOn('type_groups.type_id', '=', 'types.id')
+                    .orOn('type_status.type_id', '=', 'types.id')
+                    .orOn('type_money.type_id', '=', 'types.id')
+                    .orOn('type_times.type_id', '=', 'types.id')
+                    .orOn('type_dates.type_id', '=', 'types.id')
+                    .orOn('type_persons.type_id', '=', 'types.id')
             })
             .where("members.user_id", userID);
         

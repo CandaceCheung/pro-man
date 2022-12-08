@@ -7,6 +7,7 @@ export class TableController {
     getTable = async (req: Request, res: Response) => {
         try {
             const userID = req.params.userID
+
             const result = await this.tableService.getTableInfo(parseInt(userID));
             
             res.json({ 

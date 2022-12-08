@@ -4,10 +4,10 @@ import Knex from 'knex';
 import { AuthService } from './services/authServices';
 import { AuthController } from './controllers/authControllers';
 import { authRoutes } from './routes/authRoutes';
-import cors from 'cors';
 import { TableService } from './services/tableService';
 import { TableController } from './controllers/tableControllers';
 import { tableRoutes } from './routes/tableRoutes';
+import cors from 'cors';
 
 dotenv.config();
 
