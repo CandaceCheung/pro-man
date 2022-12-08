@@ -4,7 +4,7 @@ export function Profile() {
 
     return(
         <div>
-            <LeftNavbar />
+            This is a profile page.
         </div>
     )
 } 
