@@ -1,18 +1,18 @@
 import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface TableState {
-    projectName: string
+    project: []
 }
 
 const initialState: TableState = {
-    projectName: "",
+    project: [],
 }
 
-const getTable: CaseReducer<TableState, PayloadAction<string>> = 
-    (state, action) => { state.projectName = action.payload}
+const getTable: CaseReducer<TableState, PayloadAction<[]>> = 
+    (state, action) => { state.project = action.payload}
 
 const getTableFailed: CaseReducer<TableState, PayloadAction> =
-    (state, action) => { state.projectName = ""}
+    (state, action) => { state.project = []}
 
 const tableSlice = createSlice({
     name: 'table',
