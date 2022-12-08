@@ -44,7 +44,7 @@ const useStyles = createStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center'
     }
-}))
+}));
 
 export function Auth() {
     const [value, setValue] = useState("login");
