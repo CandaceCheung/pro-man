@@ -44,6 +44,8 @@ export function retriveLogin() {
               const data = await res.json();
               if (data.payload) {
                   dispatch(loginAction(data.payload.id, data.payload.username));
+              } else {
+                dispatch(logout());
               }
         } else {
             dispatch(logoutAction());
