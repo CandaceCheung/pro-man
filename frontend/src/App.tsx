@@ -25,7 +25,7 @@ function App() {
         isLoggedIn === null && dispatch(retriveLogin());
         // eslint-disable-next-line
         dispatch(getTable(userId as number))
-    }, [isLoggedIn, dispatch, navigate, userId]);
+    }, [isLoggedIn, dispatch, userId]);
 
     return (
         <div className="App">
