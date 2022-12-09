@@ -1,3 +1,4 @@
+import '../components/styles/Timeline.css'
 import Timeline from 'react-calendar-timeline'
 import 'react-calendar-timeline/lib/Timeline.css'
 import moment from 'moment'
@@ -73,7 +74,7 @@ const keys = { // default
   itemTimeEndKey: 'end_time',
 }
 
-const minZoom = 7 * 24 * 60 * 60 * 1000;
+const minZoom = 3 * 24 * 60 * 60 * 1000;
 const maxZoom = 31 * 24 * 60 * 60 * 1000;
 
 const sideBarObj = "Test"
