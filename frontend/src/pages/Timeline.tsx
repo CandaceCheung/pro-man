@@ -1,6 +1,7 @@
 import Timeline from 'react-calendar-timeline'
 import 'react-calendar-timeline/lib/Timeline.css'
 import moment from 'moment'
+import { defaultTimeEnd, defaultTimeStart, interval } from '../components/TimelineComponents/config'
 
 const groups = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
 
@@ -9,8 +10,8 @@ const items = [
     id: 1,
     group: 1,
     title: 'Random title',
-    start_time: moment().add(4, 'hour'),
-    end_time: moment().add(7, 'hour'),
+    start_time: moment().add(4, 'day'),
+    end_time: moment().add(7, 'day'),
     canMove: true,
     canResize: false,
     canChangeGroup: false,
@@ -29,27 +30,45 @@ const items = [
     id: 2,
     group: 2,
     title: 'item 2',
-    start_time: moment().add(-0.5, 'hour'),
-    end_time: moment().add(0.5, 'hour')
+    start_time: moment().add(-0.5, 'day'),
+    end_time: moment().add(0.5, 'day')
   },
   {
     id: 3,
     group: 1,
     title: 'item 3',
-    start_time: moment().add(2, 'hour'),
-    end_time: moment().add(3, 'hour')
+    start_time: moment().add(2, 'day'),
+    end_time: moment().add(3, 'day')
   }
 ]
 
-export function TestTimeFrame () {
-    return(
-  <div>
-    <Timeline
-      groups={groups}
-      items={items}
-      defaultTimeStart={moment().add(-12, 'hour')}
-      defaultTimeEnd={moment().add(12, 'hour')}
-    />
-  </div>
-    )
+const defaultZoom = 7 * 24 * 60 * 60 * 1000;
+
+export function TestTimeFrame() {
+  return (
+    <div>
+      <Timeline
+        groups={groups}
+        items={items}
+        defaultTimeStart={defaultTimeStart}
+        defaultTimeEnd={defaultTimeEnd}
+
+        // keys={keys}
+        // fullUpdate
+        itemTouchSendsClick={false}
+        stackItems
+        itemHeightRatio={0.75}
+        canMove
+        canResize={'both'}
+        // onItemMove={handleItemMove}
+        // onItemResize={handleItemResize}
+        // timeSteps={{hour: 12}}
+        dragSnap={interval}
+        minZoom={defaultZoom}
+        maxZoom={defaultZoom}
+        // onItemDoubleClick={updateItems}
+        lineHeight={50}
+      />
+    </div>
+  )
 }
