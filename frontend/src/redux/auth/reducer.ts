@@ -8,23 +8,25 @@ const initState: AuthState = {
 };
 
 export const authReducer = (state: AuthState = initState, action: AuthAction): AuthState => {
-    let result = JSON.parse(JSON.stringify(state));
     switch (action.type) {
         case "AUTH/LOGIN":
-            result.userId = action.userId;
-            result.username = action.username;
-            result.isLoggedIn = true;
-            break;
+            return {
+                ...state,
+                userId: action.userId,
+                username: action.username,
+                isLoggedIn: true,
+            }
         case "AUTH/LOGOUT":
-            result.userId = null;
-            result.username = null;
-            result.isLoggedIn = false;
-            break;
+            return {
+                ...state,
+                userId: null,
+                username: null,
+                isLoggedIn: false,
+            }
         case "AUTH/FAILED":
             console.error("Failed");
-            break;
+            return state
         default:
-            break;
+            return state;
     }
-    return result;
 }
