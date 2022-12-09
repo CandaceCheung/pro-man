@@ -69,7 +69,7 @@ export default function ProjectNavbar() {
                 </Tabs.List>
             </Tabs>
 
-            <ButtonHub />
+            <ButtonHub page={page} />
 
             <div id="tab-content" >
                 {page === "1" && <MainTable />}

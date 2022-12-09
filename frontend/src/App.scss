@@ -36,12 +36,18 @@
 
 #button-panel{
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
   padding-left: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
+  justify-content: space-between;
 }
+
+#fixed-button-group{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .button-panel-group{
   font-size: 10px;
   height:30px;
@@ -50,4 +56,8 @@
 .tab-content {
   overflow: auto;
   max-height: 76vh;
+}
+
+.selection-box{
+  width: 100px;
 }
