@@ -1,5 +1,6 @@
 import { IconArrowBadgeLeft, IconArrowBadgeRight } from "@tabler/icons"
 import { useState } from "react"
+import { ProjectList } from "./SidePanelComponents/ProjectList"
 import './styles/SidePanel.css'
 
 export function SidePanel() {
@@ -16,11 +17,9 @@ export function SidePanel() {
 
     return (
         <div id={toggle === null ? 'side-panel-inactive' : toggle ? 'side-panel-open' : 'side-panel-close'}>
-            <div style={toggle === null || toggle === false ? {contentVisibility : 'hidden'} : {contentVisibility : "visible"} } >
+            <div id={toggle === null || !toggle ? "project-list-container-close": 'project-list-container-open'} >
                 {toggle &&
-                    <div>
-                        This is the project list page
-                    </div>
+                    <ProjectList />
                 }
             </div>
             <span id={toggle === null ? 'side-panel-arrow-inactive' : toggle ? 'side-panel-arrow-active' : 'side-panel-arrow-inactive'} onClick={clickHandler}>{toggle ? <IconArrowBadgeLeft size={20} /> : <IconArrowBadgeRight size={20} />}</span>
