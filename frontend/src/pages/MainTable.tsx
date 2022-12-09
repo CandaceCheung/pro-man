@@ -13,7 +13,7 @@ export function MainTable() {
     },[dispatch, userId])
 
     return (
-        <div>
+        <div className="tab-content">
             Example
             {projectDetail.map((project, index)=> 
             project.project_name === 'Project 1' && 

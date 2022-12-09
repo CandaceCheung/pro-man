@@ -26,7 +26,7 @@ export default function ProjectNavbar() {
     }
 
     return (
-        <div>
+        <div id="project-navbar">
             <div className='navbar-header'>
                 <span id="project-title-container">
                     <span id='navbar-project-title'>
