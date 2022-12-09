@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { StarRateSharp } from "@mui/icons-material";
 import { useState } from "react";
 import { useAppDispatch } from "../../store";
