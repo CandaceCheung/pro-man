@@ -30,11 +30,11 @@ function App() {
                 isLoggedIn === true &&
                 (
                     <AppShell
-                        navbar={ <LeftNavbar/>}
+                        navbar={<LeftNavbar />}
                     >
                         <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/home" element={<Home />} />
+                            <Route path="/" element={<Home />}/>
+                            <Route path="/home" element={<Home />}/>
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/notification" element={<Notification />} />
                             <Route path="/my-work" element={<MyWork />} />

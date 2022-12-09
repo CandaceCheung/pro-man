@@ -6,7 +6,7 @@ export function Dashboard() {
 
     return (
         <div>
-            <NavbarLayout />
+            {/* <NavbarLayout /> */}
             <div>
                 dashboard
             </div>

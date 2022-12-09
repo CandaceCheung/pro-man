@@ -40,8 +40,13 @@
   gap: 10px;
   padding-left: 10px;
   padding-top: 10px;
+  padding-bottom: 10px;
 }
 .button-panel-group{
   font-size: 10px;
   height:30px;
+}
+
+#tab-content {
+  overflow: auto;
 }
