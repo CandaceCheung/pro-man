@@ -15,7 +15,6 @@ type StatusProps ={
 export function StatusColumn (props: StatusProps) {
 
     const dispatch = useAppDispatch();
-    const name = 
 
     
     return (
