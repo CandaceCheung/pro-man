@@ -36,7 +36,7 @@ const useStyles = createStyles((theme) => ({
             backgroundColor: theme.fn.lighten(
                 theme.fn.variant({
                     variant: "filled",
-                    color: theme.primaryColor,
+                    color: "violet",
                 }).background!,
                 0.1
             ),
@@ -49,7 +49,7 @@ const useStyles = createStyles((theme) => ({
             backgroundColor: theme.fn.lighten(
                 theme.fn.variant({
                     variant: "filled",
-                    color: theme.primaryColor,
+                    color: "violet",
                 }).background!,
                 0.15
             ),
