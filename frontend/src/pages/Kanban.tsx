@@ -17,14 +17,14 @@ export function Kanban() {
 
     return (
         <div className="kanban-table">
-            {statusList.map((status) => (
+            {/* {statusList.map((status) => (
                 <StatusColumn
                     projectId={status.projectId}
                     statesName={status.statesName}
                     itemList={status.itemList}
                     color={status.color}
                 />
-            ))}
+            ))} */}
         </div>
     );
 }
