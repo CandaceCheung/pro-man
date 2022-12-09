@@ -47,24 +47,28 @@ export async function seed(knex: Knex): Promise<void> {
     }
     await knex("members").insert(insertArray);
 
-    insertArray = []
+    const itemGroupIDs = []
     for (let i of projectIDs) {
+        insertArray = [];
         for (let j = 1; j < 4; j++) {
             insertArray.push({ name: `Item Group ${j}`, project_id: i.id })
         }
+        const eachItemGroupIDs = await knex("item_groups").insert(insertArray).returning('*');
+        itemGroupIDs.push(eachItemGroupIDs);
     }
-    const itemGroupIDs = await knex("item_groups").insert(insertArray).returning('*');
 
 
     insertArray = []
-    for (const k of itemGroupIDs) {
-        let order = 1;
-        for (const j of projectIDs) {
-            for (const i of userIDs) {
-                insertArray.push(
-                    { name: `${j.project_name} item ${order}`, creator_id: i.id, project_id: j.id, is_deleted: false, order: order, item_group_id: k.id }
-                );
-                order++;
+    for (const j in projectIDs) {
+        for (const k of itemGroupIDs[j]) {
+            let order = 1;
+            for (let count = 0; count < 3; count++) {
+                for (const i of userIDs) {
+                    insertArray.push(
+                        { name: `${projectIDs[j].project_name} item ${order}`, creator_id: i.id, project_id: projectIDs[j].id, is_deleted: false, order: order, item_group_id: k.id }
+                    );
+                    order++;
+                }
             }
         }
     }
@@ -124,7 +128,7 @@ export async function seed(knex: Knex): Promise<void> {
 
     let counter = 0
     for (let i = 0; i < itemIDs.length; i++) { //27 items, 54 types
-        if (i !== 0 && i+1 % 3 === 0) {
+        if (i !== 0 && i + 1 % 3 === 0) {
             counter += 6
         }
 
