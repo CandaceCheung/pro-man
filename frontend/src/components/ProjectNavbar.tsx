@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import './styles/ProjectNavbar.css'
 import { Tabs, Tooltip } from '@mantine/core';
 import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp, IconUsers, IconArticle } from '@tabler/icons'
