@@ -57,17 +57,18 @@ export async function seed(knex: Knex): Promise<void> {
 
 
     insertArray = []
-    for (const i of userIDs) {
         for (const j of projectIDs) {
-            let order = 1
             for (const k of itemGroupIDs) {
-                insertArray.push(
-                    { name: `${k.name} item ${order}`, creator_id: i.id, project_id: j.id, is_deleted: false, order: order, item_group_id: k.id }
-                )
-                order++
+                let order = 1;
+                for (const i of userIDs) {
+                    insertArray.push(
+                        { name: `${k.name} item ${order}`, creator_id: i.id, project_id: j.id, is_deleted: false, order: order, item_group_id: k.id }
+                    );
+                    order++;
+                }
             }
         }
-    }
+    console.log(insertArray)
     const itemIDs = await knex("items").insert(insertArray).returning('*');
 
     const defaultStates = ['Working on it', 'Done', 'Stuck', 'Checking']
