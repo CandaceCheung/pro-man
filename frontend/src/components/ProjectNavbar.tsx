@@ -11,10 +11,16 @@ import { faStar as faStarR } from '@fortawesome/free-regular-svg-icons'
 import LogsDrawer from './ProjectNavbarComponents/LogsDrawer';
 import InvitationDrawer from './ProjectNavbarComponents/InvitationDrawer';
 import { ButtonHub } from './ButtonHub';
+import { TableStateArray } from '../redux/table/slice';
 
-export default function ProjectNavbar() {
+type ProjectNavbarProps = {
+    projectId: number
+    projectSummary: TableStateArray
+}
 
-    let projectNamePlaceHolder = "Reserved for Project name"
+export default function ProjectNavbar(props: ProjectNavbarProps) {
+
+    let projectName = props.projectSummary[0]?.project_name
     const [like, setLike] = useState(false)
     const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
@@ -30,7 +36,7 @@ export default function ProjectNavbar() {
             <div className='navbar-header'>
                 <span id="project-title-container">
                     <span id='navbar-project-title'>
-                        {projectNamePlaceHolder ? projectNamePlaceHolder : "Project Title"}
+                        {projectName ? projectName : "Project Title"}
                     </span>
                     <FontAwesomeIcon id="like-button" icon={like ? faStarS : faStarR} onClick={() => setLike((like) => !like)} />
                 </span>

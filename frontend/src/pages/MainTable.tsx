@@ -1,16 +1,8 @@
-import React, { useEffect } from "react";
-import { getTable } from "../redux/table/thunk";
-import { useAppDispatch, useAppSelector } from "../store";
+import {  useAppSelector } from "../store";
 
 export function MainTable() {
     
-    const dispatch = useAppDispatch();
-    const userId = useAppSelector((state) => state.auth.userId)
     const projectDetail = useAppSelector((state) => state.table)
-
-    useEffect(()=>{
-        dispatch(getTable(userId as number))
-    },[dispatch, userId])
 
     return (
         <div className="tab-content">
