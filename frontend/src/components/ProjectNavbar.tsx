@@ -1,4 +1,4 @@
-import { Tabs } from '@mantine/core';
+import { Tabs, Tooltip } from '@mantine/core';
 import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp, IconUsers, IconArticle } from '@tabler/icons'
 import { useState } from 'react';
 import { Cashflow } from '../pages/Cashflow';
@@ -35,8 +35,26 @@ export default function ProjectNavbar() {
                     <FontAwesomeIcon id="like-button" icon={like ? faStarS : faStarR} onClick={() => setLike((like) => !like)} />
                 </span>
                 <span className='icon-hub' >
-                    <span title='Open Logs'><IconArticle id="logs-button" size={14} onClick={() => setLogsOpen((open) => !open)} /></span>
-                    <span title='Invite Users'><IconUsers id="add-users-button" size={14} onClick={() => setInvitationOpen((open) => !open)} /></span>
+                    <Tooltip
+                        multiline
+                        width={220}
+                        withArrow
+                        transition="fade"
+                        transitionDuration={200}
+                        label="Open Logs"
+                    >
+                        <span ><IconArticle id="logs-button" size={14} onClick={() => setLogsOpen((open) => !open)} /></span>
+                    </Tooltip>
+                    <Tooltip
+                        multiline
+                        width={220}
+                        withArrow
+                        transition="fade"
+                        transitionDuration={200}
+                        label="Invite Users"
+                    >
+                    <span ><IconUsers id="add-users-button" size={14} onClick={() => setInvitationOpen((open) => !open)} /></span>
+                    </Tooltip>
                 </span>
             </div>
             <LogsDrawer toggle={logsOpen} onRemove={onRemove} />
@@ -51,13 +69,13 @@ export default function ProjectNavbar() {
                 </Tabs.List>
             </Tabs>
 
-            <ButtonHub/>
+            <ButtonHub />
 
             <div id="tab-content" >
-                {page === "1" && <MainTable/>}
-                {page === "2" && <TestTimeFrame/>}
-                {page === "3" && <Kanban/>}
-                {page === "4" && <Cashflow/>}
+                {page === "1" && <MainTable />}
+                {page === "2" && <TestTimeFrame />}
+                {page === "3" && <Kanban />}
+                {page === "4" && <Cashflow />}
             </div>
 
         </div>
