@@ -3,13 +3,14 @@ import { useState } from "react";
 import { useAppDispatch } from "../../store";
 
 export type Item ={
-    itemId : string, people:string, name: string, color:string
+    itemId : string, people:string, name: string
 }
 
 type StatusProps ={
     projectId: number
     statesName: string
     itemList: Item[]
+    color:string
 }
 
 export function StatusColumn (props: StatusProps) {
