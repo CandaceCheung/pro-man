@@ -56,9 +56,6 @@ const useStyles = createStyles((theme) => ({
         },
     },
 
-    // track: {
-    //     background: theme.fn.gradient({ from: '6871DB', to: '24285A', deg: 45 }),
-    // },
 }));
 
 interface NavbarLinkProps {
