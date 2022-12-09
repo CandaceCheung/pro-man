@@ -17,7 +17,7 @@ export function Kanban() {
     ];
 
     return (
-        <div>
+        <div className="kanban-table">
             {statusList.map((status) => (
                 <StatusColumn
                     projectId={status.projectId}
