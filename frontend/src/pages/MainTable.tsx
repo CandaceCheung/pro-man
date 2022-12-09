@@ -1,5 +1,3 @@
-import {  useAppSelector } from "../store";
-
 export function MainTable() {
     
     return (
