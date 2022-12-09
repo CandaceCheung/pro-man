@@ -8,6 +8,8 @@ import { TableService } from './services/tableService';
 import { TableController } from './controllers/tableControllers';
 import { tableRoutes } from './routes/tableRoutes';
 import { KanbanService } from './services/KanbanService';
+import { kanbanRoutes } from './routes/kanbanRoutes';
+import { KanbanController } from './controllers/kanbanControllers';
 import cors from 'cors';
 
 dotenv.config();
@@ -25,11 +27,14 @@ export const tableService = new TableService(knex);
 export const tableController = new TableController(tableService);
 
 export const kanbanService = new KanbanService(knex);
+export const kanbanController = new KanbanController(kanbanService);
+
 
 app.use(express.json(), cors());
 
 app.use('/auth', authRoutes());
 app.use('/table', tableRoutes());
+app.use('/kanban', kanbanRoutes());
 
 const PORT = 8080;
 app.listen(PORT, () => {
