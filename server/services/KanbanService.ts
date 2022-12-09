@@ -9,7 +9,9 @@ export class KanbanService {
 		const kanbanDetail = await this.knex
 			.select('projects.id as project_id')
 			.from('states')
-			.join('type_status', 'type_status.state_id', '=', 'states.id');
+			.join('type_status', 'type_status.state_id', '=', 'states.id')
+            .join('projects', 'states.project_id', '=', 'projects.id')
+            .where('projects.id', '=', project_id )
 
 		return kanbanDetail;
 	}
