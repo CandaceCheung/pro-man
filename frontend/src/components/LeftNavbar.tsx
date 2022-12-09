@@ -114,11 +114,8 @@ export function LeftNavbar() {
             width={{ base: 80 }}
             p="md"
             sx={(theme) => ({
-                backgroundColor: theme.fn.variant({
-                    variant: "filled",
-                    color: theme.fn.gradient({ from: '6871DB', to: '24285A', deg: 45 }),
-                }).background,
-            })}
+                backgroundImage: theme.fn.gradient({ from: '#24285A', to: ' #6871DB', deg: 45 })
+                })}
         >
             <Navbar.Section grow mt={50}>
                 <Stack justify="center" spacing={0}>
