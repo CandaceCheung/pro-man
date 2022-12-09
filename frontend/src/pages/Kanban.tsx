@@ -1,4 +1,3 @@
-import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
 
 export function Kanban() {
     // const statusList = [];

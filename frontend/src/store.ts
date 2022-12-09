@@ -4,16 +4,19 @@ import logger from 'redux-logger';
 import { AuthAction } from "./redux/auth/action";
 import { authReducer } from "./redux/auth/reducer";
 import { AuthState } from "./redux/auth/state";
+import projectReducer,{ ActiveProjectState } from "./redux/project/slice";
 import  tableReducer, { TableStateArray }  from "./redux/table/slice";
 
 export interface IRootState {
     auth: AuthState,
-    table: TableStateArray
+    table: TableStateArray,
+    project: ActiveProjectState
 }
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    table: tableReducer
+    table: tableReducer,
+    project: projectReducer,
 });
 
 export type IRootAction = AuthAction;
