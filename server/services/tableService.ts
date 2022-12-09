@@ -34,21 +34,22 @@ export class TableService {
             'type_text.id as item_text_id',
             'type_text.text as item_text_text',
             'types.order as horizontal_order',
+            'types.type as type_name',
             'types.id as horizontal_order_id'
             )
             .from('members')
             .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
-            .join('items', 'items.project_id', '=', 'projects.id')
+            .leftJoin('items', 'items.project_id', '=', 'projects.id')
             .join('item_groups', 'items.item_group_id', '=', 'item_groups.id')
-            .join('type_persons', 'type_persons.item_id', '=', 'items.id')
-            .join('type_dates', 'type_dates.item_id', '=', 'items.id')
-            .join('type_times', 'type_times.item_id', '=', 'items.id')
-            .join('type_money', 'type_money.item_id', '=', 'items.id')
+            .leftJoin('type_persons', 'type_persons.item_id', '=', 'items.id')
+            .leftJoin('type_dates', 'type_dates.item_id', '=', 'items.id')
+            .leftJoin('type_times', 'type_times.item_id', '=', 'items.id')
+            .leftJoin('type_money', 'type_money.item_id', '=', 'items.id')
             .join('transactions', 'transactions.type_money_id', '=', 'type_money.id')
-            .join('type_status', 'type_status.item_id', '=', 'items.id')
+            .leftJoin('type_status', 'type_status.item_id', '=', 'items.id')
             .join('states', 'type_status.state_id', '=', 'states.id')
-            .join('type_text', 'type_text.item_id', '=', 'items.id')
+            .leftJoin('type_text', 'type_text.item_id', '=', 'items.id')
             .join('types', function (){
                 this
                     .on('type_text.type_id', '=', 'types.id')
