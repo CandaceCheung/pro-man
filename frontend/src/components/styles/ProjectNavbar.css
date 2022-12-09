@@ -1,0 +1,68 @@
+#project-navbar {
+    width: 100%;
+}
+
+.navbar-header {
+    display: flex;
+    justify-content: space-between;
+    padding-right: calc(20px + 2vw);
+    min-height: 50px;
+}
+
+.icon-hub {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+#navbar-project-title {
+    padding-left: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: calc(20px + 1vw);
+}
+
+#project-title-container {
+    position: relative;
+}
+
+#like-button {
+    position: absolute;
+    right: -30px;
+    top: 30%
+}
+
+#add-users-button:hover,
+#logs-button:hover,
+#like-button:hover {
+    cursor: pointer;
+}
+
+#button-panel {
+    display: flex;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    justify-content: space-between;
+}
+
+#fixed-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.button-panel-group {
+    font-size: 10px;
+    height: 30px;
+}
+
+.tab-content {
+    overflow: auto;
+    max-height: 76vh;
+}
+
+.selection-box {
+    width: 100px;
+}
