@@ -9,7 +9,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 }
 
 #navbar-project-title{
@@ -95,13 +95,8 @@
 }
 
 .react-calendar-timeline .rct-calendar-header div:first-child {
-  height: 55px !important;
+  height: 50px !important;
 }
 .react-calendar-timeline .rct-header-root {
   background-color: #238BE6 !important;
-}
-
-.intro__logo {
-  width: 300px;
-  height: auto;
 }

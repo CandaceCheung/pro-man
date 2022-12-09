@@ -12,17 +12,20 @@ import { MyWork } from "./pages/MyWork";
 import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
+import { getTable } from "./redux/table/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const userId = useAppSelector((state) => state.auth.userId)
 
     useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
         // eslint-disable-next-line
-    }, [isLoggedIn, dispatch]);
+        dispatch(getTable(userId as number))
+    }, [isLoggedIn, dispatch, navigate, userId]);
 
     return (
         <div className="App">

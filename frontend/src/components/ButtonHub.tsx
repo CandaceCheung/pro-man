@@ -53,7 +53,7 @@ export function ButtonHub(prop: ButtonHubProps) {
                 </Menu>
             </div>
             <div>
-                {prop.page === "2" &&
+                {prop.page === "timeline" &&
                     <Button.Group>
                         <Button className='button-panel-group' variant='subtle'><IconCalendar size={14} /></Button>
                         <Button className='button-panel-group' variant='subtle'>Auto Fit</Button>
