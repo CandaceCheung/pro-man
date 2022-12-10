@@ -10,7 +10,7 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { SmartPointerSensor } from '../pointerSensor';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useAppSelector } from '../store';
 
@@ -39,9 +39,11 @@ export function MainTable() {
     const [] = useState();
     const [rowIDs, setRowIDs] = useState([1, 2, 3, 4, 5]);
 
-    for (const cell of tableSummary) {
-
-    }
+    useEffect(()=>{
+        for (const cell of tableSummary) {
+            
+        }
+    }, [tableSummary]);
 
     const sensors = useSensors(
         useSensor(SmartPointerSensor)

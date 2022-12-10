@@ -23,7 +23,7 @@ function App() {
     useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
-        dispatch(getTable(userId as number));
+        userId !== null && dispatch(getTable(userId));
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId]);
 
