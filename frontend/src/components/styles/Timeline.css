@@ -1,4 +1,28 @@
 
+#timeline-container{
+  font-size: 1vw;
+  overflow-x: auto;
+  max-width: 90vw;
+}
+
+#left-bar{
+  position: relative;
+}
+#toggle-arrow{
+  position: absolute;
+  display: flex;
+  border-radius: 100px;
+  border-style: solid;
+  border-color: white;
+  color:white;
+  right:10px;
+  top:10px;
+}
+#toggle-arrow:hover {
+  opacity: 0.5;
+}
+
+
 .react-calendar-timeline .rct-items .rct-item {
     border: 1px solid rgba(40, 40, 40, 0.5) !important;
   }
