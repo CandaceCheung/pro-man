@@ -56,17 +56,18 @@ export interface itemsGroupElement {
 export function MainTable() {
     const tableSummary = useAppSelector(state => state.table);
     const projectID = useAppSelector(state => state.project.project_id);
+    const [itemCellsState, setItemCellsState] = useState<{[keys in number]: itemCellsElement[]}>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
-    const [itemCellsState, setItemsState] = useState<{[keys in number]: itemCellsElement[]}>({});
     const [rowIDs, setRowIDs] = useState([1, 2, 3, 4, 5]);
 
+    
     useEffect(() => {
         let itemCells: {[keys in number]: itemCellsElement[]} = {};
         let itemGroups: itemsGroupElement[] = [];
         for (const cell of tableSummary) {
             if (cell.project_id === projectID) {
                 const itemGroupID = cell.item_group_id;
-                let itemCell: any = {
+                let itemCell: itemCellsElement = {
                     item_id: cell.item_id,
                     type_name: cell.type_name,
                 }
@@ -106,9 +107,9 @@ export function MainTable() {
                 }
             }
         }
+        setItemCellsState(itemCells);
         setItemGroupsState(itemGroups);
-        setItemsState(itemCells);
-    }, [tableSummary]);
+    }, [tableSummary, projectID]);
 
     const sensors = useSensors(
         useSensor(SmartPointerSensor)
