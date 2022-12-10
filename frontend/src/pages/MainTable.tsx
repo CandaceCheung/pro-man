@@ -60,6 +60,9 @@ export function MainTable() {
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [rowIDs, setRowIDs] = useState([1, 2, 3, 4, 5]);
 
+    const sensors = useSensors(
+        useSensor(SmartPointerSensor)
+    );
     
     useEffect(() => {
         let itemCells: {[keys in number]: itemCellsElement[]} = {};
@@ -110,10 +113,6 @@ export function MainTable() {
         setItemCellsState(itemCells);
         setItemGroupsState(itemGroups);
     }, [tableSummary, projectID, itemCellsState, itemGroupsState]);
-
-    const sensors = useSensors(
-        useSensor(SmartPointerSensor)
-    );
 
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
