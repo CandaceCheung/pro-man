@@ -96,13 +96,13 @@ export function MainTable() {
                     default:
                         break;
                 }
-                if (!itemCells[itemGroupID]) {
+                if (itemCells[itemGroupID]) {
+                    itemCells[itemGroupID].push(itemCell);
+                } else {
                     itemGroups.push({
                         item_group_id: cell.item_group_id,
                         item_group_name: cell.item_group_name
                     });
-                    itemCells[itemGroupID].push(itemCell);
-                } else {
                     itemCells[itemGroupID] = [itemCell];
                 }
             }
