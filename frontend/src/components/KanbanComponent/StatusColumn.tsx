@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Card, Group, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { IconPlus } from "@tabler/icons";
 import { randomFill } from "crypto";
