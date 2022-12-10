@@ -5,7 +5,6 @@ import { tableController } from "../app";
     const tableRoutes = express.Router();
 
     tableRoutes.get('/:userID', tableController.getTable);
-    tableRoutes.get('/types/:userID', tableController.getTypes);
 
     return tableRoutes;
  }

@@ -13,21 +13,20 @@ import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 import { getTable } from "./redux/table/thunk";
-import { getTypes } from "./redux/types/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const userId = useAppSelector((state) => state.auth.userId)
+    const userId = useAppSelector((state) => state.auth.userId);
+    const projectId = useAppSelector((state) => state.project.project_id);
 
     useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
-        dispatch(getTypes(userId as number));
         dispatch(getTable(userId as number));
         // eslint-disable-next-line
-    }, [isLoggedIn, dispatch, userId]);
+    }, [isLoggedIn, dispatch, projectId, userId]);
 
     return (
         <div className="App">

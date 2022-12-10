@@ -68,43 +68,5 @@ export class TableService {
         return projectsDetail
     }
 
-    async getTypesDetail(userID: number) {
-        const projectIds = await this.knex.select("id").from("projects").where("creator_id", userID);
-        let typeDetails = {};
-        for (const {id} of projectIds) {
-            const items = await this.knex.select("id").from("items").where("project_id", id);
-            const itemId = items[0].id;
-            const typeDetail = (await this.knex.raw(`
-            SELECT PC.type_id, types.type, types.order
-            FROM
-            (SELECT type_persons.type_id
-            FROM type_persons
-            WHERE type_persons.item_id = :itemId
-            UNION ALL
-            SELECT type_dates.type_id
-            FROM type_dates
-            WHERE type_dates.item_id = :itemId
-            UNION ALL
-            SELECT type_times.type_id
-            FROM type_times
-            WHERE type_times.item_id = :itemId
-            UNION ALL
-            SELECT type_money.type_id
-            FROM type_money
-            WHERE type_money.item_id = :itemId
-            UNION ALL
-            SELECT type_status.type_id
-            FROM type_status
-            WHERE type_status.item_id = :itemId
-            UNION ALL
-            SELECT type_text.type_id
-            FROM type_text
-            WHERE type_text.item_id = :itemId) PC
-            INNER JOIN types ON PC.type_id = types.id
-            ORDER BY "order";`, {itemId})).rows;
-            typeDetails[id] = typeDetail;
-        }
-        return typeDetails;
-    }
 }
 
