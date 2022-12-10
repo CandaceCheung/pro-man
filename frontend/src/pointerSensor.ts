@@ -19,9 +19,7 @@ function isInteractiveElement(element: Element | null) {
     const interactiveElements = [
         "button",
         "input",
-        "textarea",
-        "select",
-        "option",
+        "textarea"
     ];
     if (
         element?.tagName &&

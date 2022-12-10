@@ -12,27 +12,36 @@ import {
 import { SmartPointerSensor } from '../pointerSensor';
 import { useState } from 'react';
 import { TableRow } from '../components/MainTableComponents/TableRow';
+import { useAppSelector } from '../store';
 
-const elements = {
-    1: { position: 6, mass: 12.011, symbol: 'C', name: 'Carbon' },
-    2: { position: 7, mass: 14.007, symbol: 'N', name: 'Nitrogen' },
-    3: { position: 39, mass: 88.906, symbol: 'Y', name: 'Yttrium' },
-    4: { position: 56, mass: 137.33, symbol: 'Ba', name: 'Barium' },
-    5: { position: 58, mass: 140.12, symbol: 'Ce', name: 'Cerium' },
+export const elements: TableElement = {
+    1: { 1: 6, 2: 12.011, 3: 'C', 4: 'Carbon' },
+    2: { 1: 7, 2: 14.007, 3: 'N', 4: 'Nitrogen' },
+    3: { 1: 39, 2: 88.906, 3: 'Y', 4: 'Yttrium' },
+    4: { 1: 56, 2: 137.33, 3: 'Ba', 4: 'Barium' },
+    5: { 1: 58, 2: 140.12, 3: 'Ce', 4: 'Cerium' },
 }
 
 export interface TableElement {
-    [keys: number]: {
-        position: number,
-        mass: number,
-        symbol: string,
-        name: string
-    }
+    [keys: number]: RowElement
+}
+
+export interface RowElement {
+    1: number,
+    2: number,
+    3: string,
+    4: string
 }
 
 export function MainTable() {
+    const tableSummary = useAppSelector(state => state.table);
+    const projectID = useAppSelector(state => state.project.project_id);
+    const [] = useState();
+    const [rowIDs, setRowIDs] = useState([1, 2, 3, 4, 5]);
 
-    const [rank, setRank] = useState([1, 2, 3, 4, 5]);
+    for (const cell of tableSummary) {
+
+    }
 
     const sensors = useSensors(
         useSensor(SmartPointerSensor)
@@ -42,10 +51,10 @@ export function MainTable() {
         const { active, over } = event;
 
         if (active.id !== over.id) {
-            const oldIndex = rank.indexOf(active.id);
-            const newIndex = rank.indexOf(over.id);
-            const newOrderArray = arrayMove(rank, oldIndex, newIndex);
-            setRank(newOrderArray);
+            const oldIndex = rowIDs.indexOf(active.id);
+            const newIndex = rowIDs.indexOf(over.id);
+            const newOrderArray = arrayMove(rowIDs, oldIndex, newIndex);
+            setRowIDs(newOrderArray);
             // dispatch(reorderTodo(name, itemsAllIds, newOrderArray));
         }
     }
@@ -58,14 +67,13 @@ export function MainTable() {
                 onDragEnd={handleDragEnd}
             >
                 <SortableContext
-                    items={rank}
+                    items={rowIDs}
                     strategy={verticalListSortingStrategy}
                 >
-                    {rank.map((each) => (
+                    {rowIDs.map((rowID) =>(
                         <TableRow
-                            key={each}
-                            id={each}
-                            elements={elements}
+                            key={rowID}
+                            rowID={rowID}
                         />
                     ))}
                 </SortableContext>

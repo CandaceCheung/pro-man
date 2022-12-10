@@ -1,34 +1,33 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { TableElement } from '../../pages/MainTable';
+import { elements, RowElement } from '../../pages/MainTable';
 
 type TableRowProps = {
-    id: number;
-    elements: TableElement;
+    rowID: number;
 }
 
-export function TableRow({ id, elements }: TableRowProps) {
+export function TableRow({ rowID }: TableRowProps) {
     const {
         attributes,
         listeners,
         setNodeRef,
         transform,
         transition,
-    } = useSortable({ id: id });
+    } = useSortable({ id: rowID });
 
     const style = {
         transform: CSS.Transform.toString(transform),
         transition
     };
 
-    const element = elements[id];
+    const element: RowElement = elements[rowID];
 
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-                <span className='cell'>{element.position}</span>
-                <span className='cell'>{element.name}</span>
-                <span className='cell'>{element.symbol}</span>
-                <span className='cell'>{element.mass}</span>
+                <span>{element[1]}</span>
+                <span>{element[2]}</span>
+                <span>{element[3]}</span>
+                <span>{element[4]}</span>
         </div>
     )
 }
