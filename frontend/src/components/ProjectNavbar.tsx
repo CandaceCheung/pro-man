@@ -90,6 +90,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
 
             <div id="tab-content" className='container'>
                 <Routes>
+                    <Route path="/" element={<MainTable />} />
                     <Route path="/mainTable" element={<MainTable />} />
                     <Route path="/timeline" element={<TestTimeFrame />} />
                     <Route path="/kanban" element={<Kanban />} />
