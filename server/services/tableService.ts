@@ -60,10 +60,13 @@ export class TableService {
                     .orOn('type_dates.type_id', '=', 'types.id')
                     .orOn('type_persons.type_id', '=', 'types.id')
             })
-            .where("members.user_id", userID);
-        
+            .where("members.user_id", userID)
+            .orderBy("project_id", 'asc')
+            .orderBy("vertical_order", 'asc')
+            .orderBy("horizontal_order", 'asc');
 
         return projectsDetail
     }
+
 }
 

@@ -73,7 +73,7 @@ const initialState: TableStateArray = [{
 }]
 
 const getTable: CaseReducer<TableStateArray, PayloadAction<TableStateArray>> =
-    (state, action) =>  state = action.payload 
+    (state, action) =>  state = action.payload
 const getTableFailed: CaseReducer<TableStateArray, PayloadAction> =
     (state, action) =>  state = initialState 
 

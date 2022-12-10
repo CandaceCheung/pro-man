@@ -16,7 +16,7 @@ export interface IRootState {
 const rootReducer = combineReducers({
     auth: authReducer,
     table: tableReducer,
-    project: projectReducer,
+    project: projectReducer
 });
 
 export type IRootAction = AuthAction;

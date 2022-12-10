@@ -18,12 +18,12 @@ function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    const userId = useAppSelector((state) => state.auth.userId)
+    const userId = useAppSelector((state) => state.auth.userId);
 
     useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
-        dispatch(getTable(userId as number))
+        dispatch(getTable(userId as number));
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId]);
 
