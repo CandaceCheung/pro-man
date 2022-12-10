@@ -6,20 +6,17 @@ import { authReducer } from "./redux/auth/reducer";
 import { AuthState } from "./redux/auth/state";
 import projectReducer,{ ActiveProjectState } from "./redux/project/slice";
 import  tableReducer, { TableStateArray }  from "./redux/table/slice";
-import typeReducer, { TypeStateArray } from "./redux/types/slice";
 
 export interface IRootState {
     auth: AuthState,
     table: TableStateArray,
-    project: ActiveProjectState,
-    type: TypeStateArray
+    project: ActiveProjectState
 }
 
 const rootReducer = combineReducers({
     auth: authReducer,
     table: tableReducer,
-    project: projectReducer,
-    type: typeReducer
+    project: projectReducer
 });
 
 export type IRootAction = AuthAction;
