@@ -115,7 +115,7 @@ export async function seed(knex: Knex): Promise<void> {
 
     insertArray = []
     const typeArr = ['persons', 'dates', 'times', 'money', 'status', 'text']
-    for (let j = 0; j < projectIDs.length * itemGroupIDs.length; j++) {
+    for (let j = 0; j < itemGroupIDs.length; j++) {
         for (let i = 0; i < 6; i++) {
             insertArray.push({ type: typeArr[i], order: i + 1 })
         }
@@ -123,8 +123,8 @@ export async function seed(knex: Knex): Promise<void> {
     const typeIDs = await knex("types").insert(insertArray).returning('*');
 
     let counter = 0
-    for (let i = 0; i < itemIDs.length; i++) { //27 items, 54 types
-        if (i !== 0 && i+1 % 3 === 0) {
+    for (let i = 0; i < itemIDs.length; i++) { //81 items, 54 types
+        if (i !== 0 && (i+1) % 9 === 0) {
             counter += 6
         }
 
