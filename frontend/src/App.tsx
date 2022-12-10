@@ -19,7 +19,6 @@ function App() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
-    const projectId = useAppSelector((state) => state.project.project_id);
 
     useEffect(() => {
         isLoggedIn === true && navigate('/');
