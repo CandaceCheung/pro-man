@@ -1,4 +1,3 @@
-/* eslint-disable */
 import '../components/styles/Timeline.css'
 import Timeline, { CustomMarker, DateHeader, SidebarHeader, TimelineHeaders, TimelineMarkers, TodayMarker } from 'react-calendar-timeline'
 import 'react-calendar-timeline/lib/Timeline.css'
