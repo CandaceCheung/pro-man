@@ -36,8 +36,8 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
     const navigate = useNavigate();
     const { tabValue } = useParams();
 
-    function tabChangeHandler (value : string | null) {
-        // navigate(`/${value}`)
+    function tabChangeHandler(value: string | null) {
+        navigate(`/${value}`)
         setPage(value)
 
     }
@@ -70,7 +70,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
                         transitionDuration={200}
                         label="Invite Users"
                     >
-                    <span ><IconUsers id="add-users-button" size={20} onClick={() => setInvitationOpen((open) => !open)} /></span>
+                        <span ><IconUsers id="add-users-button" size={20} onClick={() => setInvitationOpen((open) => !open)} /></span>
                     </Tooltip>
                 </span>
             </div>
@@ -88,21 +88,14 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
 
             <ButtonHub page={page} />
 
-            <div id="tab-content" >
-                {page === "mainTable" && <MainTable />}
-                {page === "timeline" && <TestTimeFrame />}
-                {page === "kanban" && <Kanban />}
-                {page === "cashflow" && <Cashflow />}
-            {/* <Routes>
-                <Route path="/mainTable" element={<MainTable />}/>
-                <Route path="/timeline" element={<TestTimeFrame />}/>
-                <Route path="/kanban" element={<Kanban />} />
-                <Route path="/cashflow" element={<Cashflow />} />
-            </Routes> */}
+            <div id="tab-content" className='container'>
+                <Routes>
+                    <Route path="/mainTable" element={<MainTable />} />
+                    <Route path="/timeline" element={<TestTimeFrame />} />
+                    <Route path="/kanban" element={<Kanban />} />
+                    <Route path="/cashflow" element={<Cashflow />} />
+                </Routes>
             </div>
-
-            
-
         </div>
     )
 }

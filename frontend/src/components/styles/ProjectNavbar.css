@@ -58,7 +58,7 @@
     height: 30px;
 }
 
-.tab-content {
+#tab-content {
     overflow: auto;
     max-height: 76vh;
 }
