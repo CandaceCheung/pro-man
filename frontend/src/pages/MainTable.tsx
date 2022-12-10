@@ -109,7 +109,7 @@ export function MainTable() {
         }
         setItemCellsState(itemCells);
         setItemGroupsState(itemGroups);
-    }, [tableSummary, projectID]);
+    }, [tableSummary, projectID, itemCellsState, itemGroupsState]);
 
     const sensors = useSensors(
         useSensor(SmartPointerSensor)
