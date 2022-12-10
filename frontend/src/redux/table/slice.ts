@@ -31,7 +31,8 @@ export interface TableState {
     state_id: number,
     transaction_id: number,
     vertical_order: number,
-    type_name: 'persons'|'dates'|'times'|'money'|'status'|'text'
+    type_name: 'persons'|'dates'|'times'|'money'|'status'|'text',
+    element_name: string, 
 }
 
 export interface TableStateArray extends Array<TableState>{}
@@ -67,7 +68,8 @@ const initialState: TableStateArray = [{
     state_id: 0,
     transaction_id: 0,
     vertical_order: 0,
-    type_name: "persons"
+    type_name: "persons",
+    element_name: ''
 }]
 
 const getTable: CaseReducer<TableStateArray, PayloadAction<TableStateArray>> =

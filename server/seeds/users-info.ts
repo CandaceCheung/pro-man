@@ -65,7 +65,7 @@ export async function seed(knex: Knex): Promise<void> {
             for (let count = 0; count < 3; count++) {
                 for (const i of userIDs) {
                     insertArray.push(
-                        { name: `${projectIDs[j].project_name} item ${order}`, creator_id: i.id, project_id: projectIDs[j].id, is_deleted: false, order: order, item_group_id: k.id }
+                        { name: `${k.name} item ${order}`, creator_id: i.id, project_id: projectIDs[j].id, is_deleted: false, order: order, item_group_id: k.id }
                     );
                     order++;
                 }
@@ -121,7 +121,7 @@ export async function seed(knex: Knex): Promise<void> {
     const typeArr = ['persons', 'dates', 'times', 'money', 'status', 'text']
     for (let j = 0; j < itemGroupIDs.length * projectIDs.length; j++) {
         for (let i = 0; i < 6; i++) {
-            insertArray.push({ type: typeArr[i], order: i + 1 })
+            insertArray.push({ type: typeArr[i], order: i + 1, name: 'element name' })
         }
     }
     const typeIDs = await knex("types").insert(insertArray).returning('*');

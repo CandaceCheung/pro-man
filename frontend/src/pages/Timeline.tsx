@@ -1,14 +1,12 @@
 import '../components/styles/Timeline.css'
-import Timeline from 'react-calendar-timeline'
+import Timeline, { CursorMarker, CustomMarker, TimelineMarkers, TodayMarker } from 'react-calendar-timeline'
 import 'react-calendar-timeline/lib/Timeline.css'
 import moment from 'moment'
 import { defaultTimeEnd, defaultTimeStart, interval } from '../components/TimelineComponents/config'
 import { useAppSelector } from '../store'
 
 
-
 // let groups = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
-
 // let items = [
 //   {
 //     id: 1,
@@ -31,41 +29,9 @@ import { useAppSelector } from '../store'
 //       }
 //     }
 //   },
-//   {
-//     id: 2,
-//     group: 2,
-//     title: 'item 2',
-//     start_time: moment().add(-0.5, 'day'),
-//     end_time: moment().add(0.5, 'day'),
-//     itemProps: {
-//       // these optional attributes are passed to the root <div /> of each item as <div {...itemProps} />
-//       'data-custom-attribute': 'Random content',
-//       'aria-hidden': true,
-//       onDoubleClick: () => { console.log('You clicked double!') },
-//       className: 'weekend',
-//       style: {
-//         background: 'green',
-//         borderRadius: '10px',
-//       }
-//     }
-//   },
-//   {
-//     id: 3,
-//     group: 1,
-//     title: 'item 3',
-//     start_time: moment().add(2, 'day'),
-//     end_time: moment().add(3, 'day')
-//   },
-//   {
-//     id: 4,
-//     group: 1,
-//     title: 'item 4',
-//     start_time: moment().add(2, 'day'),
-//     end_time: moment().add(3, 'day')
-//   }
 // ]
 
-const keys = { // default
+const keys = { // default key name
   groupIdKey: 'id',
   groupTitleKey: 'title',
   groupRightTitleKey: 'rightTitle',
@@ -108,10 +74,15 @@ export function TestTimeFrame() {
     items.push({
       id: item.item_times_id,
       group: item.item_id,
-      title: item.type_name,
-      start_time: new Date(item.item_times_start_date),
-      end_time: new Date(item.item_times_end_date)
+      title: item.element_name,
+      start_time: new Date(item.item_times_start_date).getTime(),
+      end_time: new Date(item.item_times_end_date).getTime()
     })
+  }
+
+  let lastEndedTime = 0
+  for (let item of timelineDetail) {
+    lastEndedTime = Math.max(new Date(item.item_times_end_date).getTime(), lastEndedTime)
   }
 
 
@@ -123,7 +94,7 @@ export function TestTimeFrame() {
         defaultTimeStart={defaultTimeStart}
         defaultTimeEnd={defaultTimeEnd}
         useResizeHandle
-        sidebarWidth={300}
+        sidebarWidth={150}
         sidebarContent={sideBarObj}
         keys={keys}
         // fullUpdate
@@ -134,13 +105,35 @@ export function TestTimeFrame() {
         canResize={'both'}
         // onItemMove={handleItemMove}
         // onItemResize={handleItemResize}
-        // timeSteps={{hour: 12}}
         dragSnap={interval}
         minZoom={minZoom}
         maxZoom={maxZoom}
         // onItemDoubleClick={updateItems}
         lineHeight={50}
-      />
+      >
+        <TimelineMarkers>
+          <CustomMarker date={Date.now()}>
+            {({ styles, date }) => {
+              const customStyles = {
+                ...styles,
+                backgroundColor: '#636CD2',
+                width: '4px'
+              }
+              return <div style={customStyles} onClick={() => { return }} />
+            }}
+          </CustomMarker>
+          <CustomMarker date={new Date(lastEndedTime)}>
+            {({ styles, date }) => {
+              const customStyles = {
+                ...styles,
+                backgroundColor: 'deeppink',
+                width: '4px'
+              }
+              return <div style={customStyles} onClick={() => { return }} />
+            }}
+          </CustomMarker>
+        </TimelineMarkers>
+      </Timeline>
     </div>
   )
 }

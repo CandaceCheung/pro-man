@@ -34,6 +34,7 @@ export class TableService {
             'type_text.id as item_text_id',
             'type_text.text as item_text_text',
             'types.order as horizontal_order',
+            'types.name as element_name',
             'types.type as type_name',
             'types.id as horizontal_order_id'
             )
