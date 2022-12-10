@@ -13,6 +13,7 @@ import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 import { getTable } from "./redux/table/thunk";
+import { getTypes } from "./redux/types/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -23,6 +24,7 @@ function App() {
     useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
+        dispatch(getTypes(userId as number));
         dispatch(getTable(userId as number));
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId]);
