@@ -5,6 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable("types", (table)=>{
         table.increments()
         table.string('type')
+        table.string('name')
         table.integer("order")
     })
 }

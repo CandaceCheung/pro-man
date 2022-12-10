@@ -121,7 +121,7 @@ export async function seed(knex: Knex): Promise<void> {
     const typeArr = ['persons', 'dates', 'times', 'money', 'status', 'text']
     for (let j = 0; j < itemGroupIDs.length * projectIDs.length; j++) {
         for (let i = 0; i < 6; i++) {
-            insertArray.push({ type: typeArr[i], order: i + 1 })
+            insertArray.push({ type: typeArr[i], order: i + 1, name: 'element name' })
         }
     }
     const typeIDs = await knex("types").insert(insertArray).returning('*');
