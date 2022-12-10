@@ -1,9 +1,11 @@
 import '../components/styles/Timeline.css'
-import Timeline, { CursorMarker, CustomMarker, TimelineMarkers, TodayMarker } from 'react-calendar-timeline'
+import Timeline, { CustomMarker, DateHeader, SidebarHeader, TimelineHeaders, TimelineMarkers, TodayMarker } from 'react-calendar-timeline'
 import 'react-calendar-timeline/lib/Timeline.css'
 import moment from 'moment'
 import { defaultTimeEnd, defaultTimeStart, interval } from '../components/TimelineComponents/config'
 import { useAppSelector } from '../store'
+import { IconArrowBadgeLeft, IconArrowBadgeRight } from '@tabler/icons'
+import { useState } from 'react'
 
 
 // let groups = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
@@ -43,7 +45,7 @@ const keys = { // default key name
   itemTimeEndKey: 'end_time',
 }
 
-const minZoom = 3 * 24 * 60 * 60 * 1000;
+const minZoom = 7 * 24 * 60 * 60 * 1000;
 const maxZoom = 31 * 24 * 60 * 60 * 1000;
 
 const sideBarObj = "Test"
@@ -54,6 +56,7 @@ export function TestTimeFrame() {
   const targetProjectId = useAppSelector(state => state.project.project_id)
   const projectSummary = useAppSelector(state => state.table)
   const timelineDetail = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times')
+  const [toggle, setToggle] = useState<boolean|null>(false)
 
   console.log(timelineDetail)
   let groups = []
@@ -76,7 +79,20 @@ export function TestTimeFrame() {
       group: item.item_id,
       title: item.element_name,
       start_time: new Date(item.item_times_start_date).getTime(),
-      end_time: new Date(item.item_times_end_date).getTime()
+      end_time: new Date(item.item_times_end_date).getTime(),
+      canMove: true,
+      canResize: false,
+      canChangeGroup: false,
+      itemProps: {
+        'data-custom-attribute': 'Random content',
+        'aria-hidden': true,
+        onDoubleClick: () => { openPanel() },
+        className: 'time-block',
+        style: {
+          background: 'fuchsia',
+          borderRadius: '10px',
+        }
+      }
     })
   }
 
@@ -85,16 +101,20 @@ export function TestTimeFrame() {
     lastEndedTime = Math.max(new Date(item.item_times_end_date).getTime(), lastEndedTime)
   }
 
+  function openPanel() {
+
+  }
+
 
   return (
-    <div >
+    <div id='timeline-container' className='container container-fluid'>
       <Timeline
         groups={groups}
         items={items}
         defaultTimeStart={defaultTimeStart}
         defaultTimeEnd={defaultTimeEnd}
         useResizeHandle
-        sidebarWidth={150}
+        sidebarWidth={toggle? 30:150}
         sidebarContent={sideBarObj}
         keys={keys}
         // fullUpdate
@@ -111,28 +131,44 @@ export function TestTimeFrame() {
         // onItemDoubleClick={updateItems}
         lineHeight={50}
       >
-        <TimelineMarkers>
-          <CustomMarker date={Date.now()}>
-            {({ styles, date }) => {
-              const customStyles = {
-                ...styles,
-                backgroundColor: '#636CD2',
-                width: '4px'
-              }
-              return <div style={customStyles} onClick={() => { return }} />
+        <TimelineHeaders>
+          <SidebarHeader>
+            {({ getRootProps }) => {
+              return <div
+              id='left-bar' {...getRootProps()}>
+                <span id='toggle-arrow' onClick={()=>setToggle((state)=>!state)}>{toggle ? <IconArrowBadgeRight size={30} />:<IconArrowBadgeLeft size={30} />}</span>
+              </div>;
             }}
-          </CustomMarker>
-          <CustomMarker date={new Date(lastEndedTime)}>
-            {({ styles, date }) => {
-              const customStyles = {
-                ...styles,
-                backgroundColor: 'deeppink',
-                width: '4px'
-              }
-              return <div style={customStyles} onClick={() => { return }} />
-            }}
-          </CustomMarker>
-        </TimelineMarkers>
+          </SidebarHeader>
+          <DateHeader unit="primaryHeader" />
+          <DateHeader
+            unit="day"
+            labelFormat='YY-MMM-D'
+            style={{ height: 50, width: 100, color: '#999999' }}
+          />
+          <TimelineMarkers>
+            <CustomMarker date={Date.now()}>
+              {({ styles, date }) => {
+                const customStyles = {
+                  ...styles,
+                  backgroundColor: '#636CD2',
+                  width: '4px'
+                }
+                return <div style={customStyles} onClick={() => { return }} />
+              }}
+            </CustomMarker>
+            <CustomMarker date={new Date(lastEndedTime)}>
+              {({ styles, date }) => {
+                const customStyles = {
+                  ...styles,
+                  backgroundColor: 'deeppink',
+                  width: '4px'
+                }
+                return <div style={customStyles} onClick={() => { return }} />
+              }}
+            </CustomMarker>
+          </TimelineMarkers>
+        </TimelineHeaders>
       </Timeline>
     </div>
   )
