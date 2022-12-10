@@ -18,8 +18,6 @@ export function getTable(userID: number) {
 	};
 }
 
-
-
 // export function updateTimelineItem(timelineID: number, startTime: number, endTime: number) {
 // 	return async (dispatch: Dispatch) => {
 
