@@ -16,24 +16,24 @@ import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 
-export const elements: TableElement = {
-    1: { 1: 6, 2: 12.011, 3: 'C', 4: 'Carbon' },
-    2: { 1: 7, 2: 14.007, 3: 'N', 4: 'Nitrogen' },
-    3: { 1: 39, 2: 88.906, 3: 'Y', 4: 'Yttrium' },
-    4: { 1: 56, 2: 137.33, 3: 'Ba', 4: 'Barium' },
-    5: { 1: 58, 2: 140.12, 3: 'Ce', 4: 'Cerium' },
-}
+// export const elements: TableElement = {
+//     1: { 1: 6, 2: 12.011, 3: 'C', 4: 'Carbon' },
+//     2: { 1: 7, 2: 14.007, 3: 'N', 4: 'Nitrogen' },
+//     3: { 1: 39, 2: 88.906, 3: 'Y', 4: 'Yttrium' },
+//     4: { 1: 56, 2: 137.33, 3: 'Ba', 4: 'Barium' },
+//     5: { 1: 58, 2: 140.12, 3: 'Ce', 4: 'Cerium' },
+// }
 
-export interface TableElement {
-    [keys: number]: RowElement
-}
+// export interface TableElement {
+//     [keys: number]: RowElement
+// }
 
-export interface RowElement {
-    1: number,
-    2: number,
-    3: string,
-    4: string
-}
+// export interface RowElement {
+//     1: number,
+//     2: number,
+//     3: string,
+//     4: string
+// }
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -60,11 +60,11 @@ export function MainTable() {
     const projectID = useAppSelector(state => state.project.project_id);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: itemCellsElement[][] }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
-    const [rowIDs, setRowIDs] = useState([1, 2, 3, 4, 5]);
+    // const [rowIDs, setRowIDs] = useState([1, 2, 3, 4, 5]);
 
-    const sensors = useSensors(
-        useSensor(SmartPointerSensor)
-    );
+    // const sensors = useSensors(
+    //     useSensor(SmartPointerSensor)
+    // );
 
     useEffect(() => {
         let itemCells: { [keys in number]: itemCellsElement[][] } = {};
@@ -125,21 +125,21 @@ export function MainTable() {
         setItemGroupsState(itemGroups);
     }, [tableSummary, projectID]);
 
-    const handleDragEnd = (event: any) => {
-        const { active, over } = event;
+    // const handleDragEnd = (event: any) => {
+    //     const { active, over } = event;
 
-        if (active.id !== over.id) {
-            const oldIndex = rowIDs.indexOf(active.id);
-            const newIndex = rowIDs.indexOf(over.id);
-            const newOrderArray = arrayMove(rowIDs, oldIndex, newIndex);
-            setRowIDs(newOrderArray);
-            // dispatch(reorderTodo(name, itemsAllIds, newOrderArray));
-        }
-    }
+    //     if (active.id !== over.id) {
+    //         const oldIndex = rowIDs.indexOf(active.id);
+    //         const newIndex = rowIDs.indexOf(over.id);
+    //         const newOrderArray = arrayMove(rowIDs, oldIndex, newIndex);
+    //         setRowIDs(newOrderArray);
+    //         // dispatch(reorderTodo(name, itemsAllIds, newOrderArray));
+    //     }
+    // }
 
     return (
         <div className="tab-content">
-            <DndContext
+            {/* <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
@@ -155,7 +155,7 @@ export function MainTable() {
                         />
                     ))}
                 </SortableContext>
-            </DndContext>
+            </DndContext> */}
             {
                 itemGroupsState.map(({ item_group_id, item_group_name }) => {
                     return (
