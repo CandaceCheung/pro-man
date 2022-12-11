@@ -1,18 +1,18 @@
 import React from 'react';
-import {
-    DndContext,
-    closestCenter,
-    useSensor,
-    useSensors,
-} from '@dnd-kit/core';
-import {
-    arrayMove,
-    SortableContext,
-    verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { SmartPointerSensor } from '../pointerSensor';
+// import {
+//     DndContext,
+//     closestCenter,
+//     useSensor,
+//     useSensors,
+// } from '@dnd-kit/core';
+// import {
+//     arrayMove,
+//     SortableContext,
+//     verticalListSortingStrategy,
+// } from '@dnd-kit/sortable';
+// import { SmartPointerSensor } from '../pointerSensor';
 import { useEffect, useState } from 'react';
-import { TableRow } from '../components/MainTableComponents/TableRow';
+// import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 
