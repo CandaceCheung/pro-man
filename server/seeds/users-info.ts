@@ -146,7 +146,7 @@ export async function seed(knex: Knex): Promise<void> {
 
         insertArray = []
         insertArray.push(
-            { item_id: itemIDs[i].id, type_id: typeIDs[2 + counter].id, start_date: new Date().getTime(), end_date: new Date().getTime() + Math.ceil(Math.random() * 10) * 8.64e+7, color: getRandomColor()},
+            { item_id: itemIDs[i].id, type_id: typeIDs[2 + counter].id, start_date: new Date(new Date().toDateString()).getTime(), end_date: new Date(new Date().toDateString()).getTime() + Math.ceil(Math.random() * 10) * 8.64e+7, color: getRandomColor()},
         )
         await knex('type_times').insert(insertArray)
 
