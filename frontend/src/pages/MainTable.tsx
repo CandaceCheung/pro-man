@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
+import React from 'react';
 
 export const elements: TableElement = {
     1: { 1: 6, 2: 12.011, 3: 'C', 4: 'Carbon' },
