@@ -5,6 +5,7 @@ import { tableController } from "../app";
     const tableRoutes = express.Router();
 
     tableRoutes.get('/:userID', tableController.getTable);
+    tableRoutes.put('/updateTimeline', tableController.updateTimeline);
 
     return tableRoutes;
  }

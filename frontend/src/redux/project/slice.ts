@@ -8,6 +8,7 @@ export interface ActiveProjectState {
     time_line_view: TimeLineViewState
     time_line_autofit: boolean
     time_line_now: boolean
+    time_line_show_marker: boolean
     time_line_start_anchor: Moment
     time_line_end_anchor: Moment
 }
@@ -17,8 +18,9 @@ const initialState: ActiveProjectState = {
     time_line_view: 'weeks',
     time_line_autofit: false,
     time_line_now: false,
-    time_line_start_anchor: moment().add(-0.5, 'weeks'),
-    time_line_end_anchor: moment().add(0.5, 'weeks')
+    time_line_show_marker: true,
+    time_line_start_anchor: moment().startOf('minute').add(-0.5, 'weeks'),
+    time_line_end_anchor: moment().startOf('minute').add(0.5, 'weeks')
 }
 
 const setActiveProject : CaseReducer<ActiveProjectState, PayloadAction<number>> =
@@ -29,6 +31,8 @@ const setAutofit : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_autofit = action.payload} 
 const setTimelineNow : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_now = action.payload}
+const setShowMarker : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.time_line_show_marker = action.payload} 
 
 const projectSlice = createSlice({
     name: 'project',
@@ -37,10 +41,17 @@ const projectSlice = createSlice({
         setActiveProject,
         setTimeLineView,
         setAutofit,
-        setTimelineNow
+        setTimelineNow,
+        setShowMarker
     },
 })
 
-export const { setActiveProject: setActiveProjectAction, setTimeLineView: setTimeLineViewAction, setAutofit: setAutofitAction, setTimelineNow: setTimelineNowAction } = projectSlice.actions
+export const { 
+    setActiveProject: setActiveProjectAction, 
+    setTimeLineView: setTimeLineViewAction, 
+    setAutofit: setAutofitAction, 
+    setTimelineNow: setTimelineNowAction, 
+    setShowMarker: setShowMarkerAction 
+} = projectSlice.actions
 
 export default projectSlice.reducer

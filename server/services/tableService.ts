@@ -69,5 +69,13 @@ export class TableService {
         return projectsDetail
     }
 
+    async updateTimelineService(id :number, start: number, end: number){
+        await this.knex('type_times').update({
+            start_date: start,
+            end_date: end
+        })
+        .where('id', id)
+    }
+
 }
 

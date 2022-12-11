@@ -6,6 +6,36 @@
   position: relative;
 }
 
+.pin-label{
+  color: white;
+  font-size: calc(4px + 0.5vw);
+  height: max-content;
+  position: absolute;
+  top:10px;
+  padding: 10px;
+  width: max-content;
+  border-radius: 3px;
+  z-index:inherit
+}
+
+.pin-label:hover{
+  opacity: 1;
+}
+
+.pin {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  transform: rotate(30deg);
+  z-index:inherit;
+}
+
+.pin-container{
+  position: relative;
+  opacity: 0.6;
+  z-index:9999;
+}
+
 #toggle-arrow {
   position: absolute;
   display: flex;
@@ -16,7 +46,7 @@
   right: 10px;
   top: 10px;
 }
-
+.pin-container:hover,
 #toggle-arrow:hover {
   opacity: 0.8;
 }
@@ -27,18 +57,9 @@
   white-space: nowrap;
 }
 
-.react-calendar-timeline .rct-scroll {
-  display: inline-block;
-  white-space: normal;
-  vertical-align: top;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  -ms-touch-action: none;
-  touch-action: none;
-}
 
 .react-calendar-timeline * {
-  max-width:calc(80vw);
+  display: block;
 }
 
 .react-calendar-timeline .rct-items .rct-item {
