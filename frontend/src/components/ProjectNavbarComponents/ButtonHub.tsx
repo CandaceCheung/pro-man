@@ -1,6 +1,8 @@
 import { Button, Menu, Select } from "@mantine/core";
 import { IconEyeOff, IconFilter, IconUser, IconColumns, IconCalendar } from "@tabler/icons";
-import { useState } from "react";
+import moment from "moment";
+import { setAutofitAction, setTimelineNowAction, setTimeLineViewAction, TimeLineViewState } from "../../redux/project/slice";
+import { useAppDispatch, useAppSelector } from "../../store";
 
 type ButtonHubProps = {
     page: string | null
@@ -8,7 +10,29 @@ type ButtonHubProps = {
 
 export function ButtonHub(prop: ButtonHubProps) {
 
-    const [value, setValue] = useState<string | null>(null)
+    const dispatch = useAppDispatch()
+    const defaultView = useAppSelector(state => state.project.time_line_view)
+    const autofit = useAppSelector(state => state.project.time_line_autofit)
+    const now = useAppSelector(state => state.project.time_line_now)
+
+
+    function changeTimeLineView(value: TimeLineViewState) {
+        let startPointAnchor = moment().add(-0.5, value)
+        let endPointAnchor = moment().add(0.5, value)
+        
+        const payload = {
+            value,
+            start: startPointAnchor,
+            end: endPointAnchor
+        }
+        dispatch(setTimeLineViewAction(payload))
+    }
+    function changeAutofit() {
+        dispatch(setAutofitAction(!autofit))
+    }
+    function changeNow() {
+        dispatch(setTimelineNowAction(!now))
+    }
 
     return (
         <div id="button-panel">
@@ -55,19 +79,17 @@ export function ButtonHub(prop: ButtonHubProps) {
             <div>
                 {prop.page === "timeline" &&
                     <Button.Group>
-                        <Button className='button-panel-group' variant='subtle'><IconCalendar size={14} /></Button>
-                        <Button className='button-panel-group' variant='subtle'>Auto Fit</Button>
+                        <Button className='button-panel-group' variant={now ? 'outline' : 'subtle'} disabled={autofit} onMouseDown={() => changeNow()} onMouseUp={() => changeNow()}><IconCalendar size={14} /></Button>
+                        <Button className='button-panel-group' variant={autofit ? 'outline' : 'subtle'} onClick={() => changeAutofit()} disabled={now}>Auto Fit</Button>
                         <Select
-                            value={value} onChange={setValue}
+                            value={defaultView} onChange={changeTimeLineView}
                             className='selection-box'
-                            searchable
                             placeholder="View"
                             size='xs'
                             data={[
-                                { value: 'Days', label: 'Days' },
-                                { value: 'Weeks', label: 'Weeks' },
-                                { value: 'Months', label: 'Months' },
-                                { value: 'Years', label: 'Years' },
+                                { value: 'day', label: 'Days' },
+                                { value: 'week', label: 'Weeks' },
+                                { value: 'month', label: 'Months' }
                             ]}
                         />
                     </Button.Group>

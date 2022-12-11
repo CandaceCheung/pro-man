@@ -5,13 +5,13 @@ import { useState } from 'react';
 import { Cashflow } from '../pages/Cashflow';
 import { Kanban } from '../pages/Kanban';
 import { MainTable } from '../pages/MainTable';
-import { TestTimeFrame } from '../pages/Timeline';
+import { TimeFrame } from '../pages/Timeline';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar as faStarS } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarR } from '@fortawesome/free-regular-svg-icons'
 import LogsDrawer from './ProjectNavbarComponents/LogsDrawer';
 import InvitationDrawer from './ProjectNavbarComponents/InvitationDrawer';
-import { ButtonHub } from './ButtonHub';
+import { ButtonHub } from './ProjectNavbarComponents/ButtonHub';
 import { TableStateArray } from '../redux/table/slice';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
@@ -32,14 +32,12 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
         setLogsOpen(false)
         setInvitationOpen(false)
     }
-
     const navigate = useNavigate();
     const { tabValue } = useParams();
 
     function tabChangeHandler(value: string | null) {
         navigate(`/${value}`)
         setPage(value)
-
     }
 
     return (
@@ -92,7 +90,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
                 <Routes>
                     <Route path="/" element={<MainTable />} />
                     <Route path="/mainTable" element={<MainTable />} />
-                    <Route path="/timeline" element={<TestTimeFrame />} />
+                    <Route path="/timeline" element={<TimeFrame/>} />
                     <Route path="/kanban" element={<Kanban />} />
                     <Route path="/cashflow" element={<Cashflow />} />
                 </Routes>

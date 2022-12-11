@@ -1,37 +1,12 @@
 import '../components/styles/Timeline.css'
-import Timeline, { CustomMarker, DateHeader, SidebarHeader, TimelineHeaders, TimelineMarkers, TodayMarker } from 'react-calendar-timeline'
+import Timeline, { CustomMarker, DateHeader, SidebarHeader, TimelineHeaders, TimelineMarkers} from 'react-calendar-timeline'
 import 'react-calendar-timeline/lib/Timeline.css'
-import moment from 'moment'
-import { defaultTimeEnd, defaultTimeStart, interval } from '../components/TimelineComponents/config'
 import { useAppSelector } from '../store'
 import { IconArrowBadgeLeft, IconArrowBadgeRight } from '@tabler/icons'
-import { useState } from 'react'
-
-
-// let groups = [{ id: 1, title: 'group 1' }, { id: 2, title: 'group 2' }]
-// let items = [
-//   {
-//     id: 1,
-//     group: 1,
-//     title: 'Random title',
-//     start_time: moment().add(4, 'day'),
-//     end_time: moment().add(7, 'day'),
-//     canMove: true,
-//     canResize: false,
-//     canChangeGroup: false,
-//     itemProps: {
-//       // these optional attributes are passed to the root <div /> of each item as <div {...itemProps} />
-//       'data-custom-attribute': 'Random content',
-//       'aria-hidden': true,
-//       onDoubleClick: () => { console.log('You clicked double!') },
-//       className: 'weekend',
-//       style: {
-//         background: 'fuchsia',
-//         borderRadius: '10px',
-//       }
-//     }
-//   },
-// ]
+import { useEffect, useState } from 'react'
+import moment from 'moment';
+import React from 'react'
+import { TimeLineViewState } from '../redux/project/slice'
 
 const keys = { // default key name
   groupIdKey: 'id',
@@ -45,23 +20,25 @@ const keys = { // default key name
   itemTimeEndKey: 'end_time',
 }
 
-const minZoom = 7 * 24 * 60 * 60 * 1000;
-const maxZoom = 31 * 24 * 60 * 60 * 1000;
-
-const sideBarObj = "Test"
-
-
-export function TestTimeFrame() {
-
+export function TimeFrame() {
+  
   const targetProjectId = useAppSelector(state => state.project.project_id)
   const projectSummary = useAppSelector(state => state.table)
   const timelineDetail = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times')
   const [toggle, setToggle] = useState<boolean|null>(false)
+  const autofit = useAppSelector(state=> state.project.time_line_autofit)
+  const zoom = useAppSelector(state =>state.project.time_line_view)
+  const startPointAnchor = useAppSelector(state=> state.project.time_line_start_anchor)
+  const endPointAnchor = useAppSelector(state=> state.project.time_line_end_anchor)
+  const now = useAppSelector(state =>state.project.time_line_now)
+  const minZoom = 1 * 24 * 60 * 60 * 1000;
+  const maxZoom = 31 * 24 * 60 * 60 * 1000;
+  const defaultTimeStart = moment().startOf('day');
+  const defaultTimeEnd = moment().add(1, zoom);
+  const interval = 24 * 60 * 60 * 1000;
 
-  console.log(timelineDetail)
   let groups = []
   let items = []
-
   for (let item of timelineDetail) {
     let checking: number[] = []
     if (!checking.includes(item.item_id)) {
@@ -72,6 +49,7 @@ export function TestTimeFrame() {
       })
     }
   }
+  
 
   for (let item of timelineDetail) {
     items.push({
@@ -89,7 +67,7 @@ export function TestTimeFrame() {
         onDoubleClick: () => { openPanel() },
         className: 'time-block',
         style: {
-          background: 'fuchsia',
+          backgroundColor: item.item_times_color,
           borderRadius: '10px',
         }
       }
@@ -101,8 +79,12 @@ export function TestTimeFrame() {
     lastEndedTime = Math.max(new Date(item.item_times_end_date).getTime(), lastEndedTime)
   }
 
+  let firstStartedTime = lastEndedTime
+  for (let item of timelineDetail) {
+    firstStartedTime = Math.min(new Date(item.item_times_end_date).getTime(), firstStartedTime)
+  }
+  
   function openPanel() {
-
   }
 
 
@@ -113,9 +95,10 @@ export function TestTimeFrame() {
         items={items}
         defaultTimeStart={defaultTimeStart}
         defaultTimeEnd={defaultTimeEnd}
+        visibleTimeStart={autofit ? firstStartedTime : now ? startPointAnchor : undefined}
+        visibleTimeEnd={autofit ? lastEndedTime : now ? endPointAnchor : undefined}
         useResizeHandle
         sidebarWidth={toggle? 30:150}
-        sidebarContent={sideBarObj}
         keys={keys}
         // fullUpdate
         itemTouchSendsClick={false}
@@ -130,6 +113,16 @@ export function TestTimeFrame() {
         maxZoom={maxZoom}
         // onItemDoubleClick={updateItems}
         lineHeight={50}
+        traditionalZoom={true}
+        timeSteps={{
+          second: 60,
+          minute: 60,
+          hour: 24,
+          day: 1,
+          month: 1,
+          year: 1
+        }}
+        // onItemClick={viewMenu}
       >
         <TimelineHeaders>
           <SidebarHeader>
@@ -140,11 +133,11 @@ export function TestTimeFrame() {
               </div>;
             }}
           </SidebarHeader>
-          <DateHeader unit="primaryHeader" />
+          <DateHeader unit="primaryHeader" labelFormat={'YYYY MMM'} />
           <DateHeader
             unit="day"
-            labelFormat='YY-MMM-D'
-            style={{ height: 50, width: 100, color: '#999999' }}
+            labelFormat={'D, ddd'}
+            style={{fontSize: '10px', color: '#999999' }}
           />
           <TimelineMarkers>
             <CustomMarker date={Date.now()}>
