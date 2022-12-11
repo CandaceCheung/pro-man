@@ -106,7 +106,7 @@ export function TimeFrame() {
           backgroundColor: item.item_datetime_color,
           borderStyle: 'solid',
           borderWidth: '4px',
-          borderColor: 'grey',
+          borderColor: 'darkgrey',
         }
       }
     })
@@ -154,14 +154,19 @@ export function TimeFrame() {
     }
   }
 
+  function handleItemDeselect(){
+
+  }
+
   const lastEndDate = new Date(lastEndedTime)
   const firstStartDate = new Date(firstStartedTime)
 
 
   return (
-    <div id='timeline-container' className='container container-fluid'>
+    <div id='timeline-container'>
       <Timeline
         groups={groups}
+        // headerRef={handleHeaderRef}
         items={[...items, ...dateItems]}
         defaultTimeStart={defaultTimeStart}
         defaultTimeEnd={defaultTimeEnd}
@@ -176,6 +181,7 @@ export function TimeFrame() {
         canResize={'both'}
         onItemMove={handleItemMove}
         onItemResize={handleItemResize}
+        onItemDeselect={handleItemDeselect}
         dragSnap={interval}
         minZoom={minZoom}
         maxZoom={maxZoom}
@@ -202,6 +208,7 @@ export function TimeFrame() {
           </SidebarHeader>
           <DateHeader unit="primaryHeader" labelFormat={'YYYY MMM'} />
           <DateHeader
+            
             unit="day"
             labelFormat={'D, ddd'}
             style={{ fontSize: '10px', color: '#999999' }}
