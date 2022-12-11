@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { Knex } from "knex";
 
 export class TableService {
@@ -21,6 +22,7 @@ export class TableService {
             'type_persons.name as item_person_name',
             'type_persons.id as item_person_id',
             'type_dates.datetime as item_dates_datetime',
+            'type_dates.color as item_datetime_color',
             'type_dates.id as item_datetime_id',
             'type_times.start_date as item_times_start_date',
             'type_times.end_date as item_times_end_date',
@@ -73,6 +75,13 @@ export class TableService {
         await this.knex('type_times').update({
             start_date: start,
             end_date: end
+        })
+        .where('id', id)
+    }
+
+    async updateDatelineService(id :number, date: number){
+        await this.knex('type_dates').update({
+            datetime: format(new Date(date), 'yyyy-MM-dd'),
         })
         .where('id', id)
     }

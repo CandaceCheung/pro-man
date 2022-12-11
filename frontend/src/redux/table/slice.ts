@@ -1,11 +1,13 @@
 import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { format } from "date-fns";
 
 export interface TableState {
     horizontal_order: number,
     horizontal_order_id: number,
     item_creator_id: number,
     item_dates_datetime: string,
-    item_datetime_id: string,
+    item_datetime_id: number,
+    item_datetime_color: string,
     item_group_id: number,
     item_group_name: string,
     item_id: number,
@@ -43,7 +45,8 @@ const initialState: TableStateArray = [{
     horizontal_order_id: 0,
     item_creator_id: 0,
     item_dates_datetime: "",
-    item_datetime_id: "",
+    item_datetime_id: 0,
+    item_datetime_color: '#238BE6',
     item_group_id: 0,
     item_group_name: "",
     item_id: 0,
@@ -87,6 +90,15 @@ const updateTimelineItem: CaseReducer<TableStateArray, PayloadAction<{timelineID
         }
     }
 }
+const updateDatelineItem: CaseReducer<TableStateArray, PayloadAction<{datelineID: number, date: number}>> =
+(state, action) =>  {
+    for (let item of state){
+        if (item.item_datetime_id === action.payload.datelineID){
+            // console.log(format(new Date(action.payload.date), 'yyyy-MM-dd'))
+            item.item_dates_datetime = new Date(action.payload.date).toDateString()
+        }
+    }
+}
 
 const tableSlice = createSlice({
     name: 'table',
@@ -94,14 +106,16 @@ const tableSlice = createSlice({
     reducers: {
         getTable,
         getTableFailed,
-        updateTimelineItem
+        updateTimelineItem,
+        updateDatelineItem
     },
 })
 
 export const { 
     getTable: getTableAction, 
     getTableFailed: getTableFailedAction,
-    updateTimelineItem: updateTimelineItemAction 
+    updateTimelineItem: updateTimelineItemAction,
+    updateDatelineItem: updateDatelineItemAction
 } = tableSlice.actions
 
 export default tableSlice.reducer

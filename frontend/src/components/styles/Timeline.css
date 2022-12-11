@@ -51,7 +51,7 @@
   opacity: 0.8;
 }
 
-.react-calendar-timeline .rct-outer {
+/* .react-calendar-timeline .rct-outer {
   display: block;
   overflow: hidden;
   white-space: nowrap;
@@ -60,11 +60,8 @@
 
 .react-calendar-timeline * {
   display: block;
-}
+} */
 
-.react-calendar-timeline .rct-items .rct-item {
-  border: 1px solid rgba(40, 40, 40, 0) !important;
-}
 .react-calendar-timeline .rct-item:hover {
   opacity: 0.8; }
 
