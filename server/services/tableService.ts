@@ -24,6 +24,7 @@ export class TableService {
             'type_dates.id as item_datetime_id',
             'type_times.start_date as item_times_start_date',
             'type_times.end_date as item_times_end_date',
+            'type_times.color as item_times_color',
             'type_times.id as item_times_id',
             'transactions.date as item_money_date',
             'transactions.cash_flow as item_money_cashflow',
@@ -66,6 +67,14 @@ export class TableService {
             .orderBy("horizontal_order", 'asc');
 
         return projectsDetail
+    }
+
+    async updateTimelineService(id :number, start: number, end: number){
+        await this.knex('type_times').update({
+            start_date: start,
+            end_date: end
+        })
+        .where('id', id)
     }
 
 }

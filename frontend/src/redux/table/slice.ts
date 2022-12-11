@@ -19,9 +19,10 @@ export interface TableState {
     item_status_name: string,
     item_text_id: number,
     item_text_text: string,
-    item_times_end_date: string,
+    item_times_end_date: number,
     item_times_id: number,
-    item_times_start_date: string,
+    item_times_start_date: number,
+    item_times_color: string,
     joined_project_id: number,
     project_creator_id: number,
     project_id: number,
@@ -56,9 +57,10 @@ const initialState: TableStateArray = [{
     item_status_name: "",
     item_text_id: 0,
     item_text_text: "",
-    item_times_end_date: "",
+    item_times_end_date: 0,
     item_times_id: 0,
-    item_times_start_date: "",
+    item_times_start_date: 0,
+    item_times_color: '#238BE6',
     joined_project_id: 0,
     project_creator_id: 0,
     project_id: 0,
@@ -76,16 +78,30 @@ const getTable: CaseReducer<TableStateArray, PayloadAction<TableStateArray>> =
     (state, action) =>  state = action.payload
 const getTableFailed: CaseReducer<TableStateArray, PayloadAction> =
     (state, action) =>  state = initialState 
+const updateTimelineItem: CaseReducer<TableStateArray, PayloadAction<{timelineID: number, startTime: number, endTime:number}>> =
+(state, action) =>  {
+    for (let item of state){
+        if (item.item_times_id === action.payload.timelineID){
+            item.item_times_start_date = action.payload.startTime
+            item.item_times_end_date = action.payload.endTime
+        }
+    }
+}
 
 const tableSlice = createSlice({
     name: 'table',
     initialState,
     reducers: {
         getTable,
-        getTableFailed
+        getTableFailed,
+        updateTimelineItem
     },
 })
 
-export const { getTable: getTableAction, getTableFailed: getTableFailedAction } = tableSlice.actions
+export const { 
+    getTable: getTableAction, 
+    getTableFailed: getTableFailedAction,
+    updateTimelineItem: updateTimelineItemAction 
+} = tableSlice.actions
 
 export default tableSlice.reducer

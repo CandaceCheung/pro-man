@@ -1,64 +1,98 @@
-
-#timeline-container{
+#timeline-container {
   font-size: 1vw;
-  overflow-x: auto;
-  max-width: 90vw;
 }
 
-#left-bar{
+#left-bar {
   position: relative;
 }
-#toggle-arrow{
+
+.pin-label{
+  color: white;
+  font-size: calc(4px + 0.5vw);
+  height: max-content;
+  position: absolute;
+  top:10px;
+  padding: 10px;
+  width: max-content;
+  border-radius: 3px;
+  z-index:inherit
+}
+
+.pin-label:hover{
+  opacity: 1;
+}
+
+.pin {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  transform: rotate(30deg);
+  z-index:inherit;
+}
+
+.pin-container{
+  position: relative;
+  opacity: 0.6;
+  z-index:9999;
+}
+
+#toggle-arrow {
   position: absolute;
   display: flex;
   border-radius: 100px;
   border-style: solid;
   border-color: white;
-  color:white;
-  right:10px;
-  top:10px;
+  color: white;
+  right: 10px;
+  top: 10px;
 }
+.pin-container:hover,
 #toggle-arrow:hover {
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
+.react-calendar-timeline .rct-outer {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+
+.react-calendar-timeline * {
+  display: block;
+}
 
 .react-calendar-timeline .rct-items .rct-item {
-    border: 1px solid rgba(40, 40, 40, 0.5) !important;
-  }
-  .react-calendar-timeline .rct-items .rct-item.machine_1 {
-    background-color: #273859 !important;
-  }
-  
-  .react-calendar-timeline .rct-items .rct-item.machine_2 {
-    background-color: #455d8c !important;
-  }
-  
-  .react-calendar-timeline .rct-items .rct-item.machine_3 {
-    background-color: #7a91bf !important;
-  }
-  
-  .react-calendar-timeline .rct-items .rct-item.machine_4 {
-    background-color: #bf947a !important;
-  }
-  
-  .react-calendar-timeline .rct-items .rct-item.machine_5 {
-    background-color: #401e12 !important;
-  }
-  
-  .react-calendar-timeline .rct-items .rct-item.engineer {
-    background-color: transparent !important;
-    border: 1px solid transparent !important;
-    text-align: center;
-    cursor: default !important;
-    color: #000011 !important;
-    font-size: 1rem !important;
-  }
-  
-  .react-calendar-timeline .rct-calendar-header div:first-child {
-    height: 50px !important;
-  }
-  .react-calendar-timeline .rct-header-root {
-    background-color: #238BE6 !important;
-  }
-  
+  border: 1px solid rgba(40, 40, 40, 0) !important;
+}
+.react-calendar-timeline .rct-item:hover {
+  opacity: 0.8; }
+
+.react-calendar-timeline .rct-items .rct-item.machine_1 {
+  background-color: #273859 !important;
+}
+
+.react-calendar-timeline .rct-items .rct-item.machine_2 {
+  background-color: #455d8c !important;
+}
+
+.react-calendar-timeline .rct-items .rct-item.machine_3 {
+  background-color: #7a91bf !important;
+}
+
+.react-calendar-timeline .rct-items .rct-item.machine_4 {
+  background-color: #bf947a !important;
+}
+
+.react-calendar-timeline .rct-items .rct-item.machine_5 {
+  background-color: #401e12 !important;
+}
+
+
+.react-calendar-timeline .rct-calendar-header div:first-child {
+  height: 50px !important;
+}
+
+.react-calendar-timeline .rct-header-root {
+  background-color: #238BE6 !important;
+}
