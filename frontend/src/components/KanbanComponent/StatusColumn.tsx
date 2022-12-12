@@ -38,27 +38,23 @@ export function StatusColumn(props: StatusProps) {
     const itemsUnderSameState = allItemsInfo.filter(
         (item) => item.item_status_name === props.statesName
     );
-    // const itemNames = itemsUnderSameState.map((item) => item.item_name);
-    // const eachItemName = itemNames.filter((item, i) => itemNames.indexOf(item) === i);
-    // const allCreator = allItemsInfo.map((item) => item.item_person_name)
 
     // const itemCreator = allCreator.map
     console.log(itemsUnderSameState);
-
+    
+    
     const itemList = [];
     for (let item of itemsUnderSameState) {
+        const date =item.item_dates_datetime.slice(0,10)
         const obj = {
             itemName: item.item_name,
-            memberName: "user1",
-            itemDate: "12/12/2022",
+            memberName: item.item_person_name,
+            itemDate: date,
         };
 
         itemList.push(obj);
     }
 
-    // const itemList = [
-    //     { itemName: "card item", memberName: "user 12", itemDate: "12/12/2022" },
-    // ];
 
     return (
         <Card
