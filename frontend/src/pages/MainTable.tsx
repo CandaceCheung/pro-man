@@ -30,7 +30,7 @@ const useStyles = createStyles(theme => ({
         borderRadius: 10,
         borderStyle: "hidden",
         boxShadow: "0 0 0 1px #ddd",
-        width: getWidth() - 180,
+        minWidth: getWidth() - 180,
         fontSize: 14,
         margin: 5,
 
