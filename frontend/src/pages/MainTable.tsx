@@ -3,9 +3,64 @@ import { createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
-import { ItemGroupCollapserDown, ItemGroupCollapserRight } from '../components/MainTableComponents/ItemGroupCollapser';
+import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 
 const useStyles = createStyles(theme => ({
+    collapserButton: {
+        transform: "rotate(90deg)"
+    },
+
+    hovertext: {
+        position: "relative",
+
+        "&:hover::before": {
+            opacity: 1,
+            visibility: "visible"
+        },
+        "&::before": {
+            content: "attr(data-hover)",
+            visibility: "hidden",
+            opacity: 0,
+            width: "max-content",
+            backgroundColor: "black",
+            color: "#fff",
+            textAlign: "center",
+            borderRadius: 5,
+            padding: "5px 5px",
+            transition: "opacity 0.5s ease-in-out",
+            position: "absolute",
+            zIndex: 1,
+            left: "50%",
+            top: "-110%",
+            transform: "translate(-50%, 0)",
+            fontSize: 10
+        }
+    },
+
+    itemCount: {
+        position: "relative",
+        "&:hover::after": {
+            opacity: 1,
+            visibility: "visible"
+        },
+        "&::after": {
+            content: "attr(item-count)",
+            visibility: "hidden",
+            opacity: 0,
+            width: "max-content",
+            color: "#676879",
+            textAlign: "center",
+            position: "absolute",
+            zIndex: 1,
+            left: "110%",
+            top: "50%",
+            transform: "translate(0, -50%)",
+            fontSize: 15,
+            fontWeight: "normal"
+        }
+
+    },
+
     itemGroup: {
         marginTop: 20,
         padding: 10,
@@ -15,11 +70,25 @@ const useStyles = createStyles(theme => ({
             fontSize: 18,
             marginLeft: 10,
             marginBottom: 10,
+            display: "flex",
 
             span: {
-                marginLeft: 10,
-                marginRight: 10,
-                cursor: "pointer"
+                "&:first-of-type": {
+                    marginLeft: 10,
+                    marginRight: 10,
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                },
+                "&:nth-of-type(2)": {
+                    border: "1px solid transparent",
+                    borderRadius: 5,
+
+                    "&:hover": {
+                        border: "1px solid #ddd"
+                    }
+                }
             }
         }
     },
@@ -30,7 +99,7 @@ const useStyles = createStyles(theme => ({
         borderRadius: 10,
         borderStyle: "hidden",
         boxShadow: "0 0 0 1px #ddd",
-        minWidth: getWidth() - 180,
+        minWidth: `max(${getWidth() - 180}px, 844px)`,
         fontSize: 14,
         margin: 5,
 
@@ -190,15 +259,36 @@ export function MainTable() {
                         >
                             <div
                                 style={{
-                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length],
                                 }}
                             >
-                                <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} key={itemGroupArrayIndex}>
+                                <span
+                                    onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
+                                    className={classes.hovertext}
+                                    data-hover={item_group_collapsed ? "Expand group" : "Collapse Group"}
+                                    key={itemGroupArrayIndex}
+                                >
                                     {
-                                        item_group_collapsed ? <ItemGroupCollapserRight size={12} /> : <ItemGroupCollapserDown size={12} />
-                                    }
+                                        <ItemGroupCollapser
+                                            size={20}
+                                            className={item_group_collapsed ? "" : classes.collapserButton}
+                                        />}
                                 </span>
-                                {item_group_name}
+                                <span
+                                    className={classes.hovertext + " " + classes.itemCount}
+                                    data-hover="Click to edit"
+                                    item-count={
+                                        itemCellsState[item_group_id].length
+                                        ?
+                                        itemCellsState[item_group_id].length 
+                                            + " item" 
+                                            + `${itemCellsState[item_group_id].length === 1 ? "" : "s"}`
+                                        :
+                                        "No items"
+                                    }
+                                >
+                                    {item_group_name}
+                                </span>
                             </div>
                             {
                                 !item_group_collapsed &&
