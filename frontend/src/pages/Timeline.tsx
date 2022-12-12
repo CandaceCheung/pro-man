@@ -3,10 +3,11 @@ import Timeline, { CustomMarker, DateHeader, SidebarHeader, TimelineHeaders, Tim
 import 'react-calendar-timeline/lib/Timeline.css'
 import { useAppDispatch, useAppSelector } from '../store'
 import { IconArrowBadgeLeft, IconArrowBadgeRight, IconPinned } from '@tabler/icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import moment from 'moment';
-import React from 'react'
 import { updateDatelineItem, updateTimelineItem } from '../redux/table/thunk'
+import { TimeLineAddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
+import ClockLoader  from "react-spinners/ClockLoader";
 
 const keys = { // default key name
   groupIdKey: 'id',
@@ -51,6 +52,7 @@ export function TimeFrame() {
   const defaultTimeStart = moment().startOf('day');
   const defaultTimeEnd = moment().add(1, zoom);
   const interval = 24 * 60 * 60 * 1000;
+  const [loading, setLoading] = useState(true)
 
   let groups = []
   let items: ItemProps = []
@@ -117,7 +119,7 @@ export function TimeFrame() {
     lastEndedTime = Math.max(item.item_times_end_date, lastEndedTime)
     lastEndedTime = Math.max(new Date(item.item_dates_datetime).getTime() + 8.64e+7, lastEndedTime)
   }
-  
+
 
   let firstStartedTime = lastEndedTime
   for (let item of timelineDetail) {
@@ -126,7 +128,6 @@ export function TimeFrame() {
   }
 
   function handleItemResize(itemId: number, time: number, edge: 'left' | 'right') {
-    console.log(itemId)
     if (itemId.toString()[0] === '1') {
       const id = parseInt(itemId.toString().slice(1))
       const originalStartTime = items.filter(x => x.id === itemId)[0].start_time
@@ -139,7 +140,8 @@ export function TimeFrame() {
         newEndTime = time
       }
       dispatch(updateTimelineItem(id, newStartTime, newEndTime))
-    } 
+      setLoading(true)
+    }
   }
 
   function handleItemMove(itemId: number, newStartTime: number, index: number) {
@@ -148,111 +150,130 @@ export function TimeFrame() {
       const id = parseInt(itemId.toString().slice(1))
       dispatch(updateTimelineItem(id, newStartTime, newEndTime))
     } else if (itemId.toString()[0] === '2') {
-      console.log(newStartTime, items[index].start_time)
       const id = parseInt(itemId.toString().slice(1))
       dispatch(updateDatelineItem(id, newStartTime))
     }
+    setLoading(true)
   }
 
-  function handleItemDeselect(){
-
+  function handleItemSelect(itemId: number, e: any, time: number) {
+    console.log(itemId, e, time)
+  }
+  function handleItemDeselect(e: any) {
+    console.log(e)
   }
 
   const lastEndDate = new Date(lastEndedTime)
   const firstStartDate = new Date(firstStartedTime)
 
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 500)
+  }, [loading])
 
   return (
     <div id='timeline-container'>
-      <Timeline
-        groups={groups}
-        // headerRef={handleHeaderRef}
-        items={[...items, ...dateItems]}
-        defaultTimeStart={defaultTimeStart}
-        defaultTimeEnd={defaultTimeEnd}
-        visibleTimeStart={autofit ? firstStartedTime - 2.592e+8 : now ? startPointAnchor : undefined}
-        visibleTimeEnd={autofit ? lastEndedTime + 2.592e+8 : now ? endPointAnchor : undefined}
-        useResizeHandle
-        sidebarWidth={toggle ? 30 : 150}
-        keys={keys}
-        stackItems
-        itemHeightRatio={0.75}
-        canMove
-        canResize={'both'}
-        onItemMove={handleItemMove}
-        onItemResize={handleItemResize}
-        onItemDeselect={handleItemDeselect}
-        dragSnap={interval}
-        minZoom={minZoom}
-        maxZoom={maxZoom}
-        // onItemDoubleClick={updateItems}
-        lineHeight={50}
-        timeSteps={{
-          second: 60,
-          minute: 60,
-          hour: 12,
-          day: 1,
-          month: 1,
-          year: 1
-        }}
-      // onItemClick={viewMenu}
-      >
-        <TimelineHeaders>
-          <SidebarHeader>
-            {({ getRootProps }) => {
-              return <div
-                id='left-bar' {...getRootProps()}>
-                <span id='toggle-arrow' onClick={() => setToggle((state) => !state)}>{toggle ? <IconArrowBadgeRight size={30} /> : <IconArrowBadgeLeft size={30} />}</span>
-              </div>;
-            }}
-          </SidebarHeader>
-          <DateHeader unit="primaryHeader" labelFormat={'YYYY MMM'} />
-          <DateHeader
-            
-            unit="day"
-            labelFormat={'D, ddd'}
-            style={{ fontSize: '10px', color: '#999999' }}
-          />
-          <TimelineMarkers>
-            {show && <CustomMarker date={firstStartDate}>
-              {({ styles, date }) => {
-                const customStyles = {
-                  ...styles,
-                  backgroundColor: 'darkgreen',
-                  width: '4px'
-                }
-                return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'darkgreen', right: '10px' }}>Start Date : {new Date(firstStartDate).toDateString()}</span><span className='pin'><IconPinned size={30} /></span></div>
-
-
+      {loading ?
+        <div id='loader-container'>
+        <ClockLoader 
+          color={'#238BE6'}
+          loading={loading}
+          size={150}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+        </div>
+        :
+        <Timeline
+          groups={groups}
+          items={[...items, ...dateItems]}
+          defaultTimeStart={defaultTimeStart}
+          defaultTimeEnd={defaultTimeEnd}
+          visibleTimeStart={autofit ? firstStartedTime - 2.592e+8 : now ? startPointAnchor : undefined}
+          visibleTimeEnd={autofit ? lastEndedTime + 2.592e+8 : now ? endPointAnchor : undefined}
+          useResizeHandle
+          sidebarWidth={toggle ? 30 : 150}
+          keys={keys}
+          stackItems
+          itemHeightRatio={0.75}
+          canMove
+          canResize={'both'}
+          onItemMove={handleItemMove}
+          onItemResize={handleItemResize}
+          onItemSelect={handleItemSelect}
+          onItemDeselect={handleItemDeselect}
+          dragSnap={interval}
+          minZoom={minZoom}
+          maxZoom={maxZoom}
+          // onItemDoubleClick={updateItems}
+          lineHeight={50}
+          timeSteps={{
+            second: 60,
+            minute: 60,
+            hour: 12,
+            day: 1,
+            month: 1,
+            year: 1
+          }}
+        // onItemClick={viewMenu}
+        >
+          <TimelineHeaders>
+            <SidebarHeader>
+              {({ getRootProps }) => {
+                return <div
+                  id='left-bar' {...getRootProps()}>
+                  <span id='toggle-arrow' onClick={() => setToggle((state) => !state)}>{toggle ? <IconArrowBadgeRight size={30} /> : <IconArrowBadgeLeft size={30} />}</span>
+                </div>;
               }}
-            </CustomMarker>}
-            {show && <CustomMarker date={Date.now()}>
-              {({ styles, date }) => {
-                const customStyles = {
-                  ...styles,
-                  backgroundColor: 'deepskyblue',
-                  width: '4px'
-                }
-                return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'deepskyblue', right: '10px' }}>Today : {new Date(Date.now()).toDateString()}</span><span className='pin'><IconPinned size={30} /></span></div>
+            </SidebarHeader>
+            <DateHeader unit="primaryHeader" labelFormat={'YYYY MMM'} />
+            <DateHeader
+
+              unit="day"
+              labelFormat={'D, ddd'}
+              style={{ fontSize: '10px', color: '#999999' }}
+            />
+            <TimelineMarkers>
+              {show && <CustomMarker date={firstStartDate}>
+                {({ styles, date }) => {
+                  const customStyles = {
+                    ...styles,
+                    backgroundColor: 'darkgreen',
+                    width: '4px'
+                  }
+                  return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'darkgreen', right: '10px' }}>Start Date : {new Date(firstStartDate).toDateString()}</span><span className='pin'><IconPinned size={30} /></span></div>
 
 
-              }}
-            </CustomMarker>}
-            {show && <CustomMarker date={lastEndDate}>
-              {({ styles, date }) => {
-                const customStyles = {
-                  ...styles,
-                  backgroundColor: 'deeppink',
-                  width: '4px'
-                }
-                return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'deeppink', left: '10px' }}>End Date : {lastEndDate.toDateString()}</span><span className='pin' title='End Date'><IconPinned size={30} /></span></div>
+                }}
+              </CustomMarker>}
+              {show && <CustomMarker date={Date.now()}>
+                {({ styles, date }) => {
+                  const customStyles = {
+                    ...styles,
+                    backgroundColor: 'deepskyblue',
+                    width: '4px'
+                  }
+                  return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'deepskyblue', right: '10px' }}>Today : {new Date(Date.now()).toDateString()}</span><span className='pin'><IconPinned size={30} /></span></div>
 
-              }}
-            </CustomMarker>
-            }
-          </TimelineMarkers>
-        </TimelineHeaders>
-      </Timeline>
+
+                }}
+              </CustomMarker>}
+              {show && <CustomMarker date={lastEndDate}>
+                {({ styles, date }) => {
+                  const customStyles = {
+                    ...styles,
+                    backgroundColor: 'deeppink',
+                    width: '4px'
+                  }
+                  return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'deeppink', left: '10px' }}>End Date : {lastEndDate.toDateString()}</span><span className='pin' title='End Date'><IconPinned size={30} /></span></div>
+
+                }}
+              </CustomMarker>
+              }
+            </TimelineMarkers>
+          </TimelineHeaders>
+        </Timeline>
+      }
+      <TimeLineAddNewItemModal groups={groups} />
     </div>
   )
 }
