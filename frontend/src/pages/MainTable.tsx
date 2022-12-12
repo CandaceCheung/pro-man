@@ -93,6 +93,10 @@ const useStyles = createStyles(theme => ({
         borderRadius: 5,
         boxSizing: "border-box",
         height: 12,
+        color: "inherit",
+        fontSize: "inherit",
+        fontFamily: "inherit",
+        fontWeight: "inherit",
 
         "&:focus": {
             width: "100%",
@@ -106,68 +110,68 @@ const useStyles = createStyles(theme => ({
         }
     },
 
-    groupName: {
-        border: "1px solid transparent",
+groupName: {
+    border: "1px solid transparent",
         borderRadius: 5,
 
-        "&:hover": {
-            border: "1px solid #ddd"
+            "&:hover": {
+        border: "1px solid #ddd"
+    }
+},
+
+tableGroup: {
+    fontFamily: "Roboto",
+        borderCollapse: "collapse",
+            borderRadius: 10,
+                borderStyle: "hidden",
+                    boxShadow: "0 0 0 1px #ddd",
+                        minWidth: `max(${getWidth() - 180}px, 844px)`,
+                            fontSize: 14,
+                                margin: 5,
+
+                                    td: {
+        border: "1px solid #ddd",
+            paddingLeft: 8,
+                paddingRight: 8,
+                    textAlign: "center"
+    },
+
+    th: {
+        border: "1px solid #ddd",
+            paddingTop: 12,
+                paddingBottom: 12,
+                    textAlign: "left",
+                        backgroundColor: "#04AA6D",
+                            color: "#FFFFFF"
+    },
+
+    tr: {
+        td: {
+            '&:first-of-type': {
+                padding: 0,
+                    width: 8,
+                        border: "none"
+            }
         }
     },
 
-    tableGroup: {
-        fontFamily: "Roboto",
-        borderCollapse: "collapse",
-        borderRadius: 10,
-        borderStyle: "hidden",
-        boxShadow: "0 0 0 1px #ddd",
-        minWidth: `max(${getWidth() - 180}px, 844px)`,
-        fontSize: 14,
-        margin: 5,
-
+    thead: {
         td: {
-            border: "1px solid #ddd",
-            paddingLeft: 8,
-            paddingRight: 8,
-            textAlign: "center"
-        },
+            padding: 8
+        }
+    },
 
-        th: {
-            border: "1px solid #ddd",
-            paddingTop: 12,
-            paddingBottom: 12,
-            textAlign: "left",
-            backgroundColor: "#04AA6D",
-            color: "#FFFFFF"
-        },
-
+    tbody: {
         tr: {
-            td: {
-                '&:first-of-type': {
-                    padding: 0,
-                    width: 8,
-                    border: "none"
-                }
-            }
-        },
-
-        thead: {
-            td: {
-                padding: 8
-            }
-        },
-
-        tbody: {
-            tr: {
-                '&:nth-of-type(even)': {
-                    backgroundColor: "#f2f2f2"
-                },
-                '&:hover': {
-                    backgroundColor: "#ddd"
-                }
+            '&:nth-of-type(even)': {
+                backgroundColor: "#f2f2f2"
+            },
+            '&:hover': {
+                backgroundColor: "#ddd"
             }
         }
     }
+}
 }));
 
 export interface itemCellsElement {
@@ -304,7 +308,6 @@ export function MainTable() {
             setItemGroupsState(newItemGroupsState);
 
             // Fetch to the server
-            
         }
     }
 
@@ -358,14 +361,13 @@ export function MainTable() {
                                                 onBlur={(e) => deselectItemGroupInput(
                                                     itemGroupArrayIndex,
                                                     e.target.value
-                                                    )}
+                                                )}
                                                 type="text"
                                                 autoFocus
                                                 className={classes.groupNameInput}
                                                 style={{
                                                     borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                                 }}
-                                                placeholder={itemGroupsInputValueState[itemGroupArrayIndex]}
                                                 value={itemGroupsInputValueState[itemGroupArrayIndex]}
                                                 onChange={(e) => changeItemGroupInputValue(
                                                     itemGroupArrayIndex,
