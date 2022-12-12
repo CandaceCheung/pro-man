@@ -14,13 +14,13 @@ const useStyles = createStyles(theme => ({
             fontWeight: "bold",
             fontSize: 18,
             marginLeft: 10,
-            marginBottom: 10
-        },
+            marginBottom: 10,
 
-        span: {
-            marginLeft: 10,
-            marginRight: 10,
-            cursor: "pointer"
+            span: {
+                marginLeft: 10,
+                marginRight: 10,
+                cursor: "pointer"
+            }
         }
     },
 
@@ -313,10 +313,10 @@ function retrieveCellData(cell: itemCellsElement, cellIndex: number): JSX.Elemen
 
 function getWidth() {
     return Math.max(
-      document.body.scrollWidth,
-      document.documentElement.scrollWidth,
-      document.body.offsetWidth,
-      document.documentElement.offsetWidth,
-      document.documentElement.clientWidth
+        document.body.scrollWidth,
+        document.documentElement.scrollWidth,
+        document.body.offsetWidth,
+        document.documentElement.offsetWidth,
+        document.documentElement.clientWidth
     );
-  }
+}
