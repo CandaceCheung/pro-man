@@ -3,6 +3,7 @@ import { createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
+import { ItemGroupCollapserDown, ItemGroupCollapserRight } from '../components/MainTableComponents/ItemGroupCollapser';
 
 const useStyles = createStyles(theme => ({
     itemGroup: {
@@ -14,6 +15,12 @@ const useStyles = createStyles(theme => ({
             fontSize: 18,
             marginLeft: 10,
             marginBottom: 10
+        },
+
+        span: {
+            marginLeft: 10,
+            marginRight: 10,
+            cursor: "pointer"
         }
     },
 
@@ -45,7 +52,7 @@ const useStyles = createStyles(theme => ({
 
         tr: {
             td: {
-                '&:first-child': {
+                '&:first-of-type': {
                     padding: 0,
                     width: 8,
                     border: "none"
@@ -61,7 +68,7 @@ const useStyles = createStyles(theme => ({
 
         tbody: {
             tr: {
-                '&:nth-child(even)': {
+                '&:nth-of-type(even)': {
                     backgroundColor: "#f2f2f2"
                 },
                 '&:hover': {
@@ -91,6 +98,7 @@ export interface itemCellsElement {
 export interface itemsGroupElement {
     item_group_id: TableState["item_group_id"],
     item_group_name: TableState["item_group_name"],
+    item_group_collapsed: boolean
 }
 
 export function MainTable() {
@@ -149,7 +157,8 @@ export function MainTable() {
                 } else {
                     itemGroups.push({
                         item_group_id: cell.item_group_id,
-                        item_group_name: cell.item_group_name
+                        item_group_name: cell.item_group_name,
+                        item_group_collapsed: false
                     });
                     previousItemID = currentItemID;
                     itemCells[itemGroupID] = [[itemCell]];
@@ -160,55 +169,78 @@ export function MainTable() {
         setItemGroupsState(itemGroups);
     }, [tableSummary, projectID]);
 
+    const toggleItemGroupCollapsed = (index: number) => {
+        const newItemGroupState = JSON.parse(JSON.stringify(itemGroupsState));
+        setItemGroupsState(newItemGroupState.map((each: itemsGroupElement, i: number) => {
+            if (index === i) {
+                each.item_group_collapsed = !each.item_group_collapsed;
+            }
+            return each;
+        }));
+    }
+
     return (
         <div className="main-table">
             {
-                itemGroupsState.map(({ item_group_id, item_group_name }) => {
+                itemGroupsState.map(({ item_group_id, item_group_name, item_group_collapsed }, itemGroupArrayIndex) => {
                     return (
                         <div
                             className={classes.itemGroup}
+                            key={itemGroupArrayIndex}
                         >
                             <div
-                                style={{ color: theme.colors.groupTag[item_group_id % 8] }}
+                                style={{
+                                    color: theme.colors.groupTag[item_group_id % 8]
+                                }}
                             >
+                                <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} key={itemGroupArrayIndex}>
+                                    {
+                                        item_group_collapsed ? <ItemGroupCollapserRight size={12} /> : <ItemGroupCollapserDown size={12} />
+                                    }
+                                </span>
                                 {item_group_name}
                             </div>
-                            <table
-                                id={`table_group_${item_group_id}`}
-                                className={classes.tableGroup}
-                            >
-                                <thead>
-                                    <tr>
-                                        <td></td>
-                                        <td>Item</td>
-                                        <td>Persons</td>
-                                        <td>Dates</td>
-                                        <td>Times</td>
-                                        <td>Money</td>
-                                        <td>Status</td>
-                                        <td>Text</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        itemCellsState[item_group_id].map((row) => {
-                                            return (
-                                                <tr>
-                                                    <td style={{ backgroundColor: theme.colors.groupTag[item_group_id] }}></td>
-                                                    <td>
-                                                        {row[0].item_name}
-                                                    </td>
-                                                    {
-                                                        row.map(cell => {
-                                                            return retrieveCellData(cell)
-                                                        })
-                                                    }
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
+                            {
+                                !item_group_collapsed &&
+                                <table
+                                    id={`table_group_${item_group_id}`}
+                                    className={classes.tableGroup}
+                                >
+                                    <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td>Item</td>
+                                            <td>Persons</td>
+                                            <td>Dates</td>
+                                            <td>Times</td>
+                                            <td>Money</td>
+                                            <td>Status</td>
+                                            <td>Text</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            itemCellsState[item_group_id].map((row, rowIndex) => {
+                                                return (
+                                                    <tr
+                                                        key={"row" + rowIndex}
+                                                    >
+                                                        <td style={{ backgroundColor: theme.colors.groupTag[item_group_id] }}></td>
+                                                        <td>
+                                                            {row[0].item_name}
+                                                        </td>
+                                                        {
+                                                            row.map((cell, cellIndex) => {
+                                                                return retrieveCellData(cell, cellIndex)
+                                                            })
+                                                        }
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            }
                         </div>
                     )
                 })
@@ -217,50 +249,64 @@ export function MainTable() {
     )
 }
 
-function retrieveCellData(cell: itemCellsElement): JSX.Element {
+function retrieveCellData(cell: itemCellsElement, cellIndex: number): JSX.Element {
     switch (cell.type_name) {
         case "persons":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     {cell.item_person_name}
                 </td>
             )
         case "dates":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     {cell.item_dates_datetime}
                 </td>
             )
         case "money":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     <span>{cell.item_money_date}</span>
                     <span>{cell.item_money_cashflow}</span>
                 </td>
             )
         case "times":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     <div>{"Start:" + cell.item_times_start_date}</div>
                     <div>{"End:" + cell.item_times_end_date}</div>
                 </td>
             )
         case "status":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     <div>{"Status:" + cell.item_status_name}</div>
                     <div>{"Color:" + cell.item_status_color}</div>
                 </td>
             )
         case "text":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     {cell.item_text_text}
                 </td>
             )
         default:
             return (
-                <td></td>
+                <td
+                    key={"cell" + cellIndex}
+                ></td>
             )
     }
 }
