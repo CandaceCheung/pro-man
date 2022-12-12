@@ -30,6 +30,7 @@ export class TableController {
                 favorite: result
              });
         } catch (e) {
+            console.log(req.params)
             console.error(e);
             res.status(500).json({ msg: "[TAB] Fail to Get Data." });
         }

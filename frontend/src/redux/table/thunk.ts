@@ -104,7 +104,7 @@ export function getFavorite(userId: number) {
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/favorite:${userId}`
+			`${process.env.REACT_APP_API_SERVER}/table/favorite/${userId}`
 		);
 		const result = await res.json();
 
