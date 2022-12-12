@@ -67,7 +67,7 @@ export function updateDatelineItem(datelineID: number, date: number) {
 			console.log("Update Success")
 			dispatch(updateDatelineItemAction({datelineID, date}))
 		} else {
-			dispatch(getTableFailedAction())
+			dispatch(getTableFailedAction({}))
 		}
 	};
 }

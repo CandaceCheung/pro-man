@@ -86,19 +86,6 @@ export class TableService {
         return favoriteList
     }
 
-    async getFavorite (userId: number){
-        const favoriteList = await this.knex.select(
-            'projects.creator_id as creator_id',
-            'projects.name as project_name',
-            'favorite.id as favorite_id'
-        )
-        .from('favorite')
-        .join('projects', 'favorite.project_id','=', 'projects.id')
-        .where('favorite.user_id', '=', userId)
-
-        return favoriteList
-    }
-
     async updateTimelineService(id: number, start: number, end: number) {
         await this.knex('type_times').update({
             start_date: start,
