@@ -42,7 +42,7 @@ export function TimelineButton() {
                     transitionDuration={200}
                     label="Toggle Show Time Markers"
                 >
-                    <Button className='button-panel-group' variant={show ? 'outline' : 'subtle'} onClick={() => dispatch(setShowMarkerAction(!show))}><IconPinned size={14} /></Button>
+                    <Button className='button-panel-group' variant={show ? 'filled' : 'subtle'} onClick={() => dispatch(setShowMarkerAction(!show))}><IconPinned size={14} /></Button>
                 </Tooltip>
                 <Tooltip
                     multiline
@@ -52,7 +52,7 @@ export function TimelineButton() {
                     transitionDuration={200}
                     label="Press to Re-center"
                 >
-                    <Button className='button-panel-group' variant={now ? 'outline' : 'subtle'} disabled={autofit} onMouseDown={() => changeNow()} onMouseUp={() => changeNow()}><IconCalendar size={14} /></Button>
+                    <Button className='button-panel-group' variant={now ? 'filled' : 'subtle'} disabled={autofit} onMouseDown={() => changeNow()} onMouseUp={() => changeNow()}><IconCalendar size={14} /></Button>
                 </Tooltip>
                 <Tooltip
                     multiline
@@ -62,7 +62,7 @@ export function TimelineButton() {
                     transitionDuration={200}
                     label="Toggle Auto-fit Timeline"
                 >
-                    <Button className='button-panel-group' variant={autofit ? 'outline' : 'subtle'} onClick={() => changeAutofit()} disabled={now}>Auto Fit</Button>
+                    <Button className='button-panel-group' variant={autofit ? 'filled' : 'subtle'} onClick={() => changeAutofit()} disabled={now}>Auto Fit</Button>
                 </Tooltip>
                 <Tooltip
                     multiline

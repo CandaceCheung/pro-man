@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction } from "./slice";
 
 export function getTable(userID: number) {
 	return async (dispatch: Dispatch) => {
@@ -40,6 +40,31 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 		if (result.success) {
 			console.log("Update Success")
 			dispatch(updateTimelineItemAction({timelineID, startTime, endTime}))
+		} else {
+			dispatch(getTableFailedAction())
+		}
+	};
+}
+
+export function updateDatelineItem(datelineID: number, date: number) {
+	return async (dispatch: Dispatch) => {
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/updateDateline`,{
+			method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                typeDateId: datelineID,
+                date,
+            })
+	});
+		const result = await res.json();
+
+		if (result.success) {
+			console.log("Update Success")
+			dispatch(updateDatelineItemAction({datelineID, date}))
 		} else {
 			dispatch(getTableFailedAction())
 		}

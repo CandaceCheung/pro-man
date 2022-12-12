@@ -1,5 +1,8 @@
 #timeline-container {
-  font-size: 1vw;
+  height: 80vh;
+  overflow-x: hidden !important;
+  overflow: auto !important;
+  align-self: flex-start !important;
 }
 
 #left-bar {
@@ -15,11 +18,11 @@
   padding: 10px;
   width: max-content;
   border-radius: 3px;
-  z-index:inherit
+  z-index: 9999;
 }
 
 .pin-label:hover{
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .pin {
@@ -31,9 +34,10 @@
 }
 
 .pin-container{
-  position: relative;
+  position: sticky;
+  top: 0px;
   opacity: 0.6;
-  z-index:9999;
+  z-index:9998;
 }
 
 #toggle-arrow {
@@ -51,20 +55,6 @@
   opacity: 0.8;
 }
 
-.react-calendar-timeline .rct-outer {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-
-.react-calendar-timeline * {
-  display: block;
-}
-
-.react-calendar-timeline .rct-items .rct-item {
-  border: 1px solid rgba(40, 40, 40, 0) !important;
-}
 .react-calendar-timeline .rct-item:hover {
   opacity: 0.8; }
 
@@ -95,4 +85,8 @@
 
 .react-calendar-timeline .rct-header-root {
   background-color: #238BE6 !important;
+  position: sticky;
+  position: -webkit-sticky;
+  top:0px;
+  z-index: 9999;
 }

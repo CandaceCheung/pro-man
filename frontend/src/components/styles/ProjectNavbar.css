@@ -1,5 +1,8 @@
 #project-navbar {
-    width: 100%;
+    width: 98%;
+    position: absolute;
+    top:0px;
+    right:-5px;
 }
 
 .navbar-header {
@@ -58,10 +61,7 @@
     height: 30px;
 }
 
-#tab-content {
-    overflow: auto;
-    max-height: 76vh;
-}
+
 
 .selection-box {
     width: 100px;

@@ -34,4 +34,17 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Update Timeline" });
         }
     }
+    updateDateline = async (req: Request, res: Response) => {
+        try {
+            const typeDateId = req.body.typeDateId
+            const newStartTime = req.body.date
+            
+            await this.tableService.updateDatelineService(typeDateId, newStartTime);
+            
+            res.json({success: true});
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Update Timeline" });
+        }
+    }
 }

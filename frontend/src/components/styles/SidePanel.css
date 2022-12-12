@@ -4,24 +4,34 @@
     width: 1px;
     border-left-style: solid;
     border-left-color: rgb(168, 167, 167);
+    background-color: white;
+    z-index: 9999;
 }
 
 #side-panel-close {
-    position: relative;
+    position: absolute;
+    top:0px;
+    left:5px;
     height: 95vh;
     width: 1px;
     border-left-style: solid;
     border-left-color: rgb(168, 167, 167);
+    background-color: white;
+    z-index: 9999;
 }
 
 #side-panel-open {
-    position: relative;
+    position: absolute;
+    top:0px;
+    left:5px;
     height: 95vh;
     width: 25%;
     border-right-style: solid;
     border-right-color: rgb(168, 167, 167);
     animation-name: open;
     animation-duration: 0.5s;
+    background-color: white;
+    z-index: 9999;
 }
 @keyframes open {
     0% {
@@ -51,7 +61,7 @@
 
 #side-panel-arrow-inactive {
     position: absolute;
-    top: 20%;
+    top: 25%;
     right: -10px;
     border-radius: 100px;
     background-color: white;
@@ -62,9 +72,11 @@
     color: white;
     background-color: #238BE6;
     position: absolute;
-    top: 20%;
-    right: -10px;
+    top: 25%;
+    right: -15px;
     border-radius: 100px;
+    border-style: solid;
+    border-color: white;
     display: flex;
 }
 
