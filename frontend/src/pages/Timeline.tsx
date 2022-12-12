@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import moment from 'moment';
 import { updateDatelineItem, updateTimelineItem } from '../redux/table/thunk'
 import { TimeLineAddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
-import ClockLoader  from "react-spinners/ClockLoader";
+import ClockLoader from "react-spinners/ClockLoader";
 
 const keys = { // default key name
   groupIdKey: 'id',
@@ -20,6 +20,11 @@ const keys = { // default key name
   itemTimeStartKey: 'start_time',
   itemTimeEndKey: 'end_time',
 }
+
+type GroupProps = {
+  id: number
+  title: string
+}[]
 
 type ItemProps = {
   id: number
@@ -37,7 +42,7 @@ export function TimeFrame() {
 
   const dispatch = useAppDispatch()
   const targetProjectId = useAppSelector(state => state.project.project_id)
-  const projectSummary = useAppSelector(state => state.table)
+  const projectSummary = useAppSelector(state => state.table.summary)
   const timelineDetail = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times').sort((a, b) => a.item_group_id - b.item_group_id)
   const datelineDetail = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'dates').sort((a, b) => a.item_group_id - b.item_group_id)
   const [toggle, setToggle] = useState<boolean | null>(false)
@@ -54,9 +59,12 @@ export function TimeFrame() {
   const interval = 24 * 60 * 60 * 1000;
   const [loading, setLoading] = useState(true)
 
-  let groups = []
+  let groups: GroupProps = []
   let items: ItemProps = []
   let dateItems: ItemProps = []
+
+  console.log(projectSummary)
+
   for (let item of timelineDetail) {
     let checking: number[] = []
     if (!checking.includes(item.item_id)) {
@@ -68,6 +76,7 @@ export function TimeFrame() {
     }
   }
 
+  console.log(timelineDetail)
 
   for (let item of timelineDetail) {
     items.push({
@@ -114,12 +123,13 @@ export function TimeFrame() {
     })
   }
 
+  console.log(items)
+
   let lastEndedTime = 0
   for (let item of timelineDetail) {
     lastEndedTime = Math.max(item.item_times_end_date, lastEndedTime)
     lastEndedTime = Math.max(new Date(item.item_dates_datetime).getTime() + 8.64e+7, lastEndedTime)
   }
-
 
   let firstStartedTime = lastEndedTime
   for (let item of timelineDetail) {
@@ -174,13 +184,13 @@ export function TimeFrame() {
     <div id='timeline-container'>
       {loading ?
         <div id='loader-container'>
-        <ClockLoader 
-          color={'#238BE6'}
-          loading={loading}
-          size={200}
-          aria-label="Loading Spinner"
-          data-testid="loader"
-        />
+          <ClockLoader
+            color={'#238BE6'}
+            loading={loading}
+            size={200}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
         </div>
         :
         <Timeline

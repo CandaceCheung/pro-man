@@ -5,11 +5,11 @@ import { AuthAction } from "./redux/auth/action";
 import { authReducer } from "./redux/auth/reducer";
 import { AuthState } from "./redux/auth/state";
 import projectReducer,{ ActiveProjectState } from "./redux/project/slice";
-import  tableReducer, { TableStateArray }  from "./redux/table/slice";
+import  tableReducer, { CombinedTableState }  from "./redux/table/slice";
 
 export interface IRootState {
     auth: AuthState,
-    table: TableStateArray,
+    table: CombinedTableState,
     project: ActiveProjectState
 }
 
@@ -23,7 +23,7 @@ export type IRootAction = AuthAction;
 
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(logger)
 });
 
 export type AppDispatch = typeof store.dispatch;

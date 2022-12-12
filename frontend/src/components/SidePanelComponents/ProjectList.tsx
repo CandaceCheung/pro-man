@@ -4,17 +4,18 @@ import { useAppDispatch, useAppSelector } from "../../store"
 import { setActiveProject } from '../../redux/project/thunk'
 
 export function ProjectList (){
-    const projectSummary = useAppSelector(state=> state.table)
+    const projectSummary = useAppSelector(state=> state.table.summary)
     const userId = useAppSelector(state => state.auth.userId)
     const dispatch = useAppDispatch()
 
     let projectNameList:[number?] = []
-    let projectList :[{name: string, id: number, creatorId: number}?]  = []
+    let projectList :[{name: string, project_id: number, id: number, creatorId: number}?]  = []
     for (let item of projectSummary){
         if (!projectNameList.includes(item.project_id)){
             projectNameList.push(item.project_id)
             const obj = {
                 name: item.project_name,
+                project_id: item.project_id,
                 id: item.project_id,
                 creatorId: item.project_creator_id 
             }
@@ -27,7 +28,7 @@ export function ProjectList (){
             <div id="project-list">
                 <Divider labelPosition='center' my="md" label="Your Projects" color={'dark'}/>
                     {projectList.map((content, index)=> content?.creatorId === userId &&
-                        <div><Button onClick={(e)=>dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content?.id} className='' variant='subtle' key={index}>{content?.name}</Button></div>
+                        <div key={content.project_id}><Button onClick={(e)=>dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content?.id} className='' variant='subtle' key={index}>{content?.name}</Button></div>
                     )}
                 <Divider labelPosition='center' my="md" label="Joined Projects" color={'dark'}/>
                     {projectList.map((content, index)=> content?.creatorId !== userId &&

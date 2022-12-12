@@ -20,6 +20,21 @@ export class TableController {
         }
     }
 
+    getFavorite = async (req: Request, res: Response) => {
+        try {
+            const userID = req.params.userID
+            const result = await this.tableService.getFavorite(parseInt(userID));
+            
+            res.json({ 
+                success: true,
+                favorite: result
+             });
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Get Data." });
+        }
+    }
+
     updateTimeline = async (req: Request, res: Response) => {
         try {
             const typeTimeId = req.body.typeTimeId

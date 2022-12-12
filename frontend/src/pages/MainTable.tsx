@@ -195,7 +195,7 @@ export interface itemsGroupElement {
 }
 
 export function MainTable() {
-    const tableSummary = useAppSelector(state => state.table);
+    const tableSummary = useAppSelector(state => state.table.summary);
     const projectID = useAppSelector(state => state.project.project_id);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: itemCellsElement[][] }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
