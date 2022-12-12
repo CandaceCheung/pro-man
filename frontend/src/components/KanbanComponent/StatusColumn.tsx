@@ -28,7 +28,7 @@ type StatusProps = {
 export function StatusColumn(props: StatusProps) {
     const [opened, setOpened] = useState(false);
 
-    const projectSummary = useAppSelector((state) => state.table);
+    const projectSummary = useAppSelector((state) => state.table.summary);
     const targetProjectId = useAppSelector((state) => state.project.project_id);
     const allItemsInfo = projectSummary.filter(
         (project) =>
