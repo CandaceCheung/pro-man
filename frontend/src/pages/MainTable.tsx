@@ -190,7 +190,7 @@ export function MainTable() {
                         >
                             <div
                                 style={{
-                                    color: theme.colors.groupTag[item_group_id % 8]
+                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                 }}
                             >
                                 <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} key={itemGroupArrayIndex}>
