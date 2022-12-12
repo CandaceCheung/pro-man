@@ -3,9 +3,13 @@ import { createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
-import { ItemGroupCollapserDown, ItemGroupCollapserRight } from '../components/MainTableComponents/ItemGroupCollapser';
+import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 
 const useStyles = createStyles(theme => ({
+    collapser: {
+        transform: "rotate(90deg)"
+    },
+
     itemGroup: {
         marginTop: 20,
         padding: 10,
@@ -15,11 +19,17 @@ const useStyles = createStyles(theme => ({
             fontSize: 18,
             marginLeft: 10,
             marginBottom: 10,
+            display: "flex",
 
             span: {
-                marginLeft: 10,
-                marginRight: 10,
-                cursor: "pointer"
+                "&:first-of-type": {
+                    marginLeft: 10,
+                    marginRight: 10,
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }
             }
         }
     },
@@ -190,15 +200,22 @@ export function MainTable() {
                         >
                             <div
                                 style={{
-                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length],
                                 }}
                             >
-                                <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} key={itemGroupArrayIndex}>
+                                <span
+                                    onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
+                                    key={itemGroupArrayIndex}
+                                >
                                     {
-                                        item_group_collapsed ? <ItemGroupCollapserRight size={12} /> : <ItemGroupCollapserDown size={12} />
-                                    }
+                                        <ItemGroupCollapser
+                                            size={20}
+                                            className={item_group_collapsed ? "" : classes.collapser}
+                                        />}
                                 </span>
-                                {item_group_name}
+                                <span>
+                                    {item_group_name}
+                                </span>
                             </div>
                             {
                                 !item_group_collapsed &&
