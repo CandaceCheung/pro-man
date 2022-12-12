@@ -72,7 +72,7 @@ const useStyles = createStyles(theme => ({
             marginBottom: 10,
             display: "flex",
 
-            span: {
+            "> span": {
                 "&:first-of-type": {
                     marginLeft: 10,
                     marginRight: 10,
@@ -80,16 +80,38 @@ const useStyles = createStyles(theme => ({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center"
-                },
-                "&:nth-of-type(2)": {
-                    border: "1px solid transparent",
-                    borderRadius: 5,
-
-                    "&:hover": {
-                        border: "1px solid #ddd"
-                    }
                 }
             }
+        }
+    },
+
+    groupNameInput: {
+        width: "100%",
+        transition: "0.5s",
+        outline: "none",
+        border: "1px solid",
+        borderRadius: 5,
+        boxSizing: "border-box",
+        height: 12,
+
+        "&:focus": {
+            width: "100%",
+            transition: "0.5s",
+            outline: "none",
+            border: "1px solid",
+            borderRadius: 5,
+            minHeight: 30,
+            boxSizing: "border-box",
+            height: 12,
+        }
+    },
+
+    groupName: {
+        border: "1px solid transparent",
+        borderRadius: 5,
+
+        "&:hover": {
+            border: "1px solid #ddd"
         }
     },
 
@@ -145,7 +167,6 @@ const useStyles = createStyles(theme => ({
                 }
             }
         }
-
     }
 }));
 
@@ -166,8 +187,7 @@ export interface itemCellsElement {
 
 export interface itemsGroupElement {
     item_group_id: TableState["item_group_id"],
-    item_group_name: TableState["item_group_name"],
-    item_group_collapsed: boolean
+    item_group_name: TableState["item_group_name"]
 }
 
 export function MainTable() {
@@ -175,6 +195,9 @@ export function MainTable() {
     const projectID = useAppSelector(state => state.project.project_id);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: itemCellsElement[][] }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
+    const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
+    const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
+    const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
     const { classes, theme } = useStyles();
 
@@ -182,6 +205,9 @@ export function MainTable() {
         let itemCells: { [keys in number]: itemCellsElement[][] } = {};
         let itemGroups: itemsGroupElement[] = [];
         let previousItemID: null | number = null;
+        let itemGroupsCollapsed: boolean[] = [];
+        let itemGroupsInputSelected: boolean[] = [];
+        let itemGroupsInputValue: string[] = [];
         for (const cell of tableSummary) {
             if (cell.project_id === projectID) {
                 const currentItemID = cell.item_id;
@@ -226,9 +252,11 @@ export function MainTable() {
                 } else {
                     itemGroups.push({
                         item_group_id: cell.item_group_id,
-                        item_group_name: cell.item_group_name,
-                        item_group_collapsed: false
+                        item_group_name: cell.item_group_name
                     });
+                    itemGroupsCollapsed.push(false);
+                    itemGroupsInputSelected.push(false);
+                    itemGroupsInputValue.push(cell.item_group_name);
                     previousItemID = currentItemID;
                     itemCells[itemGroupID] = [[itemCell]];
                 }
@@ -236,22 +264,68 @@ export function MainTable() {
         }
         setItemCellsState(itemCells);
         setItemGroupsState(itemGroups);
+        setItemGroupCollapsedState(itemGroupsCollapsed);
+        setItemGroupsInputSelectState(itemGroupsInputSelected);
+        setItemGroupsInputValueState(itemGroupsInputValue);
     }, [tableSummary, projectID]);
 
     const toggleItemGroupCollapsed = (index: number) => {
-        const newItemGroupState = JSON.parse(JSON.stringify(itemGroupsState));
-        setItemGroupsState(newItemGroupState.map((each: itemsGroupElement, i: number) => {
+        const newItemGroupsCollapsedState = [...itemGroupsCollapsedState];
+        setItemGroupCollapsedState(newItemGroupsCollapsedState.map((each: boolean, i: number) => {
             if (index === i) {
-                each.item_group_collapsed = !each.item_group_collapsed;
+                each = !each;
             }
             return each;
         }));
     }
 
+    const selectItemGroupInput = (index: number) => {
+        const newItemGroupsInputSelectState = [...itemGroupsInputSelectState];
+        setItemGroupsInputSelectState(newItemGroupsInputSelectState.map((each: boolean, i: number) => {
+            if (index === i) {
+                each = !each;
+            }
+            return each;
+        }));
+    }
+
+    const deselectItemGroupInput = (index: number, value: string) => {
+        const newItemGroupsInputSelectState = [...itemGroupsInputSelectState];
+        setItemGroupsInputSelectState(newItemGroupsInputSelectState.map((each: boolean, i: number) => {
+            if (index === i) {
+                each = !each;
+            }
+            return each;
+        }));
+        if (value !== itemGroupsState[index].item_group_name) {
+            // Set new group name into itemGroupsState
+            let newItemGroupsState: itemsGroupElement[] = JSON.parse(JSON.stringify(itemGroupsState));
+            newItemGroupsState[index].item_group_name = value;
+            setItemGroupsState(newItemGroupsState);
+
+            // Fetch to the server
+            
+        }
+    }
+
+    const changeItemGroupInputValue = (index: number, value: string) => {
+        const newItemGroupsInputValueState = [...itemGroupsInputValueState];
+        setItemGroupsInputValueState(newItemGroupsInputValueState.map((each: string, i: number) => {
+            if (index === i) {
+                each = value;
+            }
+            return each;
+        }))
+    }
+
     return (
         <div className="main-table">
             {
-                itemGroupsState.map(({ item_group_id, item_group_name, item_group_collapsed }, itemGroupArrayIndex) => {
+                itemGroupsState.map((
+                    {
+                        item_group_id,
+                        item_group_name
+                    }, itemGroupArrayIndex) => {
                     return (
                         <div
                             className={classes.itemGroup}
@@ -265,33 +339,63 @@ export function MainTable() {
                                 <span
                                     onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
                                     className={classes.hovertext}
-                                    data-hover={item_group_collapsed ? "Expand group" : "Collapse Group"}
+                                    data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? "Expand group" : "Collapse Group"}
                                     key={itemGroupArrayIndex}
                                 >
                                     {
                                         <ItemGroupCollapser
                                             size={20}
-                                            className={item_group_collapsed ? "" : classes.collapserButton}
+                                            className={itemGroupsCollapsedState[itemGroupArrayIndex] ? "" : classes.collapserButton}
                                         />}
                                 </span>
                                 <span
-                                    className={classes.hovertext + " " + classes.itemCount}
-                                    data-hover="Click to edit"
-                                    item-count={
-                                        itemCellsState[item_group_id].length
-                                        ?
-                                        itemCellsState[item_group_id].length 
-                                            + " item" 
-                                            + `${itemCellsState[item_group_id].length === 1 ? "" : "s"}`
-                                        :
-                                        "No items"
-                                    }
+                                    className={classes.itemCount}
                                 >
-                                    {item_group_name}
+                                    {
+                                        itemGroupsInputSelectState[itemGroupArrayIndex]
+                                            ?
+                                            <input
+                                                onBlur={(e) => deselectItemGroupInput(
+                                                    itemGroupArrayIndex,
+                                                    e.target.value
+                                                    )}
+                                                type="text"
+                                                autoFocus
+                                                className={classes.groupNameInput}
+                                                style={{
+                                                    borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                }}
+                                                placeholder={itemGroupsInputValueState[itemGroupArrayIndex]}
+                                                value={itemGroupsInputValueState[itemGroupArrayIndex]}
+                                                onChange={(e) => changeItemGroupInputValue(
+                                                    itemGroupArrayIndex,
+                                                    e.target.value
+                                                )}
+                                            >
+
+                                            </input>
+                                            :
+                                            <span
+                                                onClick={() => selectItemGroupInput(itemGroupArrayIndex)}
+                                                className={classes.groupName + " " + classes.hovertext}
+                                                data-hover="Click to edit"
+                                                item-count={
+                                                    itemCellsState[item_group_id].length
+                                                        ?
+                                                        itemCellsState[item_group_id].length
+                                                        + " item"
+                                                        + `${itemCellsState[item_group_id].length === 1 ? "" : "s"}`
+                                                        :
+                                                        "No items"
+                                                }
+                                            >
+                                                {item_group_name}
+                                            </span>
+                                    }
                                 </span>
                             </div>
                             {
-                                !item_group_collapsed &&
+                                !itemGroupsCollapsedState[itemGroupArrayIndex] &&
                                 <table
                                     id={`table_group_${item_group_id}`}
                                     className={classes.tableGroup}
