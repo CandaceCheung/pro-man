@@ -119,17 +119,17 @@ const updateDatelineItem: CaseReducer<CombinedTableState, PayloadAction<{ dateli
 
 const getFavorite: CaseReducer<CombinedTableState, PayloadAction<MyFavoriteListState>> =
     (state, action) => {state.my_favorite_list = action.payload}
-const updateItemGroupName: CaseReducer<TableStateArray, PayloadAction<{itemGroupId: number, itemGroupName: string}>> =
+const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{itemGroupId: number, itemGroupName: string}>> =
 (state, action) =>  {
-    for (let item of state){
+    for (let item of state.summary){
         if (item.item_group_id === action.payload.itemGroupId){
             item.item_group_name = action.payload.itemGroupName;
         }
     }
 }
-const updateItemGroupNameFailed: CaseReducer<TableStateArray, PayloadAction> =
+const updateItemGroupNameFailed: CaseReducer<CombinedTableState, PayloadAction> =
 (state, action) =>  {
-    state[0] = {...state[0]};
+    state.summary[0] = {...state.summary[0]};
 }
 
 const tableSlice = createSlice({
