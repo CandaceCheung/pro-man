@@ -17,7 +17,7 @@ export function ItemCard(props: itemCardProps) {
             mx="auto"
         >
             <div className="item-card">
-                <div>{props.itemName}</div>
+                <Text weight={550} mb={10}>{props.itemName}</Text>
                 <div className="person-name">
                     <Group position="left">
                         <ThemeIcon
@@ -26,13 +26,13 @@ export function ItemCard(props: itemCardProps) {
                             variant="outline"
                             color="gray"
                         >
-                        <IconUserCircle />
+                            <IconUserCircle />
                         </ThemeIcon>
                         <Text weight={500} color="dimmed">
                             Person
                         </Text>
+                        <div>{props.memberName}</div>
                     </Group>
-                    <div>{props.memberName}</div>
                 </div>
                 <div className="item-date">
                     <Group position="left">
@@ -47,7 +47,7 @@ export function ItemCard(props: itemCardProps) {
                         <Text weight={500} color="dimmed">
                             Date
                         </Text>
-                        <div>{props.itemDate}</div>
+                            <div>{props.itemDate}</div>
                     </Group>
                 </div>
             </div>

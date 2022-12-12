@@ -1,3 +1,4 @@
+import { Group } from "@mantine/core";
 import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
 
 export function Kanban() {
@@ -18,6 +19,7 @@ export function Kanban() {
 
     return (
         <div className="kanban-table">
+            <Group position="left">
             {statusList.map((status) => (
                 <StatusColumn
                     projectId={status.projectId}
@@ -26,6 +28,7 @@ export function Kanban() {
                     color={status.color}
                 />
             ))}
+            </Group>
         </div>
     );
 }

@@ -3,24 +3,29 @@ import moment from 'moment';
 import { Moment } from 'moment';
 
 export type TimeLineViewState = 'days'|'weeks'|'months'|'years'
+export type ActivePageState = 'timeline'|'mainTable'|'kanban'|'cashflow'
 export interface ActiveProjectState {
     project_id : number | null
+    active_page : ActivePageState | null
     time_line_view: TimeLineViewState
     time_line_autofit: boolean
     time_line_now: boolean
     time_line_show_marker: boolean
     time_line_start_anchor: Moment
     time_line_end_anchor: Moment
+    time_line_modal_opened: boolean
 }
 
 const initialState: ActiveProjectState = {
     project_id: null,
+    active_page: 'mainTable',
     time_line_view: 'weeks',
     time_line_autofit: false,
     time_line_now: false,
     time_line_show_marker: true,
     time_line_start_anchor: moment().startOf('minute').add(-0.5, 'weeks'),
-    time_line_end_anchor: moment().startOf('minute').add(0.5, 'weeks')
+    time_line_end_anchor: moment().startOf('minute').add(0.5, 'weeks'),
+    time_line_modal_opened: false,
 }
 
 const setActiveProject : CaseReducer<ActiveProjectState, PayloadAction<number>> =
@@ -33,6 +38,12 @@ const setTimelineNow : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_now = action.payload}
 const setShowMarker : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_show_marker = action.payload} 
+const triggerTimelineModal : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.time_line_modal_opened = action.payload} 
+const setActivePage : CaseReducer<ActiveProjectState, PayloadAction<ActivePageState|null>> =
+(state, action) =>  {state.active_page= action.payload} 
+
+
 
 const projectSlice = createSlice({
     name: 'project',
@@ -42,7 +53,9 @@ const projectSlice = createSlice({
         setTimeLineView,
         setAutofit,
         setTimelineNow,
-        setShowMarker
+        setShowMarker,
+        triggerTimelineModal,
+        setActivePage
     },
 })
 
@@ -51,7 +64,9 @@ export const {
     setTimeLineView: setTimeLineViewAction, 
     setAutofit: setAutofitAction, 
     setTimelineNow: setTimelineNowAction, 
-    setShowMarker: setShowMarkerAction 
+    setShowMarker: setShowMarkerAction,
+    triggerTimelineModal: triggerTimelineModalAction,
+    setActivePage: setActivePageAction,
 } = projectSlice.actions
 
 export default projectSlice.reducer

@@ -14,6 +14,8 @@ import InvitationDrawer from './ProjectNavbarComponents/InvitationDrawer';
 import { ButtonHub } from './ProjectNavbarComponents/ButtonHub';
 import { TableStateArray } from '../redux/table/slice';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { ActivePageState, setActivePageAction } from '../redux/project/slice';
+import { useAppDispatch, useAppSelector } from '../store';
 
 type ProjectNavbarProps = {
     projectId: number
@@ -26,7 +28,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
     const [like, setLike] = useState(false)
     const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
-    const [page, setPage] = useState<string | null>("mainTable")
+    const dispatch = useAppDispatch()
 
     function onRemove() {
         setLogsOpen(false)
@@ -35,9 +37,9 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
     const navigate = useNavigate();
     const { tabValue } = useParams();
 
-    function tabChangeHandler(value: string | null) {
+    function tabChangeHandler(value: ActivePageState | null) {
         navigate(`/${value}`)
-        setPage(value)
+        dispatch(setActivePageAction(value))
     }
 
     return (
@@ -75,7 +77,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
             <LogsDrawer toggle={logsOpen} onRemove={onRemove} />
             <InvitationDrawer toggle={invitationOpen} onRemove={onRemove} />
 
-            <Tabs defaultValue="mainTable" value={tabValue} onTabChange={(value) => tabChangeHandler(value)}>
+            <Tabs defaultValue="mainTable" value={tabValue} onTabChange={(value) => tabChangeHandler(value as ActivePageState)}>
                 <Tabs.List>
                     <Tabs.Tab value="mainTable" icon={<IconHome size={14} />}>Main Table</Tabs.Tab>
                     <Tabs.Tab value="timeline" icon={<IconTimelineEvent size={14} />}>Timeline</Tabs.Tab>
@@ -84,7 +86,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
                 </Tabs.List>
             </Tabs>
 
-            <ButtonHub page={page} />
+            <ButtonHub/>
 
             <div id="tab-content" className='container'>
                 <Routes>
