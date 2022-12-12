@@ -1,39 +1,77 @@
 import React from 'react';
-// import {
-//     DndContext,
-//     closestCenter,
-//     useSensor,
-//     useSensors,
-// } from '@dnd-kit/core';
-// import {
-//     arrayMove,
-//     SortableContext,
-//     verticalListSortingStrategy,
-// } from '@dnd-kit/sortable';
-// import { SmartPointerSensor } from '../pointerSensor';
+import { createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
-// import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 
-// export const elements: TableElement = {
-//     1: { 1: 6, 2: 12.011, 3: 'C', 4: 'Carbon' },
-//     2: { 1: 7, 2: 14.007, 3: 'N', 4: 'Nitrogen' },
-//     3: { 1: 39, 2: 88.906, 3: 'Y', 4: 'Yttrium' },
-//     4: { 1: 56, 2: 137.33, 3: 'Ba', 4: 'Barium' },
-//     5: { 1: 58, 2: 140.12, 3: 'Ce', 4: 'Cerium' },
-// }
+const useStyles = createStyles(theme => ({
+    itemGroup: {
+        marginTop: 20,
+        padding: 10,
 
-// export interface TableElement {
-//     [keys: number]: RowElement
-// }
+        "> div": {
+            fontWeight: "bold",
+            fontSize: 18,
+            marginLeft: 10,
+            marginBottom: 10
+        }
+    },
 
-// export interface RowElement {
-//     1: number,
-//     2: number,
-//     3: string,
-//     4: string
-// }
+    tableGroup: {
+        fontFamily: "Roboto",
+        borderCollapse: "collapse",
+        borderRadius: 10,
+        borderStyle: "hidden",
+        boxShadow: "0 0 0 1px #ddd",
+        width: "95%",
+        fontSize: 14,
+        margin: 5,
+
+        td: {
+            border: "1px solid #ddd",
+            paddingLeft: 8,
+            paddingRight: 8,
+            textAlign: "center"
+        },
+
+        th: {
+            border: "1px solid #ddd",
+            paddingTop: 12,
+            paddingBottom: 12,
+            textAlign: "left",
+            backgroundColor: "#04AA6D",
+            color: "#FFFFFF"
+        },
+
+        tr: {
+            td: {
+                '&:first-child': {
+                    padding: 0,
+                    width: 8,
+                    border: "none"
+                }
+            }
+        },
+
+        thead: {
+            td: {
+                padding: 8
+            }
+        },
+
+        tbody: {
+            tr: {
+                '&:nth-child(even)': {
+                    backgroundColor: "#f2f2f2"
+                },
+                '&:hover': {
+                    backgroundColor: "#ddd"
+                }
+            }
+        }
+
+    }
+}));
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -60,11 +98,8 @@ export function MainTable() {
     const projectID = useAppSelector(state => state.project.project_id);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: itemCellsElement[][] }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
-    // const [rowIDs, setRowIDs] = useState([1, 2, 3, 4, 5]);
 
-    // const sensors = useSensors(
-    //     useSensor(SmartPointerSensor)
-    // );
+    const { classes, theme } = useStyles();
 
     useEffect(() => {
         let itemCells: { [keys in number]: itemCellsElement[][] } = {};
@@ -125,45 +160,26 @@ export function MainTable() {
         setItemGroupsState(itemGroups);
     }, [tableSummary, projectID]);
 
-    // const handleDragEnd = (event: any) => {
-    //     const { active, over } = event;
-
-    //     if (active.id !== over.id) {
-    //         const oldIndex = rowIDs.indexOf(active.id);
-    //         const newIndex = rowIDs.indexOf(over.id);
-    //         const newOrderArray = arrayMove(rowIDs, oldIndex, newIndex);
-    //         setRowIDs(newOrderArray);
-    //         // dispatch(reorderTodo(name, itemsAllIds, newOrderArray));
-    //     }
-    // }
-
     return (
-        <div className="tab-content">
-            {/* <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-            >
-                <SortableContext
-                    items={rowIDs}
-                    strategy={verticalListSortingStrategy}
-                >
-                    {rowIDs.map((rowID) => (
-                        <TableRow
-                            key={rowID}
-                            rowID={rowID}
-                        />
-                    ))}
-                </SortableContext>
-            </DndContext> */}
+        <div className="main-table">
             {
                 itemGroupsState.map(({ item_group_id, item_group_name }) => {
                     return (
-                        <div className={`table_group_${item_group_id}`}>
-                            <div>{item_group_name}</div>
-                            <table>
+                        <div
+                            className={classes.itemGroup}
+                        >
+                            <div
+                                style={{ color: theme.colors.groupTag[item_group_id] }}
+                            >
+                                {item_group_name}
+                            </div>
+                            <table
+                                id={`table_group_${item_group_id}`}
+                                className={classes.tableGroup}
+                            >
                                 <thead>
                                     <tr>
+                                        <td></td>
                                         <td>Item</td>
                                         <td>Persons</td>
                                         <td>Dates</td>
@@ -177,16 +193,17 @@ export function MainTable() {
                                     {
                                         itemCellsState[item_group_id].map((row) => {
                                             return (
-                                                    <tr>
-                                                        <td>
-                                                            {row[0].item_name}
-                                                        </td>
-                                                        {
-                                                            row.map(cell => {
-                                                                return retrieveCellData(cell)
-                                                            })
-                                                        }
-                                                    </tr>
+                                                <tr>
+                                                    <td style={{ backgroundColor: theme.colors.groupTag[item_group_id] }}></td>
+                                                    <td>
+                                                        {row[0].item_name}
+                                                    </td>
+                                                    {
+                                                        row.map(cell => {
+                                                            return retrieveCellData(cell)
+                                                        })
+                                                    }
+                                                </tr>
                                             )
                                         })
                                     }
