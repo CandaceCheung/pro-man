@@ -13,11 +13,11 @@ const useStyles = createStyles(theme => ({
     hovertext: {
         position: "relative",
 
-        "&:hover:before": {
+        "&:hover::before": {
             opacity: 1,
             visibility: "visible"
         },
-        "&:before": {
+        "&::before": {
             content: "attr(data-hover)",
             visibility: "hidden",
             opacity: 0,
