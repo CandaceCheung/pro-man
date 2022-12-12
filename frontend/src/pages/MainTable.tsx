@@ -169,7 +169,7 @@ export function MainTable() {
                             className={classes.itemGroup}
                         >
                             <div
-                                style={{ color: theme.colors.groupTag[item_group_id] }}
+                                style={{ color: theme.colors.groupTag[item_group_id % 8] }}
                             >
                                 {item_group_name}
                             </div>
