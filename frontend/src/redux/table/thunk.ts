@@ -1,6 +1,7 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, updateItemGroupNameAction, updateItemGroupNameFailedAction } from "./slice";
+import { showNotification } from '@mantine/notifications';
 
 export function getTable(userID: number) {
 	return async (dispatch: Dispatch) => {
@@ -67,6 +68,34 @@ export function updateDatelineItem(datelineID: number, date: number) {
 			dispatch(updateDatelineItemAction({datelineID, date}))
 		} else {
 			dispatch(getTableFailedAction())
+		}
+	};
+}
+
+export function updateItemGroupName(itemGroupId: number, itemGroupName: string) {
+	return async (dispatch: Dispatch) => {
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/updateItemGroupName`,{
+			method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                itemGroupId,
+                itemGroupName
+            })
+	});
+		const result = await res.json();
+
+		if (result.success) {
+			dispatch(updateItemGroupNameAction({itemGroupId, itemGroupName}));
+		} else {			
+			showNotification({
+				title: 'Data update notification',
+                message: 'Failed to update group item name! 🤥'
+            });
+			dispatch(updateItemGroupNameFailedAction());
 		}
 	};
 }

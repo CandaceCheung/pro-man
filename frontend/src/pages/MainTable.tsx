@@ -1,9 +1,10 @@
 import React from 'react';
 import { createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { useAppSelector } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
+import { updateItemGroupName } from '../redux/table/thunk';
 
 const useStyles = createStyles(theme => ({
     collapserButton: {
@@ -203,6 +204,7 @@ export function MainTable() {
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
+    const dispatch = useAppDispatch();
     const { classes, theme } = useStyles();
 
     useEffect(() => {
@@ -308,6 +310,7 @@ export function MainTable() {
             setItemGroupsState(newItemGroupsState);
 
             // Fetch to the server
+            dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, value));
         }
     }
 

@@ -7,6 +7,7 @@ import { tableController } from "../app";
     tableRoutes.get('/:userID', tableController.getTable);
     tableRoutes.put('/updateTimeline', tableController.updateTimeline);
     tableRoutes.put('/updateDateline', tableController.updateDateline);
+    tableRoutes.put('/updateItemGroupName', tableController.updateItemGroupName);
 
     return tableRoutes;
  }

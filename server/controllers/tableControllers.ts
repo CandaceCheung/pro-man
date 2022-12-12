@@ -47,4 +47,16 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Update Timeline" });
         }
     }
+    updateItemGroupName = async (req: Request, res: Response) => {
+        try {
+            const itemGroupId = req.body.itemGroupId;
+            const itemGroupName = req.body.itemGroupName;
+            await this.tableService.updateItemGroupName(itemGroupId, itemGroupName);
+
+            res.json({success: false});
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Update Item Group Name" });
+        }
+    }
 }

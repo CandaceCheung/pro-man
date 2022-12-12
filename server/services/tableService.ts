@@ -2,8 +2,8 @@ import { format } from "date-fns";
 import { Knex } from "knex";
 
 export class TableService {
-    constructor(private knex: Knex) {}
-    
+    constructor(private knex: Knex) { }
+
     async getTableInfo(userID: number) {
         const projectsDetail = await this.knex.select(
             'projects.name as project_name',
@@ -42,7 +42,7 @@ export class TableService {
             'types.name as element_name',
             'types.type as type_name',
             'types.id as horizontal_order_id'
-            )
+        )
             .from('members')
             .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
@@ -57,7 +57,7 @@ export class TableService {
             .join('type_status', 'type_status.item_id', '=', 'items.id')
             .join('states', 'type_status.state_id', '=', 'states.id')
             .join('type_text', 'type_text.item_id', '=', 'items.id')
-            .join('types', function (){
+            .join('types', function () {
                 this
                     .on('type_text.type_id', '=', 'types.id')
                     .orOn('type_status.type_id', '=', 'types.id')
@@ -76,19 +76,25 @@ export class TableService {
         return projectsDetail
     }
 
-    async updateTimelineService(id :number, start: number, end: number){
+    async updateTimelineService(id: number, start: number, end: number) {
         await this.knex('type_times').update({
             start_date: start,
             end_date: end
         })
-        .where('id', id)
+            .where('id', id)
     }
 
-    async updateDatelineService(id :number, date: number){
+    async updateDatelineService(id: number, date: number) {
         await this.knex('type_dates').update({
             datetime: format(new Date(date), 'yyyy-MM-dd'),
         })
-        .where('id', id)
+            .where('id', id)
+    }
+
+    async updateItemGroupName(id: number, name: string) {
+        await this.knex('item_groups').update({
+            name: name
+        }).where("id", id);
     }
 
 }

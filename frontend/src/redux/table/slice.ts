@@ -103,6 +103,18 @@ const updateDatelineItem: CaseReducer<TableStateArray, PayloadAction<{datelineID
         }
     }
 }
+const updateItemGroupName: CaseReducer<TableStateArray, PayloadAction<{itemGroupId: number, itemGroupName: string}>> =
+(state, action) =>  {
+    for (let item of state){
+        if (item.item_group_id === action.payload.itemGroupId){
+            item.item_group_name = action.payload.itemGroupName;
+        }
+    }
+}
+const updateItemGroupNameFailed: CaseReducer<TableStateArray, PayloadAction> =
+(state, action) =>  {
+    state[0] = {...state[0]};
+}
 
 const tableSlice = createSlice({
     name: 'table',
@@ -111,7 +123,9 @@ const tableSlice = createSlice({
         getTable,
         getTableFailed,
         updateTimelineItem,
-        updateDatelineItem
+        updateDatelineItem,
+        updateItemGroupName,
+        updateItemGroupNameFailed
     },
 })
 
@@ -119,7 +133,9 @@ export const {
     getTable: getTableAction, 
     getTableFailed: getTableFailedAction,
     updateTimelineItem: updateTimelineItemAction,
-    updateDatelineItem: updateDatelineItemAction
+    updateDatelineItem: updateDatelineItemAction,
+    updateItemGroupName: updateItemGroupNameAction,
+    updateItemGroupNameFailed: updateItemGroupNameFailedAction,
 } = tableSlice.actions
 
 export default tableSlice.reducer
