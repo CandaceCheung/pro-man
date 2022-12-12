@@ -37,6 +37,31 @@ const useStyles = createStyles(theme => ({
         }
     },
 
+    itemCount: {
+        position: "relative",
+        "&:hover::after": {
+            opacity: 1,
+            visibility: "visible"
+        },
+        "&::after": {
+            content: "attr(item-count)",
+            visibility: "hidden",
+            opacity: 0,
+            width: "max-content",
+            color: "#676879",
+            textAlign: "center",
+            transition: "opacity 0.5s ease-in-out",
+            position: "absolute",
+            zIndex: 1,
+            left: "110%",
+            top: "50%",
+            transform: "translate(0, -50%)",
+            fontSize: 15,
+            fontWeight: "normal"
+        }
+
+    },
+
     itemGroup: {
         marginTop: 20,
         padding: 10,
@@ -62,7 +87,7 @@ const useStyles = createStyles(theme => ({
                     borderRadius: 5,
 
                     "&:hover": {
-                        border: "1px solid #ddd",
+                        border: "1px solid #ddd"
                     }
                 }
             }
@@ -251,8 +276,17 @@ export function MainTable() {
                                         />}
                                 </span>
                                 <span
-                                    className={classes.hovertext}
+                                    className={classes.hovertext + " " + classes.itemCount}
                                     data-hover="Click to edit"
+                                    item-count={
+                                        itemCellsState[item_group_id].length
+                                        ?
+                                        itemCellsState[item_group_id].length 
+                                            + " item" 
+                                            + `${itemCellsState[item_group_id].length === 1 ? "" : "s"}`
+                                        :
+                                        "No items"
+                                    }
                                 >
                                     {item_group_name}
                                 </span>
