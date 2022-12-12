@@ -9,6 +9,8 @@ export class TableService {
             'projects.name as project_name',
             'projects.id as project_id',
             'projects.is_deleted as project_is_deleted',
+            'favorite.project_id as project_is_favorite',
+            'favorite.id as my_favorite_list',
             'users.role',
             'projects.creator_id as project_creator_id',
             'members.project_id as joined_project_id',
@@ -44,6 +46,7 @@ export class TableService {
             .from('members')
             .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
+            .join('favorite', 'favorite.user_id', 'users.id')
             .join('items', 'items.project_id', '=', 'projects.id')
             .join('item_groups', 'items.item_group_id', '=', 'item_groups.id')
             .join('type_persons', 'type_persons.item_id', '=', 'items.id')
