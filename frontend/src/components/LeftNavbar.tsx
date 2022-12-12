@@ -18,7 +18,8 @@ import {
 import { Logo, LogoProps } from "./Logo";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/auth/thunk";
-import { useAppDispatch } from "../store";
+import { useAppDispatch, useAppSelector } from "../store";
+import { toggleFavoriteAction, toggleSidePanelAction } from "../redux/project/slice";
 
 const useStyles = createStyles((theme) => ({
     link: {
@@ -94,14 +95,34 @@ export function LeftNavbar() {
     const [active, setActive] = useState(0);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const toggleSidePanel = useAppSelector(state=>state.project.toggle_side_panel)
+    const toggleFavorite = useAppSelector(state=>state.project.toggle_favorite)
+    
+
     const iconLinks = navButtons.map((item, index) => (
         <NavbarLink
             {...item}
             key={item.label}
             active={index === active}
             onClick={() => {
-                setActive(index);
-                navigate(item.path);
+                if (item.path === 'favorite'){
+                    if (toggleSidePanel && !toggleFavorite){
+                        setActive(index)
+                        navigate('/home')
+                        dispatch(toggleSidePanelAction(true))
+                        dispatch(toggleFavoriteAction(true))
+                    } else {
+                        setActive(index)
+                        navigate('/home')
+                        dispatch(toggleFavoriteAction(!toggleFavorite))
+                        dispatch(toggleSidePanelAction(!toggleSidePanel))
+                    }
+                } else {
+                    setActive(index)
+                    navigate(item.path);
+                    dispatch(toggleSidePanelAction(false))
+                    dispatch(toggleFavoriteAction(false))
+                }
             }}
         />
     ));

@@ -177,7 +177,7 @@ export function TimeFrame() {
         <ClockLoader 
           color={'#238BE6'}
           loading={loading}
-          size={150}
+          size={200}
           aria-label="Loading Spinner"
           data-testid="loader"
         />
