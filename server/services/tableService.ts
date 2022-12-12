@@ -65,7 +65,7 @@ export class TableService {
             })
             .where("users.id", userID)
             .orderBy("project_id", 'asc')
-            .orderBy("item_group_id", 'asc')
+            .orderBy("item_group_id", 'desc')
             .orderBy("item_id", 'asc')
             .orderBy("vertical_order", 'asc')
             .orderBy("horizontal_order", 'asc');
