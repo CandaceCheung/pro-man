@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, updateItemGroupNameAction, updateItemGroupNameFailedAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, updateItemGroupNameFailedAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 
 export function getTable(userID: number) {
@@ -96,6 +96,23 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string) 
                 message: 'Failed to update group item name! 🤥'
             });
 			dispatch(updateItemGroupNameFailedAction());
+		}
+	};
+}
+
+export function getFavorite(userId: number) {
+	return async (dispatch: Dispatch) => {
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/favorite:${userId}`
+		);
+		const result = await res.json();
+
+		if (result.success) {
+			console.log("Request Passed")
+			dispatch(getFavoriteAction(result.favorite))
+		} else {
+			dispatch(getTableFailedAction())
 		}
 	};
 }

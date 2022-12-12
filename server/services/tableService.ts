@@ -9,8 +9,6 @@ export class TableService {
             'projects.name as project_name',
             'projects.id as project_id',
             'projects.is_deleted as project_is_deleted',
-            'favorite.project_id as project_is_favorite',
-            'favorite.id as my_favorite_list',
             'users.role',
             'projects.creator_id as project_creator_id',
             'members.project_id as joined_project_id',
@@ -46,7 +44,6 @@ export class TableService {
             .from('members')
             .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
-            .join('favorite', 'favorite.user_id', 'users.id')
             .join('items', 'items.project_id', '=', 'projects.id')
             .join('item_groups', 'items.item_group_id', '=', 'item_groups.id')
             .join('type_persons', 'type_persons.item_id', '=', 'items.id')
@@ -66,7 +63,7 @@ export class TableService {
                     .orOn('type_dates.type_id', '=', 'types.id')
                     .orOn('type_persons.type_id', '=', 'types.id')
             })
-            .where("members.user_id", userID)
+            .where("users.id", userID)
             .orderBy("project_id", 'asc')
             .orderBy("item_group_id", 'desc')
             .orderBy("item_id", 'asc')
@@ -74,6 +71,32 @@ export class TableService {
             .orderBy("horizontal_order", 'asc');
 
         return projectsDetail
+    }
+
+    async getFavorite (userId: number){
+        const favoriteList = await this.knex.select(
+            'projects.creator_id as creator_id',
+            'projects.name as project_name',
+            'favorite.id as favorite_id'
+        )
+        .from('favorite')
+        .join('projects', 'favorite.project_id','=', 'projects.id')
+        .where('favorite.user_id', '=', userId)
+
+        return favoriteList
+    }
+
+    async getFavorite (userId: number){
+        const favoriteList = await this.knex.select(
+            'projects.creator_id as creator_id',
+            'projects.name as project_name',
+            'favorite.id as favorite_id'
+        )
+        .from('favorite')
+        .join('projects', 'favorite.project_id','=', 'projects.id')
+        .where('favorite.user_id', '=', userId)
+
+        return favoriteList
     }
 
     async updateTimelineService(id: number, start: number, end: number) {
