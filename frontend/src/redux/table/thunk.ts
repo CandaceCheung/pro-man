@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction } from "./slice";
 
 export function getTable(userID: number) {
 	return async (dispatch: Dispatch) => {
@@ -65,6 +65,23 @@ export function updateDatelineItem(datelineID: number, date: number) {
 		if (result.success) {
 			console.log("Update Success")
 			dispatch(updateDatelineItemAction({datelineID, date}))
+		} else {
+			dispatch(getTableFailedAction())
+		}
+	};
+}
+
+export function getFavorite(userId: number) {
+	return async (dispatch: Dispatch) => {
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/favorite:${userId}`
+		);
+		const result = await res.json();
+
+		if (result.success) {
+			console.log("Request Passed")
+			dispatch(getFavoriteAction(result.favorite))
 		} else {
 			dispatch(getTableFailedAction())
 		}
