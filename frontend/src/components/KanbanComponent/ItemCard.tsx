@@ -6,6 +6,7 @@ export type itemCardProps = {
     memberName: string;
     itemDate: string;
 };
+
 export function ItemCard(props: itemCardProps) {
     return (
         <Card
@@ -15,9 +16,12 @@ export function ItemCard(props: itemCardProps) {
             withBorder
             sx={{ maxWidth: 300 }}
             mx="auto"
+            m={10}
         >
             <div className="item-card">
-                <Text weight={550} mb={10}>{props.itemName}</Text>
+                <Text weight={550} mb={10}>
+                    {props.itemName}
+                </Text>
                 <div className="person-name">
                     <Group position="left">
                         <ThemeIcon
@@ -47,7 +51,7 @@ export function ItemCard(props: itemCardProps) {
                         <Text weight={500} color="dimmed">
                             Date
                         </Text>
-                            <div>{props.itemDate}</div>
+                        <div>{props.itemDate}</div>
                     </Group>
                 </div>
             </div>
