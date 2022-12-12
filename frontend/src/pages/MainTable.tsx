@@ -324,6 +324,20 @@ export function MainTable() {
         }))
     }
 
+    const handleItemGroupInputKeyDown = (index: number, key: string) => {
+        if (key === "Enter") {
+            // Set new group name into itemGroupsState
+            const groupId = itemGroupsState[index].item_group_id;
+            const newValue = itemGroupsInputValueState[index];
+            let newItemGroupsState: itemsGroupElement[] = JSON.parse(JSON.stringify(itemGroupsState));
+            newItemGroupsState[index].item_group_name = newValue;
+            setItemGroupsState(newItemGroupsState);
+
+            // Fetch to the server
+            dispatch(updateItemGroupName(groupId, newValue));
+        }
+    }
+
     return (
         <div className="main-table">
             {
@@ -375,6 +389,10 @@ export function MainTable() {
                                                 onChange={(e) => changeItemGroupInputValue(
                                                     itemGroupArrayIndex,
                                                     e.target.value
+                                                )}
+                                                onKeyDown={(e) => handleItemGroupInputKeyDown(
+                                                    itemGroupArrayIndex,
+                                                    e.key
                                                 )}
                                             >
 
