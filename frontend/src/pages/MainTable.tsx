@@ -1,39 +1,84 @@
 import React from 'react';
-// import {
-//     DndContext,
-//     closestCenter,
-//     useSensor,
-//     useSensors,
-// } from '@dnd-kit/core';
-// import {
-//     arrayMove,
-//     SortableContext,
-//     verticalListSortingStrategy,
-// } from '@dnd-kit/sortable';
-// import { SmartPointerSensor } from '../pointerSensor';
+import { createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
-// import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
+import { ItemGroupCollapserDown, ItemGroupCollapserRight } from '../components/MainTableComponents/ItemGroupCollapser';
 
-// export const elements: TableElement = {
-//     1: { 1: 6, 2: 12.011, 3: 'C', 4: 'Carbon' },
-//     2: { 1: 7, 2: 14.007, 3: 'N', 4: 'Nitrogen' },
-//     3: { 1: 39, 2: 88.906, 3: 'Y', 4: 'Yttrium' },
-//     4: { 1: 56, 2: 137.33, 3: 'Ba', 4: 'Barium' },
-//     5: { 1: 58, 2: 140.12, 3: 'Ce', 4: 'Cerium' },
-// }
+const useStyles = createStyles(theme => ({
+    itemGroup: {
+        marginTop: 20,
+        padding: 10,
 
-// export interface TableElement {
-//     [keys: number]: RowElement
-// }
+        "> div": {
+            fontWeight: "bold",
+            fontSize: 18,
+            marginLeft: 10,
+            marginBottom: 10,
 
-// export interface RowElement {
-//     1: number,
-//     2: number,
-//     3: string,
-//     4: string
-// }
+            span: {
+                marginLeft: 10,
+                marginRight: 10,
+                cursor: "pointer"
+            }
+        }
+    },
+
+    tableGroup: {
+        fontFamily: "Roboto",
+        borderCollapse: "collapse",
+        borderRadius: 10,
+        borderStyle: "hidden",
+        boxShadow: "0 0 0 1px #ddd",
+        minWidth: getWidth() - 180,
+        fontSize: 14,
+        margin: 5,
+
+        td: {
+            border: "1px solid #ddd",
+            paddingLeft: 8,
+            paddingRight: 8,
+            textAlign: "center"
+        },
+
+        th: {
+            border: "1px solid #ddd",
+            paddingTop: 12,
+            paddingBottom: 12,
+            textAlign: "left",
+            backgroundColor: "#04AA6D",
+            color: "#FFFFFF"
+        },
+
+        tr: {
+            td: {
+                '&:first-of-type': {
+                    padding: 0,
+                    width: 8,
+                    border: "none"
+                }
+            }
+        },
+
+        thead: {
+            td: {
+                padding: 8
+            }
+        },
+
+        tbody: {
+            tr: {
+                '&:nth-of-type(even)': {
+                    backgroundColor: "#f2f2f2"
+                },
+                '&:hover': {
+                    backgroundColor: "#ddd"
+                }
+            }
+        }
+
+    }
+}));
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -53,6 +98,7 @@ export interface itemCellsElement {
 export interface itemsGroupElement {
     item_group_id: TableState["item_group_id"],
     item_group_name: TableState["item_group_name"],
+    item_group_collapsed: boolean
 }
 
 export function MainTable() {
@@ -60,11 +106,8 @@ export function MainTable() {
     const projectID = useAppSelector(state => state.project.project_id);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: itemCellsElement[][] }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
-    // const [rowIDs, setRowIDs] = useState([1, 2, 3, 4, 5]);
 
-    // const sensors = useSensors(
-    //     useSensor(SmartPointerSensor)
-    // );
+    const { classes, theme } = useStyles();
 
     useEffect(() => {
         let itemCells: { [keys in number]: itemCellsElement[][] } = {};
@@ -114,7 +157,8 @@ export function MainTable() {
                 } else {
                     itemGroups.push({
                         item_group_id: cell.item_group_id,
-                        item_group_name: cell.item_group_name
+                        item_group_name: cell.item_group_name,
+                        item_group_collapsed: false
                     });
                     previousItemID = currentItemID;
                     itemCells[itemGroupID] = [[itemCell]];
@@ -125,73 +169,78 @@ export function MainTable() {
         setItemGroupsState(itemGroups);
     }, [tableSummary, projectID]);
 
-    // const handleDragEnd = (event: any) => {
-    //     const { active, over } = event;
-
-    //     if (active.id !== over.id) {
-    //         const oldIndex = rowIDs.indexOf(active.id);
-    //         const newIndex = rowIDs.indexOf(over.id);
-    //         const newOrderArray = arrayMove(rowIDs, oldIndex, newIndex);
-    //         setRowIDs(newOrderArray);
-    //         // dispatch(reorderTodo(name, itemsAllIds, newOrderArray));
-    //     }
-    // }
+    const toggleItemGroupCollapsed = (index: number) => {
+        const newItemGroupState = JSON.parse(JSON.stringify(itemGroupsState));
+        setItemGroupsState(newItemGroupState.map((each: itemsGroupElement, i: number) => {
+            if (index === i) {
+                each.item_group_collapsed = !each.item_group_collapsed;
+            }
+            return each;
+        }));
+    }
 
     return (
-        <div className="tab-content">
-            {/* <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-            >
-                <SortableContext
-                    items={rowIDs}
-                    strategy={verticalListSortingStrategy}
-                >
-                    {rowIDs.map((rowID) => (
-                        <TableRow
-                            key={rowID}
-                            rowID={rowID}
-                        />
-                    ))}
-                </SortableContext>
-            </DndContext> */}
+        <div className="main-table">
             {
-                itemGroupsState.map(({ item_group_id, item_group_name }) => {
+                itemGroupsState.map(({ item_group_id, item_group_name, item_group_collapsed }, itemGroupArrayIndex) => {
                     return (
-                        <div className={`table_group_${item_group_id}`}>
-                            <div>{item_group_name}</div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <td>Item</td>
-                                        <td>Persons</td>
-                                        <td>Dates</td>
-                                        <td>Times</td>
-                                        <td>Money</td>
-                                        <td>Status</td>
-                                        <td>Text</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                        <div
+                            className={classes.itemGroup}
+                            key={itemGroupArrayIndex}
+                        >
+                            <div
+                                style={{
+                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                }}
+                            >
+                                <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} key={itemGroupArrayIndex}>
                                     {
-                                        itemCellsState[item_group_id].map((row) => {
-                                            return (
-                                                    <tr>
+                                        item_group_collapsed ? <ItemGroupCollapserRight size={12} /> : <ItemGroupCollapserDown size={12} />
+                                    }
+                                </span>
+                                {item_group_name}
+                            </div>
+                            {
+                                !item_group_collapsed &&
+                                <table
+                                    id={`table_group_${item_group_id}`}
+                                    className={classes.tableGroup}
+                                >
+                                    <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td>Item</td>
+                                            <td>Persons</td>
+                                            <td>Dates</td>
+                                            <td>Times</td>
+                                            <td>Money</td>
+                                            <td>Status</td>
+                                            <td>Text</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            itemCellsState[item_group_id].map((row, rowIndex) => {
+                                                return (
+                                                    <tr
+                                                        key={"row" + rowIndex}
+                                                    >
+                                                        <td style={{ backgroundColor: theme.colors.groupTag[item_group_id] }}></td>
                                                         <td>
                                                             {row[0].item_name}
                                                         </td>
                                                         {
-                                                            row.map(cell => {
-                                                                return retrieveCellData(cell)
+                                                            row.map((cell, cellIndex) => {
+                                                                return retrieveCellData(cell, cellIndex)
                                                             })
                                                         }
                                                     </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            }
                         </div>
                     )
                 })
@@ -200,50 +249,74 @@ export function MainTable() {
     )
 }
 
-function retrieveCellData(cell: itemCellsElement): JSX.Element {
+function retrieveCellData(cell: itemCellsElement, cellIndex: number): JSX.Element {
     switch (cell.type_name) {
         case "persons":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     {cell.item_person_name}
                 </td>
             )
         case "dates":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     {cell.item_dates_datetime}
                 </td>
             )
         case "money":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     <span>{cell.item_money_date}</span>
                     <span>{cell.item_money_cashflow}</span>
                 </td>
             )
         case "times":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     <div>{"Start:" + cell.item_times_start_date}</div>
                     <div>{"End:" + cell.item_times_end_date}</div>
                 </td>
             )
         case "status":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     <div>{"Status:" + cell.item_status_name}</div>
                     <div>{"Color:" + cell.item_status_color}</div>
                 </td>
             )
         case "text":
             return (
-                <td>
+                <td
+                    key={"cell" + cellIndex}
+                >
                     {cell.item_text_text}
                 </td>
             )
         default:
             return (
-                <td></td>
+                <td
+                    key={"cell" + cellIndex}
+                ></td>
             )
     }
+}
+
+function getWidth() {
+    return Math.max(
+        document.body.scrollWidth,
+        document.documentElement.scrollWidth,
+        document.body.offsetWidth,
+        document.documentElement.offsetWidth,
+        document.documentElement.clientWidth
+    );
 }

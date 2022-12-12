@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "local-testing/TableRow.tsx"  ]
 }

@@ -15,7 +15,7 @@ import {
     IconLogout,
     TablerIcon,
 } from "@tabler/icons";
-import { Logo, LogoProbs } from "./Logo";
+import { Logo, LogoProps } from "./Logo";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/auth/thunk";
 import { useAppDispatch } from "../store";
@@ -59,7 +59,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface NavbarLinkProps {
-    icon: TablerIcon | FC<LogoProbs>;
+    icon: TablerIcon | FC<LogoProps>;
     label: string;
     active?: boolean;
     onClick?(): void;
