@@ -1,6 +1,5 @@
 import { Card, Group, Text, ThemeIcon, UnstyledButton } from "@mantine/core";
 import { IconPlus } from "@tabler/icons";
-import { randomFill } from "crypto";
 import { ItemCard } from "./ItemCard";
 
 export type Item = {
@@ -18,7 +17,7 @@ type StatusProps = {
 
 export function StatusColumn(props: StatusProps) {
     return (
-        <Card shadow="sm" p="lg" radius="md" withBorder m={15}>
+        <Card shadow="sm" p="lg" radius="md" withBorder m={15} maw={300} mah={750}>
             <Group >
                 <Text weight={500}>
                     {props.statesName} / {props.itemList.length}

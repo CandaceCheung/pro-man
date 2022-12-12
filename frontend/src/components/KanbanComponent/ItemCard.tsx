@@ -26,7 +26,7 @@ export function ItemCard(props: itemCardProps) {
                             variant="outline"
                             color="gray"
                         >
-                        <IconUserCircle />
+                            <IconUserCircle />
                         </ThemeIcon>
                         <Text weight={500} color="dimmed">
                             Person
@@ -47,7 +47,7 @@ export function ItemCard(props: itemCardProps) {
                         <Text weight={500} color="dimmed">
                             Date
                         </Text>
-                        <div>{props.itemDate}</div>
+                        {props.itemDate}
                     </Group>
                 </div>
             </div>
