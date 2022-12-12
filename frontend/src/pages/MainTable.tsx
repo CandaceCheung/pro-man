@@ -6,8 +6,35 @@ import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 
 const useStyles = createStyles(theme => ({
-    collapser: {
+    collapserButton: {
         transform: "rotate(90deg)"
+    },
+
+    hovertext: {
+        position: "relative",
+
+        "&:hover:before": {
+            opacity: 1,
+            visibility: "visible"
+        },
+        "&:before": {
+            content: "attr(data-hover)",
+            visibility: "hidden",
+            opacity: 0,
+            width: "max-content",
+            backgroundColor: "black",
+            color: "#fff",
+            textAlign: "center",
+            borderRadius: 5,
+            padding: "5px 5px",
+            transition: "opacity 0.5s ease-in-out",
+            position: "absolute",
+            zIndex: 1,
+            left: "50%",
+            top: "-110%",
+            transform: "translate(-50%, 0)",
+            fontSize: 10
+        }
     },
 
     itemGroup: {
@@ -29,6 +56,14 @@ const useStyles = createStyles(theme => ({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center"
+                },
+                "&:nth-of-type(2)": {
+                    border: "1px solid transparent",
+                    borderRadius: 5,
+
+                    "&:hover": {
+                        border: "1px solid #ddd",
+                    }
                 }
             }
         }
@@ -40,7 +75,7 @@ const useStyles = createStyles(theme => ({
         borderRadius: 10,
         borderStyle: "hidden",
         boxShadow: "0 0 0 1px #ddd",
-        minWidth: getWidth() - 180,
+        minWidth: `max(${getWidth() - 180}px, 844px)`,
         fontSize: 14,
         margin: 5,
 
@@ -205,15 +240,20 @@ export function MainTable() {
                             >
                                 <span
                                     onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
+                                    className={classes.hovertext}
+                                    data-hover={item_group_collapsed ? "Expand group" : "Collapse Group"}
                                     key={itemGroupArrayIndex}
                                 >
                                     {
                                         <ItemGroupCollapser
                                             size={20}
-                                            className={item_group_collapsed ? "" : classes.collapser}
+                                            className={item_group_collapsed ? "" : classes.collapserButton}
                                         />}
                                 </span>
-                                <span>
+                                <span
+                                    className={classes.hovertext}
+                                    data-hover="Click to edit"
+                                >
                                     {item_group_name}
                                 </span>
                             </div>
