@@ -30,7 +30,7 @@ const useStyles = createStyles(theme => ({
         borderRadius: 10,
         borderStyle: "hidden",
         boxShadow: "0 0 0 1px #ddd",
-        width: "95%",
+        width: getWidth() - 180,
         fontSize: 14,
         margin: 5,
 
@@ -310,3 +310,13 @@ function retrieveCellData(cell: itemCellsElement, cellIndex: number): JSX.Elemen
             )
     }
 }
+
+function getWidth() {
+    return Math.max(
+      document.body.scrollWidth,
+      document.documentElement.scrollWidth,
+      document.body.offsetWidth,
+      document.documentElement.offsetWidth,
+      document.documentElement.clientWidth
+    );
+  }
