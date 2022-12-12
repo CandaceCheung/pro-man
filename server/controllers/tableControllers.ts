@@ -68,7 +68,7 @@ export class TableController {
             const itemGroupName = req.body.itemGroupName;
             await this.tableService.updateItemGroupName(itemGroupId, itemGroupName);
 
-            res.json({success: false});
+            res.json({success: true});
         } catch(e) {
             console.error(e);
             res.status(500).json({ msg: "[TAB] Fail to Update Item Group Name" });
