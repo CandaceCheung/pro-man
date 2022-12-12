@@ -193,7 +193,7 @@ export function TimeFrame() {
           useResizeHandle
           sidebarWidth={toggle ? 30 : 150}
           keys={keys}
-          stackItems
+          stackItems={true}
           itemHeightRatio={0.75}
           canMove
           canResize={'both'}

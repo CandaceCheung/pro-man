@@ -21,6 +21,10 @@ function App() {
     const userId = useAppSelector((state) => state.auth.userId);
 
     useEffect(() => {
+        document.title = 'Pro-Man: Project Management Too';
+    }, []);
+
+    useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
         userId !== null && dispatch(getTable(userId));
