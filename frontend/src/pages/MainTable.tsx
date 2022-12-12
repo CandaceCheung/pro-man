@@ -50,7 +50,6 @@ const useStyles = createStyles(theme => ({
             width: "max-content",
             color: "#676879",
             textAlign: "center",
-            transition: "opacity 0.5s ease-in-out",
             position: "absolute",
             zIndex: 1,
             left: "110%",
