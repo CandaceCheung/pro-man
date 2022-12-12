@@ -7,6 +7,8 @@ export type ActivePageState = 'timeline'|'mainTable'|'kanban'|'cashflow'
 export interface ActiveProjectState {
     project_id : number | null
     active_page : ActivePageState | null
+    toggle_side_panel: boolean
+    toggle_favorite: boolean
     time_line_view: TimeLineViewState
     time_line_autofit: boolean
     time_line_now: boolean
@@ -19,6 +21,8 @@ export interface ActiveProjectState {
 const initialState: ActiveProjectState = {
     project_id: null,
     active_page: 'mainTable',
+    toggle_side_panel: false,
+    toggle_favorite: false,
     time_line_view: 'weeks',
     time_line_autofit: false,
     time_line_now: false,
@@ -41,7 +45,11 @@ const setShowMarker : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 const triggerTimelineModal : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_modal_opened = action.payload} 
 const setActivePage : CaseReducer<ActiveProjectState, PayloadAction<ActivePageState|null>> =
-(state, action) =>  {state.active_page= action.payload} 
+(state, action) =>  {state.active_page= action.payload}
+const toggleSidePanel : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.toggle_side_panel = action.payload} 
+const toggleFavorite : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.toggle_favorite = action.payload} 
 
 
 
@@ -55,7 +63,9 @@ const projectSlice = createSlice({
         setTimelineNow,
         setShowMarker,
         triggerTimelineModal,
-        setActivePage
+        setActivePage,
+        toggleSidePanel,
+        toggleFavorite,
     },
 })
 
@@ -67,6 +77,8 @@ export const {
     setShowMarker: setShowMarkerAction,
     triggerTimelineModal: triggerTimelineModalAction,
     setActivePage: setActivePageAction,
+    toggleSidePanel: toggleSidePanelAction,
+    toggleFavorite: toggleFavoriteAction
 } = projectSlice.actions
 
 export default projectSlice.reducer
