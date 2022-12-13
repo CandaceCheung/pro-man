@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Modal, Button, Group, Input, Tooltip } from '@mantine/core';
 import { IconAlertCircle, IconChevronDown, IconIndentIncrease } from '@tabler/icons';
 import { triggerTimelineModalAction } from '../../redux/project/slice';
