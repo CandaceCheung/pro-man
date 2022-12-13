@@ -117,6 +117,37 @@ export function getFavorite(userId: number) {
 	};
 }
 
+export function insertItem(projectId: number, userId: number) {
+	return async (dispatch: Dispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/insertItem`, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				projectId,
+				userId
+			})
+		});
+		const result = await res.json();
+
+		if (result.success) {
+			const res = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/table/${userId}`
+			);
+			const tableResult = await res.json();
+			tableResult.success && dispatch(getTableAction(tableResult.table));
+		} else {
+			showNotification({
+				title: 'Insert data notification',
+				message: 'Failed to add new item! 🤥'
+			});
+		}
+
+	}
+}
+
 export function insertItemGroup(projectId: number, userId: number) {
 	return async (dispatch: Dispatch) => {
 		const res = await fetch(
