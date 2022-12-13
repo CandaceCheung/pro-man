@@ -5,6 +5,9 @@ import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import { updateItemGroupName } from '../redux/table/thunk';
+import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { TableRow } from '../components/MainTableComponents/TableRow';
 
 const useStyles = createStyles(theme => ({
     collapserButton: {
@@ -130,7 +133,7 @@ const useStyles = createStyles(theme => ({
         fontSize: 14,
         margin: 5,
 
-        td: {
+        tdRow: {
             border: "1px solid #ddd",
             paddingLeft: 8,
             paddingRight: 8,
@@ -172,7 +175,7 @@ const useStyles = createStyles(theme => ({
                 },
                 "&:last-of-type": {
                     boxShadow: "0 6px 4px -4px #ddd",
-                    
+
                     td: {
                         "&:first-of-type": {
                             borderBottomLeftRadius: 10
@@ -215,6 +218,10 @@ export function MainTable() {
 
     const dispatch = useAppDispatch();
     const { classes, theme } = useStyles();
+
+    const sensors = useSensors(
+        useSensor(MouseSensor)
+    );
 
     useEffect(() => {
         let itemCells: { [keys in number]: itemCellsElement[][] } = {};
@@ -347,6 +354,21 @@ export function MainTable() {
         }
     }
 
+    const handleDragEndRow = (event: any) => {
+		const { active, over } = event;
+		if (active.id !== over.id) {
+            // const oldIndex = active.data.current.sortable.index;
+			// const newIndex = over.data.current.sortable.index;
+            // let newItemCellsArray = JSON.parse(JSON.stringify(itemCellsState));
+            // const newInsideArray = arrayMove(newItemCellsArray[itemGroupArrayIndex], oldIndex, newIndex)
+            // newItemCellsArray[itemGroupArrayIndex] = newInsideArray
+			// setItemCellsState(
+            //     newItemCellsArray
+            //     );
+                console.log(active.id + " " + over.id)
+            }
+	}
+
     return (
         <div className="main-table">
             {
@@ -445,25 +467,21 @@ export function MainTable() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {
-                                            itemCellsState[item_group_id].map((row, rowIndex) => {
-                                                return (
-                                                    <tr
-                                                        key={"row" + rowIndex}
-                                                    >
-                                                        <td style={{ backgroundColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length] }}></td>
-                                                        <td>
-                                                            {row[0].item_name}
-                                                        </td>
-                                                        {
-                                                            row.map((cell, cellIndex) => {
-                                                                return retrieveCellData(cell, cellIndex)
-                                                            })
-                                                        }
-                                                    </tr>
-                                                )
-                                            })
-                                        }
+                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndRow}>
+                                                <SortableContext items={itemCellsState[item_group_id].map((_, rowIndex) => "group_"+itemGroupArrayIndex+"_row_"+rowIndex)} strategy={verticalListSortingStrategy}>
+                                                    {
+                                                        itemCellsState[item_group_id].map((row, rowIndex) => 
+                                                            <TableRow 
+                                                                key={"group_"+itemGroupArrayIndex+"_row_"+rowIndex} 
+                                                                id={"group_"+itemGroupArrayIndex+"_row_"+rowIndex}
+                                                                row={row}
+                                                                color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
+                                                            />
+                                                        )
+                                                    }
+
+                                                </SortableContext>
+                                        </DndContext >
                                     </tbody>
                                 </table>
                             }
@@ -473,68 +491,6 @@ export function MainTable() {
             }
         </div>
     )
-}
-
-function retrieveCellData(cell: itemCellsElement, cellIndex: number): JSX.Element {
-    switch (cell.type_name) {
-        case "persons":
-            return (
-                <td
-                    key={"cell" + cellIndex}
-                >
-                    {cell.item_person_name}
-                </td>
-            )
-        case "dates":
-            return (
-                <td
-                    key={"cell" + cellIndex}
-                >
-                    {cell.item_dates_datetime}
-                </td>
-            )
-        case "money":
-            return (
-                <td
-                    key={"cell" + cellIndex}
-                >
-                    <span>{cell.item_money_date}</span>
-                    <span>{cell.item_money_cashflow}</span>
-                </td>
-            )
-        case "times":
-            return (
-                <td
-                    key={"cell" + cellIndex}
-                >
-                    <div>{"Start:" + cell.item_times_start_date}</div>
-                    <div>{"End:" + cell.item_times_end_date}</div>
-                </td>
-            )
-        case "status":
-            return (
-                <td
-                    key={"cell" + cellIndex}
-                >
-                    <div>{"Status:" + cell.item_status_name}</div>
-                    <div>{"Color:" + cell.item_status_color}</div>
-                </td>
-            )
-        case "text":
-            return (
-                <td
-                    key={"cell" + cellIndex}
-                >
-                    {cell.item_text_text}
-                </td>
-            )
-        default:
-            return (
-                <td
-                    key={"cell" + cellIndex}
-                ></td>
-            )
-    }
 }
 
 function getWidth() {
