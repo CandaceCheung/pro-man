@@ -176,7 +176,7 @@ export class TableService {
         }).into("type_dates");
         await this.knex.insert({
             start_date: new Date(new Date().toDateString()).getTime(),
-            end_date: new Date(new Date().toDateString()).getTime(),
+            end_date: new Date(new Date().toDateString()).getTime() + 86400000,
             color: getRandomColor(),
             type_id: typesId_times,
             item_id: itemId
