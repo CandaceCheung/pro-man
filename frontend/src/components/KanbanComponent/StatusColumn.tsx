@@ -6,8 +6,9 @@ import {
     Text,
     ThemeIcon,
     UnstyledButton,
+    createStyles,
 } from "@mantine/core";
-import { IconPlus } from "@tabler/icons";
+import { IconGripVertical, IconPlus } from "@tabler/icons";
 import { useState } from "react";
 import { useAppSelector } from "../../store";
 import { ItemCard } from "./ItemCard";
@@ -25,8 +26,28 @@ type StatusProps = {
     color: string;
 };
 
+const useStyles = createStyles((theme) => ({
+    cardHeader: {
+        align: "center",
+        "&": {
+            ".grip": {
+                opacity: 0,
+                transition: "opacity",
+            },
+        },
+
+        "&:hover": {
+            ".grip": {
+                opacity: 1,
+            },
+        },
+    },
+}));
+
 export function StatusColumn(props: StatusProps) {
     const [opened, setOpened] = useState(false);
+
+    const { classes, theme } = useStyles();
 
     const projectSummary = useAppSelector((state) => state.table.summary);
     const targetProjectId = useAppSelector((state) => state.project.project_id);
@@ -39,13 +60,11 @@ export function StatusColumn(props: StatusProps) {
         (item) => item.item_status_name === props.statesName
     );
 
-    // const itemCreator = allCreator.map
     console.log(itemsUnderSameState);
-    
-    
+
     const itemList = [];
     for (let item of itemsUnderSameState) {
-        const date =item.item_dates_datetime.slice(0,10)
+        const date = item.item_dates_datetime.slice(0, 10);
         const obj = {
             itemName: item.item_name,
             memberName: item.item_person_name,
@@ -54,7 +73,6 @@ export function StatusColumn(props: StatusProps) {
 
         itemList.push(obj);
     }
-
 
     return (
         <Card
@@ -66,12 +84,16 @@ export function StatusColumn(props: StatusProps) {
             mr={6}
             maw={320}
         >
-            <Group position="center" mb={6}>
-                {/* <Card.Section >{props.color}</Card.Section> */}
-                <Text weight={500}>
-                    {props.statesName} / {props.itemList.length}
-                </Text>
-            </Group>
+            <div className={classes.cardHeader}>
+                <Group position="left" mb={6}>
+                    <IconGripVertical className="grip" size={15} />
+
+                    {/* <Card.Section >{props.color}</Card.Section> */}
+                    <Text weight={500} ml={30}>
+                        {props.statesName} / {props.itemList.length}
+                    </Text>
+                </Group>
+            </div>
 
             <ScrollArea style={{ height: 750 }} type="auto" scrollbarSize={6}>
                 <div>
