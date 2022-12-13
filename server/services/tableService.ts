@@ -79,6 +79,7 @@ export class TableService {
     async getFavorite(userId: number) {
         const favoriteList = await this.knex.select(
             'projects.creator_id as creator_id',
+            'projects.id as project_id',
             'projects.name as project_name',
             'favorite.id as favorite_id'
         )

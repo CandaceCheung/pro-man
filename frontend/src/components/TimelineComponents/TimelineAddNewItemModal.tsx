@@ -1,10 +1,10 @@
-import { Modal, Button, Group, Input, Tooltip, NumberInput } from '@mantine/core';
+import { Modal, Button, Group, Input, Tooltip } from '@mantine/core';
 import { IconAlertCircle, IconChevronDown, IconIndentIncrease } from '@tabler/icons';
 import { triggerTimelineModalAction } from '../../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { useId, useInputState } from '@mantine/hooks';
+import { useId } from '@mantine/hooks';
 import { DatePicker, DateRangePicker, DateRangePickerValue } from '@mantine/dates'
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from '@mantine/form'
 import { GroupProps } from '../../pages/Timeline';
 
@@ -22,15 +22,15 @@ export function TimeLineAddNewItemModal(props: TimeLineAddNewItemModalProps) {
     let year = parseInt(new Date().toLocaleString("default", { year: "numeric" }));
     let month = parseInt(new Date().toLocaleString("default", { month: "2-digit" }));
     let day = parseInt(new Date().toLocaleString("default", { day: "2-digit" }));
-
+    
+    const [itemType, setItemType] = useState<'time' | 'date'>('time')
+    const [activeGroup, setActiveGroup] = useState<string>("0")
+    const [submittedValues, setSubmittedValues] = useState<string>('')
     const [value, setValue] = useState<DateRangePickerValue>([
         new Date(year, month, day),
         new Date(year, month, day + 1)
     ]);
 
-    const [itemType, setItemType] = useState<'time' | 'date'>('time')
-    const [activeGroup, setActiveGroup] = useInputState<number>(0)
-    const [submittedValues, setSubmittedValues] = useState<string>('')
 
     const onClose = () => {
         if (page === 'timeline') dispatch(triggerTimelineModalAction(false))
@@ -38,20 +38,23 @@ export function TimeLineAddNewItemModal(props: TimeLineAddNewItemModalProps) {
 
     const handleSubmit = (value: string) => {
         setSubmittedValues(value)
+        console.log(value, activeGroup)
         onClose()
     }
 
-    const changeHandler = (e: any) => {
-        setActiveGroup(parseInt(e.target.value)); 
-        console.log(activeGroup)
+    const groups = props.groups.filter((value, index, self) => index === self.findIndex((obj) => (obj.groupId === value.groupId)))
+    const groupArr = []
+    for (let group of groups){
+        groupArr.push({value: group.groupId, label: group.groupName})
     }
 
     const form = useForm({
         initialValues: {
             type: 'time',
-            block_name: '',
-            item_id: null,
-            date_range: value,
+            blockName: '',
+            groupId: "0",
+            itemId: 0,
+            dateRange: value,
             date: new Date(year, month, day)
         },
     });
@@ -66,8 +69,10 @@ export function TimeLineAddNewItemModal(props: TimeLineAddNewItemModalProps) {
                 <form
                     onSubmit={form.onSubmit((value) => handleSubmit(JSON.stringify(value, null, 2)))}
                 >
-                    <Input.Wrapper id={id} label="Select Type" required {...form.getInputProps('type')}>
-                        <Input value={itemType} component="select" onChange={(e) => setItemType(e.target.value as 'time' | 'date')} rightSection={<IconChevronDown size={14} stroke={1.5} />}>
+                    <Input.Wrapper id={id} label="Select Type" required >
+                        <Input value={itemType} component="select"
+                            {...form.getInputProps('type')}
+                            onChange={(e) => setItemType(e.target.value as 'time' | 'date')} rightSection={<IconChevronDown size={14} stroke={1.5} />}>
                             <option value={'time'}>Time Block</option>
                             <option value={'date'}>Date Block</option>
                         </Input>
@@ -76,7 +81,7 @@ export function TimeLineAddNewItemModal(props: TimeLineAddNewItemModalProps) {
                         <Input
                             icon={<IconIndentIncrease size={16} />}
                             required
-                            {...form.getInputProps('block_name')}
+                            {...form.getInputProps('blockName')}
                             placeholder="Item Name"
                             rightSection={
                                 <Tooltip label="This will be shown on the time block" position="top-end" withArrow>
@@ -88,36 +93,37 @@ export function TimeLineAddNewItemModal(props: TimeLineAddNewItemModalProps) {
                         />
                     </Input.Wrapper>
                     <Input.Wrapper id={id} label="Select Group" required>
-                        <NumberInput
-                            component="select"
+                        <Input
                             value={activeGroup}
-                            onChange={setActiveGroup}
+                            component="select"
+                            
+                            {...form.getInputProps('groupId')}
+                            onChange={(e)=>setActiveGroup(e.target.value)}
                             rightSection={<IconChevronDown size={14} stroke={1.5} />}
-                            {...form.getInputProps('item_id')}
-                        >
+                        >   
                             {props.groups.filter((value, index, self) =>
                                 index === self.findIndex((obj) => (
                                     obj.groupId === value.groupId
                                 ))
                             ).map((content, index) =>
-                                <option key={index} value={content.groupId}>{content.groupName}</option>
+                                <option key={index} value={content.groupId.toString()}>{content.groupName}</option>
                             )}
-                        </NumberInput>
+                        </Input>
                     </Input.Wrapper>
-                    {activeGroup ? <Input.Wrapper id={id} label="Select Item" required>
+                    {activeGroup !=='0' ? <Input.Wrapper id={id} label="Select Item" required>
                         <Input
                             component="select"
                             rightSection={<IconChevronDown size={14} stroke={1.5} />}
-                            {...form.getInputProps('item_id')}
+                            {...form.getInputProps('itemId')}
                         >
-                            {props.groups.filter((content, index)=> content.groupId === activeGroup).map((content, index) =>
+                            {props.groups.filter((content, index) => content.groupId === parseInt(activeGroup)).map((content, index) =>
                                 <option key={index} value={content.id}>{content.title}</option>
                             )}
                         </Input>
                     </Input.Wrapper> : null}
                     {itemType === 'time' ?
                         <DateRangePicker
-                            {...form.getInputProps('date_range')}
+                            {...form.getInputProps('dateRange')}
                             label="Pick Date Range"
                             placeholder="Pick dates range"
                             value={value}
