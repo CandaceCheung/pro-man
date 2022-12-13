@@ -129,6 +129,8 @@ const useStyles = createStyles(theme => ({
         minWidth: `max(${getWidth() - 180}px, 844px)`,
         fontSize: 14,
         margin: 5,
+        WebkitBoxShadow: "0 6px 4px -4px #ddd",
+        MozBoxShadow: "0 6px 4px -4px #ddd",
 
         td: {
             border: "1px solid #ddd",
@@ -152,6 +154,13 @@ const useStyles = createStyles(theme => ({
                     padding: 0,
                     width: 8,
                     border: "none"
+                }
+            },
+            "&:last-of-type": {
+                td: {
+                    "&:first-of-type": {
+                        borderBottomLeftRadius: 10
+                    }
                 }
             }
         },
