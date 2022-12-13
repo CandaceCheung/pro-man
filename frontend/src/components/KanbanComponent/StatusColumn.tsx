@@ -48,8 +48,7 @@ const useStyles = createStyles((theme, color: string) => ({
 
         ".headerText": {
             fontSize: 18,
-
-        }
+        },
     },
 }));
 
@@ -85,7 +84,6 @@ export function StatusColumn(props: StatusProps) {
 
     const handleDnd = (event: DragEndEvent) => {
         const { active, over } = event;
-
     };
 
     return (
@@ -107,7 +105,7 @@ export function StatusColumn(props: StatusProps) {
                         <IconGripVertical className="grip" size={20} />
                         <Text weight={570} className="headerText">
                             {props.statesName} / {itemList.length}
-                        </Text> 
+                        </Text>
                     </Group>
                 </div>
 
@@ -141,11 +139,15 @@ export function StatusColumn(props: StatusProps) {
                         opened={opened}
                         onClose={() => setOpened(false)}
                         title="Item"
-                        size={600}
+                        size="sm"
                     >
-                        <Group position="center" mb={6}></Group>
+                        <Group position="left" mb={6}>
+                            <Text>People</Text>
+                            <Text>Date</Text>
+                        </Group>
                     </Modal>
                 </>
+
             </Card>
         </DndContext>
     );
