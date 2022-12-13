@@ -1,12 +1,11 @@
-import { Group } from "@mantine/core";
+import { createStyles, Group } from "@mantine/core";
 import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
+import { TableState } from "../redux/table/slice";
 import { useAppSelector } from "../store";
 
-// const useStyles = createStyles(theme => ({
-//     columnGroup: {
-
-//     }
-// }))
+const useStyles = createStyles((theme) => ({
+    columnGroup: {},
+}));
 
 export function Kanban() {
     const projectSummary = useAppSelector((state) => state.table.summary);
@@ -18,20 +17,27 @@ export function Kanban() {
             project.type_name === "status"
     );
 
-    const allStatus = itemWithStatus.map((item) => item.item_status_name);
+    const allStatus = itemWithStatus.map((item) => ({
+        name: item.item_status_name,
+        color: item.item_status_color,
+    }));
 
-    const eachStatusName = allStatus.filter(
-        (item, i) => allStatus.indexOf(item) === i
+    console.log(allStatus);
+
+    // TODO need refactor
+    const eachStatus = allStatus.filter(
+        (item, i) =>
+            allStatus.findIndex((search) => search.name === item.name) === i
     );
-    console.log(eachStatusName);
+
+    console.log(eachStatus);
 
     const statusList = [];
-    for (let statesName of eachStatusName) {
+    for (let status of eachStatus) {
         const obj = {
             projectId: targetProjectId as number,
-            statesName: statesName,
-            itemList: [{ itemId:"", people: "", name: "" }],
-            color: "orange",
+            statesName: status.name,
+            color: status.color,
         };
         statusList.push(obj);
     }
@@ -44,7 +50,6 @@ export function Kanban() {
                         key={i}
                         projectId={status.projectId}
                         statesName={status.statesName}
-                        itemList={status.itemList}
                         color={status.color}
                     />
                 ))}

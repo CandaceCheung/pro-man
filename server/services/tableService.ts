@@ -110,14 +110,13 @@ export class TableService {
             name: name
         }).where("id", id);
     }
-    async insertItemGroup(projectId: number, userId: number) {
+
+    async insertItem(projectId: number, userId: number) {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);
 
-        const [{ itemGroupId }] = await this.knex.insert({
-            project_id: projectId,
-            name: "New Group"
-        }).into('item_groups').returning('id as itemGroupId');
+        const [{ itemGroupId }] = await this.knex("item_groups").select("id as itemGroupId").where("project_id", projectId).orderBy("itemGroupId", "desc").limit(1);
+
         const [{ itemId }] = await this.knex.insert({
             name: "New Item",
             creator_id: userId,
@@ -177,7 +176,7 @@ export class TableService {
         }).into("type_dates");
         await this.knex.insert({
             start_date: new Date(new Date().toDateString()).getTime(),
-            end_date: new Date(new Date().toDateString()).getTime(),
+            end_date: new Date(new Date().toDateString()).getTime() + 86400000,
             color: getRandomColor(),
             type_id: typesId_times,
             item_id: itemId
@@ -203,8 +202,14 @@ export class TableService {
             cash_flow: 0,
             type_money_id: typeMoneyId
         }).into("transactions");
+    }
 
-        return { itemGroupId, itemId };
+    async insertItemGroup(projectId: number, userId: number) {
+        await this.knex.insert({
+            project_id: projectId,
+            name: "New Group"
+        }).into('item_groups').returning('id as itemGroupId');
+        await this.insertItem(projectId, userId);
     }
 
 }
