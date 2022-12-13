@@ -44,6 +44,11 @@ const useStyles = createStyles((theme, color: string) => ({
                 opacity: 1,
             },
         },
+
+        ".headerText": {
+            fontSize: 15,
+            
+        }
     },
 }));
 
@@ -79,13 +84,14 @@ export function StatusColumn(props: StatusProps) {
 
     const handleDnd = (event: DragEndEvent) => {
         const { active, over } = event;
+
     };
 
     return (
-        <DndContext>
+        <DndContext onDragEnd={handleDnd}>
             <Card
                 shadow="md"
-                pt={20}
+                pt={5}
                 pb={10}
                 pr={6}
                 pl={6}
@@ -96,9 +102,9 @@ export function StatusColumn(props: StatusProps) {
                 w={290}
             >
                 <div className={classes.cardHeader}>
-                    <Group position="left" pb={10} m={5}>
+                    <Group position="left" pt={5} pb={10} m={5}>
                         <IconGripVertical className="grip" size={20} />
-                        <Text weight={500}>
+                        <Text weight={570} className="headerText">
                             {props.statesName} / {itemList.length}
                         </Text>
                     </Group>
