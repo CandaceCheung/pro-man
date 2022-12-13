@@ -116,6 +116,7 @@ export function MainTable() {
         setItemGroupCollapsedState(itemGroupsCollapsed);
         setItemGroupsInputSelectState(itemGroupsInputSelected);
         setItemGroupsInputValueState(itemGroupsInputValue);
+        setItemsOrdersState(itemsOrders);
     }, [tableSummary, projectID]);
 
     const toggleItemGroupCollapsed = (index: number) => {
