@@ -6,10 +6,11 @@ import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import { updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
+import { showNotification } from '@mantine/notifications';
 
-const useStyles = createStyles(theme => ({
+export const useStyles = createStyles(theme => ({
     collapserButton: {
         transform: "rotate(90deg)"
     },
@@ -69,7 +70,7 @@ const useStyles = createStyles(theme => ({
         marginTop: 20,
         padding: 10,
 
-        "> div": {
+        "> div:first-of-type": {
             fontWeight: "bold",
             fontSize: 18,
             marginLeft: 10,
@@ -125,66 +126,87 @@ const useStyles = createStyles(theme => ({
 
     tableGroup: {
         fontFamily: "Roboto",
-        borderCollapse: "collapse",
         borderRadius: 10,
-        borderStyle: "hidden",
         boxShadow: "0 0 0 1px #ddd",
-        minWidth: `max(${getWidth() - 180}px, 844px)`,
-        fontSize: 14,
+        fontSize: 12,
         margin: 5,
+        display: "flex",
+        flexDirection: "column",
+        width: "max-content"
+    },
 
-        tdRow: {
-            border: "1px solid #ddd",
-            paddingLeft: 8,
-            paddingRight: 8,
-            textAlign: "center"
-        },
+    tableCell: {
+        border: "1px solid #ddd",
+        paddingLeft: 8,
+        paddingRight: 8,
+        textAlign: "center",
+        minHeight: 40,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
 
-        th: {
-            border: "1px solid #ddd",
-            paddingTop: 12,
-            paddingBottom: 12,
-            textAlign: "left",
-            backgroundColor: "#04AA6D",
-            color: "#FFFFFF"
-        },
+        '&:first-of-type': {
+            padding: 0,
+            width: 8,
+            border: "none"
+        }
+    },
 
-        tr: {
-            td: {
-                '&:first-of-type': {
-                    padding: 0,
-                    width: 8,
-                    border: "none"
-                }
-            }
-        },
+    item: {
+        width: 400
+    },
+    persons: {
+        width: 98
+    },
+    dates: {
+        width: 140
+    },
+    times: {
+        width: 188
+    },
+    money: {
+        width: 140
+    },
+    status: {
+        width: 140
+    },
+    text: {
+        width: 140
+    },
 
-        thead: {
-            td: {
-                padding: 8
-            }
-        },
+    tableRow: {
+        display: "flex"
+    },
 
-        tbody: {
-            tr: {
-                '&:nth-of-type(even)': {
-                    backgroundColor: "#f2f2f2"
-                },
-                '&:hover': {
-                    backgroundColor: "#ddd"
-                },
-                "&:last-of-type": {
-                    boxShadow: "0 6px 4px -4px #ddd",
+    tableHead: {
+        display: "flex",
+        flexDirection: "column"
+    },
 
-                    td: {
-                        "&:first-of-type": {
-                            borderBottomLeftRadius: 10
-                        }
+    tableBody: {
+        display: "flex",
+        flexDirection: "column",
+
+        "> div": {
+            '&:nth-of-type(even)': {
+                backgroundColor: "#f2f2f2"
+            },
+            '&:hover': {
+                backgroundColor: "#ddd"
+            },
+            "&:last-of-type": {
+                boxShadow: "0 6px 4px -4px #ddd",
+
+                "> div": {
+                    "&:first-of-type": {
+                        borderBottomLeftRadius: 10
                     }
                 }
             }
         }
     }
+
 }));
 
 export interface itemCellsElement {
@@ -217,7 +239,7 @@ export function MainTable() {
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
     const dispatch = useAppDispatch();
-    const { classes, theme } = useStyles();
+    const { classes, theme, cx } = useStyles();
 
     const sensors = useSensors(
         useSensor(MouseSensor)
@@ -354,20 +376,23 @@ export function MainTable() {
         }
     }
 
-    const handleDragEndRow = (event: any) => {
-		const { active, over } = event;
-		if (active.id !== over.id) {
+    const handleDragEndRow = (event: any, itemGroupArrayIndex: number) => {
+        const { active, over } = event;
+        if (active.id !== over.id) {
             // const oldIndex = active.data.current.sortable.index;
-			// const newIndex = over.data.current.sortable.index;
+            // const newIndex = over.data.current.sortable.index;
             // let newItemCellsArray = JSON.parse(JSON.stringify(itemCellsState));
             // const newInsideArray = arrayMove(newItemCellsArray[itemGroupArrayIndex], oldIndex, newIndex)
             // newItemCellsArray[itemGroupArrayIndex] = newInsideArray
-			// setItemCellsState(
+            // setItemCellsState(
             //     newItemCellsArray
             //     );
-                console.log(active.id + " " + over.id)
-            }
-	}
+            showNotification({
+				title: `${itemGroupArrayIndex}: Swap data notification`,
+				message: `Swapped item ${event.active.id} to ${event.over.id}! 🤥`
+            });
+        }
+    }
 
     return (
         <div className="main-table">
@@ -450,40 +475,40 @@ export function MainTable() {
                             </div>
                             {
                                 !itemGroupsCollapsedState[itemGroupArrayIndex] &&
-                                <table
+                                <div
                                     id={`table_group_${item_group_id}`}
                                     className={classes.tableGroup}
                                 >
-                                    <thead>
-                                        <tr>
-                                            <td></td>
-                                            <td>Item</td>
-                                            <td>Persons</td>
-                                            <td>Dates</td>
-                                            <td>Times</td>
-                                            <td>Money</td>
-                                            <td>Status</td>
-                                            <td>Text</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndRow}>
-                                                <SortableContext items={itemCellsState[item_group_id].map((_, rowIndex) => "group_"+itemGroupArrayIndex+"_row_"+rowIndex)} strategy={verticalListSortingStrategy}>
-                                                    {
-                                                        itemCellsState[item_group_id].map((row, rowIndex) => 
-                                                            <TableRow 
-                                                                key={"group_"+itemGroupArrayIndex+"_row_"+rowIndex} 
-                                                                id={"group_"+itemGroupArrayIndex+"_row_"+rowIndex}
-                                                                row={row}
-                                                                color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
-                                                            />
-                                                        )
-                                                    }
+                                    <div>
+                                        <div className={classes.tableRow}>
+                                            <div className={classes.tableCell}></div>
+                                            <div className={cx(classes.tableCell, classes.item)}>Item</div>
+                                            <div className={cx(classes.tableCell, classes.persons)}>Persons</div>
+                                            <div className={cx(classes.tableCell, classes.dates)}>Dates</div>
+                                            <div className={cx(classes.tableCell, classes.times)}>Times</div>
+                                            <div className={cx(classes.tableCell, classes.money)}>Money</div>
+                                            <div className={cx(classes.tableCell, classes.status)}>Status</div>
+                                            <div className={cx(classes.tableCell, classes.text)}>Text</div>
+                                        </div>
+                                    </div>
+                                    <div className={classes.tableBody}>
+                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event)=>handleDragEndRow(event, itemGroupArrayIndex)}>
+                                            <SortableContext items={itemCellsState[item_group_id].map((_, rowIndex) => "group_" + itemGroupArrayIndex + "_row_" + rowIndex)} strategy={verticalListSortingStrategy}>
+                                                {
+                                                    itemCellsState[item_group_id].map((row, rowIndex) =>
+                                                        <TableRow
+                                                            key={"group_" + itemGroupArrayIndex + "_row_" + rowIndex}
+                                                            id={"group_" + itemGroupArrayIndex + "_row_" + rowIndex}
+                                                            row={row}
+                                                            color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
+                                                        />
+                                                    )
+                                                }
 
-                                                </SortableContext>
+                                            </SortableContext>
                                         </DndContext >
-                                    </tbody>
-                                </table>
+                                    </div>
+                                </div>
                             }
                         </div>
                     )
@@ -491,14 +516,4 @@ export function MainTable() {
             }
         </div>
     )
-}
-
-function getWidth() {
-    return Math.max(
-        document.body.scrollWidth,
-        document.documentElement.scrollWidth,
-        document.body.offsetWidth,
-        document.documentElement.offsetWidth,
-        document.documentElement.clientWidth
-    );
 }
