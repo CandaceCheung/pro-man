@@ -8,6 +8,8 @@ import moment from 'moment';
 import { updateDatelineItem, updateTimelineItem } from '../redux/table/thunk'
 import { TimeLineAddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
 import ClockLoader from "react-spinners/ClockLoader";
+import { triggerUpdateTimelineModalAction } from '../redux/project/slice'
+import { ChangNameColorModal, ChangNameColorModalProps } from '../components/TimelineComponents/ChangeNameColorModal'
 
 const keys = { // default key name
   groupIdKey: 'id',
@@ -21,9 +23,11 @@ const keys = { // default key name
   itemTimeEndKey: 'end_time',
 }
 
-type GroupProps = {
+export type GroupProps = {
   id: number
   title: string
+  groupId: number
+  groupName: string
 }[]
 
 type ItemProps = {
@@ -58,6 +62,11 @@ export function TimeFrame() {
   const defaultTimeEnd = moment().add(1, zoom);
   const interval = 24 * 60 * 60 * 1000;
   const [loading, setLoading] = useState(true)
+  const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
+
+  const [targetItem, setTargetItem] = useState<number>(0)
+   
+
 
   let groups: GroupProps = []
   let items: ItemProps = []
@@ -71,7 +80,9 @@ export function TimeFrame() {
       checking.push(item.item_id)
       groups.push({
         id: item.item_id,
-        title: item.item_name
+        title: item.item_name,
+        groupId: item.item_group_id,
+        groupName: item.item_group_name
       })
     }
   }
@@ -123,8 +134,6 @@ export function TimeFrame() {
     })
   }
 
-  console.log(items)
-
   let lastEndedTime = 0
   for (let item of timelineDetail) {
     lastEndedTime = Math.max(item.item_times_end_date, lastEndedTime)
@@ -166,12 +175,11 @@ export function TimeFrame() {
     setLoading(true)
   }
 
-  function handleItemSelect(itemId: number, e: any, time: number) {
-    console.log(itemId, e, time)
+  function handleItemDoubleClick(itemId: number, e: any, time: number) {
+    setTargetItem(itemId)
+    dispatch(triggerUpdateTimelineModalAction(!toggleUpdateModal))
   }
-  function handleItemDeselect(e: any) {
-    console.log(e)
-  }
+
 
   const lastEndDate = new Date(lastEndedTime)
   const firstStartDate = new Date(firstStartedTime)
@@ -209,12 +217,11 @@ export function TimeFrame() {
           canResize={'both'}
           onItemMove={handleItemMove}
           onItemResize={handleItemResize}
-          onItemSelect={handleItemSelect}
-          onItemDeselect={handleItemDeselect}
+          onItemDoubleClick={handleItemDoubleClick}
           dragSnap={interval}
           minZoom={minZoom}
           maxZoom={maxZoom}
-          // onItemDoubleClick={updateItems}
+          // onItemClick={clickHandler}
           lineHeight={50}
           timeSteps={{
             second: 60,
@@ -250,9 +257,18 @@ export function TimeFrame() {
                     backgroundColor: 'darkgreen',
                     width: '4px'
                   }
-                  return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'darkgreen', right: '10px' }}>Start Date : {new Date(firstStartDate).toDateString()}</span><span className='pin'><IconPinned size={30} /></span></div>
-
-
+                  return <div
+                    className='pin-container'
+                    style={customStyles}
+                    onClick={() => { return }}>
+                    <span
+                      className='pin-label'
+                      style={{ backgroundColor: 'darkgreen', right: '10px' }}
+                    >Start Date : {new Date(firstStartDate).toDateString()}
+                    </span>
+                    <span className='pin'><IconPinned size={30} />
+                    </span>
+                  </div>
                 }}
               </CustomMarker>}
               {show && <CustomMarker date={Date.now()}>
@@ -283,6 +299,7 @@ export function TimeFrame() {
           </TimelineHeaders>
         </Timeline>
       }
+      <ChangNameColorModal itemId={targetItem}/> 
       <TimeLineAddNewItemModal groups={groups} />
     </div>
   )
