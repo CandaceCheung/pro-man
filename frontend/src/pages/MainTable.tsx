@@ -6,7 +6,7 @@ import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import { updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 
 const useStyles = createStyles(theme => ({
@@ -133,7 +133,7 @@ const useStyles = createStyles(theme => ({
         fontSize: 14,
         margin: 5,
 
-        td: {
+        tdRow: {
             border: "1px solid #ddd",
             paddingLeft: 8,
             paddingRight: 8,
@@ -354,16 +354,19 @@ export function MainTable() {
         }
     }
 
-    const handleDragEndRow = (event: any, itemGroupArrayIndex: number) => {
+    const handleDragEndRow = (event: any) => {
 		const { active, over } = event;
 		if (active.id !== over.id) {
-			const oldIndex = active.data.current.sortable.index;
-			const newIndex = over.data.current.sortable.index;
-            arrayMove(itemCellsState[itemGroupArrayIndex], oldIndex, newIndex)
-			setItemCellsState(
-                itemCellsState
-			);
-		}
+            // const oldIndex = active.data.current.sortable.index;
+			// const newIndex = over.data.current.sortable.index;
+            // let newItemCellsArray = JSON.parse(JSON.stringify(itemCellsState));
+            // const newInsideArray = arrayMove(newItemCellsArray[itemGroupArrayIndex], oldIndex, newIndex)
+            // newItemCellsArray[itemGroupArrayIndex] = newInsideArray
+			// setItemCellsState(
+            //     newItemCellsArray
+            //     );
+                console.log(active.id + " " + over.id)
+            }
 	}
 
     return (
@@ -464,7 +467,7 @@ export function MainTable() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(e) => handleDragEndRow(e, itemGroupArrayIndex)}>
+                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEndRow}>
                                                 <SortableContext items={itemCellsState[item_group_id].map((_, rowIndex) => "group_"+itemGroupArrayIndex+"_row_"+rowIndex)} strategy={verticalListSortingStrategy}>
                                                     {
                                                         itemCellsState[item_group_id].map((row, rowIndex) => 
