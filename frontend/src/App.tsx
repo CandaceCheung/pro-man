@@ -12,7 +12,7 @@ import { MyWork } from "./pages/MyWork";
 import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
-import { getTable } from "./redux/table/thunk";
+import { getFavorite, getTable } from "./redux/table/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -21,13 +21,14 @@ function App() {
     const userId = useAppSelector((state) => state.auth.userId);
 
     useEffect(() => {
-        document.title = 'Pro-Man: Project Management Too';
+        document.title = 'Pro-Man: Project Management Tool';
     }, []);
 
     useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
         userId !== null && dispatch(getTable(userId));
+        userId !== null && dispatch(getFavorite(userId))
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId]);
 
