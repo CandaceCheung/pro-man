@@ -16,7 +16,8 @@ export function ItemCard(props: itemCardProps) {
             withBorder
             sx={{ maxWidth: 300 }}
             mx="auto"
-            m={10}
+            mb={10}
+            w={250}
         >
             <div className="item-card">
                 <Text weight={550} mb={10}>
