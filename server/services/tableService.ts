@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { Knex } from "knex";
+import { getRandomColor } from "../seeds/users-info";
 
 export class TableService {
     constructor(private knex: Knex) { }
@@ -73,15 +74,15 @@ export class TableService {
         return projectsDetail
     }
 
-    async getFavorite (userId: number){
+    async getFavorite(userId: number) {
         const favoriteList = await this.knex.select(
             'projects.creator_id as creator_id',
             'projects.name as project_name',
             'favorite.id as favorite_id'
         )
-        .from('favorite')
-        .join('projects', 'favorite.project_id','=', 'projects.id')
-        .where('favorite.user_id', '=', userId)
+            .from('favorite')
+            .join('projects', 'favorite.project_id', '=', 'projects.id')
+            .where('favorite.user_id', '=', userId)
 
         return favoriteList
     }
@@ -105,6 +106,102 @@ export class TableService {
         await this.knex('item_groups').update({
             name: name
         }).where("id", id);
+    }
+    async insertItemGroup(projectId: number, userId: number) {
+        const [{ username }] = await this.knex("users").select("username").where("id", userId);
+        const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);
+
+        const [{ itemGroupId }] = await this.knex.insert({
+            project_id: projectId,
+            name: "New Group"
+        }).into('item_groups').returning('id as itemGroupId');
+        const [{ itemId }] = await this.knex.insert({
+            name: "New Item",
+            creator_id: userId,
+            project_id: projectId,
+            item_group_id: itemGroupId,
+            is_deleted: false,
+            order: 1
+        }).into('items').returning('id as itemId');
+
+        const [{ typesId_persons }] = await this.knex.insert({
+            type: "persons",
+            name: "persons",
+            order: 1
+        }).into("types")
+            .returning("id as typesId_persons");
+        const [{ typesId_dates }] = await this.knex.insert({
+            type: "dates",
+            name: "dates",
+            order: 2
+        }).into("types")
+            .returning("id as typesId_dates");
+        const [{ typesId_times }] = await this.knex.insert({
+            type: "times",
+            name: "times",
+            order: 3
+        }).into("types")
+            .returning("id as typesId_times");
+        const [{ typesId_money }] = await this.knex.insert({
+            type: "money",
+            name: "money",
+            order: 4
+        }).into("types")
+            .returning("id as typesId_money");
+        const [{ typesId_status }] = await this.knex.insert({
+            type: "status",
+            name: "status",
+            order: 5
+        }).into("types")
+            .returning("id as typesId_status");
+        const [{ typesId_text }] = await this.knex.insert({
+            type: "text",
+            name: "text",
+            order: 6
+        }).into("types")
+            .returning("id as typesId_text");
+
+        await this.knex.insert({
+            name: username,
+            type_id: typesId_persons,
+            item_id: itemId
+        }).into("type_persons");
+        await this.knex.insert({
+            datetime: format(new Date(Date.now()), 'yyyy-MM-dd'),
+            color: getRandomColor(),
+            type_id: typesId_dates,
+            item_id: itemId
+        }).into("type_dates");
+        await this.knex.insert({
+            start_date: new Date(new Date().toDateString()).getTime(),
+            end_date: new Date(new Date().toDateString()).getTime(),
+            color: getRandomColor(),
+            type_id: typesId_times,
+            item_id: itemId
+        }).into("type_times");
+        const [{ typeMoneyId }] = await this.knex.insert({
+            type_id: typesId_money,
+            item_id: itemId
+        }).into("type_money")
+            .returning("id as typeMoneyId");
+        await this.knex.insert({
+            state_id: stateId,
+            type_id: typesId_status,
+            item_id: itemId
+        }).into("type_status");
+        await this.knex.insert({
+            text: "",
+            type_id: typesId_text,
+            item_id: itemId
+        }).into("type_text");
+
+        await this.knex.insert({
+            date: format(new Date(Date.now()), 'yyyy-MM-dd'),
+            cash_flow: 0,
+            type_money_id: typeMoneyId
+        }).into("transactions");
+
+        return { itemGroupId, itemId };
     }
 
 }

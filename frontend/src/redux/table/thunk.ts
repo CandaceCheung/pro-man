@@ -13,7 +13,7 @@ export function getTable(userID: number) {
 
 		if (result.success) {
 			console.log("Passed")
-            dispatch(getTableAction(result.table));
+			dispatch(getTableAction(result.table));
 			dispatch(setActiveProjectAction(result.table[0].project_id));
 		} else {
 			dispatch(getTableFailedAction())
@@ -25,22 +25,22 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/updateTimeline`,{
+			`${process.env.REACT_APP_API_SERVER}/table/updateTimeline`, {
 			method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                typeTimeId: timelineID,
-                startTime,
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				typeTimeId: timelineID,
+				startTime,
 				endTime
-            })
-	});
+			})
+		});
 		const result = await res.json();
 
 		if (result.success) {
 			console.log("Update Success")
-			dispatch(updateTimelineItemAction({timelineID, startTime, endTime}))
+			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime }))
 		} else {
 			dispatch(getTableFailedAction())
 		}
@@ -51,21 +51,21 @@ export function updateDatelineItem(datelineID: number, date: number) {
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/updateDateline`,{
+			`${process.env.REACT_APP_API_SERVER}/table/updateDateline`, {
 			method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                typeDateId: datelineID,
-                date,
-            })
-	});
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				typeDateId: datelineID,
+				date,
+			})
+		});
 		const result = await res.json();
 
 		if (result.success) {
 			console.log("Update Success")
-			dispatch(updateDatelineItemAction({datelineID, date}))
+			dispatch(updateDatelineItemAction({ datelineID, date }))
 		} else {
 			dispatch(getTableFailedAction())
 		}
@@ -76,25 +76,25 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string) 
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/updateItemGroupName`,{
+			`${process.env.REACT_APP_API_SERVER}/table/updateItemGroupName`, {
 			method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                itemGroupId,
-                itemGroupName
-            })
-	});
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				itemGroupId,
+				itemGroupName
+			})
+		});
 		const result = await res.json();
 
 		if (result.success) {
-			dispatch(updateItemGroupNameAction({itemGroupId, itemGroupName}));
-		} else {			
+			dispatch(updateItemGroupNameAction({ itemGroupId, itemGroupName }));
+		} else {
 			showNotification({
 				title: 'Data update notification',
-                message: 'Failed to update group item name! 🤥'
-            });
+				message: 'Failed to update group item name! 🤥'
+			});
 			dispatch(updateItemGroupNameFailedAction());
 		}
 	};
@@ -115,4 +115,35 @@ export function getFavorite(userId: number) {
 			dispatch(getTableFailedAction())
 		}
 	};
+}
+
+export function insertItemGroup(projectId: number, userId: number) {
+	return async (dispatch: Dispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/insertItemGroup`, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				projectId,
+				userId
+			})
+		});
+		const result = await res.json();
+
+		if (result.success) {
+			const res = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/table/${userId}`
+			);
+			const tableResult = await res.json();
+			tableResult.success && dispatch(getTableAction(tableResult.table));
+		} else {
+			showNotification({
+				title: 'Insert data notification',
+				message: 'Failed to add new group item! 🤥'
+			});
+		}
+
+	}
 }

@@ -9,6 +9,7 @@ import { tableController } from "../app";
     tableRoutes.put('/updateTimeline', tableController.updateTimeline);
     tableRoutes.put('/updateDateline', tableController.updateDateline);
     tableRoutes.put('/updateItemGroupName', tableController.updateItemGroupName);
+    tableRoutes.post('/insertItemGroup', tableController.insertItemGroup);
 
     return tableRoutes;
  }

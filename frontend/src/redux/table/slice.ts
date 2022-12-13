@@ -153,7 +153,7 @@ export const {
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
     updateItemGroupName: updateItemGroupNameAction,
-    updateItemGroupNameFailed: updateItemGroupNameFailedAction,
+    updateItemGroupNameFailed: updateItemGroupNameFailedAction
 } = tableSlice.actions
 
 export default tableSlice.reducer

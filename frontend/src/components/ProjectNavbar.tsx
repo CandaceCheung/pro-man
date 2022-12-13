@@ -24,7 +24,7 @@ type ProjectNavbarProps = {
 
 export default function ProjectNavbar(props: ProjectNavbarProps) {
 
-    let projectName = props.projectSummary[0]?.project_name
+    let projectName = props.projectSummary[0]?.project_name;
     const [like, setLike] = useState(false)
     const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);

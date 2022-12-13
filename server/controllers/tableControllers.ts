@@ -75,4 +75,20 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Update Item Group Name" });
         }
     }
+    insertItemGroup = async (req: Request, res: Response) => {
+        try {
+            const projectId = req.body.projectId;
+            const userId = req.body.userId;
+            const result = await this.tableService.insertItemGroup(projectId, userId);
+
+            res.json({
+                success: true,
+                itemGroupId: result.itemGroupId,
+                itemId: result.itemId
+            })
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Insert Item Group" });
+        }
+    }
 }

@@ -153,15 +153,6 @@ const useStyles = createStyles(theme => ({
                     width: 8,
                     border: "none"
                 }
-            },
-            "&:last-of-type": {
-                boxShadow: "0 6px 4px -4px #ddd",
-                
-                td: {
-                    "&:first-of-type": {
-                        borderBottomLeftRadius: 10
-                    }
-                }
             }
         },
 
@@ -178,6 +169,15 @@ const useStyles = createStyles(theme => ({
                 },
                 '&:hover': {
                     backgroundColor: "#ddd"
+                },
+                "&:last-of-type": {
+                    boxShadow: "0 6px 4px -4px #ddd",
+                    
+                    td: {
+                        "&:first-of-type": {
+                            borderBottomLeftRadius: 10
+                        }
+                    }
                 }
             }
         }
@@ -451,7 +451,7 @@ export function MainTable() {
                                                     <tr
                                                         key={"row" + rowIndex}
                                                     >
-                                                        <td style={{ backgroundColor: theme.colors.groupTag[item_group_id] }}></td>
+                                                        <td style={{ backgroundColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length] }}></td>
                                                         <td>
                                                             {row[0].item_name}
                                                         </td>

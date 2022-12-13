@@ -2,6 +2,15 @@ import { Knex } from "knex";
 import bcrypt from "bcryptjs";
 import { format } from "date-fns";
 
+export function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 export async function seed(knex: Knex): Promise<void> {
 
     await knex('type_text').del();
@@ -74,16 +83,7 @@ export async function seed(knex: Knex): Promise<void> {
     }
     const itemIDs = await knex("items").insert(insertArray).returning('*');
 
-    const defaultStates = ['Working on it', 'Done', 'Stuck', 'Checking']
-
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
+    const defaultStates = ['Empty', 'Working on it', 'Done', 'Stuck', 'Checking']
 
     insertArray = []
     for (let i of projectIDs) {
