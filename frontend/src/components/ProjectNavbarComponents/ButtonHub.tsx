@@ -1,7 +1,7 @@
 import { Button, Menu } from "@mantine/core";
 import { IconEyeOff, IconFilter, IconUser, IconColumns} from "@tabler/icons";
 import { triggerTimelineModalAction } from "../../redux/project/slice";
-import { insertItemGroup } from "../../redux/table/thunk";
+import { insertItem, insertItemGroup } from "../../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { TimelineButton } from "../TimelineComponents/TimelineButtons";
 
@@ -12,7 +12,8 @@ export function ButtonHub() {
     const page = useAppSelector(state => state.project.active_page)
 
     const onNewItemClick = ()=>{
-        page==='timeline' && dispatch(triggerTimelineModalAction(true))
+        page==='timeline' && dispatch(triggerTimelineModalAction(true));
+        page==='mainTable' && projectId && userId && dispatch(insertItem(projectId, userId));
     } 
     const onNewGroupClick = ()=>{
         projectId && userId && dispatch(insertItemGroup(projectId, userId));

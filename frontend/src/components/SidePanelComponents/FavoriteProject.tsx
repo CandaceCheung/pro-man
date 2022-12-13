@@ -7,7 +7,7 @@ export function FavoriteProject() {
     const dispatch = useAppDispatch()
     const userId = useAppSelector((state) => state.auth.userId);
 
-    
+    console.log (projectSummary)
     return (
         <div>
             <h2>My Favorite Projects</h2>
@@ -16,11 +16,11 @@ export function FavoriteProject() {
                     <>
                         <Divider labelPosition='center' my="md" label="My Projects" color={'dark'} />
                         {projectSummary.map((content, index) => content?.creator_id === userId &&
-                            <div key={content.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content?.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
+                            <div key={content.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
                         )}
                         <Divider labelPosition='center' my="md" label="Other Projects" color={'dark'} />
                         {projectSummary.map((content, index) => content?.creator_id !== userId &&
-                            <div key={content.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content?.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
+                            <div key={content.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
                         )}
                     </>
                     :
