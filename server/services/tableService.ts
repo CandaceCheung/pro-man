@@ -65,6 +65,8 @@ export class TableService {
                     .orOn('type_persons.type_id', '=', 'types.id')
             })
             .where("users.id", userID)
+            .where("items.is_deleted", false)
+            .where("projects.is_deleted", false)
             .orderBy("project_id", 'asc')
             .orderBy("item_group_id", 'desc')
             .orderBy("item_id", 'asc')
