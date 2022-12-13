@@ -5,24 +5,29 @@ export class KanbanService {
 
 	async getKanbanInfo(project_id: number) {
 		const kanbanDetail = await this.knex
-			.select(
-				'projects.id as project_id',
-				'items.id as item_id',
-				'items.name as item_name',
-				'type_dates.datetime as item_dates_datetime',
-				'states.id as state_id',
-				'states.name as item_status_name',
-				'states.color as itemStatusColor',
-				'kanban_order.item_id_order as kanbanColumnOrder'
+		.with('items', (qb) => {
+			qb.select(
+				'items.id as id',
+				'items.name as name',
+				this.knex.raw('JSON_AGG(type_persons.name) as persons')
 			)
-			.from('states')
-			.join('projects', 'states.project_id', '=', 'projects.id')
-			.join('type_status', 'type_status.state_id', '=', 'states.id')
-			.join('items','type_status.item_id', '=', 'items.id')
-			.join('type_dates', 'type_dates.item_id', '=', 'items.id')
-			.join('kanban_order', 'kanban_order.state_id', '=', 'states.id')
-			.where('projects.id', project_id);
-			
+				.from('items')
+				.join('type_persons','type_persons.item_id','items.id')
+				.groupBy('items.id')
+				.where('items.project_id',project_id);
+		})
+		.select(
+			'states.id as stat_id',
+			'states.name as status_name',
+			this.knex.raw('JSON_AGG(items.*) as items')
+		)
+		.from('states')
+		.join('projects', 'states.project_id', '=', 'projects.id')
+		.join('kanban_order', 'kanban_order.state_id', '=', 'states.id')
+		.join('type_status', 'type_status.state_id', '=', 'states.id')
+		.join('items', 'type_status.item_id', '=', 'items.id')
+		.where('projects.id', project_id)
+		.groupBy('states.id');
 
 		return kanbanDetail;
 	}
