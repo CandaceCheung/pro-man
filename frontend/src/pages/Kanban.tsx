@@ -1,6 +1,5 @@
-import { createStyles, Group } from "@mantine/core";
+import { Group } from "@mantine/core";
 import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
-import { TableState } from "../redux/table/slice";
 import { useAppSelector } from "../store";
 
 // const useStyles = createStyles(theme => ({

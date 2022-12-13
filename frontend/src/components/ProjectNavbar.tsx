@@ -15,7 +15,7 @@ import { ButtonHub } from './ProjectNavbarComponents/ButtonHub';
 import { TableStateArray } from '../redux/table/slice';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { ActivePageState, setActivePageAction } from '../redux/project/slice';
-import { useAppDispatch, useAppSelector } from '../store';
+import { useAppDispatch } from '../store';
 
 type ProjectNavbarProps = {
     projectId: number
