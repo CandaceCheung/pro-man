@@ -9,7 +9,7 @@ import { triggerUpdateTimelineModalAction } from '../../redux/project/slice';
 
 
 export type ChangNameColorModalProps = {
-  itemId: number 
+  itemId: number
 }
 
 export function ChangNameColorModal(props: ChangNameColorModalProps) {
@@ -20,7 +20,7 @@ export function ChangNameColorModal(props: ChangNameColorModalProps) {
   const page = useAppSelector(state => state.project.active_page)
   const id = useId()
   const projectSummary = useAppSelector(state => state.table.summary)
-  const itemDetail = itemType==='times' ? projectSummary.filter((project) => project.item_times_id === itemId)[0] : projectSummary.filter((project) => project.item_datetime_id === itemId)[0]
+  const itemDetail = itemType === 'times' ? projectSummary.filter((project) => project.item_times_id === itemId)[0] : projectSummary.filter((project) => project.item_datetime_id === itemId)[0]
   const year = parseInt(new Date().toLocaleString("default", { year: "numeric" }));
   const month = parseInt(new Date().toLocaleString("default", { month: "2-digit" }));
   const day = parseInt(new Date().toLocaleString("default", { day: "2-digit" }));
@@ -32,11 +32,11 @@ export function ChangNameColorModal(props: ChangNameColorModalProps) {
 
   const [submittedValues, setSubmittedValues] = useState<string>('')
 
-  useEffect(()=>{
-    if (props.itemId){
-      setItemId(parseInt(props.itemId.toString().slice(1)) )
+  useEffect(() => {
+    if (props.itemId) {
+      setItemId(parseInt(props.itemId.toString().slice(1)))
     }
-  },[])
+  }, [])
 
   const handleSubmit = (value: string) => {
     setSubmittedValues(value)
@@ -53,7 +53,7 @@ export function ChangNameColorModal(props: ChangNameColorModalProps) {
       type: 'times',
       block_name: '',
       item_id: 0,
-      date_range: [ new Date(year, month, day), new Date(year, month, day + 1)],
+      date_range: [new Date(year, month, day), new Date(year, month, day + 1)],
       color: 'rgba(47, 119, 150, 0.7)',
       date: new Date()
     },
@@ -70,11 +70,11 @@ export function ChangNameColorModal(props: ChangNameColorModalProps) {
           onSubmit={form.onSubmit((value) => handleSubmit(JSON.stringify(value, null, 2)))}
         >
 
-          <Input.Wrapper id={id} label={itemType==="times" ? 'Time Block Name':'Date Block Name'}>
+          <Input.Wrapper id={id} label={itemType === "times" ? 'Time Block Name' : 'Date Block Name'}>
             <Input
               icon={<IconIndentIncrease size={16} />}
               required
-              
+
               {...form.getInputProps('block_name')}
               placeholder="Change Name"
               rightSection={
@@ -98,9 +98,13 @@ export function ChangNameColorModal(props: ChangNameColorModalProps) {
                 {...form.getInputProps('date')}
                 placeholder="Pick date" label="Event date" withAsterisk />
               : null}
-          <Stack align="center">
-            <ColorPicker {...form.getInputProps('color')} format="rgba" value={color} onChange={setColor} />
-          </Stack>
+          <Input.Wrapper id={id} label="Select Item Color">
+
+            <Stack align="center">
+              <ColorPicker {...form.getInputProps('color')} format="rgba" value={color} onChange={setColor} />
+            </Stack>
+          </Input.Wrapper>
+
           <Group position="center" mt="xl">
             <Button variant="outline" type='submit'>
               Submit

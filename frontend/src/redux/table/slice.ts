@@ -41,6 +41,7 @@ export interface TableState {
 export type MyFavoriteListState = {
     creator_id?: number
     project_id?: number
+    favorite_id?: number
     project_name: string
 }[]
 
@@ -91,6 +92,7 @@ const initialState: CombinedTableState = {
     my_favorite_list: [{
         creator_id: undefined,
         project_id: undefined,
+        favorite_id: undefined,
         project_name: ""
     }]
 }
@@ -98,7 +100,7 @@ const initialState: CombinedTableState = {
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> =
     (state, action) => {state.summary = action.payload}
 const getTableFailed: CaseReducer<CombinedTableState, PayloadAction> =
-    (state, action) => {state = initialState}
+    (state, action) => {state = state}
 const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timelineID: number, startTime: number, endTime: number }>> =
     (state, action) => {
         for (let item of state.summary) {

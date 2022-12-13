@@ -63,16 +63,11 @@ export function TimeFrame() {
   const interval = 24 * 60 * 60 * 1000;
   const [loading, setLoading] = useState(true)
   const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
-
   const [targetItem, setTargetItem] = useState<number>(0)
    
-
-
   let groups: GroupProps = []
   let items: ItemProps = []
   let dateItems: ItemProps = []
-
-  console.log(projectSummary)
 
   for (let item of timelineDetail) {
     let checking: number[] = []
@@ -86,8 +81,6 @@ export function TimeFrame() {
       })
     }
   }
-
-  console.log(timelineDetail)
 
   for (let item of timelineDetail) {
     items.push({
@@ -186,7 +179,7 @@ export function TimeFrame() {
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 500)
-  }, [loading])
+  }, [loading, zoom])
 
   return (
     <div id='timeline-container'>
@@ -221,7 +214,6 @@ export function TimeFrame() {
           dragSnap={interval}
           minZoom={minZoom}
           maxZoom={maxZoom}
-          // onItemClick={clickHandler}
           lineHeight={50}
           timeSteps={{
             second: 60,
@@ -231,7 +223,6 @@ export function TimeFrame() {
             month: 1,
             year: 1
           }}
-        // onItemClick={viewMenu}
         >
           <TimelineHeaders>
             <SidebarHeader>
