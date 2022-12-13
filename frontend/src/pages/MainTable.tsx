@@ -35,6 +35,7 @@ export function MainTable() {
     const tableSummary = useAppSelector(state => state.table.summary);
     const projectID = useAppSelector(state => state.project.project_id);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: itemCellsElement[][] }>({});
+    const [itemCellsStateNew, setItemCellsStateNew] = useState<{ [keys in number]: {[keys in number]: itemCellsElement[]} }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [itemsOrdersState, setItemsOrdersState] = useState<{ [keys in number]: number[] }>({});
     const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
@@ -50,6 +51,7 @@ export function MainTable() {
 
     useEffect(() => {
         let itemCells: { [keys in number]: itemCellsElement[][] } = {};
+        let itemCellsNew: { [keys in number]: {[keys in number]: itemCellsElement[]} } = {};
         let itemGroups: itemsGroupElement[] = [];
         let previousItemID: null | number = null;
         let itemGroupsCollapsed: boolean[] = [];
@@ -93,9 +95,11 @@ export function MainTable() {
                 if (itemCells[itemGroupID]) {
                     if (currentItemID === previousItemID) {
                         itemCells[itemGroupID][itemCells[itemGroupID].length - 1].push(itemCell);
+                        itemCellsNew[itemGroupID][currentItemID].push(itemCell);
                     } else {
                         previousItemID = currentItemID;
                         itemCells[itemGroupID].push([itemCell]);
+                        itemCellsNew[itemGroupID][currentItemID] = [itemCell];
                     }
                 } else {
                     itemGroups.push({
@@ -107,7 +111,9 @@ export function MainTable() {
                     itemGroupsInputValue.push(cell.item_group_name);
                     previousItemID = currentItemID;
                     itemCells[itemGroupID] = [[itemCell]];
-                    itemsOrders[itemGroupID] = [cell.item_id];
+                    itemCellsNew[itemGroupID] = {}
+                    itemCellsNew[itemGroupID][currentItemID] = [itemCell];
+                    itemsOrders[itemGroupID] = [currentItemID];
                 }
             }
         }
@@ -116,6 +122,8 @@ export function MainTable() {
         setItemGroupCollapsedState(itemGroupsCollapsed);
         setItemGroupsInputSelectState(itemGroupsInputSelected);
         setItemGroupsInputValueState(itemGroupsInputValue);
+
+        setItemCellsStateNew(itemCellsNew);
         setItemsOrdersState(itemsOrders);
     }, [tableSummary, projectID]);
 
