@@ -31,6 +31,7 @@ const useStyles = createStyles((theme, color: string) => ({
         align: "center",
         cursor: "grab",
         backgroundColor: color,
+        borderRadius: 5,
 
         "&": {
             ".grip": {
@@ -46,8 +47,8 @@ const useStyles = createStyles((theme, color: string) => ({
         },
 
         ".headerText": {
-            fontSize: 15,
-            
+            fontSize: 18,
+
         }
     },
 }));
@@ -91,7 +92,7 @@ export function StatusColumn(props: StatusProps) {
         <DndContext onDragEnd={handleDnd}>
             <Card
                 shadow="md"
-                pt={5}
+                pt={1}
                 pb={10}
                 pr={6}
                 pl={6}
@@ -102,11 +103,11 @@ export function StatusColumn(props: StatusProps) {
                 w={290}
             >
                 <div className={classes.cardHeader}>
-                    <Group position="left" pt={5} pb={10} m={5}>
+                    <Group position="left" pt={10} pb={10} m={5}>
                         <IconGripVertical className="grip" size={20} />
                         <Text weight={570} className="headerText">
                             {props.statesName} / {itemList.length}
-                        </Text>
+                        </Text> 
                     </Group>
                 </div>
 
