@@ -33,7 +33,7 @@ export function ButtonHub() {
                 <Button className='button-panel-group' onClick={onNewItemClick}>New Item</Button>
                 <Button className='button-panel-group' onClick={onNewGroupClick}>New Group</Button>
 
-                <Menu>
+                <Menu transition='pop-top-left' transitionDuration={150}>
                     <Menu.Target>
                         <Button className='button-panel-group' variant='subtle'><IconUser size={14} />Person</Button>
                     </Menu.Target>
@@ -46,7 +46,7 @@ export function ButtonHub() {
                     </Menu.Dropdown>
                 </Menu>
 
-                <Menu>
+                <Menu transition="pop-top-right" transitionDuration={150}>
                     <Menu.Target>
                         <Button className='button-panel-group' variant='subtle'><IconFilter size={14} />Filter</Button>
                     </Menu.Target>
