@@ -199,18 +199,14 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
                 backgroundColor: "#ddd"
             }
         },
+    },
 
-        [`& .${getRef('tableRow')}`]: {
-            "$:first-of-type": {
-                [`& .${getRef('tableCell')}:first-of-type`]: {
-                    borderRadius: "inherit",
-                    borderLeft: "1px solid #ddd",
-                    borderBottom: "1px solid #ddd"
-                },
-                [`& .${getRef('tableCell')}:last-of-type`]: {
-                    borderRadius: "inherit",
-                }
-            }
+    lastRow: {
+        [`& .${getRef('tableCell')}:first-of-type`]: {
+            borderBottomLeftRadius: 10
+        },
+        [`& .${getRef('tableCell')}:last-of-type`]: {
+            borderBottomRightRadius: 10
         }
     }
 

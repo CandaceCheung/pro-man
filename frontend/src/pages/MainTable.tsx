@@ -315,6 +315,7 @@ export function MainTable() {
                                                             id={"group_" + itemGroupArrayIndex + "_row_" + rowIndex}
                                                             row={row}
                                                             color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
+                                                            lastRow={rowIndex === itemCellsState[item_group_id].length - 1}
                                                         />
                                                     )
                                                 }

@@ -6,7 +6,8 @@ import { useStyles } from "./styles";
 export interface TableRowProps {
     id: string,
     row: itemCellsElement[],
-    color: string
+    color: string,
+    lastRow: boolean
 }
 
 export function TableRow(props: TableRowProps) {
@@ -95,7 +96,7 @@ export function TableRow(props: TableRowProps) {
 
     return (
         <div 
-            className={classes.tableRow}
+            className={cx(classes.tableRow, { [classes.lastRow]: props.lastRow })}
             ref={setNodeRef} style={style} {...listeners} {...attributes}
         >
             <div 
