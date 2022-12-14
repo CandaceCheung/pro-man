@@ -3,11 +3,10 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getTable, reorderItems, updateItemGroupName } from '../redux/table/thunk';
+import { reorderItems, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
-import { showNotification } from '@mantine/notifications';
 import { useStyles } from '../components/MainTableComponents/styles';
 
 export interface itemCellsElement {
@@ -32,11 +31,13 @@ export interface itemsGroupElement {
 
 export function MainTable() {
     const userId = useAppSelector(state => state.auth.userId);
-    const tableSummary = useAppSelector(state => state.table.summary);
     const projectID = useAppSelector(state => state.project.project_id);
+    const tableSummary = useAppSelector(state => state.table.summary);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: { [keys in number]: itemCellsElement[] } }>({});
+    const [itemCellsStateNew, setItemCellsStateNew] = useState<{ [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [itemsOrdersState, setItemsOrdersState] = useState<{ [keys in number]: number[] }>({});
+    const [typesOrdersState, setTypesOrdersState] = useState<{ [keys in number]: number[] }>({});
     const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
@@ -50,15 +51,19 @@ export function MainTable() {
 
     useEffect(() => {
         let itemCells: { [keys in number]: { [keys in number]: itemCellsElement[] } } = {};
+        let itemCellsNew: { [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } } = {};
         let itemGroups: itemsGroupElement[] = [];
         let itemGroupsCollapsed: boolean[] = [];
         let itemGroupsInputSelected: boolean[] = [];
         let itemGroupsInputValue: string[] = [];
         let itemsOrders: { [keys in number]: number[] } = {};
+        let typesOrders: { [keys in number]: number[] } = {};
+        let typesOrderSet: Set<number> = new Set();
         for (const cell of tableSummary) {
             if (cell.project_id === projectID) {
-                const itemID = cell.item_id;
                 const itemGroupID = cell.item_group_id;
+                const itemID = cell.item_id;
+                const typeID = cell.horizontal_order_id;
                 let itemCell: itemCellsElement = {
                     item_id: cell.item_id,
                     item_name: cell.item_name,
@@ -108,15 +113,32 @@ export function MainTable() {
                     itemCells[itemGroupID][itemID] = [itemCell];
                     itemsOrders[itemGroupID] = [itemID];
                 }
+
+                if (!itemCellsNew[itemGroupID]) {
+                    itemCellsNew[itemGroupID] = {};
+                    itemCellsNew[itemGroupID][itemID] = {};
+                }
+                if (!itemCellsNew[itemGroupID][itemID]) {
+                    itemCellsNew[itemGroupID][itemID] = {};
+                }
+                itemCellsNew[itemGroupID][itemID][typeID] = itemCell;
+
+                if (!typesOrders[itemGroupID]) {
+                    typesOrderSet = new Set();
+                }
+                typesOrderSet.add(typeID);
+                typesOrders[itemGroupID] = Array.from(typesOrderSet);
             }
         }
         setItemGroupsState(itemGroups);
+        setItemCellsStateNew(itemCellsNew);
         setItemGroupCollapsedState(itemGroupsCollapsed);
         setItemGroupsInputSelectState(itemGroupsInputSelected);
         setItemGroupsInputValueState(itemGroupsInputValue);
 
         setItemCellsState(itemCells);
         setItemsOrdersState(itemsOrders);
+        setTypesOrdersState(typesOrders);
     }, [tableSummary, projectID]);
 
     const toggleItemGroupCollapsed = (index: number) => {
