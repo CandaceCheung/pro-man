@@ -9,6 +9,7 @@ export interface ActiveProjectState {
     active_page : ActivePageState | null
     toggle_side_panel: boolean
     toggle_favorite: boolean
+    toggle_loading: boolean
     time_line_view: TimeLineViewState
     time_line_autofit: boolean
     time_line_now: boolean
@@ -25,6 +26,7 @@ const initialState: ActiveProjectState = {
     active_page: 'mainTable',
     toggle_side_panel: false,
     toggle_favorite: false,
+    toggle_loading: true,
     time_line_view: 'weeks',
     time_line_autofit: false,
     time_line_now: false,
@@ -58,6 +60,8 @@ const triggerUpdateTimelineModal : CaseReducer<ActiveProjectState, PayloadAction
 (state, action) =>  {state.update_time_line_modal_opened = action.payload} 
 const setTargetUpdateElement : CaseReducer<ActiveProjectState, PayloadAction<number>> =
 (state, action) =>  {state.target_element_id = action.payload}
+const toggleLoading : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.toggle_loading = action.payload} 
 
 
 
@@ -76,6 +80,7 @@ const projectSlice = createSlice({
         toggleFavorite,
         triggerUpdateTimelineModal,
         setTargetUpdateElement,
+        toggleLoading,
     },
 })
 
@@ -91,6 +96,7 @@ export const {
     toggleFavorite: toggleFavoriteAction,
     triggerUpdateTimelineModal: triggerUpdateTimelineModalAction,
     setTargetUpdateElement: setTargetUpdateElementAction,
+    toggleLoading: toggleLoadingAction,
 } = projectSlice.actions
 
 export default projectSlice.reducer

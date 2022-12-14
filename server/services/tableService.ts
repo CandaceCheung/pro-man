@@ -110,7 +110,7 @@ export class TableService {
             color
         })
             .where('id', id).returning('type_id')
-
+            console.log(typeId[0].type_id)
         await this.knex('types').update({
             name
         })

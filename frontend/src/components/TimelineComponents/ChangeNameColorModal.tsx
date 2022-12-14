@@ -3,7 +3,7 @@ import { Modal, Button, Group, Input, Tooltip, Stack, ColorPicker } from '@manti
 import { IconAlertCircle, IconIndentIncrease } from '@tabler/icons';
 import { useId } from '@mantine/hooks';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { triggerUpdateTimelineModalAction } from '../../redux/project/slice';
+import { toggleLoadingAction, triggerUpdateTimelineModalAction } from '../../redux/project/slice';
 import { updateDatelineItem, updateTimelineItem } from '../../redux/table/thunk';
 
 
@@ -16,6 +16,8 @@ export function ChangNameColorModal() {
   const page = useAppSelector(state => state.project.active_page)
   const id = useId()
   const projectSummary = useAppSelector(state => state.table.summary)
+  const dateItem = projectSummary.filter(project => project.item_times_id === itemId && project.type_name==='times')[0]
+  const timeItem = projectSummary.filter(project => project.item_times_id === itemId && project.type_name==='times')[0]
   const [color, setColor] = useState('#FFFFFF')
   const [name, setName] = useState<string>('')
   const [type, setType] = useState<string>('')
@@ -23,13 +25,13 @@ export function ChangNameColorModal() {
   useEffect(() => {
     if (itemType === 'dates') {
       setType('dates')
-      setColor(projectSummary.filter(project => project.item_datetime_id === itemId)[0].item_datetime_color)
-      setName(projectSummary.filter(project => project.item_datetime_id === itemId)[0].element_name)
+      setColor(dateItem.item_datetime_color)
+      setName(dateItem.element_name)
     }
     if (itemType === 'times') {
       setType('times')
-      setColor(projectSummary.filter(project => project.item_times_id === itemId)[0].item_times_color)
-      setName(projectSummary.filter(project => project.item_times_id === itemId)[0].element_name)
+      setColor(timeItem.item_times_color)
+      setName(timeItem.element_name)
     }
   }, [targetElementId])
 
@@ -37,14 +39,14 @@ export function ChangNameColorModal() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (itemType === 'dates') {
-      const date = projectSummary.filter((item)=> item.item_datetime_id===itemId)[0].item_dates_datetime
+      const date = dateItem.item_dates_datetime
       dispatch(updateDatelineItem(itemId, new Date(date).getTime(), name, color))
-    }
-    if (itemType === 'times') {
-      const start = projectSummary.filter((item)=> item.item_times_id===itemId)[0].item_times_start_date
-      const end = projectSummary.filter((item)=> item.item_times_id===itemId)[0].item_times_end_date
+    } else {
+      const start = timeItem.item_times_start_date
+      const end = timeItem.item_times_end_date
       dispatch(updateTimelineItem(itemId, start, end, name, color))
     }
+    dispatch(toggleLoadingAction(true))
     onClose()
   }
 
