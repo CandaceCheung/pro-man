@@ -118,10 +118,10 @@ export async function seed(knex: Knex): Promise<void> {
     await knex("kanban_order").insert(insertArray)
 
     insertArray = []
-    const typeArr = ['persons', 'dates', 'times', 'money', 'status', 'text']
+    const typeArr = ['Persons', 'Dates', 'Times', 'Money', 'Status', 'Text']
     for (let j = 0; j < itemGroupIDs.length * projectIDs.length; j++) {
         for (let i = 0; i < 6; i++) {
-            insertArray.push({ type: typeArr[i], order: i + 1, name: 'element name' })
+            insertArray.push({ type: typeArr[i].toLowerCase(), order: i + 1, name: typeArr[i] })
         }
     }
     const typeIDs = await knex("types").insert(insertArray).returning('*');
