@@ -12,6 +12,7 @@ import { tableController } from "../app";
     tableRoutes.post('/insertItem', tableController.insertItem);
     tableRoutes.post('/insertItemGroup', tableController.insertItemGroup);
     tableRoutes.put('/reorderItems', tableController.reorderItems);
+    tableRoutes.put('/reorderTypes', tableController.reorderTypes);
 
     return tableRoutes;
  }

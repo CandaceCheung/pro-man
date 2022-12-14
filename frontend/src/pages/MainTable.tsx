@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { reorderItems, updateItemGroupName } from '../redux/table/thunk';
+import { reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useStyles } from '../components/MainTableComponents/styles';
+import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -204,6 +205,18 @@ export function MainTable() {
         }
     }
 
+    const handleDragEndColumn = (event: any, item_group_id: number) => {
+        const { active, over } = event;
+        if (active.id !== over.id) {
+            const oldIndex = typesOrdersState[item_group_id].indexOf(active.id);
+            const newIndex = typesOrdersState[item_group_id].indexOf(over.id);
+            const newTypesOrdersState = JSON.parse(JSON.stringify(typesOrdersState));
+            newTypesOrdersState[item_group_id] = arrayMove(newTypesOrdersState[item_group_id], oldIndex, newIndex);
+            setTypesOrdersState(newTypesOrdersState);
+            userId && dispatch(reorderTypes(arrayMove(typesOrdersState[item_group_id], oldIndex, newIndex), userId));
+        }
+    }
+
     return (
         <div className="main-table">
             {
@@ -293,12 +306,18 @@ export function MainTable() {
                                         <div className={classes.tableRow}>
                                             <div className={classes.tableCell}></div>
                                             <div className={cx(classes.tableCell, classes.item)}>Item</div>
-                                            <div className={cx(classes.tableCell, classes.persons)}>Persons</div>
-                                            <div className={cx(classes.tableCell, classes.dates)}>Dates</div>
-                                            <div className={cx(classes.tableCell, classes.times)}>Times</div>
-                                            <div className={cx(classes.tableCell, classes.money)}>Money</div>
-                                            <div className={cx(classes.tableCell, classes.status)}>Status</div>
-                                            <div className={cx(classes.tableCell, classes.text)}>Text</div>
+                                            <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
+                                                <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
+                                                    {typesOrdersState[item_group_id].map((typeId, index) => (
+                                                        <TableColumnTitle
+                                                            key={typeId}
+                                                            id={typeId}
+                                                            cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
+                                                            index={index}
+                                                        />
+                                                    ))}
+                                                </SortableContext>
+                                            </DndContext >
                                         </div>
                                     </div>
                                     <div className={classes.tableBody}>

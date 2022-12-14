@@ -11,14 +11,14 @@ export interface TableRowProps {
     lastRow: boolean
 }
 
-export function TableRow(props: TableRowProps) {
+export function TableRow({id, rowOrder, cellDetails, color, lastRow}: TableRowProps) {
     const {
         attributes,
         listeners,
         setNodeRef,
         transform,
         transition
-    } = useSortable({ id: props.id });
+    } = useSortable({ id: id });
 
     const { classes, cx } = useStyles();
 
@@ -97,19 +97,19 @@ export function TableRow(props: TableRowProps) {
 
     return (
         <div 
-            className={cx(classes.tableRow, { [classes.lastRow]: props.lastRow })}
+            className={cx(classes.tableRow, { [classes.lastRow]: lastRow })}
             ref={setNodeRef} style={style} {...listeners} {...attributes}
         >
             <div 
                 className={classes.tableCell}
-                style={{ backgroundColor: props.color }}
+                style={{ backgroundColor: color }}
             ></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                {props.cellDetails[props.rowOrder[0]].item_name}
+                {cellDetails[rowOrder[0]].item_name}
             </div>
             {
-                props.rowOrder.map((typeId, cellIndex) => {
-                    return retrieveCellData(props.cellDetails[typeId], cellIndex)
+                rowOrder.map((typeId, cellIndex) => {
+                    return retrieveCellData(cellDetails[typeId], cellIndex)
                 })
             }
         </div>

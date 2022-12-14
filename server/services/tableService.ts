@@ -235,10 +235,18 @@ export class TableService {
     async reorderItems(newOrder: number[]) {
         for (const i in newOrder) {
             const itemId = newOrder[i];
-            const ordering = await this.knex("items")
+            await this.knex("items")
                 .where("id", itemId)
-                .update({ order: parseInt(i) + 1 }).returning("order");
-            console.log(itemId, ordering)
+                .update({ order: parseInt(i) + 1 });
+        }
+    }
+
+    async reorderTypes(newOrder: number[]) {
+        for (const i in newOrder) {
+            const typeId = newOrder[i];
+            await this.knex("types")
+                .where("id", typeId)
+                .update({ order: parseInt(i) + 1 });
         }
     }
 
