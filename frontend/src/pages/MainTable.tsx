@@ -1,5 +1,4 @@
 import React from 'react';
-import { createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';

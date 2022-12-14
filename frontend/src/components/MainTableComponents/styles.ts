@@ -131,11 +131,12 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         paddingLeft: 8,
         paddingRight: 8,
         textAlign: "center",
-        minHeight: 40,
+        height: 40,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        overflow: "hidden",
 
         '&:first-of-type': {
             padding: 0,
