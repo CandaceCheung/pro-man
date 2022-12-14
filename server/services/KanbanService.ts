@@ -13,7 +13,7 @@ export class KanbanService {
 			)
 				.from('items')
 				.join('type_persons','type_persons.item_id','items.id')
-				.join('type_dates', 'type_dates.item_id', 'item.id')
+				.join('type_dates', 'type_dates.item_id', 'items.id')
 				.groupBy('items.id')
 				.where('items.project_id',project_id);
 		})
