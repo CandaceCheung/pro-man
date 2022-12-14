@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { updateItemGroupName } from '../redux/table/thunk';
+import { reorderItems, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -31,6 +31,7 @@ export interface itemsGroupElement {
 }
 
 export function MainTable() {
+    const userId = useAppSelector(state => state.auth.userId);
     const tableSummary = useAppSelector(state => state.table.summary);
     const projectID = useAppSelector(state => state.project.project_id);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: {[keys in number]: itemCellsElement[]} }>({});
@@ -181,21 +182,15 @@ export function MainTable() {
         }
     }
 
-    const handleDragEndRow = (event: any, itemGroupArrayIndex: number) => {
+    const handleDragEndRow = (event: any, item_group_id: number) => {
         const { active, over } = event;
         if (active.id !== over.id) {
-            // const oldIndex = active.data.current.sortable.index;
-            // const newIndex = over.data.current.sortable.index;
-            // let newItemCellsArray = JSON.parse(JSON.stringify(itemCellsState));
-            // const newInsideArray = arrayMove(newItemCellsArray[itemGroupArrayIndex], oldIndex, newIndex)
-            // newItemCellsArray[itemGroupArrayIndex] = newInsideArray
-            // setItemCellsState(
-            //     newItemCellsArray
-            //     );
-            showNotification({
-				title: `${itemGroupArrayIndex}: Swap data notification`,
-				message: `Swapped item ${event.active.id} to ${event.over.id}! 🤥`
-            });
+            const oldIndex = itemsOrdersState[item_group_id].indexOf(active.id);
+            const newIndex = itemsOrdersState[item_group_id].indexOf(over.id);
+            const newItemsOrdersState = JSON.parse(JSON.stringify(itemsOrdersState));
+            newItemsOrdersState[item_group_id] = arrayMove(itemsOrdersState[item_group_id], oldIndex, newIndex);
+            setItemsOrdersState(newItemsOrdersState);
+            userId && dispatch(reorderItems(arrayMove(itemsOrdersState[item_group_id], oldIndex, newIndex), userId));
         }
     }
 
@@ -297,7 +292,7 @@ export function MainTable() {
                                         </div>
                                     </div>
                                     <div className={classes.tableBody}>
-                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event)=>handleDragEndRow(event, itemGroupArrayIndex)}>
+                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event)=>handleDragEndRow(event, item_group_id)}>
                                             <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
                                                 {
                                                     itemsOrdersState[item_group_id].map((itemId, itemIndex) =>

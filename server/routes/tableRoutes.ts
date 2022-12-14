@@ -11,6 +11,7 @@ import { tableController } from "../app";
     tableRoutes.put('/updateItemGroupName', tableController.updateItemGroupName);
     tableRoutes.post('/insertItem', tableController.insertItem);
     tableRoutes.post('/insertItemGroup', tableController.insertItemGroup);
+    tableRoutes.put('/reorderItems', tableController.reorderItems);
 
     return tableRoutes;
  }

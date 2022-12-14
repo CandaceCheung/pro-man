@@ -69,7 +69,6 @@ export class TableService {
             .where("projects.is_deleted", false)
             .orderBy("project_id", 'asc')
             .orderBy("item_group_id", 'desc')
-            .orderBy("item_id", 'asc')
             .orderBy("vertical_order", 'asc')
             .orderBy("horizontal_order", 'asc');
 
@@ -210,6 +209,16 @@ export class TableService {
             name: "New Group"
         }).into('item_groups').returning('id as itemGroupId');
         await this.insertItem(projectId, userId);
+    }
+
+    async reorderItems(newOrder: number[]) {
+        for (const i in newOrder) {
+            const itemId = newOrder[i];
+            const ordering = await this.knex("items")
+            .where("id", itemId)
+            .update({order: parseInt(i) + 1}).returning("order");
+            console.log(itemId, ordering)
+        }
     }
 
 }
