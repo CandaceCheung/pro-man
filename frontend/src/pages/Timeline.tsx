@@ -8,8 +8,9 @@ import moment from 'moment';
 import { updateDatelineItem, updateTimelineItem } from '../redux/table/thunk'
 import { TimeLineAddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
 import ClockLoader from "react-spinners/ClockLoader";
-import { triggerUpdateTimelineModalAction } from '../redux/project/slice'
-import { ChangNameColorModal, ChangNameColorModalProps } from '../components/TimelineComponents/ChangeNameColorModal'
+import { setTargetUpdateElementAction, triggerUpdateTimelineModalAction } from '../redux/project/slice'
+import { ChangNameColorModal } from '../components/TimelineComponents/ChangeNameColorModal'
+
 
 const keys = { // default key name
   groupIdKey: 'id',
@@ -64,6 +65,7 @@ export function TimeFrame() {
   const [loading, setLoading] = useState(true)
   const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
   const [targetItem, setTargetItem] = useState<number>(0)
+  const targetElementId = useAppSelector(state=> state.project.target_element_id)
    
   let groups: GroupProps = []
   let items: ItemProps = []
@@ -93,12 +95,12 @@ export function TimeFrame() {
       canResize: true,
       canChangeGroup: false,
       itemProps: {
-        'aria-hidden': true,
+        'aria-hidden': false,
         className: 'time-block',
         style: {
-          backgroundColor: item.item_times_color,
+          background: item.item_times_color,
           borderRadius: '10px',
-          border: 'none'
+          border: 'none',
         }
       }
     })
@@ -115,10 +117,10 @@ export function TimeFrame() {
       canResize: false,
       canChangeGroup: false,
       itemProps: {
-        'aria-hidden': true,
+        'aria-hidden': false,
         className: 'date-block',
         style: {
-          backgroundColor: item.item_datetime_color,
+          background: item.item_datetime_color,
           borderStyle: 'solid',
           borderWidth: '4px',
           borderColor: 'darkgrey',
@@ -132,13 +134,12 @@ export function TimeFrame() {
     lastEndedTime = Math.max(item.item_times_end_date, lastEndedTime)
     lastEndedTime = Math.max(new Date(item.item_dates_datetime).getTime() + 8.64e+7, lastEndedTime)
   }
-
   let firstStartedTime = lastEndedTime
   for (let item of timelineDetail) {
     firstStartedTime = Math.min(item.item_times_start_date, firstStartedTime)
     firstStartedTime = Math.min(new Date(item.item_dates_datetime).getTime(), firstStartedTime)
   }
-
+  
   function handleItemResize(itemId: number, time: number, edge: 'left' | 'right') {
     if (itemId.toString()[0] === '1') {
       const id = parseInt(itemId.toString().slice(1))
@@ -168,17 +169,14 @@ export function TimeFrame() {
     setLoading(true)
   }
 
-  function handleItemDoubleClick(itemId: number, e: any, time: number) {
-    setTargetItem(itemId)
+  function handleItemDoubleClick(itemId: number, e: any, startTime: number) {
+    dispatch(setTargetUpdateElementAction(itemId))
     dispatch(triggerUpdateTimelineModalAction(!toggleUpdateModal))
   }
 
-
-  const lastEndDate = new Date(lastEndedTime)
-  const firstStartDate = new Date(firstStartedTime)
-
   useEffect(() => {
-    setTimeout(() => setLoading(false), 500)
+    let timeout = setTimeout(() => setLoading(false), 500)
+    return ()=>{clearTimeout(timeout)}
   }, [loading, zoom])
 
   return (
@@ -241,11 +239,11 @@ export function TimeFrame() {
               style={{ fontSize: '10px', color: '#999999' }}
             />
             <TimelineMarkers>
-              {show && <CustomMarker date={firstStartDate}>
+              {show && <CustomMarker date={firstStartedTime}>
                 {({ styles, date }) => {
                   const customStyles = {
                     ...styles,
-                    backgroundColor: 'darkgreen',
+                    background: 'darkgreen',
                     width: '4px'
                   }
                   return <div
@@ -254,8 +252,8 @@ export function TimeFrame() {
                     onClick={() => { return }}>
                     <span
                       className='pin-label'
-                      style={{ backgroundColor: 'darkgreen', right: '10px' }}
-                    >Start Date : {new Date(firstStartDate).toDateString()}
+                      style={{ background: 'darkgreen', right: '10px' }}
+                    >Start Date : {new Date(firstStartedTime).toDateString()}
                     </span>
                     <span className='pin'><IconPinned size={30} />
                     </span>
@@ -266,22 +264,22 @@ export function TimeFrame() {
                 {({ styles, date }) => {
                   const customStyles = {
                     ...styles,
-                    backgroundColor: 'deepskyblue',
+                    background: 'deepskyblue',
                     width: '4px'
                   }
-                  return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'deepskyblue', right: '10px' }}>Today : {new Date(Date.now()).toDateString()}</span><span className='pin'><IconPinned size={30} /></span></div>
+                  return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ background: 'deepskyblue', right: '10px' }}>Today : {new Date(Date.now()).toDateString()}</span><span className='pin'><IconPinned size={30} /></span></div>
 
 
                 }}
               </CustomMarker>}
-              {show && <CustomMarker date={lastEndDate}>
+              {show && <CustomMarker date={lastEndedTime}>
                 {({ styles, date }) => {
                   const customStyles = {
                     ...styles,
-                    backgroundColor: 'deeppink',
+                    background: 'deeppink',
                     width: '4px'
                   }
-                  return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ backgroundColor: 'deeppink', left: '10px' }}>End Date : {lastEndDate.toDateString()}</span><span className='pin' title='End Date'><IconPinned size={30} /></span></div>
+                  return <div className='pin-container' style={customStyles} onClick={() => { return }}><span className='pin-label' style={{ background: 'deeppink', left: '10px' }}>End Date : {new Date(lastEndedTime).toDateString()}</span><span className='pin' title='End Date'><IconPinned size={30} /></span></div>
 
                 }}
               </CustomMarker>
@@ -290,7 +288,7 @@ export function TimeFrame() {
           </TimelineHeaders>
         </Timeline>
       }
-      <ChangNameColorModal itemId={targetItem}/> 
+      <ChangNameColorModal /> 
       <TimeLineAddNewItemModal groups={groups} />
     </div>
   )
