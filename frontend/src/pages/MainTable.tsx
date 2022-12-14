@@ -293,7 +293,7 @@ export function MainTable() {
                                     id={`table_group_${item_group_id}`}
                                     className={classes.tableGroup}
                                 >
-                                    <div>
+                                    <div className={classes.tableHead}>
                                         <div className={classes.tableRow}>
                                             <div className={classes.tableCell}></div>
                                             <div className={cx(classes.tableCell, classes.item)}>Item</div>

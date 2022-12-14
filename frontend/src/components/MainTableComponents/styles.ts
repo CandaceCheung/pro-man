@@ -1,6 +1,6 @@
 import { createStyles } from '@mantine/core';
 
-export const useStyles = createStyles(theme => ({
+export const useStyles = createStyles((theme, _params, getRef) => ({
     collapserButton: {
         transform: "rotate(90deg)"
     },
@@ -126,6 +126,7 @@ export const useStyles = createStyles(theme => ({
     },
 
     tableCell: {
+        ref: getRef("tableCell"),
         border: "1px solid #ddd",
         paddingLeft: 8,
         paddingRight: 8,
@@ -166,12 +167,24 @@ export const useStyles = createStyles(theme => ({
     },
 
     tableRow: {
+        ref: getRef("tableRow"),
         display: "flex"
     },
 
     tableHead: {
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
+
+        [`& .${getRef('tableRow')}`]: {
+            [`& .${getRef('tableCell')}:first-of-type`]: {
+                borderTopLeftRadius: 10,
+                borderLeft: "1px solid #ddd",
+                borderTop: "1px solid #ddd"
+            },
+            [`& .${getRef('tableCell')}:last-of-type`]: {
+                borderTopRightRadius: 10
+            }
+        }
     },
 
     tableBody: {
@@ -179,19 +192,23 @@ export const useStyles = createStyles(theme => ({
         flexDirection: "column",
 
         "> div": {
-            '&:nth-of-type(even)': {
+            '&:nth-of-type(odd)': {
                 backgroundColor: "#f2f2f2"
             },
             '&:hover': {
                 backgroundColor: "#ddd"
-            },
-            "&:last-of-type": {
-                boxShadow: "0 6px 4px -4px #ddd",
+            }
+        },
 
-                "> div": {
-                    "&:first-of-type": {
-                        borderBottomLeftRadius: 10
-                    }
+        [`& .${getRef('tableRow')}`]: {
+            "$:first-of-type": {
+                [`& .${getRef('tableCell')}:first-of-type`]: {
+                    borderRadius: "inherit",
+                    borderLeft: "1px solid #ddd",
+                    borderBottom: "1px solid #ddd"
+                },
+                [`& .${getRef('tableCell')}:last-of-type`]: {
+                    borderRadius: "inherit",
                 }
             }
         }
