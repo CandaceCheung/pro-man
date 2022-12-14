@@ -6,9 +6,9 @@ import { IconArrowBadgeLeft, IconArrowBadgeRight, IconPinned } from '@tabler/ico
 import { useEffect, useState } from 'react'
 import moment from 'moment';
 import { updateDatelineItem, updateTimelineItem } from '../redux/table/thunk'
-import { TimeLineAddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
+import { AddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
 import ClockLoader from "react-spinners/ClockLoader";
-import { setTargetUpdateElementAction, triggerUpdateTimelineModalAction } from '../redux/project/slice'
+import { setTargetUpdateElementAction, toggleLoadingAction, triggerUpdateTimelineModalAction } from '../redux/project/slice'
 import { ChangNameColorModal } from '../components/TimelineComponents/ChangeNameColorModal'
 
 
@@ -24,17 +24,18 @@ const keys = { // default key name
   itemTimeEndKey: 'end_time',
 }
 
-export type GroupProps = {
+export type GroupState = {
   id: number
   title: string
   groupId: number
   groupName: string
 }[]
 
-type ItemProps = {
+type ItemState = {
   id: number
   group: number
   title: string
+  type_id: number
   start_time: number
   end_time: number
   color: string
@@ -63,13 +64,12 @@ export function TimeFrame() {
   const defaultTimeStart = moment().startOf('day');
   const defaultTimeEnd = moment().add(1, zoom);
   const interval = 24 * 60 * 60 * 1000;
-  const [loading, setLoading] = useState(true)
+  const loading = useAppSelector(state=>state.project.toggle_loading)
   const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
-  const targetElementId = useAppSelector(state=> state.project.target_element_id)
    
-  let groups: GroupProps = []
-  let items: ItemProps = []
-  let dateItems: ItemProps = []
+  let groups: GroupState = []
+  let items: ItemState = []
+  let dateItems: ItemState = []
 
   for (let item of timelineDetail) {
     let checking: number[] = []
@@ -89,6 +89,7 @@ export function TimeFrame() {
       id: parseInt('1' + item.item_times_id),
       group: item.item_id,
       title: item.element_name,
+      type_id: item.horizontal_order_id,
       start_time: item.item_times_start_date,
       end_time: item.item_times_end_date,
       color: item.item_times_color,
@@ -112,6 +113,7 @@ export function TimeFrame() {
       id: parseInt('2' + item.item_datetime_id),
       group: item.item_id,
       title: item.element_name,
+      type_id: item.horizontal_order_id,
       start_time: new Date(item.item_dates_datetime).getTime(),
       end_time: new Date(item.item_dates_datetime).getTime() + 8.64e+7,
       color: item.item_datetime_color,
@@ -155,7 +157,7 @@ export function TimeFrame() {
         newEndTime = time
       }
       dispatch(updateTimelineItem(id, newStartTime, newEndTime, name, color))
-      setLoading(true)
+      dispatch(toggleLoadingAction(true))
     }
   }
 
@@ -164,15 +166,21 @@ export function TimeFrame() {
     if (itemId.toString()[0] === '1') {
       const name = items.filter(x => x.id === itemId)[0].title
       const color = items.filter(x => x.id === itemId)[0].color
+      const typeId = items.filter(x => x.id === itemId)[0].type_id
       const newEndTime = newStartTime - items[index].start_time + parseInt(items[index].end_time + "")
+      
+      console.log(typeId, name)
       dispatch(updateTimelineItem(id, newStartTime, newEndTime, name, color))
     }
     if (itemId.toString()[0] === '2') {
       const name = dateItems.filter(x => x.id === itemId)[0].title
       const color = dateItems.filter(x => x.id === itemId)[0].color
+      const typeId = dateItems.filter(x => x.id === itemId)[0].type_id
+      console.log(typeId, name)
+
       dispatch(updateDatelineItem(id, newStartTime, name, color))
     }
-    setLoading(true)
+    dispatch(toggleLoadingAction(true))
   }
 
   function handleItemDoubleClick(itemId: number, e: any, startTime: number) {
@@ -181,7 +189,7 @@ export function TimeFrame() {
   }
 
   useEffect(() => {
-    let timeout = setTimeout(() => setLoading(false), 500)
+    let timeout = setTimeout(() => dispatch(toggleLoadingAction(false)), 500)
     return ()=>{clearTimeout(timeout)}
   }, [loading, zoom])
 
@@ -295,7 +303,7 @@ export function TimeFrame() {
         </Timeline>
       }
       <ChangNameColorModal /> 
-      <TimeLineAddNewItemModal groups={groups} />
+      <AddNewItemModal groups={groups} />
     </div>
   )
 }

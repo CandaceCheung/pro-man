@@ -6,13 +6,13 @@ import { useId } from '@mantine/hooks';
 import { DatePicker, DateRangePicker, DateRangePickerValue } from '@mantine/dates'
 import { useState } from 'react';
 import { useForm } from '@mantine/form'
-import { GroupProps } from '../../pages/Timeline';
+import { GroupState } from '../../pages/Timeline';
 
 type TimeLineAddNewItemModalProps = {
-    groups: GroupProps
+    groups: GroupState
 }
 
-export function TimeLineAddNewItemModal(props: TimeLineAddNewItemModalProps) {
+export function AddNewItemModal(props: TimeLineAddNewItemModalProps) {
     const dispatch = useAppDispatch()
     const opened = useAppSelector(state => state.project.time_line_modal_opened)
     const userId = useAppSelector(state => state.auth.userId)

@@ -107,8 +107,12 @@ const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timeli
             if (item.item_times_id === action.payload.timelineID) {
                 item.item_times_start_date = action.payload?.startTime
                 item.item_times_end_date = action.payload?.endTime
-                item.element_name = action.payload?.name
                 item.item_times_color = action.payload?.color
+            }
+            for (let type of state.summary){
+                if (type.horizontal_order_id === item.horizontal_order_id && type.type_name==='times'){
+                    type.element_name = action.payload?.name
+                }
             }
         }
     }
@@ -117,8 +121,12 @@ const updateDatelineItem: CaseReducer<CombinedTableState, PayloadAction<{ dateli
         for (let item of state.summary) {
             if (item.item_datetime_id === action.payload.datelineID) {
                 item.item_dates_datetime = new Date(action.payload.date).toDateString()
-                item.element_name = action.payload?.name
                 item.item_datetime_color = action.payload?.color
+            }
+            for (let type of state.summary){
+                if (type.horizontal_order_id === item.horizontal_order_id && type.type_name==='dates'){
+                    type.element_name = action.payload?.name
+                }
             }
         }
     }
