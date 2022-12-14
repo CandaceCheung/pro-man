@@ -11,20 +11,11 @@ import {
 } from "@mantine/core";
 import { IconGripVertical, IconPlus } from "@tabler/icons";
 import { useState } from "react";
-import { useAppSelector } from "../../store";
+import { Status } from "../../redux/kanban/state";
 import { ItemCard } from "./ItemCard";
 
-export type Item = {
-    itemId: string;
-    people: string;
-    name: string;
-};
 
-type StatusProps = {
-    projectId: number;
-    statesName: string;
-    color: string;
-};
+type StatusProps = Status //state 
 
 const useStyles = createStyles((theme, color: string) => ({
     cardHeader: {
@@ -54,33 +45,8 @@ const useStyles = createStyles((theme, color: string) => ({
 
 export function StatusColumn(props: StatusProps) {
     const [opened, setOpened] = useState(false);
-
     const { classes, theme } = useStyles(props.color);
-
-    const projectSummary = useAppSelector((state) => state.table.summary);
-    const targetProjectId = useAppSelector((state) => state.project.project_id);
-    const allItemsInfo = projectSummary.filter(
-        (project) =>
-            project.project_id === targetProjectId &&
-            project.type_name === "status"
-    );
-    const itemsUnderSameState = allItemsInfo.filter(
-        (item) => item.item_status_name === props.statesName
-    );
-
-    console.log(itemsUnderSameState);
-
-    const itemList = [];
-    for (let item of itemsUnderSameState) {
-        const date = item.item_dates_datetime.slice(0, 10);
-        const obj = {
-            itemName: item.item_name,
-            memberName: item.item_person_name,
-            itemDate: date,
-        };
-
-        itemList.push(obj);
-    }
+    
 
     const handleDnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -104,7 +70,7 @@ export function StatusColumn(props: StatusProps) {
                     <Group position="left" pt={10} pb={10} m={5}>
                         <IconGripVertical className="grip" size={20} />
                         <Text weight={570} className="headerText">
-                            {props.statesName} / {itemList.length}
+                            {props.name} / {props.name.length}
                         </Text>
                     </Group>
                 </div>
@@ -115,11 +81,11 @@ export function StatusColumn(props: StatusProps) {
                     scrollbarSize={6}
                 >
                     <div>
-                        {itemList.map((status) => (
+                        {props.itemsList.map((item) => (
                             <ItemCard
-                                itemName={status.itemName}
-                                memberName={status.memberName}
-                                itemDate={status.itemDate}
+                                itemName={item.name}
+                                memberName={item.membersList}
+                                itemDate={item.date}
                             />
                         ))}
                     </div>
