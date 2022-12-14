@@ -314,6 +314,7 @@ export function MainTable() {
                                                             id={typeId}
                                                             cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
                                                             index={index}
+                                                            lastCell={index === typesOrdersState[item_group_id].length - 1}
                                                         />
                                                     ))}
                                                 </SortableContext>

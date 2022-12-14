@@ -5,10 +5,11 @@ import { useStyles } from "./styles";
 export interface TableColumnTitleProps {
     id: number,
     cellColumnType: string,
-    index: number
+    index: number,
+    lastCell: boolean
 }
 
-export function TableColumnTitle({ id, cellColumnType, index }: TableColumnTitleProps) {
+export function TableColumnTitle({ id, cellColumnType, index, lastCell }: TableColumnTitleProps) {
     const {
         attributes,
         listeners,
@@ -27,17 +28,17 @@ export function TableColumnTitle({ id, cellColumnType, index }: TableColumnTitle
     const retrieveCellData = (cellColumnType: string, index: number): JSX.Element => {
         switch (cellColumnType) {
             case "persons":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.persons)}>Persons</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.persons, { [classes.lastCell]: lastCell })}>Persons</div>
             case "dates":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.dates)}>Dates</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.dates, { [classes.lastCell]: lastCell })}>Dates</div>
             case "money":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.money)}>Money</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.money, { [classes.lastCell]: lastCell })}>Money</div>
             case "times":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.times)}>Times</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.times, { [classes.lastCell]: lastCell })}>Times</div>
             case "status":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.status)}>Status</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.status, { [classes.lastCell]: lastCell })}>Status</div>
             case "text":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.text)}>Text</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.text, { [classes.lastCell]: lastCell })}>Text</div>
             default:
                 return <div key={"cell_column" + index}></div>
         }
