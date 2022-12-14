@@ -1,5 +1,4 @@
 export interface KanbanState {
-    projectId: number, // common 
     statusList: Status[], 
 }
 
@@ -13,5 +12,6 @@ export interface Status {
 export interface Item {
     id: number,
     name: string, 
+    date: string,
     membersList: string[],
 }

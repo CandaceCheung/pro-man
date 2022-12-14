@@ -13,12 +13,14 @@ import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 import { getFavorite, getTable } from "./redux/table/thunk";
+import { getKanbanItems } from "./redux/kanban/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
+    const projectId = useAppSelector((state) => state.project.project_id); //active project state
 
     useEffect(() => {
         document.title = 'Pro-Man: Project Management Tool';
@@ -31,6 +33,12 @@ function App() {
         userId !== null && dispatch(getFavorite(userId))
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId]);
+
+    useEffect(() => {
+        if (projectId !== null){
+            dispatch(getKanbanItems(projectId))
+        }
+    },[projectId,dispatch]);
 
     return (
         <div className="App">
