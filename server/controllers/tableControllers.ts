@@ -39,10 +39,12 @@ export class TableController {
     updateTimeline = async (req: Request, res: Response) => {
         try {
             const typeTimeId = req.body.typeTimeId
-            const newStartTime = req.body.startTime
-            const newEndTime = req.body.endTime
+            const newStartTime = req.body?.startTime
+            const newEndTime = req.body?.endTime
+            const newName = req.body?.name
+            const newColor = req.body?.color
 
-            await this.tableService.updateTimelineService(typeTimeId, newStartTime, newEndTime);
+            await this.tableService.updateTimelineService(typeTimeId, newStartTime, newEndTime, newName, newColor);
 
             res.json({ success: true });
         } catch (e) {
@@ -54,8 +56,10 @@ export class TableController {
         try {
             const typeDateId = req.body.typeDateId
             const newStartTime = req.body.date
+            const newName = req.body?.name
+            const newColor = req.body?.color
 
-            await this.tableService.updateDatelineService(typeDateId, newStartTime);
+            await this.tableService.updateDatelineService(typeDateId, newStartTime, newName, newColor);
 
             res.json({ success: true });
         } catch (e) {

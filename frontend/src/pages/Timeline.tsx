@@ -37,6 +37,7 @@ type ItemProps = {
   title: string
   start_time: number
   end_time: number
+  color: string
   canMove?: boolean
   canResize?: boolean
   canChangeGroup?: boolean
@@ -90,6 +91,7 @@ export function TimeFrame() {
       title: item.element_name,
       start_time: item.item_times_start_date,
       end_time: item.item_times_end_date,
+      color: item.item_times_color,
       canMove: true,
       canResize: true,
       canChangeGroup: false,
@@ -112,6 +114,7 @@ export function TimeFrame() {
       title: item.element_name,
       start_time: new Date(item.item_dates_datetime).getTime(),
       end_time: new Date(item.item_dates_datetime).getTime() + 8.64e+7,
+      color: item.item_datetime_color,
       canMove: true,
       canResize: false,
       canChangeGroup: false,
@@ -142,6 +145,8 @@ export function TimeFrame() {
       const id = parseInt(itemId.toString().slice(1))
       const originalStartTime = items.filter(x => x.id === itemId)[0].start_time
       const originalEndTime = items.filter(x => x.id === itemId)[0].end_time
+      const name = items.filter(x => x.id === itemId)[0].title
+      const color = items.filter(x => x.id === itemId)[0].color
       let newStartTime = originalStartTime
       let newEndTime = originalEndTime
       if (edge === 'left') {
@@ -149,19 +154,23 @@ export function TimeFrame() {
       } else if (edge === 'right') {
         newEndTime = time
       }
-      dispatch(updateTimelineItem(id, newStartTime, newEndTime))
+      dispatch(updateTimelineItem(id, newStartTime, newEndTime, name, color))
       setLoading(true)
     }
   }
 
   function handleItemMove(itemId: number, newStartTime: number, index: number) {
+    const id = parseInt(itemId.toString().slice(1))
     if (itemId.toString()[0] === '1') {
+      const name = items.filter(x => x.id === itemId)[0].title
+      const color = items.filter(x => x.id === itemId)[0].color
       const newEndTime = newStartTime - items[index].start_time + parseInt(items[index].end_time + "")
-      const id = parseInt(itemId.toString().slice(1))
-      dispatch(updateTimelineItem(id, newStartTime, newEndTime))
-    } else if (itemId.toString()[0] === '2') {
-      const id = parseInt(itemId.toString().slice(1))
-      dispatch(updateDatelineItem(id, newStartTime))
+      dispatch(updateTimelineItem(id, newStartTime, newEndTime, name, color))
+    }
+    if (itemId.toString()[0] === '2') {
+      const name = dateItems.filter(x => x.id === itemId)[0].title
+      const color = dateItems.filter(x => x.id === itemId)[0].color
+      dispatch(updateDatelineItem(id, newStartTime, name, color))
     }
     setLoading(true)
   }

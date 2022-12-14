@@ -21,7 +21,7 @@ export function getTable(userID: number) {
 	};
 }
 
-export function updateTimelineItem(timelineID: number, startTime: number, endTime: number) {
+export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
@@ -33,13 +33,15 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 			body: JSON.stringify({
 				typeTimeId: timelineID,
 				startTime,
-				endTime
+				endTime,
+				name,
+				color
 			})
 		});
 		const result = await res.json();
 
 		if (result.success) {
-			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime }))
+			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color}))
 			showNotification({
 				title: 'Data update notification',
 				message: 'Update Success'
@@ -50,7 +52,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 	};
 }
 
-export function updateDatelineItem(datelineID: number, date: number) {
+export function updateDatelineItem(datelineID: number, date: number, name: string, color :string) {
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
@@ -62,12 +64,14 @@ export function updateDatelineItem(datelineID: number, date: number) {
 			body: JSON.stringify({
 				typeDateId: datelineID,
 				date,
+				name,
+				color
 			})
 		});
 		const result = await res.json();
 
 		if (result.success) {
-			dispatch(updateDatelineItemAction({ datelineID, date }))
+			dispatch(updateDatelineItemAction({ datelineID, date, name, color }))
 			showNotification({
 				title: 'Data update notification',
 				message: 'Update Success'
