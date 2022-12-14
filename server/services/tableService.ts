@@ -90,35 +90,48 @@ export class TableService {
     }
 
     async updateTimelineService(id: number, start: number, end: number, name: string, color: string) {
-        const typeId = await this.knex('type_times').update({
-            start_date: start,
-            end_date: end,
-            color
-        })
-            .where('id', id).returning('type_id')
-        
+        const txn = await this.knex.transaction();
+        try {
+            const typeId = await this.knex('type_times').update({
+                start_date: start,
+                end_date: end,
+                color
+            })
+                .where('id', id).returning('type_id')
+
             console.log(typeId[0].type_id)
-        await this.knex('types').update({
-            name
-        })
-            .where('id', typeId[0].type_id)
-        
-        return typeId[0].type_id
+            await this.knex('types').update({
+                name
+            })
+                .where('id', typeId[0].type_id)
+
+            return typeId[0].type_id
+
+        } catch (e) {
+            await txn.rollback();
+            throw e
+        }
     }
 
     async updateDatelineService(id: number, date: number, name: string, color: string) {
-        const typeId = await this.knex('type_dates').update({
-            datetime: format(new Date(date), 'yyyy-MM-dd'),
-            color
-        })
-            .where('id', id).returning('type_id')
+        const txn = await this.knex.transaction();
+        try {
+            const typeId = await this.knex('type_dates').update({
+                datetime: format(new Date(date), 'yyyy-MM-dd'),
+                color
+            })
+                .where('id', id).returning('type_id')
             console.log(typeId[0].type_id)
-        await this.knex('types').update({
-            name
-        })
-            .where('id', typeId[0].type_id)
+            await this.knex('types').update({
+                name
+            })
+                .where('id', typeId[0].type_id)
 
-        return typeId[0].type_id
+            return typeId[0].type_id
+        } catch (e) {
+            await txn.rollback();
+            throw e
+        }
     }
 
     async updateItemGroupName(id: number, name: string) {
@@ -238,13 +251,13 @@ export class TableService {
         }).into('item_groups').returning('id as itemGroupId');
 
         await this.knex.insert(
-                [{type: "persons", name: "persons", order: 1},
-                {type: "dates", name: "dates", order: 2},
-                {type: "times", name: "times", order: 3},
-                {type: "money", name: "money", order: 4},
-                {type: "status", name: "status", order: 5},
-                {type: "text", name: "text", order: 6}]
-            ).into("types");
+            [{ type: "persons", name: "persons", order: 1 },
+            { type: "dates", name: "dates", order: 2 },
+            { type: "times", name: "times", order: 3 },
+            { type: "money", name: "money", order: 4 },
+            { type: "status", name: "status", order: 5 },
+            { type: "text", name: "text", order: 6 }]
+        ).into("types");
 
         await this.insertItem(projectId, userId, true);
     }
