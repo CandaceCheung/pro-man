@@ -66,7 +66,9 @@ export function TimeFrame() {
   const interval = 24 * 60 * 60 * 1000;
   const loading = useAppSelector(state=>state.project.toggle_loading)
   const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
-   
+  const stack = useAppSelector(state=> state.project.time_line_stack_item)
+  
+  
   let groups: GroupState = []
   let items: ItemState = []
   let dateItems: ItemState = []
@@ -216,7 +218,7 @@ export function TimeFrame() {
           useResizeHandle
           sidebarWidth={toggle ? 30 : 150}
           keys={keys}
-          stackItems={true}
+          stackItems={stack}
           itemHeightRatio={0.75}
           canMove
           canResize={'both'}

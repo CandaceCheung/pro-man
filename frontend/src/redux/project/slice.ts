@@ -17,6 +17,7 @@ export interface ActiveProjectState {
     time_line_start_anchor: Moment
     time_line_end_anchor: Moment
     time_line_modal_opened: boolean
+    time_line_stack_item: boolean
     update_time_line_modal_opened: boolean
     target_element_id: number
 }
@@ -34,6 +35,7 @@ const initialState: ActiveProjectState = {
     time_line_start_anchor: moment().startOf('minute').add(-0.5, 'weeks'),
     time_line_end_anchor: moment().startOf('minute').add(0.5, 'weeks'),
     time_line_modal_opened: false,
+    time_line_stack_item: true,
     update_time_line_modal_opened: false,
     target_element_id: 0
 }
@@ -62,7 +64,8 @@ const setTargetUpdateElement : CaseReducer<ActiveProjectState, PayloadAction<num
 (state, action) =>  {state.target_element_id = action.payload}
 const toggleLoading : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.toggle_loading = action.payload} 
-
+const toggleStackItem : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.time_line_stack_item = action.payload} 
 
 
 const projectSlice = createSlice({
@@ -81,6 +84,7 @@ const projectSlice = createSlice({
         triggerUpdateTimelineModal,
         setTargetUpdateElement,
         toggleLoading,
+        toggleStackItem,
     },
 })
 
@@ -97,6 +101,7 @@ export const {
     triggerUpdateTimelineModal: triggerUpdateTimelineModalAction,
     setTargetUpdateElement: setTargetUpdateElementAction,
     toggleLoading: toggleLoadingAction,
+    toggleStackItem: toggleStackItemAction,
 } = projectSlice.actions
 
 export default projectSlice.reducer

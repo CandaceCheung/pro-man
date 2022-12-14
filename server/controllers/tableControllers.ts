@@ -44,9 +44,12 @@ export class TableController {
             const newName = req.body?.name
             const newColor = req.body?.color
 
-            await this.tableService.updateTimelineService(typeTimeId, newStartTime, newEndTime, newName, newColor);
+            const typeId: number = await this.tableService.updateTimelineService(typeTimeId, newStartTime, newEndTime, newName, newColor);
 
-            res.json({ success: true });
+            res.json({ 
+                success: true, 
+                typeId 
+            });
         } catch (e) {
             console.error(e);
             res.status(500).json({ msg: "[TAB] Fail to Update Timeline" });
@@ -59,9 +62,12 @@ export class TableController {
             const newName = req.body?.name
             const newColor = req.body?.color
 
-            await this.tableService.updateDatelineService(typeDateId, newStartTime, newName, newColor);
+            const typeId: number = await this.tableService.updateDatelineService(typeDateId, newStartTime, newName, newColor);
 
-            res.json({ success: true });
+            res.json({ 
+                success: true,
+                typeId
+            });
         } catch (e) {
             console.error(e);
             res.status(500).json({ msg: "[TAB] Fail to Update Timeline" });

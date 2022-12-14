@@ -4,9 +4,10 @@ import { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable("item_groups", (table)=>{
         table.increments()
-        table.integer('project_id').unsigned()
+        table.integer('project_id').unsigned().notNullable
         table.foreign('project_id').references("projects.id")
-        table.string('name')
+        table.string('name').notNullable
+        table.timestamps(false, true);
     })
 }
 
