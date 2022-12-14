@@ -37,7 +37,7 @@ export function postItem(itemName: string, date: string, member: string[], proje
         const result = await res.json();
 
         if (result.success) {
-            dispatch(addKanbanItem(result.));
+            // dispatch(addKanbanItem(result.));
         } else {
             dispatch(failKanbanAction());
             console.log("Post Kanban item fail");
