@@ -92,21 +92,20 @@ export class TableService {
     async updateTimelineService(id: number, start: number, end: number, name: string, color: string) {
         const txn = await this.knex.transaction();
         try {
-            const typeId = await this.knex('type_times').update({
+            const typeId = await txn('type_times').update({
                 start_date: start,
                 end_date: end,
                 color
             })
                 .where('id', id).returning('type_id')
 
-            console.log(typeId[0].type_id)
-            await this.knex('types').update({
+            await txn('types').update({
                 name
             })
                 .where('id', typeId[0].type_id)
 
+            await txn.commit()
             return typeId[0].type_id
-
         } catch (e) {
             await txn.rollback();
             throw e
@@ -116,18 +115,20 @@ export class TableService {
     async updateDatelineService(id: number, date: number, name: string, color: string) {
         const txn = await this.knex.transaction();
         try {
-            const typeId = await this.knex('type_dates').update({
+            const typeId = await txn('type_dates').update({
                 datetime: format(new Date(date), 'yyyy-MM-dd'),
                 color
             })
                 .where('id', id).returning('type_id')
-            console.log(typeId[0].type_id)
-            await this.knex('types').update({
+        
+            await txn('types').update({
                 name
             })
                 .where('id', typeId[0].type_id)
 
+            await txn.commit()
             return typeId[0].type_id
+
         } catch (e) {
             await txn.rollback();
             throw e
