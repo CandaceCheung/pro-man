@@ -119,10 +119,6 @@ export function MainTable() {
         setItemsOrdersState(itemsOrders);
     }, [tableSummary, projectID]);
 
-    useEffect(() => {
-        userId && dispatch(getTable(userId));
-    }, [itemCellsState, itemGroupsState, itemsOrdersState])
-
     const toggleItemGroupCollapsed = (index: number) => {
         const newItemGroupsCollapsedState = [...itemGroupsCollapsedState];
         setItemGroupCollapsedState(newItemGroupsCollapsedState.map((each: boolean, i: number) => {
