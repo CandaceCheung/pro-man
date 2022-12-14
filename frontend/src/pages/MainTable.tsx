@@ -4,11 +4,12 @@ import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import { reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
-import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useStyles } from '../components/MainTableComponents/styles';
 import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
+import { SmartPointerSensor } from '../pointerSensor';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -46,7 +47,7 @@ export function MainTable() {
     const { classes, theme, cx } = useStyles();
 
     const sensors = useSensors(
-        useSensor(MouseSensor)
+        useSensor(SmartPointerSensor)
     );
 
     useEffect(() => {
