@@ -20,16 +20,13 @@ export function ChangNameColorModal() {
   const timeItem = projectSummary.filter(project => project.item_times_id === itemId && project.type_name==='times')[0]
   const [color, setColor] = useState('#FFFFFF')
   const [name, setName] = useState<string>('')
-  const [type, setType] = useState<string>('')
 
   useEffect(() => {
     if (itemType === 'dates') {
-      setType('dates')
       setColor(dateItem.item_datetime_color)
       setName(dateItem.element_name)
     }
     if (itemType === 'times') {
-      setType('times')
       setColor(timeItem.item_times_color)
       setName(timeItem.element_name)
     }

@@ -1,5 +1,6 @@
 import { Button, Menu } from "@mantine/core";
-import { IconEyeOff, IconFilter, IconUser, IconColumns} from "@tabler/icons";
+import { valueGetters } from "@mantine/core/lib/Box/style-system-props/value-getters/value-getters";
+import { IconEyeOff, IconFilter, IconUser, IconColumns } from "@tabler/icons";
 import { triggerTimelineModalAction } from "../../redux/project/slice";
 import { insertItem, insertItemGroup } from "../../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -7,15 +8,21 @@ import { TimelineButton } from "../TimelineComponents/TimelineButtons";
 
 export function ButtonHub() {
     const dispatch = useAppDispatch()
+    const projectSummary = useAppSelector(state => state.table.summary)
     const projectId = useAppSelector(state => state.project.project_id);
+    const personsSummary = projectSummary.filter((project, index, self) => 
+        project.project_id === projectId && 
+        project.type_name === 'persons' && 
+        index === self.findIndex((obj) => obj.item_person_id === project.item_person_id))
     const userId = useAppSelector(state => state.auth.userId);
     const page = useAppSelector(state => state.project.active_page)
+    console.log(personsSummary)
 
-    const onNewItemClick = ()=>{
-        page==='timeline' && dispatch(triggerTimelineModalAction(true));
-        page==='mainTable' && projectId && userId && dispatch(insertItem(projectId, userId));
-    } 
-    const onNewGroupClick = ()=>{
+    const onNewItemClick = () => {
+        page === 'timeline' && dispatch(triggerTimelineModalAction(true));
+        page === 'mainTable' && projectId && userId && dispatch(insertItem(projectId, userId));
+    }
+    const onNewGroupClick = () => {
         projectId && userId && dispatch(insertItemGroup(projectId, userId));
     }
     return (
@@ -30,9 +37,10 @@ export function ButtonHub() {
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by person</Menu.Label>
-                        <Menu.Item icon={<IconUser size={14} />}>place holder</Menu.Item>
-                        <Menu.Item icon={<IconUser size={14} />}>place holder 2</Menu.Item>
-                        <Menu.Item icon={<IconUser size={14} />}>place holder 3</Menu.Item>
+                        {personsSummary.map((person, index) => {
+                            return <Menu.Item key={index} value={person.item_person_id} icon={<IconUser size={14} />}>{person.item_person_name}</Menu.Item>
+                        })
+                        }
                     </Menu.Dropdown>
                 </Menu>
 
@@ -60,7 +68,7 @@ export function ButtonHub() {
                     </Menu.Dropdown>
                 </Menu>
             </div>
-            {page === "timeline" && <TimelineButton  />}
+            {page === "timeline" && <TimelineButton />}
         </div>
     )
 }

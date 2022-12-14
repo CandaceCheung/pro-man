@@ -34,7 +34,7 @@ export async function seed(knex: Knex): Promise<void> {
         { username: "frankie", password: bcrypt.hashSync("test", 10), role: "admin" },
         { username: "duncan", password: bcrypt.hashSync("test", 10), role: "admin" },
         { username: "candace", password: bcrypt.hashSync("test", 10), role: "admin" }
-    ]).returning('id');
+    ]).returning('*');
 
     let insertArray = []
 
@@ -134,7 +134,7 @@ export async function seed(knex: Knex): Promise<void> {
 
         insertArray = []
         insertArray.push(
-            { item_id: itemIDs[i].id, type_id: typeIDs[0 + counter].id, name: 'default' },
+            { item_id: itemIDs[i].id, type_id: typeIDs[0 + counter].id, name: userIDs[Math.floor(Math.random()*userIDs.length)].username},
         )
         await knex('type_persons').insert(insertArray)
 
