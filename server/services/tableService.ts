@@ -69,7 +69,6 @@ export class TableService {
             .where("projects.is_deleted", false)
             .orderBy("project_id", 'asc')
             .orderBy("item_group_id", 'desc')
-            .orderBy("item_id", 'asc')
             .orderBy("vertical_order", 'asc')
             .orderBy("horizontal_order", 'asc');
 
@@ -111,11 +110,60 @@ export class TableService {
         }).where("id", id);
     }
 
-    async insertItem(projectId: number, userId: number) {
+    async insertItem(projectId: number, userId: number, newGroup: boolean) {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);
 
         const [{ itemGroupId }] = await this.knex("item_groups").select("id as itemGroupId").where("project_id", projectId).orderBy("itemGroupId", "desc").limit(1);
+
+        let typesId_persons = null;
+        let typesId_dates = null;
+        let typesId_times = null;
+        let typesId_money = null;
+        let typesId_status = null;
+        let typesId_text = null;
+
+        if (newGroup) {
+            const types = await this.knex("types").select("id").orderBy("id", "desc").limit(6);
+            console.log(types)
+            typesId_persons = types[5].id;
+            typesId_dates = types[4].id;
+            typesId_times = types[3].id;
+            typesId_money = types[2].id;
+            typesId_status = types[1].id;
+            typesId_text = types[0].id;
+
+            await this.knex("items")
+            .where("item_group_id", itemGroupId)
+            .increment('order', 1);
+        } else {
+            const [{ previousItemId }] = await this.knex("items").select("id as previousItemId").where("item_group_id", itemGroupId).limit(1);
+            const types = await this.knex.select(
+                "types.id"
+            ).from("items")
+                .join('type_persons', 'type_persons.item_id', '=', 'items.id')
+                .join('type_dates', 'type_dates.item_id', '=', 'items.id')
+                .join('type_times', 'type_times.item_id', '=', 'items.id')
+                .join('type_money', 'type_money.item_id', '=', 'items.id')
+                .join('type_status', 'type_status.item_id', '=', 'items.id')
+                .join('type_text', 'type_text.item_id', '=', 'items.id')
+                .join('types', function () {
+                    this
+                        .on('type_text.type_id', '=', 'types.id')
+                        .orOn('type_status.type_id', '=', 'types.id')
+                        .orOn('type_money.type_id', '=', 'types.id')
+                        .orOn('type_times.type_id', '=', 'types.id')
+                        .orOn('type_dates.type_id', '=', 'types.id')
+                        .orOn('type_persons.type_id', '=', 'types.id')
+                    }).where("items.id", previousItemId)
+                    .orderBy("types.id", "asc");
+                typesId_persons = types[0].id;
+                typesId_dates = types[1].id;
+                typesId_times = types[2].id;
+                typesId_money = types[3].id;
+                typesId_status = types[4].id;
+                typesId_text = types[5].id;
+        }
 
         const [{ itemId }] = await this.knex.insert({
             name: "New Item",
@@ -125,43 +173,6 @@ export class TableService {
             is_deleted: false,
             order: 1
         }).into('items').returning('id as itemId');
-
-        const [{ typesId_persons }] = await this.knex.insert({
-            type: "persons",
-            name: "persons",
-            order: 1
-        }).into("types")
-            .returning("id as typesId_persons");
-        const [{ typesId_dates }] = await this.knex.insert({
-            type: "dates",
-            name: "dates",
-            order: 2
-        }).into("types")
-            .returning("id as typesId_dates");
-        const [{ typesId_times }] = await this.knex.insert({
-            type: "times",
-            name: "times",
-            order: 3
-        }).into("types")
-            .returning("id as typesId_times");
-        const [{ typesId_money }] = await this.knex.insert({
-            type: "money",
-            name: "money",
-            order: 4
-        }).into("types")
-            .returning("id as typesId_money");
-        const [{ typesId_status }] = await this.knex.insert({
-            type: "status",
-            name: "status",
-            order: 5
-        }).into("types")
-            .returning("id as typesId_status");
-        const [{ typesId_text }] = await this.knex.insert({
-            type: "text",
-            name: "text",
-            order: 6
-        }).into("types")
-            .returning("id as typesId_text");
 
         await this.knex.insert({
             name: username,
@@ -209,7 +220,49 @@ export class TableService {
             project_id: projectId,
             name: "New Group"
         }).into('item_groups').returning('id as itemGroupId');
-        await this.insertItem(projectId, userId);
+
+        await this.knex.insert({
+            type: "persons",
+            name: "persons",
+            order: 1
+        }).into("types");
+        await this.knex.insert({
+            type: "dates",
+            name: "dates",
+            order: 2
+        }).into("types");
+        await this.knex.insert({
+            type: "times",
+            name: "times",
+            order: 3
+        }).into("types");
+        await this.knex.insert({
+            type: "money",
+            name: "money",
+            order: 4
+        }).into("types");
+        await this.knex.insert({
+            type: "status",
+            name: "status",
+            order: 5
+        }).into("types");
+        await this.knex.insert({
+            type: "text",
+            name: "text",
+            order: 6
+        }).into("types");
+
+        await this.insertItem(projectId, userId, true);
+    }
+
+    async reorderItems(newOrder: number[]) {
+        for (const i in newOrder) {
+            const itemId = newOrder[i];
+            const ordering = await this.knex("items")
+                .where("id", itemId)
+                .update({ order: parseInt(i) + 1 }).returning("order");
+            console.log(itemId, ordering)
+        }
     }
 
 }

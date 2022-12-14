@@ -4,9 +4,11 @@ import { itemCellsElement } from "../../pages/MainTable";
 import { useStyles } from "./styles";
 
 export interface TableRowProps {
-    id: string,
-    row: itemCellsElement[],
-    color: string
+    id: number,
+    rowOrder: number[],
+    cellDetails: {[key in number]: itemCellsElement},
+    color: string,
+    lastRow: boolean
 }
 
 export function TableRow(props: TableRowProps) {
@@ -95,7 +97,7 @@ export function TableRow(props: TableRowProps) {
 
     return (
         <div 
-            className={classes.tableRow}
+            className={cx(classes.tableRow, { [classes.lastRow]: props.lastRow })}
             ref={setNodeRef} style={style} {...listeners} {...attributes}
         >
             <div 
@@ -103,11 +105,11 @@ export function TableRow(props: TableRowProps) {
                 style={{ backgroundColor: props.color }}
             ></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                {props.row[0].item_name}
+                {props.cellDetails[props.rowOrder[0]].item_name}
             </div>
             {
-                props.row.map((cell, cellIndex) => {
-                    return retrieveCellData(cell, cellIndex)
+                props.rowOrder.map((typeId, cellIndex) => {
+                    return retrieveCellData(props.cellDetails[typeId], cellIndex)
                 })
             }
         </div>
