@@ -197,12 +197,5 @@ export function reorderItems(newOrder: number[], userId: number) {
 				message: 'Failed to reorder items! 🤥'
 			});
 		}
-
-		result = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/${userId}`
-		);
-		const tableResult = await result.json();
-		tableResult.success && dispatch(getTableAction(tableResult.table));
-		
 	}
 }

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { reorderItems, updateItemGroupName } from '../redux/table/thunk';
+import { getTable, reorderItems, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -34,7 +34,7 @@ export function MainTable() {
     const userId = useAppSelector(state => state.auth.userId);
     const tableSummary = useAppSelector(state => state.table.summary);
     const projectID = useAppSelector(state => state.project.project_id);
-    const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: {[keys in number]: itemCellsElement[]} }>({});
+    const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: { [keys in number]: itemCellsElement[] } }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [itemsOrdersState, setItemsOrdersState] = useState<{ [keys in number]: number[] }>({});
     const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
@@ -49,7 +49,7 @@ export function MainTable() {
     );
 
     useEffect(() => {
-        let itemCells: { [keys in number]: {[keys in number]: itemCellsElement[]} } = {};
+        let itemCells: { [keys in number]: { [keys in number]: itemCellsElement[] } } = {};
         let itemGroups: itemsGroupElement[] = [];
         let itemGroupsCollapsed: boolean[] = [];
         let itemGroupsInputSelected: boolean[] = [];
@@ -118,6 +118,10 @@ export function MainTable() {
         setItemCellsState(itemCells);
         setItemsOrdersState(itemsOrders);
     }, [tableSummary, projectID]);
+
+    useEffect(() => {
+        userId && dispatch(getTable(userId));
+    }, [itemCellsState, itemGroupsState, itemsOrdersState])
 
     const toggleItemGroupCollapsed = (index: number) => {
         const newItemGroupsCollapsedState = [...itemGroupsCollapsedState];
@@ -292,7 +296,7 @@ export function MainTable() {
                                         </div>
                                     </div>
                                     <div className={classes.tableBody}>
-                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event)=>handleDragEndRow(event, item_group_id)}>
+                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
                                             <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
                                                 {
                                                     itemsOrdersState[item_group_id].map((itemId, itemIndex) =>
