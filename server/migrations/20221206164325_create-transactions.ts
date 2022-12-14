@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
         table.increments()
         table.date('date')
         table.integer('cash_flow')
-        table.integer('type_money_id').unsigned
+        table.integer('type_money_id').unsigned()
         table.foreign('type_money_id').references("type_money.id")
     })
 }
