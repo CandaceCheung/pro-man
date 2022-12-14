@@ -15,6 +15,7 @@ export interface itemCellsElement {
     item_id: TableState["item_id"],
     item_name: TableState["item_name"],
     type_name: TableState["type_name"],
+    element_name: TableState["element_name"],
     item_dates_datetime?: TableState["item_dates_datetime"],
     item_money_cashflow?: TableState["item_money_cashflow"],
     item_money_date?: TableState["item_money_date"],
@@ -68,6 +69,7 @@ export function MainTable() {
                     item_id: cell.item_id,
                     item_name: cell.item_name,
                     type_name: cell.type_name,
+                    element_name: cell.element_name
                 }
                 switch (cell.type_name) {
                     case "dates":
@@ -314,6 +316,7 @@ export function MainTable() {
                                                             key={typeId}
                                                             id={typeId}
                                                             cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
+                                                            cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
                                                             index={index}
                                                             lastCell={index === typesOrdersState[item_group_id].length - 1}
                                                         />
