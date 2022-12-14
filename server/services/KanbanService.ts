@@ -9,18 +9,19 @@ export class KanbanService {
 			qb.select(
 				'items.id as id',
 				'items.name as name',
-				this.knex.raw('JSON_AGG(type_persons.name) as persons')
+				this.knex.raw('JSON_AGG(type_persons.name) as membersList')
 			)
 				.from('items')
 				.join('type_persons','type_persons.item_id','items.id')
+				.join('type_dates', 'type_dates.item_id', 'item.id')
 				.groupBy('items.id')
 				.where('items.project_id',project_id);
 		})
 		.select(
-			'states.id as statusId',
-			'states.name as statusName',
-			'states.color as statusColor',
-			this.knex.raw('JSON_AGG(items.*) as items')
+			'states.id as id',
+			'states.name as name',
+			'states.color as color',
+			this.knex.raw('JSON_AGG(items.*) as itemsList')
 		)
 		.from('states')
 		.join('projects', 'states.project_id', '=', 'projects.id')
