@@ -1,4 +1,4 @@
-import { Status } from "./state";
+import { Item, Status } from "./state";
 
 export function setKanbanInfo(statusList: Status[]){
     return {
@@ -7,9 +7,10 @@ export function setKanbanInfo(statusList: Status[]){
     };
 }
 
-export function addKanbanItem() {
+export function addKanbanItem(itemList: Item) {
     return {
         type: "KANBAN/ADD" as const,
+        itemList,
     };
 }
 
