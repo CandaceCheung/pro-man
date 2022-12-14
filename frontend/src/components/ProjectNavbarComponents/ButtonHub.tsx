@@ -10,13 +10,15 @@ export function ButtonHub() {
     const dispatch = useAppDispatch()
     const projectSummary = useAppSelector(state => state.table.summary)
     const projectId = useAppSelector(state => state.project.project_id);
-    const personsSummary = projectSummary.filter((project, index, self) => 
-        project.project_id === projectId && 
-        project.type_name === 'persons' && 
-        index === self.findIndex((obj) => obj.item_person_id === project.item_person_id))
+    const personsSummary = projectSummary.filter((project, index, self) =>
+        project.project_id === projectId &&
+        project.type_name === 'persons' &&
+        index === self.findIndex((obj) => obj.item_person_name === project.item_person_name))
+    const groupSummary = projectSummary.filter((project, index, self) =>
+        project.project_id === projectId &&
+        index === self.findIndex((obj) => obj.item_group_id === project.item_group_id))
     const userId = useAppSelector(state => state.auth.userId);
     const page = useAppSelector(state => state.project.active_page)
-    console.log(personsSummary)
 
     const onNewItemClick = () => {
         page === 'timeline' && dispatch(triggerTimelineModalAction(true));
@@ -50,9 +52,10 @@ export function ButtonHub() {
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by column</Menu.Label>
-                        <Menu.Item icon={<IconColumns size={14} />}>place holder</Menu.Item>
-                        <Menu.Item icon={<IconColumns size={14} />}>place holder 2</Menu.Item>
-                        <Menu.Item icon={<IconColumns size={14} />}>place holder 3</Menu.Item>
+                        {groupSummary.map((group, index) => {
+                            return <Menu.Item key={index} value={group.item_group_id} icon={<IconColumns size={14} />}>{group.item_group_name}</Menu.Item>
+                        })
+                        }
                     </Menu.Dropdown>
                 </Menu>
 
