@@ -89,19 +89,32 @@ export class TableService {
         return favoriteList
     }
 
-    async updateTimelineService(id: number, start: number, end: number) {
-        await this.knex('type_times').update({
+    async updateTimelineService(id: number, start: number, end: number, name: string, color: string) {
+        const typeId = await this.knex('type_times').update({
             start_date: start,
-            end_date: end
+            end_date: end,
+            color
         })
-            .where('id', id)
+            .where('id', id).returning('type_id')
+        
+            console.log(typeId[0].type_id)
+        await this.knex('types').update({
+            name
+        })
+            .where('id', typeId[0].type_id)
     }
 
-    async updateDatelineService(id: number, date: number) {
-        await this.knex('type_dates').update({
+    async updateDatelineService(id: number, date: number, name: string, color: string) {
+        const typeId = await this.knex('type_dates').update({
             datetime: format(new Date(date), 'yyyy-MM-dd'),
+            color
         })
-            .where('id', id)
+            .where('id', id).returning('type_id')
+            console.log(typeId[0].type_id)
+        await this.knex('types').update({
+            name
+        })
+            .where('id', typeId[0].type_id)
     }
 
     async updateItemGroupName(id: number, name: string) {
@@ -125,7 +138,6 @@ export class TableService {
 
         if (newGroup) {
             const types = await this.knex("types").select("id").orderBy("id", "desc").limit(6);
-            console.log(types)
             typesId_persons = types[5].id;
             typesId_dates = types[4].id;
             typesId_times = types[3].id;
@@ -134,8 +146,8 @@ export class TableService {
             typesId_text = types[0].id;
 
             await this.knex("items")
-            .where("item_group_id", itemGroupId)
-            .increment('order', 1);
+                .where("item_group_id", itemGroupId)
+                .increment('order', 1);
         } else {
             const [{ previousItemId }] = await this.knex("items").select("id as previousItemId").where("item_group_id", itemGroupId).limit(1);
             const types = await this.knex.select(
@@ -155,14 +167,14 @@ export class TableService {
                         .orOn('type_times.type_id', '=', 'types.id')
                         .orOn('type_dates.type_id', '=', 'types.id')
                         .orOn('type_persons.type_id', '=', 'types.id')
-                    }).where("items.id", previousItemId)
-                    .orderBy("types.id", "asc");
-                typesId_persons = types[0].id;
-                typesId_dates = types[1].id;
-                typesId_times = types[2].id;
-                typesId_money = types[3].id;
-                typesId_status = types[4].id;
-                typesId_text = types[5].id;
+                }).where("items.id", previousItemId)
+                .orderBy("types.id", "asc");
+            typesId_persons = types[0].id;
+            typesId_dates = types[1].id;
+            typesId_times = types[2].id;
+            typesId_money = types[3].id;
+            typesId_status = types[4].id;
+            typesId_text = types[5].id;
         }
 
         const [{ itemId }] = await this.knex.insert({
@@ -221,36 +233,14 @@ export class TableService {
             name: "New Group"
         }).into('item_groups').returning('id as itemGroupId');
 
-        await this.knex.insert({
-            type: "persons",
-            name: "persons",
-            order: 1
-        }).into("types");
-        await this.knex.insert({
-            type: "dates",
-            name: "dates",
-            order: 2
-        }).into("types");
-        await this.knex.insert({
-            type: "times",
-            name: "times",
-            order: 3
-        }).into("types");
-        await this.knex.insert({
-            type: "money",
-            name: "money",
-            order: 4
-        }).into("types");
-        await this.knex.insert({
-            type: "status",
-            name: "status",
-            order: 5
-        }).into("types");
-        await this.knex.insert({
-            type: "text",
-            name: "text",
-            order: 6
-        }).into("types");
+        await this.knex.insert(
+                [{type: "persons", name: "persons", order: 1},
+                {type: "dates", name: "dates", order: 2},
+                {type: "times", name: "times", order: 3},
+                {type: "money", name: "money", order: 4},
+                {type: "status", name: "status", order: 5},
+                {type: "text", name: "text", order: 6}]
+            ).into("types");
 
         await this.insertItem(projectId, userId, true);
     }
@@ -258,10 +248,18 @@ export class TableService {
     async reorderItems(newOrder: number[]) {
         for (const i in newOrder) {
             const itemId = newOrder[i];
-            const ordering = await this.knex("items")
+            await this.knex("items")
                 .where("id", itemId)
-                .update({ order: parseInt(i) + 1 }).returning("order");
-            console.log(itemId, ordering)
+                .update({ order: parseInt(i) + 1 });
+        }
+    }
+
+    async reorderTypes(newOrder: number[]) {
+        for (const i in newOrder) {
+            const typeId = newOrder[i];
+            await this.knex("types")
+                .where("id", typeId)
+                .update({ order: parseInt(i) + 1 });
         }
     }
 

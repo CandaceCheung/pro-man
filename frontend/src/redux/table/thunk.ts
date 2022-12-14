@@ -21,7 +21,7 @@ export function getTable(userID: number) {
 	};
 }
 
-export function updateTimelineItem(timelineID: number, startTime: number, endTime: number) {
+export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
@@ -33,21 +33,26 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 			body: JSON.stringify({
 				typeTimeId: timelineID,
 				startTime,
-				endTime
+				endTime,
+				name,
+				color
 			})
 		});
 		const result = await res.json();
 
 		if (result.success) {
-			console.log("Update Success")
-			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime }))
+			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color}))
+			showNotification({
+				title: 'Data update notification',
+				message: 'Update Success'
+			});
 		} else {
 			dispatch(getTableFailedAction())
 		}
 	};
 }
 
-export function updateDatelineItem(datelineID: number, date: number) {
+export function updateDatelineItem(datelineID: number, date: number, name: string, color :string) {
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
@@ -59,13 +64,18 @@ export function updateDatelineItem(datelineID: number, date: number) {
 			body: JSON.stringify({
 				typeDateId: datelineID,
 				date,
+				name,
+				color
 			})
 		});
 		const result = await res.json();
 
 		if (result.success) {
-			console.log("Update Success")
-			dispatch(updateDatelineItemAction({ datelineID, date }))
+			dispatch(updateDatelineItemAction({ datelineID, date, name, color }))
+			showNotification({
+				title: 'Data update notification',
+				message: 'Update Success'
+			});
 		} else {
 			dispatch(getTableFailedAction())
 		}
@@ -203,6 +213,34 @@ export function reorderItems(newOrder: number[], userId: number) {
 		);
 		const tableResult = await result.json();
 		tableResult.success && dispatch(getTableAction(tableResult.table));
-		
+	}
+}
+
+export function reorderTypes(newOrder: number[], userId: number) {
+	return async (dispatch: Dispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/reorderTypes`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				newOrder
+			})
+		});
+		let result = await res.json();
+
+		if (!result.success) {
+			showNotification({
+				title: 'Insert data notification',
+				message: 'Failed to reorder types! 🤥'
+			});
+		}
+
+		result = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/${userId}`
+		);
+		const tableResult = await result.json();
+		tableResult.success && dispatch(getTableAction(tableResult.table));
 	}
 }

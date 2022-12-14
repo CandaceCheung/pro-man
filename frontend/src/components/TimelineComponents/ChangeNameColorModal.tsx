@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { Modal, Button, Group, Input, Tooltip, Stack, ColorPicker } from '@mantine/core';
 import { IconAlertCircle, IconIndentIncrease } from '@tabler/icons';
-import { useForm } from '@mantine/form';
 import { useId } from '@mantine/hooks';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { triggerUpdateTimelineModalAction } from '../../redux/project/slice';
+import { toggleLoadingAction, triggerUpdateTimelineModalAction } from '../../redux/project/slice';
+import { updateDatelineItem, updateTimelineItem } from '../../redux/table/thunk';
 
 
 export function ChangNameColorModal() {
@@ -12,46 +12,47 @@ export function ChangNameColorModal() {
   const opened = useAppSelector(state => state.project.update_time_line_modal_opened)
   const targetElementId = useAppSelector(state => state.project.target_element_id)
   const itemType = targetElementId.toString()[0] === '0' ? null : targetElementId.toString()[0] === '1' ? 'times' : 'dates'
+  const itemId = parseInt(targetElementId.toString().slice(1))
   const page = useAppSelector(state => state.project.active_page)
   const id = useId()
   const projectSummary = useAppSelector(state => state.table.summary)
+  const dateItem = projectSummary.filter(project => project.item_times_id === itemId && project.type_name==='times')[0]
+  const timeItem = projectSummary.filter(project => project.item_times_id === itemId && project.type_name==='times')[0]
   const [color, setColor] = useState('#FFFFFF')
   const [name, setName] = useState<string>('')
-  const [submittedValues, setSubmittedValues] = useState<string>('')
+  const [type, setType] = useState<string>('')
 
   useEffect(() => {
-    if (targetElementId !== 0) {
-      const itemId = parseInt(targetElementId.toString().slice(1))
-      if (itemType === 'dates') {
-        setColor(projectSummary.filter(project => project.item_datetime_id === itemId)[0].item_datetime_color)
-        setName(projectSummary.filter(project => project.item_datetime_id === itemId)[0].element_name)
-      }
-      if (itemType === 'times') {
-        setColor(projectSummary.filter(project => project.item_times_id === itemId)[0].item_times_color)
-        setName(projectSummary.filter(project => project.item_times_id === itemId)[0].element_name)
-      }
+    if (itemType === 'dates') {
+      setType('dates')
+      setColor(dateItem.item_datetime_color)
+      setName(dateItem.element_name)
+    }
+    if (itemType === 'times') {
+      setType('times')
+      setColor(timeItem.item_times_color)
+      setName(timeItem.element_name)
     }
   }, [targetElementId])
 
 
-  const handleSubmit = (value: string) => {
-    setSubmittedValues(value)
-    console.log(value)
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (itemType === 'dates') {
+      const date = dateItem.item_dates_datetime
+      dispatch(updateDatelineItem(itemId, new Date(date).getTime(), name, color))
+    } else {
+      const start = timeItem.item_times_start_date
+      const end = timeItem.item_times_end_date
+      dispatch(updateTimelineItem(itemId, start, end, name, color))
+    }
+    dispatch(toggleLoadingAction(true))
     onClose()
   }
 
   const onClose = () => {
     if (page === 'timeline') dispatch(triggerUpdateTimelineModalAction(false))
   }
-
-  const form = useForm({
-    initialValues: {
-      type: 'times',
-      blockName: '',
-      itemId: 0,
-      color: '#FFFFFF',
-    },
-  });
 
   return (
     <>
@@ -61,15 +62,15 @@ export function ChangNameColorModal() {
         title="Update Item"
       >
         <form
-          onSubmit={form.onSubmit((value) => handleSubmit(JSON.stringify(value, null, 2)))}
+          onSubmit={handleSubmit}
         >
-
           <Input.Wrapper id={id} label={itemType === "times" ? 'Time Block Name' : 'Date Block Name'}>
             <Input
-              {...form.getInputProps('blockName')}
+              type='text'
+              value={name}
+              onChange={(e)=>setName(e.target.value)}
               icon={<IconIndentIncrease size={16} />}
               required
-              value={name}
               placeholder="Change Name"
               rightSection={
                 <Tooltip label="This will be shown on the time block" position="top-end" withArrow>
@@ -80,23 +81,20 @@ export function ChangNameColorModal() {
               }
             />
           </Input.Wrapper>
-
           <Input.Wrapper id={id} label="Select Item Color">
 
             <Stack align="center">
-              <ColorPicker {...form.getInputProps('color')} format='hex' value={color} onChange={setColor} />
+              <ColorPicker
+                value={color}
+                onChange={setColor}
+                format='hexa'
+              />
             </Stack>
           </Input.Wrapper>
 
           <Group position="center" mt="xl">
             <Button variant="outline" type='submit'>
               Submit
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => form.reset()}
-            >
-              Clear Form
             </Button>
           </Group>
         </form>

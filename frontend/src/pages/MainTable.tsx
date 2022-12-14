@@ -3,16 +3,19 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { reorderItems, updateItemGroupName } from '../redux/table/thunk';
-import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
+import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useStyles } from '../components/MainTableComponents/styles';
+import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
+import { SmartPointerSensor } from '../pointerSensor';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
     item_name: TableState["item_name"],
     type_name: TableState["type_name"],
+    element_name: TableState["element_name"],
     item_dates_datetime?: TableState["item_dates_datetime"],
     item_money_cashflow?: TableState["item_money_cashflow"],
     item_money_date?: TableState["item_money_date"],
@@ -45,7 +48,7 @@ export function MainTable() {
     const { classes, theme, cx } = useStyles();
 
     const sensors = useSensors(
-        useSensor(MouseSensor)
+        useSensor(SmartPointerSensor)
     );
 
     useEffect(() => {
@@ -66,6 +69,7 @@ export function MainTable() {
                     item_id: cell.item_id,
                     item_name: cell.item_name,
                     type_name: cell.type_name,
+                    element_name: cell.element_name
                 }
                 switch (cell.type_name) {
                     case "dates":
@@ -204,6 +208,18 @@ export function MainTable() {
         }
     }
 
+    const handleDragEndColumn = (event: any, item_group_id: number) => {
+        const { active, over } = event;
+        if (active.id !== over.id) {
+            const oldIndex = typesOrdersState[item_group_id].indexOf(active.id);
+            const newIndex = typesOrdersState[item_group_id].indexOf(over.id);
+            const newTypesOrdersState = JSON.parse(JSON.stringify(typesOrdersState));
+            newTypesOrdersState[item_group_id] = arrayMove(newTypesOrdersState[item_group_id], oldIndex, newIndex);
+            setTypesOrdersState(newTypesOrdersState);
+            userId && dispatch(reorderTypes(arrayMove(typesOrdersState[item_group_id], oldIndex, newIndex), userId));
+        }
+    }
+
     return (
         <div className="main-table">
             {
@@ -292,13 +308,21 @@ export function MainTable() {
                                     <div className={classes.tableHead}>
                                         <div className={classes.tableRow}>
                                             <div className={classes.tableCell}></div>
-                                            <div className={cx(classes.tableCell, classes.item)}>Item</div>
-                                            <div className={cx(classes.tableCell, classes.persons)}>Persons</div>
-                                            <div className={cx(classes.tableCell, classes.dates)}>Dates</div>
-                                            <div className={cx(classes.tableCell, classes.times)}>Times</div>
-                                            <div className={cx(classes.tableCell, classes.money)}>Money</div>
-                                            <div className={cx(classes.tableCell, classes.status)}>Status</div>
-                                            <div className={cx(classes.tableCell, classes.text)}>Text</div>
+                                            <div className={cx(classes.tableCell, classes.item)}><span>Item</span></div>
+                                            <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
+                                                <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
+                                                    {typesOrdersState[item_group_id].map((typeId, index) => (
+                                                        <TableColumnTitle
+                                                            key={typeId}
+                                                            id={typeId}
+                                                            cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
+                                                            cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
+                                                            index={index}
+                                                            lastCell={index === typesOrdersState[item_group_id].length - 1}
+                                                        />
+                                                    ))}
+                                                </SortableContext>
+                                            </DndContext >
                                         </div>
                                     </div>
                                     <div className={classes.tableBody}>

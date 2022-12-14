@@ -101,20 +101,32 @@ const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> 
     (state, action) => {state.summary = action.payload}
 const getTableFailed: CaseReducer<CombinedTableState, PayloadAction> =
     (state, action) => {state = state}
-const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timelineID: number, startTime: number, endTime: number }>> =
+const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timelineID: number, startTime: number, endTime: number, name: string, color : string }>> =
     (state, action) => {
         for (let item of state.summary) {
             if (item.item_times_id === action.payload.timelineID) {
-                item.item_times_start_date = action.payload.startTime
-                item.item_times_end_date = action.payload.endTime
+                item.item_times_start_date = action.payload?.startTime
+                item.item_times_end_date = action.payload?.endTime
+                item.item_times_color = action.payload?.color
+            }
+            for (let type of state.summary){
+                if (type.horizontal_order_id === item.horizontal_order_id && type.type_name==='times'){
+                    type.element_name = action.payload?.name
+                }
             }
         }
     }
-const updateDatelineItem: CaseReducer<CombinedTableState, PayloadAction<{ datelineID: number, date: number }>> =
+const updateDatelineItem: CaseReducer<CombinedTableState, PayloadAction<{ datelineID: number, date: number, name:string, color: string }>> =
     (state, action) => {
         for (let item of state.summary) {
             if (item.item_datetime_id === action.payload.datelineID) {
                 item.item_dates_datetime = new Date(action.payload.date).toDateString()
+                item.item_datetime_color = action.payload?.color
+            }
+            for (let type of state.summary){
+                if (type.horizontal_order_id === item.horizontal_order_id && type.type_name==='dates'){
+                    type.element_name = action.payload?.name
+                }
             }
         }
     }
