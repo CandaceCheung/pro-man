@@ -195,6 +195,9 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
                 cursor: "pointer",
                 backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`,
                 boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`
+            },
+            "&:active": {
+                cursor: "grabbing"
             }
         },
     },
@@ -219,6 +222,9 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         "&:hover": {
             cursor: "grab",
             backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`
+        },
+        "&:active": {
+            cursor: "grabbing"
         }
     }
 
