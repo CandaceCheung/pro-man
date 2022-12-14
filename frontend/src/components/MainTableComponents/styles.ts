@@ -192,6 +192,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
         [`& > .${getRef('tableRow')}`]: {
             '&:hover': {
+                cursor: "pointer",
                 backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`,
                 boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`
             }
@@ -216,6 +217,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
     draggableTitleCell: {
         "&:hover": {
+            cursor: "grab",
             backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`
         }
     }
