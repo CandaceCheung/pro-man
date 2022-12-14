@@ -8,14 +8,14 @@ import {
     ThemeIcon,
     UnstyledButton,
     createStyles,
+    Input,
 } from "@mantine/core";
-import { IconGripVertical, IconPlus } from "@tabler/icons";
+import { IconCalendarEvent, IconGripVertical, IconPlus, IconUser } from "@tabler/icons";
 import { useState } from "react";
 import { Status } from "../../redux/kanban/state";
 import { ItemCard } from "./ItemCard";
 
-
-type StatusProps = Status //state 
+type StatusProps = Status; //state
 
 const useStyles = createStyles((theme, color: string) => ({
     cardHeader: {
@@ -46,7 +46,6 @@ const useStyles = createStyles((theme, color: string) => ({
 export function StatusColumn(props: StatusProps) {
     const [opened, setOpened] = useState(false);
     const { classes, theme } = useStyles(props.color);
-    
 
     const handleDnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -83,9 +82,10 @@ export function StatusColumn(props: StatusProps) {
                     <div>
                         {props.itemsList.map((item) => (
                             <ItemCard
-                                itemName={item.name}
-                                memberName={item.membersList}
-                                itemDate={item.date}
+                                id={item.id}
+                                name={item.name}
+                                date={item.date}
+                                membersList={item.membersList}
                             />
                         ))}
                     </div>
@@ -107,13 +107,19 @@ export function StatusColumn(props: StatusProps) {
                         title="Item"
                         size="sm"
                     >
-                        <Group position="left" mb={6}>
-                            <Text>People</Text>
-                            <Text>Date</Text>
+                        <Group position="left" m={6}>
+                            <Group>
+                                <Text>People</Text>
+                                <Input variant="filled" icon={<IconUser size={16} />} ></Input>
+                            </Group>
+                            <Group>
+                                <Text>Date</Text>
+                                <Input variant="filled" icon={<IconCalendarEvent size={16} />} ></Input>
+                            </Group>
+                            
                         </Group>
                     </Modal>
                 </>
-
             </Card>
         </DndContext>
     );
