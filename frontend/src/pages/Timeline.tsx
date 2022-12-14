@@ -64,7 +64,6 @@ export function TimeFrame() {
   const interval = 24 * 60 * 60 * 1000;
   const [loading, setLoading] = useState(true)
   const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
-  const [targetItem, setTargetItem] = useState<number>(0)
   const targetElementId = useAppSelector(state=> state.project.target_element_id)
    
   let groups: GroupProps = []
@@ -121,9 +120,7 @@ export function TimeFrame() {
         className: 'date-block',
         style: {
           background: item.item_datetime_color,
-          borderStyle: 'solid',
-          borderWidth: '4px',
-          borderColor: 'darkgrey',
+          border: '4px solid darkgrey'
         }
       }
     })

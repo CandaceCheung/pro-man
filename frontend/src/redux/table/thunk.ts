@@ -39,8 +39,11 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 		const result = await res.json();
 
 		if (result.success) {
-			console.log("Update Success")
 			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime }))
+			showNotification({
+				title: 'Data update notification',
+				message: 'Update Success'
+			});
 		} else {
 			dispatch(getTableFailedAction())
 		}
@@ -64,8 +67,11 @@ export function updateDatelineItem(datelineID: number, date: number) {
 		const result = await res.json();
 
 		if (result.success) {
-			console.log("Update Success")
 			dispatch(updateDatelineItemAction({ datelineID, date }))
+			showNotification({
+				title: 'Data update notification',
+				message: 'Update Success'
+			});
 		} else {
 			dispatch(getTableFailedAction())
 		}
