@@ -137,12 +137,6 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         alignItems: "center",
         flexDirection: "column",
         overflow: "hidden",
-
-        '&:first-of-type': {
-            padding: 0,
-            width: 8,
-            border: "none"
-        }
     },
 
     item: {
@@ -169,7 +163,12 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
     tableRow: {
         ref: getRef("tableRow"),
-        display: "flex"
+        display: "flex",
+        [`& > .${getRef('tableCell')}:first-of-type`]: {
+            padding: 0,
+            width: 8,
+            border: "none"
+        }
     },
 
     tableHead: {
@@ -177,13 +176,10 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         flexDirection: "column",
 
         [`& .${getRef('tableRow')}`]: {
-            [`& .${getRef('tableCell')}:first-of-type`]: {
+            [`& > .${getRef('tableCell')}:first-of-type`]: {
                 borderTopLeftRadius: 10,
                 borderLeft: "1px solid #ddd",
                 borderTop: "1px solid #ddd"
-            },
-            [`& .${getRef('tableCell')}:last-of-type`]: {
-                borderTopRightRadius: 10
             }
         }
     },
@@ -203,12 +199,19 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     },
 
     lastRow: {
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        
         [`& .${getRef('tableCell')}:first-of-type`]: {
             borderBottomLeftRadius: 10
         },
         [`& .${getRef('tableCell')}:last-of-type`]: {
             borderBottomRightRadius: 10
         }
+    },
+
+    lastCell: {
+        borderTopRightRadius: 10
     }
 
 }));

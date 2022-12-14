@@ -213,6 +213,34 @@ export function reorderItems(newOrder: number[], userId: number) {
 		);
 		const tableResult = await result.json();
 		tableResult.success && dispatch(getTableAction(tableResult.table));
-		
+	}
+}
+
+export function reorderTypes(newOrder: number[], userId: number) {
+	return async (dispatch: Dispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/reorderTypes`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				newOrder
+			})
+		});
+		let result = await res.json();
+
+		if (!result.success) {
+			showNotification({
+				title: 'Insert data notification',
+				message: 'Failed to reorder types! 🤥'
+			});
+		}
+
+		result = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/${userId}`
+		);
+		const tableResult = await result.json();
+		tableResult.success && dispatch(getTableAction(tableResult.table));
 	}
 }

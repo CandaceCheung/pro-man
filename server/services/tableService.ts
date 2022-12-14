@@ -138,7 +138,6 @@ export class TableService {
 
         if (newGroup) {
             const types = await this.knex("types").select("id").orderBy("id", "desc").limit(6);
-            console.log(types)
             typesId_persons = types[5].id;
             typesId_dates = types[4].id;
             typesId_times = types[3].id;
@@ -234,36 +233,14 @@ export class TableService {
             name: "New Group"
         }).into('item_groups').returning('id as itemGroupId');
 
-        await this.knex.insert({
-            type: "persons",
-            name: "persons",
-            order: 1
-        }).into("types");
-        await this.knex.insert({
-            type: "dates",
-            name: "dates",
-            order: 2
-        }).into("types");
-        await this.knex.insert({
-            type: "times",
-            name: "times",
-            order: 3
-        }).into("types");
-        await this.knex.insert({
-            type: "money",
-            name: "money",
-            order: 4
-        }).into("types");
-        await this.knex.insert({
-            type: "status",
-            name: "status",
-            order: 5
-        }).into("types");
-        await this.knex.insert({
-            type: "text",
-            name: "text",
-            order: 6
-        }).into("types");
+        await this.knex.insert(
+                [{type: "persons", name: "persons", order: 1},
+                {type: "dates", name: "dates", order: 2},
+                {type: "times", name: "times", order: 3},
+                {type: "money", name: "money", order: 4},
+                {type: "status", name: "status", order: 5},
+                {type: "text", name: "text", order: 6}]
+            ).into("types");
 
         await this.insertItem(projectId, userId, true);
     }
@@ -271,10 +248,18 @@ export class TableService {
     async reorderItems(newOrder: number[]) {
         for (const i in newOrder) {
             const itemId = newOrder[i];
-            const ordering = await this.knex("items")
+            await this.knex("items")
                 .where("id", itemId)
-                .update({ order: parseInt(i) + 1 }).returning("order");
-            console.log(itemId, ordering)
+                .update({ order: parseInt(i) + 1 });
+        }
+    }
+
+    async reorderTypes(newOrder: number[]) {
+        for (const i in newOrder) {
+            const typeId = newOrder[i];
+            await this.knex("types")
+                .where("id", typeId)
+                .update({ order: parseInt(i) + 1 });
         }
     }
 
