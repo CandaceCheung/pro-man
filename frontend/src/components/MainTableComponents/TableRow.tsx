@@ -4,7 +4,7 @@ import { itemCellsElement } from "../../pages/MainTable";
 import { useStyles } from "./styles";
 
 export interface TableRowProps {
-    id: string,
+    id: number,
     row: itemCellsElement[],
     color: string,
     lastRow: boolean

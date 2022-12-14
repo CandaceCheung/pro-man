@@ -33,8 +33,7 @@ export interface itemsGroupElement {
 export function MainTable() {
     const tableSummary = useAppSelector(state => state.table.summary);
     const projectID = useAppSelector(state => state.project.project_id);
-    const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: itemCellsElement[][] }>({});
-    const [itemCellsStateNew, setItemCellsStateNew] = useState<{ [keys in number]: {[keys in number]: itemCellsElement[]} }>({});
+    const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: {[keys in number]: itemCellsElement[]} }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [itemsOrdersState, setItemsOrdersState] = useState<{ [keys in number]: number[] }>({});
     const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
@@ -49,17 +48,15 @@ export function MainTable() {
     );
 
     useEffect(() => {
-        let itemCells: { [keys in number]: itemCellsElement[][] } = {};
-        let itemCellsNew: { [keys in number]: {[keys in number]: itemCellsElement[]} } = {};
+        let itemCells: { [keys in number]: {[keys in number]: itemCellsElement[]} } = {};
         let itemGroups: itemsGroupElement[] = [];
-        let previousItemID: null | number = null;
         let itemGroupsCollapsed: boolean[] = [];
         let itemGroupsInputSelected: boolean[] = [];
         let itemGroupsInputValue: string[] = [];
         let itemsOrders: { [keys in number]: number[] } = {};
         for (const cell of tableSummary) {
             if (cell.project_id === projectID) {
-                const currentItemID = cell.item_id;
+                const itemID = cell.item_id;
                 const itemGroupID = cell.item_group_id;
                 let itemCell: itemCellsElement = {
                     item_id: cell.item_id,
@@ -92,13 +89,11 @@ export function MainTable() {
                         break;
                 }
                 if (itemCells[itemGroupID]) {
-                    if (currentItemID === previousItemID) {
-                        itemCells[itemGroupID][itemCells[itemGroupID].length - 1].push(itemCell);
-                        itemCellsNew[itemGroupID][currentItemID].push(itemCell);
+                    if (itemCells[itemGroupID][itemID]) {
+                        itemCells[itemGroupID][itemID].push(itemCell);
                     } else {
-                        previousItemID = currentItemID;
-                        itemCells[itemGroupID].push([itemCell]);
-                        itemCellsNew[itemGroupID][currentItemID] = [itemCell];
+                        itemCells[itemGroupID][itemID] = [itemCell];
+                        itemsOrders[itemGroupID].push(itemID);
                     }
                 } else {
                     itemGroups.push({
@@ -108,21 +103,18 @@ export function MainTable() {
                     itemGroupsCollapsed.push(false);
                     itemGroupsInputSelected.push(false);
                     itemGroupsInputValue.push(cell.item_group_name);
-                    previousItemID = currentItemID;
-                    itemCells[itemGroupID] = [[itemCell]];
-                    itemCellsNew[itemGroupID] = {}
-                    itemCellsNew[itemGroupID][currentItemID] = [itemCell];
-                    itemsOrders[itemGroupID] = [currentItemID];
+                    itemCells[itemGroupID] = {}
+                    itemCells[itemGroupID][itemID] = [itemCell];
+                    itemsOrders[itemGroupID] = [itemID];
                 }
             }
         }
-        setItemCellsState(itemCells);
         setItemGroupsState(itemGroups);
         setItemGroupCollapsedState(itemGroupsCollapsed);
         setItemGroupsInputSelectState(itemGroupsInputSelected);
         setItemGroupsInputValueState(itemGroupsInputValue);
 
-        setItemCellsStateNew(itemCellsNew);
+        setItemCellsState(itemCells);
         setItemsOrdersState(itemsOrders);
     }, [tableSummary, projectID]);
 
@@ -272,11 +264,11 @@ export function MainTable() {
                                                 className={classes.groupName + " " + classes.hovertext + " " + classes.itemCount}
                                                 data-hover="Click to edit"
                                                 item-count={
-                                                    itemCellsState[item_group_id].length
+                                                    itemsOrdersState[item_group_id].length
                                                         ?
-                                                        itemCellsState[item_group_id].length
+                                                        itemsOrdersState[item_group_id].length
                                                         + " item"
-                                                        + `${itemCellsState[item_group_id].length === 1 ? "" : "s"}`
+                                                        + `${itemsOrdersState[item_group_id].length === 1 ? "" : "s"}`
                                                         :
                                                         "No items"
                                                 }
@@ -306,15 +298,15 @@ export function MainTable() {
                                     </div>
                                     <div className={classes.tableBody}>
                                         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event)=>handleDragEndRow(event, itemGroupArrayIndex)}>
-                                            <SortableContext items={itemCellsState[item_group_id].map((_, rowIndex) => "group_" + itemGroupArrayIndex + "_row_" + rowIndex)} strategy={verticalListSortingStrategy}>
+                                            <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
                                                 {
-                                                    itemCellsState[item_group_id].map((row, rowIndex) =>
+                                                    itemsOrdersState[item_group_id].map((itemId, itemIndex) =>
                                                         <TableRow
-                                                            key={"group_" + itemGroupArrayIndex + "_row_" + rowIndex}
-                                                            id={"group_" + itemGroupArrayIndex + "_row_" + rowIndex}
-                                                            row={row}
+                                                            key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
+                                                            id={itemId}
+                                                            row={itemCellsState[item_group_id][itemId]}
                                                             color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
-                                                            lastRow={rowIndex === itemCellsState[item_group_id].length - 1}
+                                                            lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                         />
                                                     )
                                                 }
