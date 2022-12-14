@@ -3,7 +3,7 @@ import { IconCalendarStats, IconUserCircle } from "@tabler/icons";
 
 export type itemCardProps = {
     itemName: string;
-    memberName: string;
+    memberName: string[];
     itemDate: string;
 };
 
