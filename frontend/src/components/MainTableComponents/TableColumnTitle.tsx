@@ -28,17 +28,17 @@ export function TableColumnTitle({ id, cellColumnType, index, lastCell }: TableC
     const retrieveCellData = (cellColumnType: string, index: number): JSX.Element => {
         switch (cellColumnType) {
             case "persons":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.persons, { [classes.lastCell]: lastCell })}>Persons</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.persons, classes.draggableTitleCell,{ [classes.lastCell]: lastCell })}>Persons</div>
             case "dates":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.dates, { [classes.lastCell]: lastCell })}>Dates</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.dates, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}>Dates</div>
             case "money":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.money, { [classes.lastCell]: lastCell })}>Money</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.money, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}>Money</div>
             case "times":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.times, { [classes.lastCell]: lastCell })}>Times</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.times, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}>Times</div>
             case "status":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.status, { [classes.lastCell]: lastCell })}>Status</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.status, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}>Status</div>
             case "text":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.text, { [classes.lastCell]: lastCell })}>Text</div>
+                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.text, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}>Text</div>
             default:
                 return <div key={"cell_column" + index}></div>
         }

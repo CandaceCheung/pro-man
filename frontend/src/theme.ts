@@ -11,6 +11,8 @@ type ExtendedCustomColors = 'lightViolet' |
                             'darkActiveViolet' | 
                             'darkerViolet' | 
                             'groupTag' | 
+                            'borderColor' | 
+                            'boardContentBackgroundColor' | 
                             DefaultMantineColor;
 
 declare module '@mantine/core' {
@@ -31,6 +33,8 @@ export const themeObject: MantineThemeOverride = {
         darkHoverViolet: ["#303579"],
         darkActiveViolet: ["#24285a"],
         darkerViolet: ["#1c1f46"],
-        groupTag: ["#037F4C", "#E2445C", "#808080", "#579BFC", "#BB3354", "#FF158A", "#FF5AC4"]
+        groupTag: ["#037F4C", "#E2445C", "#808080", "#579BFC", "#BB3354", "#FF158A", "#FF5AC4"],
+        borderColor: ["#ddd"],
+        boardContentBackgroundColor: ["#F4F5F8"]
     },
 }

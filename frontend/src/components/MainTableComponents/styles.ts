@@ -110,14 +110,14 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         borderRadius: 5,
 
         "&:hover": {
-            border: "1px solid #ddd"
+            border: `1px solid ${theme.colors.borderColor[0]}`
         }
     },
 
     tableGroup: {
         fontFamily: "Roboto",
         borderRadius: 10,
-        boxShadow: "0 0 0 1px #ddd",
+        boxShadow: `0 0 0 1px ${theme.colors.borderColor[0]}`,
         fontSize: 12,
         margin: 5,
         display: "flex",
@@ -127,7 +127,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
     tableCell: {
         ref: getRef("tableCell"),
-        border: "1px solid #ddd",
+        border: `1px solid ${theme.colors.borderColor[0]}`,
         paddingLeft: 8,
         paddingRight: 8,
         textAlign: "center",
@@ -164,10 +164,12 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     tableRow: {
         ref: getRef("tableRow"),
         display: "flex",
-        [`& > .${getRef('tableCell')}:first-of-type`]: {
-            padding: 0,
-            width: 8,
-            border: "none"
+        [`& > .${getRef('tableCell')}`]: {
+            "&:first-of-type": {
+                padding: 0,
+                width: 8,
+                border: "none"
+            }
         }
     },
 
@@ -178,8 +180,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         [`& .${getRef('tableRow')}`]: {
             [`& > .${getRef('tableCell')}:first-of-type`]: {
                 borderTopLeftRadius: 10,
-                borderLeft: "1px solid #ddd",
-                borderTop: "1px solid #ddd"
+                borderLeft: `1px solid ${theme.colors.borderColor[0]}`,
+                borderTop: `1px solid ${theme.colors.borderColor[0]}`
             }
         }
     },
@@ -188,12 +190,14 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         display: "flex",
         flexDirection: "column",
 
-        "> div": {
-            '&:nth-of-type(odd)': {
-                backgroundColor: "#f2f2f2"
-            },
+        [`& > .${getRef('tableRow')}`]: {
             '&:hover': {
-                backgroundColor: "#ddd"
+                cursor: "pointer",
+                backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`,
+                boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`
+            },
+            "&:active": {
+                cursor: "grabbing"
             }
         },
     },
@@ -201,7 +205,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     lastRow: {
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
-        
+
         [`& .${getRef('tableCell')}:first-of-type`]: {
             borderBottomLeftRadius: 10
         },
@@ -212,6 +216,16 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
     lastCell: {
         borderTopRightRadius: 10
+    },
+
+    draggableTitleCell: {
+        "&:hover": {
+            cursor: "grab",
+            backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`
+        },
+        "&:active": {
+            cursor: "grabbing"
+        }
     }
 
 }));
