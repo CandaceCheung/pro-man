@@ -140,7 +140,6 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     },
 
     item: {
-        ref: getRef("item"),
         width: 200
     },
     persons: {
@@ -171,11 +170,6 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
                 width: 8,
                 border: "none"
             }
-        },
-        [`& .${getRef('tableCell')}:not(.${getRef('item')})`]: {
-            "&:hover": {
-                backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`
-            },
         }
     },
 
@@ -218,6 +212,12 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
     lastCell: {
         borderTopRightRadius: 10
+    },
+
+    draggableTitleCell: {
+        "&:hover": {
+            backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`
+        }
     }
 
 }));
