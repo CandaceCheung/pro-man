@@ -19,10 +19,11 @@ export class KanbanController {
             console.error(e);
             res.status(500).json({ msg: "[KAN] Fail to Get Data." });
         }
-    }
+    };
+    
     postKanban =async (req: Request, res: Response) => {
         try {
-            
+
 
         }catch (e) {
             console.error(e);
