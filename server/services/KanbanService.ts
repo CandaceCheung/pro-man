@@ -17,8 +17,9 @@ export class KanbanService {
 				.where('items.project_id',project_id);
 		})
 		.select(
-			'states.id as stat_id',
-			'states.name as status_name',
+			'states.id as statusId',
+			'states.name as statusName',
+			'states.color as statusColor',
 			this.knex.raw('JSON_AGG(items.*) as items')
 		)
 		.from('states')

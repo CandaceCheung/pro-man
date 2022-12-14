@@ -79,7 +79,7 @@ export class TableController {
         try {
             const projectId = req.body.projectId;
             const userId = req.body.userId;
-            await this.tableService.insertItem(projectId, userId);
+            await this.tableService.insertItem(projectId, userId, false);
 
             res.json({ success: true })
         } catch (e) {
@@ -97,6 +97,16 @@ export class TableController {
         } catch (e) {
             console.error(e);
             res.status(500).json({ msg: "[TAB] Fail to Insert Item Group" });
+        }
+    }
+    reorderItems = async (req: Request, res: Response) => {
+        try {
+            const newOrder = req.body.newOrder;
+            await this.tableService.reorderItems(newOrder);
+            res.json({ success: true });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Reorder Items" });
         }
     }
 }

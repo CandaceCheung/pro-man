@@ -150,7 +150,6 @@ export function insertItem(projectId: number, userId: number) {
 				message: 'Failed to add new item! 🤥'
 			});
 		}
-
 	}
 }
 
@@ -181,6 +180,35 @@ export function insertItemGroup(projectId: number, userId: number) {
 				message: 'Failed to add new group item! 🤥'
 			});
 		}
+	}
+}
 
+export function reorderItems(newOrder: number[], userId: number) {
+	return async (dispatch: Dispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/reorderItems`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				newOrder
+			})
+		});
+		let result = await res.json();
+
+		if (!result.success) {
+			showNotification({
+				title: 'Insert data notification',
+				message: 'Failed to reorder items! 🤥'
+			});
+		}
+
+		result = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/${userId}`
+		);
+		const tableResult = await result.json();
+		tableResult.success && dispatch(getTableAction(tableResult.table));
+		
 	}
 }

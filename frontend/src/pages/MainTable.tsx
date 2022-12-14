@@ -1,14 +1,12 @@
 import React from 'react';
-import { createStyles } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { updateItemGroupName } from '../redux/table/thunk';
+import { reorderItems, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
-import { showNotification } from '@mantine/notifications';
 import { useStyles } from '../components/MainTableComponents/styles';
 
 export interface itemCellsElement {
@@ -32,12 +30,13 @@ export interface itemsGroupElement {
 }
 
 export function MainTable() {
-    const tableSummary = useAppSelector(state => state.table.summary);
+    const userId = useAppSelector(state => state.auth.userId);
     const projectID = useAppSelector(state => state.project.project_id);
-    const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: itemCellsElement[][] }>({});
-    const [itemCellsStateNew, setItemCellsStateNew] = useState<{ [keys in number]: {[keys in number]: itemCellsElement[]} }>({});
+    const tableSummary = useAppSelector(state => state.table.summary);
+    const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [itemsOrdersState, setItemsOrdersState] = useState<{ [keys in number]: number[] }>({});
+    const [typesOrdersState, setTypesOrdersState] = useState<{ [keys in number]: number[] }>({});
     const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
@@ -50,18 +49,19 @@ export function MainTable() {
     );
 
     useEffect(() => {
-        let itemCells: { [keys in number]: itemCellsElement[][] } = {};
-        let itemCellsNew: { [keys in number]: {[keys in number]: itemCellsElement[]} } = {};
+        let itemCells: { [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } } = {};
         let itemGroups: itemsGroupElement[] = [];
-        let previousItemID: null | number = null;
         let itemGroupsCollapsed: boolean[] = [];
         let itemGroupsInputSelected: boolean[] = [];
         let itemGroupsInputValue: string[] = [];
         let itemsOrders: { [keys in number]: number[] } = {};
+        let typesOrders: { [keys in number]: number[] } = {};
+        let typesOrderSet: Set<number> = new Set();
         for (const cell of tableSummary) {
             if (cell.project_id === projectID) {
-                const currentItemID = cell.item_id;
                 const itemGroupID = cell.item_group_id;
+                const itemID = cell.item_id;
+                const typeID = cell.horizontal_order_id;
                 let itemCell: itemCellsElement = {
                     item_id: cell.item_id,
                     item_name: cell.item_name,
@@ -92,16 +92,15 @@ export function MainTable() {
                     default:
                         break;
                 }
+
                 if (itemCells[itemGroupID]) {
-                    if (currentItemID === previousItemID) {
-                        itemCells[itemGroupID][itemCells[itemGroupID].length - 1].push(itemCell);
-                        itemCellsNew[itemGroupID][currentItemID].push(itemCell);
-                    } else {
-                        previousItemID = currentItemID;
-                        itemCells[itemGroupID].push([itemCell]);
-                        itemCellsNew[itemGroupID][currentItemID] = [itemCell];
+                    if (!itemCells[itemGroupID][itemID]) {
+                        itemCells[itemGroupID][itemID] = {};
+                        itemsOrders[itemGroupID].push(itemID);
                     }
                 } else {
+                    itemCells[itemGroupID] = {};
+                    itemCells[itemGroupID][itemID] = {};
                     itemGroups.push({
                         item_group_id: cell.item_group_id,
                         item_group_name: cell.item_group_name
@@ -109,22 +108,25 @@ export function MainTable() {
                     itemGroupsCollapsed.push(false);
                     itemGroupsInputSelected.push(false);
                     itemGroupsInputValue.push(cell.item_group_name);
-                    previousItemID = currentItemID;
-                    itemCells[itemGroupID] = [[itemCell]];
-                    itemCellsNew[itemGroupID] = {}
-                    itemCellsNew[itemGroupID][currentItemID] = [itemCell];
-                    itemsOrders[itemGroupID] = [currentItemID];
+                    itemsOrders[itemGroupID] = [itemID];
                 }
+                itemCells[itemGroupID][itemID][typeID] = itemCell;
+
+                if (!typesOrders[itemGroupID]) {
+                    typesOrderSet = new Set();
+                }
+                typesOrderSet.add(typeID);
+                typesOrders[itemGroupID] = Array.from(typesOrderSet);
             }
         }
-        setItemCellsState(itemCells);
         setItemGroupsState(itemGroups);
+        setItemCellsState(itemCells);
         setItemGroupCollapsedState(itemGroupsCollapsed);
         setItemGroupsInputSelectState(itemGroupsInputSelected);
         setItemGroupsInputValueState(itemGroupsInputValue);
 
-        setItemCellsStateNew(itemCellsNew);
         setItemsOrdersState(itemsOrders);
+        setTypesOrdersState(typesOrders);
     }, [tableSummary, projectID]);
 
     const toggleItemGroupCollapsed = (index: number) => {
@@ -190,21 +192,15 @@ export function MainTable() {
         }
     }
 
-    const handleDragEndRow = (event: any, itemGroupArrayIndex: number) => {
+    const handleDragEndRow = (event: any, item_group_id: number) => {
         const { active, over } = event;
         if (active.id !== over.id) {
-            // const oldIndex = active.data.current.sortable.index;
-            // const newIndex = over.data.current.sortable.index;
-            // let newItemCellsArray = JSON.parse(JSON.stringify(itemCellsState));
-            // const newInsideArray = arrayMove(newItemCellsArray[itemGroupArrayIndex], oldIndex, newIndex)
-            // newItemCellsArray[itemGroupArrayIndex] = newInsideArray
-            // setItemCellsState(
-            //     newItemCellsArray
-            //     );
-            showNotification({
-				title: `${itemGroupArrayIndex}: Swap data notification`,
-				message: `Swapped item ${event.active.id} to ${event.over.id}! 🤥`
-            });
+            const oldIndex = itemsOrdersState[item_group_id].indexOf(active.id);
+            const newIndex = itemsOrdersState[item_group_id].indexOf(over.id);
+            const newItemsOrdersState = JSON.parse(JSON.stringify(itemsOrdersState));
+            newItemsOrdersState[item_group_id] = arrayMove(itemsOrdersState[item_group_id], oldIndex, newIndex);
+            setItemsOrdersState(newItemsOrdersState);
+            userId && dispatch(reorderItems(arrayMove(itemsOrdersState[item_group_id], oldIndex, newIndex), userId));
         }
     }
 
@@ -273,11 +269,11 @@ export function MainTable() {
                                                 className={classes.groupName + " " + classes.hovertext + " " + classes.itemCount}
                                                 data-hover="Click to edit"
                                                 item-count={
-                                                    itemCellsState[item_group_id].length
+                                                    itemsOrdersState[item_group_id].length
                                                         ?
-                                                        itemCellsState[item_group_id].length
+                                                        itemsOrdersState[item_group_id].length
                                                         + " item"
-                                                        + `${itemCellsState[item_group_id].length === 1 ? "" : "s"}`
+                                                        + `${itemsOrdersState[item_group_id].length === 1 ? "" : "s"}`
                                                         :
                                                         "No items"
                                                 }
@@ -293,7 +289,7 @@ export function MainTable() {
                                     id={`table_group_${item_group_id}`}
                                     className={classes.tableGroup}
                                 >
-                                    <div>
+                                    <div className={classes.tableHead}>
                                         <div className={classes.tableRow}>
                                             <div className={classes.tableCell}></div>
                                             <div className={cx(classes.tableCell, classes.item)}>Item</div>
@@ -306,15 +302,17 @@ export function MainTable() {
                                         </div>
                                     </div>
                                     <div className={classes.tableBody}>
-                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event)=>handleDragEndRow(event, itemGroupArrayIndex)}>
-                                            <SortableContext items={itemCellsState[item_group_id].map((_, rowIndex) => "group_" + itemGroupArrayIndex + "_row_" + rowIndex)} strategy={verticalListSortingStrategy}>
+                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
+                                            <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
                                                 {
-                                                    itemCellsState[item_group_id].map((row, rowIndex) =>
+                                                    itemsOrdersState[item_group_id].map((itemId, itemIndex) =>
                                                         <TableRow
-                                                            key={"group_" + itemGroupArrayIndex + "_row_" + rowIndex}
-                                                            id={"group_" + itemGroupArrayIndex + "_row_" + rowIndex}
-                                                            row={row}
+                                                            key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
+                                                            id={itemId}
+                                                            rowOrder={typesOrdersState[item_group_id]}
+                                                            cellDetails={itemCellsState[item_group_id][itemId]}
                                                             color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
+                                                            lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                         />
                                                     )
                                                 }
