@@ -305,7 +305,7 @@ export function MainTable() {
                                     <div className={classes.tableHead}>
                                         <div className={classes.tableRow}>
                                             <div className={classes.tableCell}></div>
-                                            <div className={cx(classes.tableCell, classes.item)}>Item</div>
+                                            <div className={cx(classes.tableCell, classes.item)}><span>Item</span></div>
                                             <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
                                                 <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
                                                     {typesOrdersState[item_group_id].map((typeId, index) => (
