@@ -1,7 +1,7 @@
 import { Button, Select, Tooltip } from "@mantine/core"
-import { IconCalendar, IconPinned } from "@tabler/icons"
+import { IconBrandStackoverflow, IconCalendar, IconPinned } from "@tabler/icons"
 import moment from "moment"
-import { setAutofitAction, setShowMarkerAction, setTimelineNowAction, setTimeLineViewAction, TimeLineViewState } from "../../redux/project/slice"
+import { setAutofitAction, setShowMarkerAction, setTimelineNowAction, setTimeLineViewAction, TimeLineViewState, toggleLoadingAction, toggleStackItemAction } from "../../redux/project/slice"
 import { useAppDispatch, useAppSelector } from "../../store"
 
 export function TimelineButton() {
@@ -11,9 +11,10 @@ export function TimelineButton() {
     const autofit = useAppSelector(state => state.project.time_line_autofit)
     const now = useAppSelector(state => state.project.time_line_now)
     const show = useAppSelector(state => state.project.time_line_show_marker)
-
+    const stack = useAppSelector(state=> state.project.time_line_stack_item)
 
     function changeTimeLineView(value: TimeLineViewState) {
+        dispatch(setAutofitAction(false))
         let startPointAnchor = moment().startOf('minute').add(-0.5, value)
         let endPointAnchor = moment().startOf('minute').add(0.5, value)
 
@@ -23,6 +24,7 @@ export function TimelineButton() {
             end: endPointAnchor
         }
         dispatch(setTimeLineViewAction(payload))
+        dispatch(toggleLoadingAction(true))
     }
     function changeAutofit() {
         dispatch(setAutofitAction(!autofit))
@@ -34,6 +36,16 @@ export function TimelineButton() {
     return (
         <div>
             <Button.Group>
+                <Tooltip
+                    multiline
+                    width={220}
+                    withArrow
+                    transition="fade"
+                    transitionDuration={200}
+                    label="Stack Item"
+                >
+                    <Button className='button-panel-group' variant={stack ? 'filled' : 'subtle'} onClick={() => dispatch(toggleStackItemAction(!stack))}><IconBrandStackoverflow size={14} /></Button>
+                </Tooltip>
                 <Tooltip
                     multiline
                     width={220}

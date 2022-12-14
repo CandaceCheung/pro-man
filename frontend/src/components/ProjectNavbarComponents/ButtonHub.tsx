@@ -1,5 +1,4 @@
 import { Button, Menu } from "@mantine/core";
-import { valueGetters } from "@mantine/core/lib/Box/style-system-props/value-getters/value-getters";
 import { IconEyeOff, IconFilter, IconUser, IconColumns } from "@tabler/icons";
 import { triggerTimelineModalAction } from "../../redux/project/slice";
 import { insertItem, insertItemGroup } from "../../redux/table/thunk";
@@ -12,14 +11,13 @@ export function ButtonHub() {
     const projectId = useAppSelector(state => state.project.project_id);
     const personsSummary = projectSummary.filter((project, index, self) =>
         project.project_id === projectId &&
-        project.type_name === 'persons' &&
         index === self.findIndex((obj) => obj.item_person_name === project.item_person_name))
     const groupSummary = projectSummary.filter((project, index, self) =>
         project.project_id === projectId &&
         index === self.findIndex((obj) => obj.item_group_id === project.item_group_id))
+    const timelineColumn = ['Date', 'Time']
     const userId = useAppSelector(state => state.auth.userId);
     const page = useAppSelector(state => state.project.active_page)
-
     const onNewItemClick = () => {
         page === 'timeline' && dispatch(triggerTimelineModalAction(true));
         page === 'mainTable' && projectId && userId && dispatch(insertItem(projectId, userId));
@@ -39,10 +37,10 @@ export function ButtonHub() {
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by person</Menu.Label>
-                        {personsSummary.map((person, index) => {
+                        {page === 'timeline' && personsSummary.map((person, index) => {
                             return <Menu.Item key={index} value={person.item_person_id} icon={<IconUser size={14} />}>{person.item_person_name}</Menu.Item>
-                        })
-                        }
+                        })}
+                        
                     </Menu.Dropdown>
                 </Menu>
 
@@ -52,10 +50,10 @@ export function ButtonHub() {
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by column</Menu.Label>
-                        {groupSummary.map((group, index) => {
+                        {page === 'timeline' && groupSummary.map((group, index) => {
                             return <Menu.Item key={index} value={group.item_group_id} icon={<IconColumns size={14} />}>{group.item_group_name}</Menu.Item>
-                        })
-                        }
+                        })}
+                        
                     </Menu.Dropdown>
                 </Menu>
 
@@ -64,10 +62,9 @@ export function ButtonHub() {
                         <Button className='button-panel-group' variant='subtle'><IconEyeOff size={14} />Hide</Button>
                     </Menu.Target>
                     <Menu.Dropdown>
-                        <Menu.Label>Hide column</Menu.Label>
-                        <Menu.Item icon={<IconColumns size={14} />}>place holder</Menu.Item>
-                        <Menu.Item icon={<IconColumns size={14} />}>place holder 2</Menu.Item>
-                        <Menu.Item icon={<IconColumns size={14} />}>place holder 3</Menu.Item>
+                    {page === 'timeline' && timelineColumn.map((column, index)=>{ 
+                       return <Menu.Item value={column} icon={<IconColumns size={14} />}>{column}</Menu.Item>
+                    })}
                     </Menu.Dropdown>
                 </Menu>
             </div>

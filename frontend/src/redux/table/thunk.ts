@@ -41,7 +41,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 		const result = await res.json();
 
 		if (result.success) {
-			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color}))
+			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color, typeId: result.typeId}))
 			showNotification({
 				title: 'Data update notification',
 				message: 'Update Success'
@@ -71,7 +71,7 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
 		const result = await res.json();
 
 		if (result.success) {
-			dispatch(updateDatelineItemAction({ datelineID, date, name, color }))
+			dispatch(updateDatelineItemAction({ datelineID, date, name, color, typeId: result.typeId}))
 			showNotification({
 				title: 'Data update notification',
 				message: 'Update Success'

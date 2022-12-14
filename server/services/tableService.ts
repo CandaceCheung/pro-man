@@ -102,6 +102,8 @@ export class TableService {
             name
         })
             .where('id', typeId[0].type_id)
+        
+        return typeId[0].type_id
     }
 
     async updateDatelineService(id: number, date: number, name: string, color: string) {
@@ -115,6 +117,8 @@ export class TableService {
             name
         })
             .where('id', typeId[0].type_id)
+
+        return typeId[0].type_id
     }
 
     async updateItemGroupName(id: number, name: string) {
