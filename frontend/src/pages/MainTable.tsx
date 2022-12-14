@@ -33,8 +33,7 @@ export function MainTable() {
     const userId = useAppSelector(state => state.auth.userId);
     const projectID = useAppSelector(state => state.project.project_id);
     const tableSummary = useAppSelector(state => state.table.summary);
-    const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: { [keys in number]: itemCellsElement[] } }>({});
-    const [itemCellsStateNew, setItemCellsStateNew] = useState<{ [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } }>({});
+    const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [itemsOrdersState, setItemsOrdersState] = useState<{ [keys in number]: number[] }>({});
     const [typesOrdersState, setTypesOrdersState] = useState<{ [keys in number]: number[] }>({});
@@ -50,8 +49,7 @@ export function MainTable() {
     );
 
     useEffect(() => {
-        let itemCells: { [keys in number]: { [keys in number]: itemCellsElement[] } } = {};
-        let itemCellsNew: { [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } } = {};
+        let itemCells: { [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } } = {};
         let itemGroups: itemsGroupElement[] = [];
         let itemGroupsCollapsed: boolean[] = [];
         let itemGroupsInputSelected: boolean[] = [];
@@ -94,14 +92,15 @@ export function MainTable() {
                     default:
                         break;
                 }
+
                 if (itemCells[itemGroupID]) {
-                    if (itemCells[itemGroupID][itemID]) {
-                        itemCells[itemGroupID][itemID].push(itemCell);
-                    } else {
-                        itemCells[itemGroupID][itemID] = [itemCell];
+                    if (!itemCells[itemGroupID][itemID]) {
+                        itemCells[itemGroupID][itemID] = {};
                         itemsOrders[itemGroupID].push(itemID);
                     }
                 } else {
+                    itemCells[itemGroupID] = {};
+                    itemCells[itemGroupID][itemID] = {};
                     itemGroups.push({
                         item_group_id: cell.item_group_id,
                         item_group_name: cell.item_group_name
@@ -109,19 +108,9 @@ export function MainTable() {
                     itemGroupsCollapsed.push(false);
                     itemGroupsInputSelected.push(false);
                     itemGroupsInputValue.push(cell.item_group_name);
-                    itemCells[itemGroupID] = {}
-                    itemCells[itemGroupID][itemID] = [itemCell];
                     itemsOrders[itemGroupID] = [itemID];
                 }
-
-                if (!itemCellsNew[itemGroupID]) {
-                    itemCellsNew[itemGroupID] = {};
-                    itemCellsNew[itemGroupID][itemID] = {};
-                }
-                if (!itemCellsNew[itemGroupID][itemID]) {
-                    itemCellsNew[itemGroupID][itemID] = {};
-                }
-                itemCellsNew[itemGroupID][itemID][typeID] = itemCell;
+                itemCells[itemGroupID][itemID][typeID] = itemCell;
 
                 if (!typesOrders[itemGroupID]) {
                     typesOrderSet = new Set();
@@ -131,12 +120,11 @@ export function MainTable() {
             }
         }
         setItemGroupsState(itemGroups);
-        setItemCellsStateNew(itemCellsNew);
+        setItemCellsState(itemCells);
         setItemGroupCollapsedState(itemGroupsCollapsed);
         setItemGroupsInputSelectState(itemGroupsInputSelected);
         setItemGroupsInputValueState(itemGroupsInputValue);
 
-        setItemCellsState(itemCells);
         setItemsOrdersState(itemsOrders);
         setTypesOrdersState(typesOrders);
     }, [tableSummary, projectID]);
@@ -321,7 +309,8 @@ export function MainTable() {
                                                         <TableRow
                                                             key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
                                                             id={itemId}
-                                                            row={itemCellsState[item_group_id][itemId]}
+                                                            rowOrder={typesOrdersState[item_group_id]}
+                                                            cellDetails={itemCellsState[item_group_id][itemId]}
                                                             color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
                                                             lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                         />
