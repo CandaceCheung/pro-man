@@ -146,7 +146,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     },
 
     item: {
-        width: 400
+        width: 200
     },
     persons: {
         width: 98
