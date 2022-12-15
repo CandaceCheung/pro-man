@@ -219,10 +219,11 @@ export function MainTable() {
         if (active.id !== over.id && userId && projectID) {
             const oldIndex = itemsOrdersState[item_group_id].indexOf(active.id);
             const newIndex = itemsOrdersState[item_group_id].indexOf(over.id);
-            const newItemsOrdersState = JSON.parse(JSON.stringify(itemsOrdersState));
-            newItemsOrdersState[item_group_id] = arrayMove(itemsOrdersState[item_group_id], oldIndex, newIndex);
-            setItemsOrdersState(newItemsOrdersState);
-            userId && dispatch(reorderItems(arrayMove(itemsOrdersState[item_group_id], oldIndex, newIndex), userId, projectID));
+            const nextItemOrdersState = produce(itemsOrdersState, draftState => {
+                draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
+            })
+            setItemsOrdersState(nextItemOrdersState);
+            userId && dispatch(reorderItems(nextItemOrdersState[item_group_id], userId, projectID));
         }
     }
 
@@ -231,10 +232,11 @@ export function MainTable() {
         if (active.id !== over.id && userId && projectID) {
             const oldIndex = typesOrdersState[item_group_id].indexOf(active.id);
             const newIndex = typesOrdersState[item_group_id].indexOf(over.id);
-            const newTypesOrdersState = JSON.parse(JSON.stringify(typesOrdersState));
-            newTypesOrdersState[item_group_id] = arrayMove(newTypesOrdersState[item_group_id], oldIndex, newIndex);
-            setTypesOrdersState(newTypesOrdersState);
-            userId && dispatch(reorderTypes(arrayMove(typesOrdersState[item_group_id], oldIndex, newIndex), userId, projectID));
+            const nextTypesOrdersState = produce(typesOrdersState, draftState => {
+                draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
+            })
+            setTypesOrdersState(nextTypesOrdersState);
+            userId && dispatch(reorderTypes(nextTypesOrdersState[item_group_id], userId, projectID));
         }
     }
 
