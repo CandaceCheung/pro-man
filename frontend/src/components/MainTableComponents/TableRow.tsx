@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from '@dnd-kit/utilities';
 import { itemCellsElement } from "../../pages/MainTable";
-import { Persons } from "./Persons";
+import { Persons } from "./TableCellsComponents/Persons";
 import { useStyles } from "./styles";
 
 export interface TableRowProps {
