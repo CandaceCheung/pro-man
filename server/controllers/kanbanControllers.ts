@@ -16,7 +16,7 @@ export class KanbanController {
 				success: true,
 				projectInfo: result
 			});
-			
+
 		} catch (e) {
 			console.error(e);
 			res.status(500).json({ msg: '[KAN] Fail to Get Data.' });
@@ -29,7 +29,7 @@ export class KanbanController {
 			await this.kanbanService.addKanbanitem( projectId, itemName, date, member, userId);
 
             res.json({
-                success: true,
+                success: true, 
             })
 		} catch (e) {
 			console.error(e);
