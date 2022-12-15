@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { Button, Divider, Menu } from "@mantine/core";
 import { IconEyeOff, IconFilter, IconUser, IconColumns, IconArrowBack } from "@tabler/icons";
 import { MouseEvent } from "react";

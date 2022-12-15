@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { FormEvent, useEffect, useState } from 'react';
 import { Modal, Button, Group, Input, Tooltip, Stack, ColorPicker } from '@mantine/core';
 import { IconAlertCircle, IconIndentIncrease } from '@tabler/icons';
