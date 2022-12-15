@@ -63,6 +63,7 @@ export function TimeFrame() {
   const sortByPersonId = useAppSelector(state=> state.project.sort_by_person_id)
   const sortByGroupId = useAppSelector(state=> state.project.sort_by_group_id)
   const setHideByType = useAppSelector(state => state.project.set_hide_by_type)
+  const itemHeight = useAppSelector(state=> state.project.set_timeline_item_height)
 
   const unfilteredTimelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times').sort((a, b) => a.item_group_id - b.item_group_id)
   const unfilteredDatelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'dates').sort((a, b) => a.item_group_id - b.item_group_id)
@@ -102,14 +103,13 @@ export function TimeFrame() {
       end_time: item.item_times_end_date,
       color: item.item_times_color,
       canMove: true,
-      canResize: true,
       canChangeGroup: false,
       itemProps: {
         'aria-hidden': false,
         className: 'time-block',
         style: {
           background: item.item_times_color,
-          borderRadius: '10px',
+          borderRadius: '5px',
           border: 'none',
         }
       }
@@ -225,7 +225,7 @@ export function TimeFrame() {
           sidebarWidth={toggle ? 30 : 150}
           keys={keys}
           stackItems={stack}
-          itemHeightRatio={0.75}
+          itemHeightRatio={0.8}
           canMove
           canResize={'both'}
           onItemMove={handleItemMove}
@@ -234,7 +234,7 @@ export function TimeFrame() {
           dragSnap={interval}
           minZoom={minZoom}
           maxZoom={maxZoom}
-          lineHeight={50}
+          lineHeight={itemHeight}
           timeSteps={{
             second: 60,
             minute: 60,
@@ -257,7 +257,7 @@ export function TimeFrame() {
             <DateHeader
 
               unit="day"
-              labelFormat={'D, ddd'}
+              labelFormat={'D'}
               style={{ fontSize: '10px', color: '#999999' }}
             />
             <TimelineMarkers>

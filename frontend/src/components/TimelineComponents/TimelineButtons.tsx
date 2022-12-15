@@ -1,7 +1,7 @@
-import { Button, Select, Tooltip } from "@mantine/core"
+import { Button, Select, Slider, Tooltip } from "@mantine/core"
 import { IconBrandStackoverflow, IconCalendar, IconPinned } from "@tabler/icons"
 import moment from "moment"
-import { setAutofitAction, setShowMarkerAction, setTimelineNowAction, setTimeLineViewAction, TimeLineViewState, toggleLoadingAction, toggleStackItemAction } from "../../redux/project/slice"
+import { setAutofitAction, setShowMarkerAction, setTimelineItemHeightAction, setTimelineNowAction, setTimeLineViewAction, TimeLineViewState, toggleLoadingAction, toggleStackItemAction } from "../../redux/project/slice"
 import { useAppDispatch, useAppSelector } from "../../store"
 
 export function TimelineButton() {
@@ -11,7 +11,8 @@ export function TimelineButton() {
     const autofit = useAppSelector(state => state.project.time_line_autofit)
     const now = useAppSelector(state => state.project.time_line_now)
     const show = useAppSelector(state => state.project.time_line_show_marker)
-    const stack = useAppSelector(state=> state.project.time_line_stack_item)
+    const stack = useAppSelector(state => state.project.time_line_stack_item)
+    const itemHeight = useAppSelector(state=> state.project.set_timeline_item_height)
 
     function changeTimeLineView(value: TimeLineViewState) {
         dispatch(setAutofitAction(false))
@@ -32,9 +33,37 @@ export function TimelineButton() {
     function changeNow() {
         dispatch(setTimelineNowAction(!now))
     }
+    function onSliderChange(value : number){
+        dispatch(setTimelineItemHeightAction(value))
+    }
 
     return (
-        <div>
+        <div style={{ display: 'flex' }}>
+            <span style={{ width: '200px', paddingRight: '20px' }}>
+                <Tooltip
+                    multiline
+                    width={220}
+                    withArrow
+                    offset={30}
+                    transition="fade"
+                    transitionDuration={200}
+                    label="Change Item height"
+                >
+                    <Slider
+                        size="lg"
+                        value={itemHeight}
+                        min={40}
+                        max={100}
+                        onChange={onSliderChange}
+                        marks={[
+                            { value: 50, label: '20%' },
+                            { value: 75, label: '50%' },
+                            { value: 100, label: '100%' },
+                        ]}
+                    />
+                </Tooltip>
+            </span>
+
             <Button.Group>
                 <Tooltip
                     multiline

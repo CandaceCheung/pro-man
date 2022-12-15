@@ -23,6 +23,7 @@ export interface ActiveProjectState {
     sort_by_person_id: number | undefined
     sort_by_group_id: number | undefined
     set_hide_by_type: string | undefined
+    set_timeline_item_height: number
 }
 
 const initialState: ActiveProjectState = {
@@ -44,6 +45,7 @@ const initialState: ActiveProjectState = {
     sort_by_person_id: undefined,
     sort_by_group_id: undefined,
     set_hide_by_type: undefined,
+    set_timeline_item_height: 50
 }
 
 const setActiveProject : CaseReducer<ActiveProjectState, PayloadAction<number>> =
@@ -78,6 +80,8 @@ const setSortByGroupId : CaseReducer<ActiveProjectState, PayloadAction<number>> 
 (state, action) =>  {state.sort_by_group_id = action.payload} 
 const setHideByType : CaseReducer<ActiveProjectState, PayloadAction<string>> =
 (state, action) =>  {state.set_hide_by_type = action.payload} 
+const setTimelineItemHeight : CaseReducer<ActiveProjectState, PayloadAction<number>> =
+(state, action) =>  {state.set_timeline_item_height = action.payload} 
 
 const projectSlice = createSlice({
     name: 'project',
@@ -98,7 +102,8 @@ const projectSlice = createSlice({
         toggleStackItem,
         setSortByPersonId,
         setSortByGroupId,
-        setHideByType
+        setHideByType,
+        setTimelineItemHeight
     },
 })
 
@@ -118,7 +123,8 @@ export const {
     toggleStackItem: toggleStackItemAction,
     setSortByPersonId: setSortByPersonIdAction,
     setSortByGroupId: setSortByGroupIdAction,
-    setHideByType: setHideByTypeAction
+    setHideByType: setHideByTypeAction,
+    setTimelineItemHeight: setTimelineItemHeightAction
 } = projectSlice.actions
 
 export default projectSlice.reducer
