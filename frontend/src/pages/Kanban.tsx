@@ -10,6 +10,7 @@ export function Kanban() {
             <Group position="left">
                 {statusList.map((status) => (
                     <StatusColumn
+                        key={status.id}
                         id={status.id}
                         name={status.name}
                         color={status.color}
