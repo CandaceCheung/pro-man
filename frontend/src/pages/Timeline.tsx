@@ -6,19 +6,19 @@ import { IconArrowBadgeLeft, IconArrowBadgeRight, IconPinned } from '@tabler/ico
 import { useEffect, useState } from 'react'
 import moment from 'moment';
 import { updateDatelineItem, updateTimelineItem } from '../redux/table/thunk'
-import { AddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
+// import { AddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
 import ClockLoader from "react-spinners/ClockLoader";
 import { setTargetUpdateElementAction, toggleLoadingAction, triggerUpdateTimelineModalAction } from '../redux/project/slice'
 import { ChangNameColorModal } from '../components/TimelineComponents/ChangeNameColorModal'
 
 
-const keys = { // default key name
+const keys = { 
   groupIdKey: 'id',
   groupTitleKey: 'title',
   groupRightTitleKey: 'rightTitle',
   itemIdKey: 'id',
-  itemTitleKey: 'title',    // key for item div content
-  itemDivTitleKey: 'title', // key for item div title (<div title="text"/>)
+  itemTitleKey: 'title',    
+  itemDivTitleKey: 'title', 
   itemGroupKey: 'group',
   itemTimeStartKey: 'start_time',
   itemTimeEndKey: 'end_time',

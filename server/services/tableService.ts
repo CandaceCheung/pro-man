@@ -90,6 +90,8 @@ export class TableService {
             .join('users','members.user_id','=','users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
             .where('members.user_id', '=', userId)
+            .where("projects.is_deleted", false)
+            .orderBy("project_id", 'asc')
 
         return tableList
     }
