@@ -161,7 +161,7 @@ const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemG
     }
 const updateItemGroupNameFailed: CaseReducer<CombinedTableState, PayloadAction> =
     (state, action) => {
-        state.summary[0] = { ...state.summary[0] };
+        state = JSON.parse(JSON.stringify(state));
     }
 
 const tableSlice = createSlice({
