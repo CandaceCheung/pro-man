@@ -104,7 +104,7 @@ export function StatusColumn(props: StatusProps) {
                                 key={item.id}
                                 id={item.id}
                                 name={item.name}
-                                date={(item.date).slice(0,-15)}
+                                date={item.date.slice(0, -15)}
                                 membersList={item.membersList}
                             />
                         ))}
@@ -124,33 +124,30 @@ export function StatusColumn(props: StatusProps) {
                     <Modal
                         opened={opened}
                         onClose={() => setOpened(false)}
-                        title="Item"
+                        title="Add Item"
                         size="sm"
                     >
                         <Group position="left" m={6}>
-                            <Group>
-                                <Text>People</Text>
-                                <Input
-                                    variant="filled"
-                                    icon={<IconUser size={16} />}
-                                ></Input>
-                            </Group>
-                            <Group>
-                                <Text>Date</Text>
-                                <DatePicker
-                                    label="Event date"
-                                    withAsterisk
-                                    icon={<IconCalendarEvent size={16} />}
-                                />
-                            </Group>
-                            <Group>
-                                <Text>Groups</Text>
-                                <MultiSelect
-                                    data={selectData}
-                                    placeholder="Scroll to see all options"
-                                    maxDropdownHeight={160}
-                                />
-                            </Group>
+                            <Text>People</Text>
+                            <Input
+                                variant="filled"
+                                icon={<IconUser size={16} />}
+                            ></Input>
+
+                            <Text mr={15}>Date</Text>
+                            <DatePicker
+                                variant="filled"
+                                withAsterisk
+                                icon={<IconCalendarEvent size={16} />}
+                            />
+
+                            <Text>Groups</Text>
+                            <MultiSelect
+                                data={selectData}
+                                placeholder="Scroll to see all options"
+                                maxDropdownHeight={160}
+                            />
+
                             <Button color="cyan">Add item</Button>
                         </Group>
                     </Modal>
