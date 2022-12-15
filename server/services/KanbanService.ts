@@ -36,8 +36,8 @@ export class KanbanService {
 	}
 
 	async addKanbanitem(
-		itemName: string,
 		projectId: number,
+		itemName: string,
 		groupId: number,
 		date: number
 	) {
@@ -45,8 +45,8 @@ export class KanbanService {
 		try {
 			const addItem = await txn
 				.insert({
-					name: itemName,
 					project_id: projectId,
+					name: itemName,
 					item_group_id: groupId
 				})
 				.into('items')
