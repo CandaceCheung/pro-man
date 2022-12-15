@@ -89,7 +89,7 @@ export class TableController {
         try {
             const projectId = req.body.projectId;
             const userId = req.body.userId;
-            await this.tableService.insertItem(projectId, userId, false);
+            await this.tableService.insertItem(projectId, userId);
 
             res.json({ success: true })
         } catch (e) {
