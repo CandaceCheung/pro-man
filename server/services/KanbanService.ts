@@ -4,21 +4,23 @@ import { format } from 'date-fns';
 export class KanbanService {
 	constructor(private knex: Knex) {}
 
-	async getKanbanInfo(project_id: number) {
+	async getKanbanInfo(project_Id: number) {
 		const kanbanDetail = await this.knex
 			.with('items', (qb) => {
 				qb.select(
 					'items.id as id',
 					'items.name as name',
 					'type_dates.datetime as date',
-					this.knex.raw('JSON_AGG(type_persons.name) as "membersList"')
+					this.knex.raw(
+						'JSON_AGG(type_persons.name) as "membersList"'
+					)
 				)
 					.from('items')
 					.join('type_persons', 'type_persons.item_id', 'items.id')
 					.join('type_dates', 'type_dates.item_id', 'items.id')
 					.groupBy('items.id')
 					.groupBy('type_dates.datetime')
-					.where('items.project_id', project_id);
+					.where('items.project_id', project_Id);
 			})
 			.select(
 				'states.id as id',
@@ -31,17 +33,35 @@ export class KanbanService {
 			.join('kanban_order', 'kanban_order.state_id', '=', 'states.id')
 			.join('type_status', 'type_status.state_id', '=', 'states.id')
 			.join('items', 'type_status.item_id', '=', 'items.id')
-			.where('projects.id', project_id)
+			.where('projects.id', project_Id)
 			.groupBy('states.id');
 
 		return kanbanDetail;
+	}
+
+	async getMemberList(project_Id: number) {
+		const membersList = await this.knex
+			.select('users.id', 'users.username')
+			.from('users')
+			.join('members', 'members.user_id', '=', 'users.id')
+			.where('members.project_id', project_Id);
+		return membersList;
+	}
+
+	async getGroupList(project_Id: number) {
+		const groupsList = await this.knex 
+			.select('item_groups.id', 'item_groups.name')
+			.from('item_groups')
+			.join('items', 'items.item_group_id', '=', 'item_groups.id')
+			.where('items.project_id', project_Id);
+		return groupsList;
 	}
 
 	async addKanbanitem(
 		projectId: number,
 		itemName: string,
 		groupId: number,
-		date: number, 
+		date: number,
 		userId: number
 	) {
 		const txn = await this.knex.transaction();
@@ -63,10 +83,9 @@ export class KanbanService {
 
 			addDate;
 
-			const addMember = await txn .insert({user_id: userId});
+			const addMember = await txn.insert({ user_id: userId });
 
 			addMember;
-
 		} catch (e) {
 			await txn.rollback();
 			return;

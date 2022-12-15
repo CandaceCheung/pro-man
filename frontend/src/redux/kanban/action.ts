@@ -7,6 +7,20 @@ export function setKanbanInfo(statusList: Status[]){
     };
 }
 
+export function setKanbanMember(memberList:[]) {
+    return {
+        type: "KANBAN/SET_MEMBER" as const,
+        memberList,
+    }
+}
+
+export function setKanbanGroup(groupList: []) {
+    return {
+        type: "KANBAN/SET_GROUP" as const,
+        groupList,
+    }
+}
+
 export function addKanbanItem(statusId: number, item: Item) {
     return {
         type: "KANBAN/ADD" as const,
@@ -23,5 +37,7 @@ export function failKanbanAction() {
 
 export type KanbanAction =
     | ReturnType<typeof setKanbanInfo>
+    | ReturnType<typeof setKanbanMember>
+    | ReturnType<typeof setKanbanGroup>
     | ReturnType<typeof addKanbanItem>
     | ReturnType<typeof failKanbanAction>;

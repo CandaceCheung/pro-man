@@ -1,5 +1,4 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { icon } from "@fortawesome/fontawesome-svg-core";
 import {
     Card,
     Group,
@@ -15,6 +14,7 @@ import {
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import {
+    IconBrandAsana,
     IconCalendarEvent,
     IconClipboardList,
     IconGripVertical,
@@ -23,9 +23,11 @@ import {
 } from "@tabler/icons";
 import { useState } from "react";
 import { Status } from "../../redux/kanban/state";
+import { useAppSelector } from "../../store";
 import { ItemCard } from "./ItemCard";
 
 type StatusProps = Status; //state
+
 
 const useStyles = createStyles((theme, color: string) => ({
     cardHeader: {
@@ -61,20 +63,23 @@ const useStyles = createStyles((theme, color: string) => ({
     },
 }));
 
-const selectData = [
-    {
-        value: "group 1",
-        label: "add item in group 1",
-    },
-    {
-        value: "group 2",
-        label: "add item in group 2",
-    },
-];
 
 export function StatusColumn(props: StatusProps) {
     const [opened, setOpened] = useState(false);
     const { classes, theme } = useStyles(props.color);
+    const memberList = useAppSelector((state) => state.kanban.memberList);
+    const groupList = useAppSelector((state) => state.kanban.groupList);
+
+    const selectData = [
+        {
+            value: "group 1",
+            label: "add item in group 1",
+        },
+        {
+            value: "group 2",
+            label: "add item in group 2",
+        },
+    ];
 
     const modalList = [
         {
@@ -88,7 +93,16 @@ export function StatusColumn(props: StatusProps) {
         },
         {
             text: "People",
-            input: <Input variant="filled" icon={<IconUser size={16} />} />,
+            input: (
+                <MultiSelect
+
+                    data={memberList.map(member => ({value:member.id.toString(), label: member.username}))}
+                    placeholder="All options"
+                    maxDropdownHeight={100}
+                    variant="filled"
+                    icon={<IconUser size={16} />}
+                />
+            ),
         },
         {
             text: "Date",
@@ -104,9 +118,11 @@ export function StatusColumn(props: StatusProps) {
             text: "Group",
             input: (
                 <MultiSelect
-                    data={selectData}
-                    placeholder="Scroll to see all options"
-                    maxDropdownHeight={160}
+                    data={groupList.map(group => ({value:group.id.toString(), label: group.name}))}
+                    variant="filled"
+                    placeholder="All options"
+                    maxDropdownHeight={100}
+                    icon={<IconBrandAsana size={16} />}
                 />
             ),
         },
@@ -175,7 +191,7 @@ export function StatusColumn(props: StatusProps) {
                     >
                         <div>
                             {modalList.map((eachRow) => (
-                                <Group className={classes.modalRow}>
+                                <Group className={classes.modalRow} key={eachRow.text}>
                                     <Text className={classes.modalText}>
                                         {eachRow.text}
                                     </Text>

@@ -23,10 +23,49 @@ export class KanbanController {
 		}
 	};
 
+	getMemberList = async(req: Request, res: Response) => {
+		try { 
+			const projectId = req.params.projectId;
+
+			const result = await this.kanbanService.getMemberList(
+				Number(projectId)
+			);
+
+			res.json({
+				success: true,
+				memberList: result
+			});
+
+		} catch (e) {
+			console.error(e);
+			res.status(500).json({ msg: '[KAN] Fail to Get Member List Data.' });
+		}
+	};
+
+	getGroupList = async (req: Request, res: Response) => {
+		try {
+			const projectId = req.params.projectId;
+
+			const result = await this.kanbanService.getGroupList(
+				Number(projectId)
+			);
+
+			res.json({
+				success: true,
+				groupList: result
+			});
+
+
+		} catch (e) {
+			console.error(e);
+			res.status(500).json({ msg: '[KAN] Fail to Get Group List Data.'});
+		}
+	}
+
 	postKanban = async (req: Request, res: Response) => {
 		try {
-			const { projectId, itemName, date, member, userId } = req.body;
-			await this.kanbanService.addKanbanitem( projectId, itemName, date, member, userId);
+			const { projectId, itemName,groupId, date, userId, } = req.body;
+			await this.kanbanService.addKanbanitem( projectId, itemName, groupId, date, userId );
 
             res.json({
                 success: true, 
