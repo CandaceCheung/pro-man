@@ -10,6 +10,7 @@ export class TableService {
             'projects.name as project_name',
             'projects.id as project_id',
             'projects.is_deleted as project_is_deleted',
+            'users.id as user_id',
             'users.role',
             'projects.creator_id as project_creator_id',
             'members.project_id as joined_project_id',

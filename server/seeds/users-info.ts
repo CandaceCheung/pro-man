@@ -132,9 +132,10 @@ export async function seed(knex: Knex): Promise<void> {
             counter += 6
         }
 
+        const randomNumber = Math.floor(Math.random()*userIDs.length)
         insertArray = []
         insertArray.push(
-            { item_id: itemIDs[i].id, type_id: typeIDs[0 + counter].id, name: userIDs[Math.floor(Math.random()*userIDs.length)].username},
+            { item_id: itemIDs[i].id, type_id: typeIDs[0 + counter].id, user_id:userIDs[randomNumber].id, name: userIDs[randomNumber].username},
         )
         await knex('type_persons').insert(insertArray)
 
