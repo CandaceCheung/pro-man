@@ -1,4 +1,5 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { icon } from "@fortawesome/fontawesome-svg-core";
 import {
     Card,
     Group,
@@ -15,6 +16,7 @@ import {
 import { DatePicker } from "@mantine/dates";
 import {
     IconCalendarEvent,
+    IconClipboardList,
     IconGripVertical,
     IconPlus,
     IconUser,
@@ -49,6 +51,14 @@ const useStyles = createStyles((theme, color: string) => ({
             fontSize: 18,
         },
     },
+
+    modalRow: {
+        margin: 5,
+    },
+
+    modalText: {
+        minWidth: 50,
+    },
 }));
 
 const selectData = [
@@ -58,13 +68,49 @@ const selectData = [
     },
     {
         value: "group 2",
-        label: "add item in group 1",
-    }
+        label: "add item in group 2",
+    },
 ];
 
 export function StatusColumn(props: StatusProps) {
     const [opened, setOpened] = useState(false);
     const { classes, theme } = useStyles(props.color);
+
+    const modalList = [
+        {
+            text: "Item",
+            input: (
+                <Input
+                    variant="filled"
+                    icon={<IconClipboardList size={16} />}
+                />
+            ),
+        },
+        {
+            text: "People",
+            input: <Input variant="filled" icon={<IconUser size={16} />} />,
+        },
+        {
+            text: "Date",
+            input: (
+                <DatePicker
+                    variant="filled"
+                    withAsterisk
+                    icon={<IconCalendarEvent size={16} />}
+                />
+            ),
+        },
+        {
+            text: "Group",
+            input: (
+                <MultiSelect
+                    data={selectData}
+                    placeholder="Scroll to see all options"
+                    maxDropdownHeight={160}
+                />
+            ),
+        },
+    ];
 
     const handleDnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -101,9 +147,10 @@ export function StatusColumn(props: StatusProps) {
                     <div>
                         {props.itemsList.map((item) => (
                             <ItemCard
+                                key={item.id}
                                 id={item.id}
                                 name={item.name}
-                                date={item.date}
+                                date={item.date.slice(0, -15)}
                                 membersList={item.membersList}
                             />
                         ))}
@@ -123,35 +170,22 @@ export function StatusColumn(props: StatusProps) {
                     <Modal
                         opened={opened}
                         onClose={() => setOpened(false)}
-                        title="Item"
+                        title="Add Item"
                         size="sm"
                     >
-                        <Group position="left" m={6}>
-                            <Group>
-                                <Text>People</Text>
-                                <Input
-                                    variant="filled"
-                                    icon={<IconUser size={16} />}
-                                ></Input>
-                            </Group>
-                            <Group>
-                                <Text>Date</Text>
-                                <DatePicker
-                                    label="Event date"
-                                    withAsterisk
-                                    icon={<IconCalendarEvent size={16} />}
-                                />
-                            </Group>
-                            <Group>
-                                <Text>Groups</Text>
-                                <MultiSelect
-                                    data={selectData}
-                                    placeholder="Scroll to see all options"
-                                    maxDropdownHeight={160}
-                                />
-                            </Group>
-                            <Button color="cyan">Add item</Button>
-                        </Group>
+                        <div>
+                            {modalList.map((eachRow) => (
+                                <Group className={classes.modalRow}>
+                                    <Text className={classes.modalText}>
+                                        {eachRow.text}
+                                    </Text>
+                                    {eachRow.input}
+                                </Group>
+                            ))}
+                            <Button color="cyan" mt={5}>
+                                Add item
+                            </Button>
+                        </div>
                     </Modal>
                 </>
             </Card>

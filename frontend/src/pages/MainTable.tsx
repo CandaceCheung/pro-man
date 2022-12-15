@@ -10,6 +10,7 @@ import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useStyles } from '../components/MainTableComponents/styles';
 import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
 import { SmartPointerSensor } from '../pointerSensor';
+import produce from "immer";
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -136,8 +137,8 @@ export function MainTable() {
                 typesOrders[itemGroupID] = Array.from(typesOrderSet);
             }
         }
-        setItemGroupsState(itemGroups);
         setItemCellsState(itemCells);
+        setItemGroupsState(itemGroups);
         setItemGroupCollapsedState(itemGroupsCollapsed);
         setItemGroupsInputSelectState(itemGroupsInputSelected);
         setItemGroupsInputValueState(itemGroupsInputValue);
@@ -167,22 +168,25 @@ export function MainTable() {
     }
 
     const deselectItemGroupInput = (index: number, value: string) => {
-        const newItemGroupsInputSelectState = [...itemGroupsInputSelectState];
-        setItemGroupsInputSelectState(newItemGroupsInputSelectState.map((each: boolean, i: number) => {
-            if (index === i) {
-                each = !each;
+        if (userId && projectID) {
+            const newItemGroupsInputSelectState = [...itemGroupsInputSelectState];
+            setItemGroupsInputSelectState(newItemGroupsInputSelectState.map((each: boolean, i: number) => {
+                if (index === i) {
+                    each = !each;
+                }
+                return each;
+            }));
+            if (value !== itemGroupsState[index].item_group_name) {
+                // Set new group name into itemGroupsState
+                const nextNewItemGroupsState = produce(itemGroupsState, draftState => {
+                    draftState[index].item_group_name = value;
+                })
+                setItemGroupsState(nextNewItemGroupsState);
+    
+                // Fetch to the server
+                dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, value, userId, projectID));
             }
-            return each;
-        }));
-        if (value !== itemGroupsState[index].item_group_name) {
-            // Set new group name into itemGroupsState
-            let newItemGroupsState: itemsGroupElement[] = JSON.parse(JSON.stringify(itemGroupsState));
-            newItemGroupsState[index].item_group_name = value;
-            setItemGroupsState(newItemGroupsState);
-
-            // Fetch to the server
-            dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, value));
-        }
+        } 
     }
 
     const changeItemGroupInputValue = (index: number, value: string) => {
@@ -196,40 +200,43 @@ export function MainTable() {
     }
 
     const handleItemGroupInputKeyDown = (index: number, key: string) => {
-        if (key === "Enter") {
+        if (key === "Enter" && userId && projectID) {
             // Set new group name into itemGroupsState
             const groupId = itemGroupsState[index].item_group_id;
             const newValue = itemGroupsInputValueState[index];
-            let newItemGroupsState: itemsGroupElement[] = JSON.parse(JSON.stringify(itemGroupsState));
-            newItemGroupsState[index].item_group_name = newValue;
-            setItemGroupsState(newItemGroupsState);
+            let nextitemGroupsState = produce(itemGroupsState, draftState => {
+                draftState[index].item_group_name = newValue;
+            })
+            setItemGroupsState(nextitemGroupsState);
 
             // Fetch to the server
-            dispatch(updateItemGroupName(groupId, newValue));
+            dispatch(updateItemGroupName(groupId, newValue, userId, projectID));
         }
     }
 
     const handleDragEndRow = (event: any, item_group_id: number) => {
         const { active, over } = event;
-        if (active.id !== over.id) {
+        if (active.id !== over.id && userId && projectID) {
             const oldIndex = itemsOrdersState[item_group_id].indexOf(active.id);
             const newIndex = itemsOrdersState[item_group_id].indexOf(over.id);
-            const newItemsOrdersState = JSON.parse(JSON.stringify(itemsOrdersState));
-            newItemsOrdersState[item_group_id] = arrayMove(itemsOrdersState[item_group_id], oldIndex, newIndex);
-            setItemsOrdersState(newItemsOrdersState);
-            userId && dispatch(reorderItems(arrayMove(itemsOrdersState[item_group_id], oldIndex, newIndex), userId));
+            const nextItemOrdersState = produce(itemsOrdersState, draftState => {
+                draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
+            });
+            setItemsOrdersState(nextItemOrdersState);
+            userId && dispatch(reorderItems(nextItemOrdersState[item_group_id], userId, projectID));
         }
     }
 
     const handleDragEndColumn = (event: any, item_group_id: number) => {
         const { active, over } = event;
-        if (active.id !== over.id) {
+        if (active.id !== over.id && userId && projectID) {
             const oldIndex = typesOrdersState[item_group_id].indexOf(active.id);
             const newIndex = typesOrdersState[item_group_id].indexOf(over.id);
-            const newTypesOrdersState = JSON.parse(JSON.stringify(typesOrdersState));
-            newTypesOrdersState[item_group_id] = arrayMove(newTypesOrdersState[item_group_id], oldIndex, newIndex);
-            setTypesOrdersState(newTypesOrdersState);
-            userId && dispatch(reorderTypes(arrayMove(typesOrdersState[item_group_id], oldIndex, newIndex), userId));
+            const nextTypesOrdersState = produce(typesOrdersState, draftState => {
+                draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
+            });
+            setTypesOrdersState(nextTypesOrdersState);
+            userId && dispatch(reorderTypes(nextTypesOrdersState[item_group_id], userId, projectID));
         }
     }
 

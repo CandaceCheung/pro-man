@@ -1,7 +1,8 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, updateItemGroupNameFailedAction, getTableListAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
+import { AppDispatch } from "../../store";
 
 export function getTable(userID: number, projectID: number) {
 	return async (dispatch: Dispatch) => {
@@ -100,8 +101,8 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
 	};
 }
 
-export function updateItemGroupName(itemGroupId: number, itemGroupName: string) {
-	return async (dispatch: Dispatch) => {
+export function updateItemGroupName(itemGroupId: number, itemGroupName: string, userId: number, projectID: number) {
+	return async (dispatch: AppDispatch) => {
 
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/updateItemGroupName`, {
@@ -114,7 +115,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string) 
 				itemGroupName
 			})
 		});
-		const result = await res.json();
+		let result = await res.json();
 
 		if (result.success) {
 			dispatch(updateItemGroupNameAction({ itemGroupId, itemGroupName }));
@@ -123,7 +124,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string) 
 				title: 'Data update notification',
 				message: 'Failed to update group item name! 🤥'
 			});
-			dispatch(updateItemGroupNameFailedAction());
+			dispatch(getTable(userId, projectID));
 		}
 	};
 }
@@ -146,7 +147,7 @@ export function getFavorite(userId: number) {
 }
 
 export function insertItem(projectId: number, userId: number) {
-	return async (dispatch: Dispatch) => {
+	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/insertItem`, {
 			method: "POST",
@@ -161,11 +162,7 @@ export function insertItem(projectId: number, userId: number) {
 		const result = await res.json();
 
 		if (result.success) {
-			const res = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/table/${userId}`
-			);
-			const tableResult = await res.json();
-			tableResult.success && dispatch(getTableAction(tableResult.table));
+			dispatch(getTable(userId, projectId));
 		} else {
 			showNotification({
 				title: 'Insert data notification',
@@ -176,7 +173,7 @@ export function insertItem(projectId: number, userId: number) {
 }
 
 export function insertItemGroup(projectId: number, userId: number) {
-	return async (dispatch: Dispatch) => {
+	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/insertItemGroup`, {
 			method: "POST",
@@ -191,11 +188,7 @@ export function insertItemGroup(projectId: number, userId: number) {
 		const result = await res.json();
 
 		if (result.success) {
-			const res = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/table/${userId}`
-			);
-			const tableResult = await res.json();
-			tableResult.success && dispatch(getTableAction(tableResult.table));
+			dispatch(getTable(userId, projectId));
 		} else {
 			showNotification({
 				title: 'Insert data notification',
@@ -205,8 +198,8 @@ export function insertItemGroup(projectId: number, userId: number) {
 	}
 }
 
-export function reorderItems(newOrder: number[], userId: number) {
-	return async (dispatch: Dispatch) => {
+export function reorderItems(newOrder: number[], userId: number, projectID: number) {
+	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/reorderItems`, {
 			method: "PUT",
@@ -225,17 +218,12 @@ export function reorderItems(newOrder: number[], userId: number) {
 				message: 'Failed to reorder items! 🤥'
 			});
 		}
-
-		result = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/${userId}`
-		);
-		const tableResult = await result.json();
-		tableResult.success && dispatch(getTableAction(tableResult.table));
+		dispatch(getTable(userId, projectID));
 	}
 }
 
-export function reorderTypes(newOrder: number[], userId: number) {
-	return async (dispatch: Dispatch) => {
+export function reorderTypes(newOrder: number[], userId: number, projectID: number) {
+	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/reorderTypes`, {
 			method: "PUT",
@@ -254,11 +242,6 @@ export function reorderTypes(newOrder: number[], userId: number) {
 				message: 'Failed to reorder types! 🤥'
 			});
 		}
-
-		result = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/${userId}`
-		);
-		const tableResult = await result.json();
-		tableResult.success && dispatch(getTableAction(tableResult.table));
+		dispatch(getTable(userId, projectID));
 	}
 }

@@ -199,7 +199,7 @@ export function TimeFrame() {
   useEffect(() => {
     let timeout = setTimeout(() => dispatch(toggleLoadingAction(false)), 500)
     return ()=>{clearTimeout(timeout)}
-  }, [loading, zoom])
+  }, [loading, zoom, dispatch])
 
   return (
     <div id='timeline-container'>

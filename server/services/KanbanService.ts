@@ -10,12 +10,14 @@ export class KanbanService {
 				qb.select(
 					'items.id as id',
 					'items.name as name',
+					'type_dates.datetime as date',
 					this.knex.raw('JSON_AGG(type_persons.name) as "membersList"')
 				)
 					.from('items')
 					.join('type_persons', 'type_persons.item_id', 'items.id')
 					.join('type_dates', 'type_dates.item_id', 'items.id')
 					.groupBy('items.id')
+					.groupBy('type_dates.datetime')
 					.where('items.project_id', project_id);
 			})
 			.select(
