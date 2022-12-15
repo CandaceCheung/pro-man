@@ -9,15 +9,26 @@ export function ButtonHub() {
     const dispatch = useAppDispatch()
     const projectSummary = useAppSelector(state => state.table.summary)
     const projectId = useAppSelector(state => state.project.project_id);
-    const personsSummary = projectSummary.filter((project, index, self) =>
-        project.project_id === projectId &&
-        index === self.findIndex((obj) => obj.item_person_name === project.item_person_name))
-    const groupSummary = projectSummary.filter((project, index, self) =>
-        project.project_id === projectId &&
-        index === self.findIndex((obj) => obj.item_group_id === project.item_group_id))
-    const timelineColumn = ['Date', 'Time']
     const userId = useAppSelector(state => state.auth.userId);
     const page = useAppSelector(state => state.project.active_page)
+    const timelineColumn = ['Date', 'Time']
+    const groupSummary = projectSummary.filter((project, index, self) =>
+        project.joined_project_id === projectId &&
+        index === self.findIndex((obj) => obj.item_group_id === project.item_group_id))
+    const personsSummary = projectSummary.filter((project, index, self) =>
+        project.project_id === projectId &&
+        project.type_name === 'persons' &&
+        index === self.findIndex((obj) => obj.item_person_name === project.item_person_name))
+    // const personsSummaryArry = []
+    // const checking = []
+    // for (let item of personsSummary){
+    //     if (!checking.includes(item.user_id)){
+    //         checking.push(item.user_id)
+    //         personsSummaryArry.push({
+                
+    //         })
+    //     }
+    // }
     const onNewItemClick = () => {
         page === 'timeline' && dispatch(triggerTimelineModalAction(true));
         page === 'mainTable' && projectId && userId && dispatch(insertItem(projectId, userId));
@@ -25,6 +36,9 @@ export function ButtonHub() {
     const onNewGroupClick = () => {
         projectId && userId && dispatch(insertItemGroup(projectId, userId));
     }
+
+    
+
     return (
         <div id="button-panel">
             <div id='fixed-button-group'>

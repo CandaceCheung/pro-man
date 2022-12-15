@@ -1,7 +1,7 @@
 import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface TableState {
-    horizontal_order: number,
+    horizontal_order: number | null,
     horizontal_order_id: number,
     item_creator_id: number,
     item_dates_datetime: string,
@@ -15,6 +15,7 @@ export interface TableState {
     item_money_date: string,
     item_name: string,
     item_person_id: number,
+    item_person_user_id: number,
     item_person_name: string,
     item_status_color: string,
     item_status_name: string,
@@ -30,6 +31,7 @@ export interface TableState {
     project_is_deleted: boolean,
     my_favorite_list?: number,
     project_name: string,
+    user_id: number,
     role: string,
     state_id: number,
     transaction_id: number,
@@ -67,6 +69,7 @@ const initialState: CombinedTableState = {
         item_money_date: "",
         item_name: "",
         item_person_id: 0,
+        item_person_user_id: 0,
         item_person_name: "",
         item_status_color: "",
         item_status_name: "",
@@ -82,6 +85,7 @@ const initialState: CombinedTableState = {
         project_is_deleted: false,
         my_favorite_list: undefined,
         project_name: "",
+        user_id: 0,
         role: "member",
         state_id: 0,
         transaction_id: 0,
