@@ -15,6 +15,17 @@ export const kanbanReducer = (
                 ...state,
                 statusList: action.statusList,
             };
+
+        case "KANBAN/ADD":
+            return {
+                ...state,
+
+            };
+            
+        case "KANBAN/FETCH_FAIL":
+            console.error("Failed");
+            return state;
+
         default:
             return state;
     }
