@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from '@dnd-kit/utilities';
 import { itemCellsElement } from "../../pages/MainTable";
+import { Persons } from "./Persons";
 import { useStyles } from "./styles";
 
 export interface TableRowProps {
@@ -35,7 +36,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow}: TableRowPr
                         className={cx(classes.tableCell, classes.persons)}
                         key={"cell" + cellIndex}
                     >
-                        {cell.item_person_name}
+                        <Persons itemPersonsNames={cell.item_person_name!} itemPersonsIds={cell.item_person_user_id!} />
                     </div>
                 )
             case "dates":

@@ -11,6 +11,9 @@ import { KanbanService } from './services/KanbanService';
 import { kanbanRoutes } from './routes/kanbanRoutes';
 import { KanbanController } from './controllers/kanbanControllers';
 import cors from 'cors';
+import { InvitationService } from './services/invitationService';
+import { InvitationController } from './controllers/invitationController';
+import { invitationRoutes } from './routes/invitationRoutes';
 
 dotenv.config();
 
@@ -29,12 +32,15 @@ export const tableController = new TableController(tableService);
 export const kanbanService = new KanbanService(knex);
 export const kanbanController = new KanbanController(kanbanService);
 
+export const invitationService = new InvitationService(knex);
+export const invitationController = new InvitationController(invitationService);
 
 app.use(express.json(), cors());
 
 app.use('/auth', authRoutes());
 app.use('/table', tableRoutes());
 app.use('/kanban', kanbanRoutes());
+app.use('/invitation', invitationRoutes());
 
 const PORT = 8080;
 app.listen(PORT, () => {

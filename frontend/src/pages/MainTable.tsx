@@ -360,7 +360,6 @@ export function MainTable() {
                                                         />
                                                     )
                                                 }
-
                                             </SortableContext>
                                         </DndContext >
                                     </div>
