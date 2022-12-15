@@ -7,12 +7,28 @@ export class TableController {
     getTable = async (req: Request, res: Response) => {
         try {
             const userID = req.params.userID
-
-            const result = await this.tableService.getTableInfo(parseInt(userID));
+            const projectID = req.params.projectID
+            console.log(req.params)
+            const result = await this.tableService.getTableInfo(parseInt(userID), parseInt(projectID));
 
             res.json({
                 success: true,
                 table: result
+            });
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Get Data." });
+        }
+    }
+
+    getTableList = async (req: Request, res: Response) => {
+        try {
+            const userID = req.params.userID
+            const result = await this.tableService.getTableList(parseInt(userID));
+
+            res.json({
+                success: true,
+                list: result
             });
         } catch (e) {
             console.error(e);
@@ -30,7 +46,6 @@ export class TableController {
                 favorite: result
             });
         } catch (e) {
-            console.log(req.params)
             console.error(e);
             res.status(500).json({ msg: "[TAB] Fail to Get Data." });
         }

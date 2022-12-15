@@ -4,8 +4,9 @@ import { tableController } from "../app";
  export const tableRoutes = () => {
     const tableRoutes = express.Router();
 
-    tableRoutes.get('/:userID', tableController.getTable);
+    tableRoutes.get('/:userID&:projectID', tableController.getTable);
     tableRoutes.get('/favorite/:userID', tableController.getFavorite);
+    tableRoutes.get('/list/:userID', tableController.getTableList);
     tableRoutes.put('/updateTimeline', tableController.updateTimeline);
     tableRoutes.put('/updateDateline', tableController.updateDateline);
     tableRoutes.put('/updateItemGroupName', tableController.updateItemGroupName);

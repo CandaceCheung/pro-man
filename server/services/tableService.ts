@@ -5,7 +5,7 @@ import { getRandomColor } from "../seeds/users-info";
 export class TableService {
     constructor(private knex: Knex) { }
 
-    async getTableInfo(userID: number) {
+    async getTableInfo(userID: number, projectID: number) {
         const projectsDetail = await this.knex.select(
             'projects.name as project_name',
             'projects.id as project_id',
@@ -67,6 +67,7 @@ export class TableService {
                     .orOn('type_persons.type_id', '=', 'types.id')
             })
             .where("users.id", userID)
+            .where("projects.id", projectID)
             .where("items.is_deleted", false)
             .where("projects.is_deleted", false)
             .orderBy("project_id", 'asc')
@@ -75,6 +76,22 @@ export class TableService {
             .orderBy("horizontal_order", 'asc');
 
         return projectsDetail
+    }
+
+    async getTableList(userId: number) {
+        const tableList = await this.knex.select(
+            'projects.creator_id as creator_id',
+            'projects.id as project_id',
+            'projects.name as project_name',
+            'members.id as member_table_id',
+            'users.username as username'
+        )
+            .from('members')
+            .join('users','members.user_id','=','users.id')
+            .join('projects', 'members.project_id', '=', 'projects.id')
+            .where('members.user_id', '=', userId)
+
+        return tableList
     }
 
     async getFavorite(userId: number) {

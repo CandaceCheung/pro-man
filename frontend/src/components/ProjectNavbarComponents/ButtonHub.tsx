@@ -38,8 +38,7 @@ export function ButtonHub() {
     // timeline logic
 
     const onNewItemClick = () => {
-        page === 'timeline' && dispatch(triggerTimelineModalAction(true));
-        page === 'mainTable' && projectId && userId && dispatch(insertItem(projectId, userId));
+        projectId && userId && dispatch(insertItem(projectId, userId));
     }
     const onNewGroupClick = () => {
         projectId && userId && dispatch(insertItemGroup(projectId, userId));

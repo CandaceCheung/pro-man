@@ -52,7 +52,7 @@ export function TimelineButton() {
                     <Slider
                         size="lg"
                         value={itemHeight}
-                        min={40}
+                        min={30}
                         max={100}
                         onChange={onSliderChange}
                         marks={[

@@ -7,7 +7,6 @@ export function FavoriteProject() {
     const dispatch = useAppDispatch()
     const userId = useAppSelector((state) => state.auth.userId);
 
-    console.log (projectSummary)
     return (
         <div>
             <h2>My Favorite Projects</h2>

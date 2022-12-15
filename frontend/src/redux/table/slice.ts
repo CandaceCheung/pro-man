@@ -47,10 +47,19 @@ export type MyFavoriteListState = {
     project_name: string
 }[]
 
+export type MyTableListState = {
+    creator_id?: number
+    project_id?: number
+    member_table_id?: number
+    username: string
+    project_name: string
+}[]
+
 export interface TableStateArray extends Array<TableState> { }
-export interface CombinedTableState{
+export interface CombinedTableState {
     summary: TableStateArray
     my_favorite_list: MyFavoriteListState
+    project_list: MyTableListState
 }
 
 const initialState: CombinedTableState = {
@@ -93,6 +102,13 @@ const initialState: CombinedTableState = {
         type_name: "persons",
         element_name: ''
     }],
+    project_list: [{
+        creator_id: undefined,
+        project_id: undefined,
+        member_table_id: undefined,
+        username: '',
+        project_name: ""
+    }],
     my_favorite_list: [{
         creator_id: undefined,
         project_id: undefined,
@@ -102,10 +118,10 @@ const initialState: CombinedTableState = {
 }
 
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> =
-    (state, action) => {state.summary = action.payload}
+    (state, action) => { state.summary = action.payload }
 const getTableFailed: CaseReducer<CombinedTableState, PayloadAction> =
-    (state, action) => {state = state}
-const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timelineID: number, startTime: number, endTime: number, name: string, color : string, typeId: number }>> =
+    (state, action) => { state = state }
+const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timelineID: number, startTime: number, endTime: number, name: string, color: string, typeId: number }>> =
     (state, action) => {
         for (let item of state.summary) {
             if (item.item_times_id === action.payload.timelineID) {
@@ -113,38 +129,40 @@ const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timeli
                 item.item_times_end_date = action.payload?.endTime
                 item.item_times_color = action.payload?.color
             }
-            if (item.horizontal_order_id === action.payload.typeId){
+            if (item.horizontal_order_id === action.payload.typeId) {
                 item.element_name = action.payload?.name
             }
         }
     }
-const updateDatelineItem: CaseReducer<CombinedTableState, PayloadAction<{ datelineID: number, date: number, name:string, color: string, typeId: number }>> =
+const updateDatelineItem: CaseReducer<CombinedTableState, PayloadAction<{ datelineID: number, date: number, name: string, color: string, typeId: number }>> =
     (state, action) => {
         for (let item of state.summary) {
             if (item.item_datetime_id === action.payload.datelineID) {
                 item.item_dates_datetime = new Date(action.payload.date).toDateString()
                 item.item_datetime_color = action.payload?.color
             }
-            if (item.horizontal_order_id === action.payload.typeId){
+            if (item.horizontal_order_id === action.payload.typeId) {
                 item.element_name = action.payload?.name
             }
         }
     }
 
 const getFavorite: CaseReducer<CombinedTableState, PayloadAction<MyFavoriteListState>> =
-    (state, action) => {state.my_favorite_list = action.payload}
-const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{itemGroupId: number, itemGroupName: string}>> =
-(state, action) =>  {
-    for (let item of state.summary){
-        if (item.item_group_id === action.payload.itemGroupId){
-            item.item_group_name = action.payload.itemGroupName;
+    (state, action) => { state.my_favorite_list = action.payload }
+const getTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableListState>> =
+    (state, action) => { state.project_list = action.payload }
+const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemGroupId: number, itemGroupName: string }>> =
+    (state, action) => {
+        for (let item of state.summary) {
+            if (item.item_group_id === action.payload.itemGroupId) {
+                item.item_group_name = action.payload.itemGroupName;
+            }
         }
     }
-}
 const updateItemGroupNameFailed: CaseReducer<CombinedTableState, PayloadAction> =
-(state, action) =>  {
-    state.summary[0] = {...state.summary[0]};
-}
+    (state, action) => {
+        state.summary[0] = { ...state.summary[0] };
+    }
 
 const tableSlice = createSlice({
     name: 'table',
@@ -156,7 +174,9 @@ const tableSlice = createSlice({
         updateDatelineItem,
         getFavorite,
         updateItemGroupName,
-        updateItemGroupNameFailed
+        updateItemGroupNameFailed,
+        getTableList,
+
     },
 })
 
@@ -167,7 +187,8 @@ export const {
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
     updateItemGroupName: updateItemGroupNameAction,
-    updateItemGroupNameFailed: updateItemGroupNameFailedAction
+    updateItemGroupNameFailed: updateItemGroupNameFailedAction,
+    getTableList: getTableListAction
 } = tableSlice.actions
 
 export default tableSlice.reducer
