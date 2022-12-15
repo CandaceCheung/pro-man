@@ -5,6 +5,8 @@ export const kanbanRoutes = () => {
     const kanbanRoutes = express.Router();
 
     kanbanRoutes.get('/:projectId', kanbanController.getKanban)
+    kanbanRoutes.get('/member/:projectId', kanbanController.getMemberList)
+    kanbanRoutes.get('/group/:projectId', kanbanController.getGroupList)
 
     return kanbanRoutes;
 }
