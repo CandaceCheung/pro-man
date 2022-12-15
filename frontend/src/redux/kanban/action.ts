@@ -7,16 +7,17 @@ export function setKanbanInfo(statusList: Status[]){
     };
 }
 
-export function addKanbanItem(itemList: Item) {
+export function addKanbanItem(statusId: number, item: Item) {
     return {
         type: "KANBAN/ADD" as const,
-        itemList,
+        statusId,
+        item,
     };
 }
 
 export function failKanbanAction() {
     return {
-        type: "KANBAN/FETCH_FAIL" as const
+        type: "KANBAN/FETCH_FAIL" as const,
     };
 }
 
