@@ -13,7 +13,7 @@ import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 import { getFavorite, getTableList } from "./redux/table/thunk";
-import { getKanbanItems } from "./redux/kanban/thunk";
+import { getGroup, getKanbanItems, getMember } from "./redux/kanban/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -36,9 +36,12 @@ function App() {
 
     useEffect(() => {
         if (projectId !== null){
-            dispatch(getKanbanItems(projectId))
+            dispatch(getKanbanItems(projectId));
+            dispatch(getMember(projectId));
+            dispatch(getGroup(projectId));
         }
     },[projectId,dispatch]);
+
 
     return (
         <div className="App">
