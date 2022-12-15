@@ -23,6 +23,7 @@ export class TableService {
             'item_groups.name as item_group_name',
             'type_persons.name as item_person_name',
             'type_persons.id as item_person_id',
+            'type_persons.user_id as item_person_user_id',
             'type_dates.datetime as item_dates_datetime',
             'type_dates.color as item_datetime_color',
             'type_dates.id as item_datetime_id',

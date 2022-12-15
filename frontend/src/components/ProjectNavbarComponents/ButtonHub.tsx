@@ -17,18 +17,19 @@ export function ButtonHub() {
         index === self.findIndex((obj) => obj.item_group_id === project.item_group_id))
     const personsSummary = projectSummary.filter((project, index, self) =>
         project.project_id === projectId &&
-        project.type_name === 'persons' &&
-        index === self.findIndex((obj) => obj.item_person_name === project.item_person_name))
-    // const personsSummaryArry = []
-    // const checking = []
-    // for (let item of personsSummary){
-    //     if (!checking.includes(item.user_id)){
-    //         checking.push(item.user_id)
-    //         personsSummaryArry.push({
-                
-    //         })
-    //     }
-    // }
+        project.type_name === 'persons')
+    const personsSummaryArr = []
+    const checking: number[] = []
+    for (let item of personsSummary){
+        if (!checking.includes(item.item_person_user_id)){
+            checking.push(item.item_person_user_id)
+            personsSummaryArr.push({
+                name: item.item_person_name,
+                userId: item.item_person_user_id
+            })
+        }
+    }
+    console.log(checking)
     const onNewItemClick = () => {
         page === 'timeline' && dispatch(triggerTimelineModalAction(true));
         page === 'mainTable' && projectId && userId && dispatch(insertItem(projectId, userId));
@@ -51,8 +52,8 @@ export function ButtonHub() {
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by person</Menu.Label>
-                        {page === 'timeline' && personsSummary.map((person, index) => {
-                            return <Menu.Item key={index} value={person.item_person_id} icon={<IconUser size={14} />}>{person.item_person_name}</Menu.Item>
+                        {page === 'timeline' && personsSummaryArr.map((person, index) => {
+                            return <Menu.Item key={index} value={person.userId} icon={<IconUser size={14} />}>{person.name}</Menu.Item>
                         })}
                         
                     </Menu.Dropdown>
