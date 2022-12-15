@@ -59,7 +59,7 @@ const selectData = [
     {
         value: "group 2",
         label: "add item in group 1",
-    }
+    },
 ];
 
 export function StatusColumn(props: StatusProps) {
@@ -101,6 +101,7 @@ export function StatusColumn(props: StatusProps) {
                     <div>
                         {props.itemsList.map((item) => (
                             <ItemCard
+                                key={item.id}
                                 id={item.id}
                                 name={item.name}
                                 date={item.date}
