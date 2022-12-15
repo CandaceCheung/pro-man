@@ -19,7 +19,8 @@ export interface itemCellsElement {
     item_dates_datetime?: TableState["item_dates_datetime"],
     item_money_cashflow?: TableState["item_money_cashflow"],
     item_money_date?: TableState["item_money_date"],
-    item_person_name?: TableState["item_person_name"],
+    item_person_name?: Array<TableState["item_person_name"]>,
+    item_person_user_id?: Array<TableState["item_person_user_id"]>,
     item_status_color?: TableState["item_status_color"],
     item_status_name?: TableState["item_status_name"],
     item_text_text?: TableState["item_text_text"],
@@ -71,31 +72,6 @@ export function MainTable() {
                     type_name: cell.type_name,
                     element_name: cell.element_name
                 }
-                switch (cell.type_name) {
-                    case "dates":
-                        itemCell["item_dates_datetime"] = cell.item_dates_datetime;
-                        break;
-                    case "money":
-                        itemCell["item_money_cashflow"] = cell.item_money_cashflow;
-                        itemCell["item_money_date"] = cell.item_money_date;
-                        break;
-                    case "persons":
-                        itemCell["item_person_name"] = cell.item_person_name;
-                        break;
-                    case "status":
-                        itemCell["item_status_color"] = cell.item_status_color;
-                        itemCell["item_status_name"] = cell.item_status_name;
-                        break;
-                    case "text":
-                        itemCell["item_text_text"] = cell.item_text_text;
-                        break;
-                    case "times":
-                        itemCell["item_times_start_date"] = cell.item_times_start_date;
-                        itemCell["item_times_end_date"] = cell.item_times_end_date;
-                        break;
-                    default:
-                        break;
-                }
 
                 if (itemCells[itemGroupID]) {
                     if (!itemCells[itemGroupID][itemID]) {
@@ -114,7 +90,44 @@ export function MainTable() {
                     itemGroupsInputValue.push(cell.item_group_name);
                     itemsOrders[itemGroupID] = [itemID];
                 }
-                itemCells[itemGroupID][itemID][typeID] = itemCell;
+
+                switch (cell.type_name) {
+                    case "dates":
+                        itemCell["item_dates_datetime"] = cell.item_dates_datetime;
+                        itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        break;
+                    case "money":
+                        itemCell["item_money_cashflow"] = cell.item_money_cashflow;
+                        itemCell["item_money_date"] = cell.item_money_date;
+                        itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        break;
+                    case "persons":
+                        if (itemCells[itemGroupID][itemID][typeID]) {
+                            itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(cell.item_person_user_id);
+                            itemCells[itemGroupID][itemID][typeID].item_person_name!.push(cell.item_person_name);
+                        } else {
+                            itemCell.item_person_user_id = [cell.item_person_user_id];
+                            itemCell.item_person_name = [cell.item_person_name];
+                            itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        }
+                        break;
+                    case "status":
+                        itemCell["item_status_color"] = cell.item_status_color;
+                        itemCell["item_status_name"] = cell.item_status_name;
+                        itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        break;
+                    case "text":
+                        itemCell["item_text_text"] = cell.item_text_text;
+                        itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        break;
+                    case "times":
+                        itemCell["item_times_start_date"] = cell.item_times_start_date;
+                        itemCell["item_times_end_date"] = cell.item_times_end_date;
+                        itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        break;
+                    default:
+                        break;
+                }
 
                 if (!typesOrders[itemGroupID]) {
                     typesOrderSet = new Set();
