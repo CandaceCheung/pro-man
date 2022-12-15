@@ -18,7 +18,7 @@ export const kanbanReducer = (
             };
 
         case "KANBAN/ADD":
-            //immer
+            //immer applied
             const newStatus = produce(state, (draft) => {
                 const targetStatus = draft.statusList.find((status) => {
                     if (action.statusId === status.id) {

@@ -10,7 +10,7 @@ export class KanbanService {
 				qb.select(
 					'items.id as id',
 					'items.name as name',
-					this.knex.raw('JSON_AGG(type_persons.name) as membersList')
+					this.knex.raw('JSON_AGG(type_persons.name) as "membersList"')
 				)
 					.from('items')
 					.join('type_persons', 'type_persons.item_id', 'items.id')
@@ -22,7 +22,7 @@ export class KanbanService {
 				'states.id as id',
 				'states.name as name',
 				'states.color as color',
-				this.knex.raw('JSON_AGG(items.*) as itemsLists')
+				this.knex.raw('JSON_AGG(items.*) as "itemsList"')
 			)
 			.from('states')
 			.join('projects', 'states.project_id', '=', 'projects.id')
@@ -60,7 +60,7 @@ export class KanbanService {
 			});
 
 			addDate;
-			
+
 			const addMember = await txn .insert({user_id: userId});
 
 			addMember;
