@@ -95,6 +95,7 @@ export function MainTable() {
                         break;
                     default:
                         break;
+                        
                 }
 
                 if (itemCells[itemGroupID]) {
