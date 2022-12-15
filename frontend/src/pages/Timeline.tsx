@@ -70,6 +70,8 @@ export function TimeFrame() {
   const timelineDetail = unfilteredTimelineDetails.filter((project)=> sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project)=> sortByGroupId ? project.item_group_id === sortByGroupId : project)
   const datelineDetail = unfilteredDatelineDetails.filter((project)=> sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project)=> sortByGroupId ? project.item_group_id === sortByGroupId : project)
 
+  console.log(unfilteredTimelineDetails)
+
   const minZoom = 1 * 24 * 60 * 60 * 1000;
   const maxZoom = 31 * 24 * 60 * 60 * 1000;
   const defaultTimeStart = moment().startOf('day');
@@ -80,8 +82,8 @@ export function TimeFrame() {
   let items: ItemState = []
   let dateItems: ItemState = []
 
+  let checking: number[] = []
   for (let item of timelineDetail) {
-    let checking: number[] = []
     if (!checking.includes(item.item_id)) {
       checking.push(item.item_id)
       groups.push({
@@ -93,50 +95,58 @@ export function TimeFrame() {
     }
   }
 
+  checking = []
   for (let item of timelineDetail) {
-    items.push({
-      id: parseInt('1' + item.item_times_id),
-      group: item.item_id,
-      title: item.element_name,
-      type_id: item.horizontal_order_id,
-      start_time: item.item_times_start_date,
-      end_time: item.item_times_end_date,
-      color: item.item_times_color,
-      canMove: true,
-      canChangeGroup: false,
-      itemProps: {
-        'aria-hidden': false,
-        className: 'time-block',
-        style: {
-          background: item.item_times_color,
-          borderRadius: '5px',
-          border: 'none',
+    if (!checking.includes(item.item_times_id)) {
+      checking.push(item.item_times_id)
+      items.push({
+        id: parseInt('1' + item.item_times_id),
+        group: item.item_id,
+        title: item.element_name,
+        type_id: item.horizontal_order_id,
+        start_time: item.item_times_start_date,
+        end_time: item.item_times_end_date,
+        color: item.item_times_color,
+        canMove: true,
+        canChangeGroup: false,
+        itemProps: {
+          'aria-hidden': false,
+          className: 'time-block',
+          style: {
+            background: item.item_times_color,
+            borderRadius: '5px',
+            border: 'none',
+          }
         }
-      }
-    })
+      })
+    }
   }
 
+  checking = []
   for (let item of datelineDetail) {
-    dateItems.push({
-      id: parseInt('2' + item.item_datetime_id),
-      group: item.item_id,
-      title: item.element_name,
-      type_id: item.horizontal_order_id,
-      start_time: new Date(item.item_dates_datetime).getTime(),
-      end_time: new Date(item.item_dates_datetime).getTime() + 8.64e+7,
-      color: item.item_datetime_color,
-      canMove: true,
-      canResize: false,
-      canChangeGroup: false,
-      itemProps: {
-        'aria-hidden': false,
-        className: 'date-block',
-        style: {
-          background: item.item_datetime_color,
-          border: '4px solid darkgrey'
+    if (!checking.includes(item.item_datetime_id)) {
+      checking.push(item.item_datetime_id)
+      dateItems.push({
+        id: parseInt('2' + item.item_datetime_id),
+        group: item.item_id,
+        title: item.element_name,
+        type_id: item.horizontal_order_id,
+        start_time: new Date(item.item_dates_datetime).getTime(),
+        end_time: new Date(item.item_dates_datetime).getTime() + 8.64e+7,
+        color: item.item_datetime_color,
+        canMove: true,
+        canResize: false,
+        canChangeGroup: false,
+        itemProps: {
+          'aria-hidden': false,
+          className: 'date-block',
+          style: {
+            background: item.item_datetime_color,
+            border: '4px solid darkgrey'
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   let lastEndedTime = 0
