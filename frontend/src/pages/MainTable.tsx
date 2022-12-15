@@ -221,7 +221,7 @@ export function MainTable() {
             const newIndex = itemsOrdersState[item_group_id].indexOf(over.id);
             const nextItemOrdersState = produce(itemsOrdersState, draftState => {
                 draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
-            })
+            });
             setItemsOrdersState(nextItemOrdersState);
             userId && dispatch(reorderItems(nextItemOrdersState[item_group_id], userId, projectID));
         }
@@ -234,7 +234,7 @@ export function MainTable() {
             const newIndex = typesOrdersState[item_group_id].indexOf(over.id);
             const nextTypesOrdersState = produce(typesOrdersState, draftState => {
                 draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
-            })
+            });
             setTypesOrdersState(nextTypesOrdersState);
             userId && dispatch(reorderTypes(nextTypesOrdersState[item_group_id], userId, projectID));
         }
