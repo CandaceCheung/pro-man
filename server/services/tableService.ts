@@ -277,6 +277,7 @@ export class TableService {
 
             await txn.insert({
                 name: username,
+                user_id: userId,
                 type_id: typesId_persons,
                 item_id: itemId
             }).into("type_persons");
