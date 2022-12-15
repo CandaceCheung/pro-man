@@ -39,7 +39,8 @@ export class KanbanService {
 		projectId: number,
 		itemName: string,
 		groupId: number,
-		date: number
+		date: number, 
+		userId: number
 	) {
 		const txn = await this.knex.transaction();
 		try {
@@ -59,7 +60,11 @@ export class KanbanService {
 			});
 
 			addDate;
-			// const addMember = await txn .insert({name})
+			
+			const addMember = await txn .insert({user_id: userId});
+
+			addMember;
+
 		} catch (e) {
 			await txn.rollback();
 			return;
