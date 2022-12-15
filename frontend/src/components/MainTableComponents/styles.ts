@@ -227,5 +227,4 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             cursor: "grabbing"
         }
     }
-
 }));

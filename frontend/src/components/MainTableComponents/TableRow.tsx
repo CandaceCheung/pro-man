@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from '@dnd-kit/utilities';
 import { itemCellsElement } from "../../pages/MainTable";
+import { Persons } from "./Persons";
 import { useStyles } from "./styles";
 
 export interface TableRowProps {
@@ -8,10 +9,11 @@ export interface TableRowProps {
     rowOrder: number[],
     cellDetails: {[key in number]: itemCellsElement},
     color: string,
-    lastRow: boolean
+    lastRow: boolean,
+    personsColors: {[key in string]: string}
 }
 
-export function TableRow({id, rowOrder, cellDetails, color, lastRow}: TableRowProps) {
+export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColors}: TableRowProps) {
     const {
         attributes,
         listeners,
@@ -35,7 +37,11 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow}: TableRowPr
                         className={cx(classes.tableCell, classes.persons)}
                         key={"cell" + cellIndex}
                     >
-                        {cell.item_person_name}
+                        <Persons 
+                            itemPersonsNames={cell.item_person_name!} 
+                            itemPersonsIds={cell.item_person_user_id!} 
+                            personsColors={personsColors}
+                        />
                     </div>
                 )
             case "dates":
