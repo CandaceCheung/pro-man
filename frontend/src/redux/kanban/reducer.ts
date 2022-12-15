@@ -1,5 +1,6 @@
 import { KanbanAction } from "./action";
 import { KanbanState } from "./state";
+import produce from "immer";
 
 const initState: KanbanState = {
     statusList: [],
@@ -17,11 +18,18 @@ export const kanbanReducer = (
             };
 
         case "KANBAN/ADD":
-            return {
-                ...state,
+            //immer
+            const newStatus = produce(state, (draft) => {
+                const targetStatus = draft.statusList.find((status) => {
+                    if (action.statusId === status.id) {
+                        return true;
+                    }
+                });
+                targetStatus?.itemsList.push(action.item);
+            });
 
-            };
-            
+            return newStatus;
+
         case "KANBAN/FETCH_FAIL":
             console.error("Failed");
             return state;
