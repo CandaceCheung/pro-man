@@ -226,6 +226,20 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         "&:active": {
             cursor: "grabbing"
         }
+    },
+
+    personsComponent: {
+        position: "relative",
+        borderRadius: 50,
+        width: 30,
+        height: 30,
+        backgroundColor: theme.colors.personsTypeComponentColor[0],
+        color: "#FFF",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: 15,
+        fontWeight: "bold"
     }
 
 }));
