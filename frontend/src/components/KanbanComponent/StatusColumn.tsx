@@ -9,8 +9,16 @@ import {
     UnstyledButton,
     createStyles,
     Input,
+    MultiSelect,
+    Button,
 } from "@mantine/core";
-import { IconCalendarEvent, IconGripVertical, IconPlus, IconUser } from "@tabler/icons";
+import { DatePicker } from "@mantine/dates";
+import {
+    IconCalendarEvent,
+    IconGripVertical,
+    IconPlus,
+    IconUser,
+} from "@tabler/icons";
 import { useState } from "react";
 import { Status } from "../../redux/kanban/state";
 import { ItemCard } from "./ItemCard";
@@ -42,6 +50,17 @@ const useStyles = createStyles((theme, color: string) => ({
         },
     },
 }));
+
+const selectData = [
+    {
+        value: "group 1",
+        label: "add item in group 1",
+    },
+    {
+        value: "group 2",
+        label: "add item in group 1",
+    }
+];
 
 export function StatusColumn(props: StatusProps) {
     const [opened, setOpened] = useState(false);
@@ -110,13 +129,28 @@ export function StatusColumn(props: StatusProps) {
                         <Group position="left" m={6}>
                             <Group>
                                 <Text>People</Text>
-                                <Input variant="filled" icon={<IconUser size={16} />} ></Input>
+                                <Input
+                                    variant="filled"
+                                    icon={<IconUser size={16} />}
+                                ></Input>
                             </Group>
                             <Group>
                                 <Text>Date</Text>
-                                <Input variant="filled" icon={<IconCalendarEvent size={16} />} ></Input>
+                                <DatePicker
+                                    label="Event date"
+                                    withAsterisk
+                                    icon={<IconCalendarEvent size={16} />}
+                                />
                             </Group>
-                            
+                            <Group>
+                                <Text>Groups</Text>
+                                <MultiSelect
+                                    data={selectData}
+                                    placeholder="Scroll to see all options"
+                                    maxDropdownHeight={160}
+                                />
+                            </Group>
+                            <Button color="cyan">Add item</Button>
                         </Group>
                     </Modal>
                 </>
