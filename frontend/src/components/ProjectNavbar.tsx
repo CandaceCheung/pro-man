@@ -49,7 +49,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
 
     useEffect(()=>{
         dispatch(getTable(userId as number, projectId as number))
-    }, [projectId])
+    }, [projectId, dispatch, userId])
 
     return (
         <div id="project-navbar">

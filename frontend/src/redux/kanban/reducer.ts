@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { KanbanAction } from "./action";
 import { KanbanState } from "./state";
 import produce from "immer";

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { AppDispatch } from "../../store";
 import { addKanbanItem, failKanbanAction, setKanbanInfo } from "./action";
 import { Status } from "./state";
