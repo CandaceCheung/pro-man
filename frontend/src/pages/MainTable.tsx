@@ -46,6 +46,8 @@ export function MainTable() {
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
+    const [personsColors, setPersonsColors] = useState<{[key in string]: string}>({});
+
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
 
@@ -62,6 +64,9 @@ export function MainTable() {
         let itemsOrders: { [keys in number]: number[] } = {};
         let typesOrders: { [keys in number]: number[] } = {};
         let typesOrderSet: Set<number> = new Set();
+
+        let personsColorsTemp: {[key in string]: string} = {};
+
         for (const cell of tableSummary) {
             if (cell.project_id === projectID) {
                 const itemGroupID = cell.item_group_id;
@@ -111,6 +116,10 @@ export function MainTable() {
                             itemCell.item_person_name = [cell.item_person_name];
                             itemCells[itemGroupID][itemID][typeID] = itemCell;
                         }
+                        if (!personsColorsTemp[cell.item_person_name]) {
+                            const numberOfExistingPersons =  Object.keys(personsColorsTemp).length;
+                            personsColorsTemp[cell.item_person_name] = theme.colors.personsTypeComponentColor[numberOfExistingPersons % theme.colors.personsTypeComponentColor.length];
+                        }
                         break;
                     case "status":
                         itemCell["item_status_color"] = cell.item_status_color;
@@ -145,6 +154,8 @@ export function MainTable() {
 
         setItemsOrdersState(itemsOrders);
         setTypesOrdersState(typesOrders);
+
+        setPersonsColors(personsColorsTemp);
     }, [tableSummary, projectID]);
 
     const toggleItemGroupCollapsed = (index: number) => {
@@ -357,6 +368,7 @@ export function MainTable() {
                                                             cellDetails={itemCellsState[item_group_id][itemId]}
                                                             color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
                                                             lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
+                                                            personsColors={personsColors}
                                                         />
                                                     )
                                                 }

@@ -37,6 +37,6 @@ export const themeObject: MantineThemeOverride = {
         groupTag: ["#037F4C", "#E2445C", "#808080", "#579BFC", "#BB3354", "#FF158A", "#FF5AC4", "#A25DDC", "#FDAB3D"],
         borderColor: ["#ddd"],
         boardContentBackgroundColor: ["#F4F5F8"],
-        personsTypeComponentColor: ["#FB225D", "#FFACE1","#000000"]
+        personsTypeComponentColor: ["#FB225D", "#FFACE1","#C4C4C4"]
     },
 }
