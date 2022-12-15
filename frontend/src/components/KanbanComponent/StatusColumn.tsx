@@ -104,7 +104,7 @@ export function StatusColumn(props: StatusProps) {
                                 key={item.id}
                                 id={item.id}
                                 name={item.name}
-                                date={item.date}
+                                date={(item.date).slice(0,-15)}
                                 membersList={item.membersList}
                             />
                         ))}
