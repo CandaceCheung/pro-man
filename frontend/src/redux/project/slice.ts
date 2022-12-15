@@ -20,6 +20,7 @@ export interface ActiveProjectState {
     time_line_stack_item: boolean
     update_time_line_modal_opened: boolean
     target_element_id: number
+    sort_by_person_id: number | undefined
 }
 
 const initialState: ActiveProjectState = {
@@ -37,7 +38,8 @@ const initialState: ActiveProjectState = {
     time_line_modal_opened: false,
     time_line_stack_item: true,
     update_time_line_modal_opened: false,
-    target_element_id: 0
+    target_element_id: 0,
+    sort_by_person_id: undefined,
 }
 
 const setActiveProject : CaseReducer<ActiveProjectState, PayloadAction<number>> =
@@ -66,6 +68,8 @@ const toggleLoading : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.toggle_loading = action.payload} 
 const toggleStackItem : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_stack_item = action.payload} 
+const setSortByPersonId : CaseReducer<ActiveProjectState, PayloadAction<number>> =
+(state, action) =>  {state.sort_by_person_id = action.payload} 
 
 
 const projectSlice = createSlice({
@@ -85,6 +89,7 @@ const projectSlice = createSlice({
         setTargetUpdateElement,
         toggleLoading,
         toggleStackItem,
+        setSortByPersonId,
     },
 })
 
@@ -102,6 +107,7 @@ export const {
     setTargetUpdateElement: setTargetUpdateElementAction,
     toggleLoading: toggleLoadingAction,
     toggleStackItem: toggleStackItemAction,
+    setSortByPersonId: setSortByPersonIdAction,
 } = projectSlice.actions
 
 export default projectSlice.reducer

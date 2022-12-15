@@ -50,8 +50,6 @@ export function TimeFrame() {
   const dispatch = useAppDispatch()
   const targetProjectId = useAppSelector(state => state.project.project_id)
   const projectSummary = useAppSelector(state => state.table.summary)
-  const timelineDetail = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times').sort((a, b) => a.item_group_id - b.item_group_id)
-  const datelineDetail = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'dates').sort((a, b) => a.item_group_id - b.item_group_id)
   const [toggle, setToggle] = useState<boolean | null>(false)
   const autofit = useAppSelector(state => state.project.time_line_autofit)
   const zoom = useAppSelector(state => state.project.time_line_view)
@@ -59,15 +57,32 @@ export function TimeFrame() {
   const endPointAnchor = useAppSelector(state => state.project.time_line_end_anchor)
   const now = useAppSelector(state => state.project.time_line_now)
   const show = useAppSelector(state => state.project.time_line_show_marker)
+  const loading = useAppSelector(state=>state.project.toggle_loading)
+  const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
+  const stack = useAppSelector(state=> state.project.time_line_stack_item)
+  const sortByPersonId = useAppSelector(state=> state.project.sort_by_person_id)
+  let timelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times').sort((a, b) => a.item_group_id - b.item_group_id)
+  let datelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'dates').sort((a, b) => a.item_group_id - b.item_group_id)
+  const [timelineDetail, setTimelineDetail] = useState(timelineDetails)
+  const [datelineDetail, setDatelineDetail] = useState(datelineDetails)
+
+
+  useEffect(()=>{
+    if (!sortByPersonId){
+      setTimelineDetail(timelineDetails)
+      setDatelineDetail(datelineDetails)
+    }
+    if (sortByPersonId){
+      setTimelineDetail(timelineDetail => timelineDetail.filter((project)=>project.item_person_user_id === sortByPersonId))
+      setDatelineDetail(datelineDetail => datelineDetail.filter((project)=>project.item_person_user_id === sortByPersonId))
+    }
+  },[sortByPersonId])
+
   const minZoom = 1 * 24 * 60 * 60 * 1000;
   const maxZoom = 31 * 24 * 60 * 60 * 1000;
   const defaultTimeStart = moment().startOf('day');
   const defaultTimeEnd = moment().add(1, zoom);
   const interval = 24 * 60 * 60 * 1000;
-  const loading = useAppSelector(state=>state.project.toggle_loading)
-  const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
-  const stack = useAppSelector(state=> state.project.time_line_stack_item)
-  
   
   let groups: GroupState = []
   let items: ItemState = []
