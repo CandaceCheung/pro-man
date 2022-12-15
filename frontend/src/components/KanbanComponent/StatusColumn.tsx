@@ -68,6 +68,7 @@ export function StatusColumn(props: StatusProps) {
     const [opened, setOpened] = useState(false);
     const { classes, theme } = useStyles(props.color);
     const memberList = useAppSelector((state) => state.kanban.memberList);
+    const groupList = useAppSelector((state) => state.kanban.groupList);
 
     const selectData = [
         {
@@ -117,7 +118,7 @@ export function StatusColumn(props: StatusProps) {
             text: "Group",
             input: (
                 <MultiSelect
-                    data={selectData}
+                    data={groupList.map(group => ({value:group.id.toString(), label: group.name}))}
                     variant="filled"
                     placeholder="All options"
                     maxDropdownHeight={100}

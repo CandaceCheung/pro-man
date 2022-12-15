@@ -1,7 +1,7 @@
 export interface KanbanState {
     statusList: Status[], 
     memberList: Member[],
-    groupList: Group []
+    groupList: Group [],
 }
 
 export interface Status {
