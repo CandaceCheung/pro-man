@@ -9,9 +9,10 @@ export class InvitationController {
         try {
             const projectId = req.body.projectId;
             const username = req.body.username;
-
+            
+            await this.invitationService.inviteUser(projectId, username);
+            
             //send email
-
             let transporter = nodemailer.createTransport({
                 host: "smtp.office365.com",
                 port: 587,
@@ -37,7 +38,6 @@ export class InvitationController {
                 console.log(info.response)
             });
 
-            await this.invitationService.inviteUser(projectId, username);
 
             res.json({ 
                 success: true,

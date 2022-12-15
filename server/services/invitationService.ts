@@ -8,16 +8,19 @@ export class InvitationService {
         const txn = await this.knex.transaction();
 
         try {
-            const check = await this.knex("users").select("username").where("username", username);
+            const check = await txn("users").select("username").where("username", username).returning('id')[0];
 
-            if(check !== null || check !==undefined){
+            if(check){
+                await txn('users').update({
+                    token: '' //token
+                }).where('users.id', check.id)
                 return
             }
 
             const [{ userId }] = await txn.insert({
                 username: username,
                 password: '', 
-                role: 'member',
+                role: 'pending',
                 token: '' //token
             }).into('users').returning('id as userId');
 
