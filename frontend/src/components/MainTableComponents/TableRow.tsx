@@ -35,7 +35,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                 return (
                     <div
                         className={cx(classes.tableCell, classes.persons)}
-                        key={"cell" + cellIndex}
+                        key={"item" + id + "cell" + cellIndex}
                     >
                         <Persons 
                             itemPersonsNames={cell.item_person_name!} 
@@ -48,7 +48,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                 return (
                     <div
                         className={cx(classes.tableCell, classes.dates)}
-                        key={"cell" + cellIndex}
+                        key={"item" + id + "cell" + cellIndex}
                     >
                         {cell.item_dates_datetime}
                     </div>
@@ -57,7 +57,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                 return (
                     <div
                         className={cx(classes.tableCell, classes.money)}
-                        key={"cell" + cellIndex}
+                        key={"item" + id + "cell" + cellIndex}
                     >
                         <span>{cell.item_money_date}</span>
                         <span>{cell.item_money_cashflow}</span>
@@ -67,7 +67,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                 return (
                     <div
                         className={cx(classes.tableCell, classes.times)}
-                        key={"cell" + cellIndex}
+                        key={"item" + id + "cell" + cellIndex}
                     >
                         <div>{"Start:" + cell.item_times_start_date}</div>
                         <div>{"End:" + cell.item_times_end_date}</div>
@@ -77,7 +77,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                 return (
                     <div
                         className={cx(classes.tableCell, classes.status)}
-                        key={"cell" + cellIndex}
+                        key={"item" + id + "cell" + cellIndex}
                     >
                         <div>{"Status:" + cell.item_status_name}</div>
                         <div>{"Color:" + cell.item_status_color}</div>
@@ -87,7 +87,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                 return (
                     <div
                         className={cx(classes.tableCell, classes.text)}
-                        key={"cell" + cellIndex}
+                        key={"item" + id + "cell" + cellIndex}
                     >
                         {cell.item_text_text}
                     </div>
@@ -95,7 +95,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
             default:
                 return (
                     <div
-                        key={"cell" + cellIndex}
+                        key={"item" + id + "cell" + cellIndex}
                     ></div>
                 )
         }
