@@ -73,7 +73,8 @@ export class TableService {
             .orderBy("project_id", 'asc')
             .orderBy("item_group_id", 'desc')
             .orderBy("vertical_order", 'asc')
-            .orderBy("horizontal_order", 'asc');
+            .orderBy("horizontal_order", 'asc')
+            .orderBy("item_person_id", 'asc');
 
         return projectsDetail
     }

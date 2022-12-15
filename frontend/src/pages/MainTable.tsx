@@ -156,7 +156,7 @@ export function MainTable() {
         setTypesOrdersState(typesOrders);
 
         setPersonsColors(personsColorsTemp);
-    }, [tableSummary, projectID]);
+    }, [tableSummary, projectID, theme.colors.personsTypeComponentColor]);
 
     const toggleItemGroupCollapsed = (index: number) => {
         const newItemGroupsCollapsedState = [...itemGroupsCollapsedState];

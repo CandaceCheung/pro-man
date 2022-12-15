@@ -109,7 +109,7 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                     <span
                         key={"person_multiple"}
                         className={cx(classes.personsComponent, classes.personsMultipleComponent)}
-                        style={{ backgroundColor: "#000" }}
+                        style={{ backgroundColor: "#323232" }}
                     >
                         {`+${itemPersonsNames.length - 1}`}
                     </span>
