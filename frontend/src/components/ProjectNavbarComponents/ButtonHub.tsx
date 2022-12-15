@@ -1,7 +1,7 @@
 import { Button, Divider, Menu } from "@mantine/core";
 import { IconEyeOff, IconFilter, IconUser, IconColumns, IconArrowBack } from "@tabler/icons";
 import { MouseEvent } from "react";
-import { setSortByPersonIdAction, triggerTimelineModalAction } from "../../redux/project/slice";
+import { setHideByTypeAction, setSortByGroupIdAction, setSortByPersonIdAction, triggerTimelineModalAction } from "../../redux/project/slice";
 import { insertItem, insertItemGroup } from "../../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { TimelineButton } from "../TimelineComponents/TimelineButtons";
@@ -12,9 +12,12 @@ export function ButtonHub() {
     const projectId = useAppSelector(state => state.project.project_id);
     const userId = useAppSelector(state => state.auth.userId);
     const page = useAppSelector(state => state.project.active_page)
-    const sortByPersonId = useAppSelector(state=> state.project.sort_by_person_id)
- 
-    const timelineColumn = ['Date', 'Time']
+    const sortByPersonId = useAppSelector(state => state.project.sort_by_person_id)
+    const sortByGroupId = useAppSelector(state => state.project.sort_by_group_id)
+    const setHideByType = useAppSelector(state => state.project.set_hide_by_type)
+    const typeColumn = ['dates', 'times']
+
+    // timeline logic
     const groupSummary = projectSummary.filter((project, index, self) =>
         project.joined_project_id === projectId &&
         index === self.findIndex((obj) => obj.item_group_id === project.item_group_id))
@@ -32,6 +35,7 @@ export function ButtonHub() {
             })
         }
     }
+    // timeline logic
 
     const onNewItemClick = () => {
         page === 'timeline' && dispatch(triggerTimelineModalAction(true));
@@ -43,6 +47,12 @@ export function ButtonHub() {
     const onSortByPersonsClick = (e: MouseEvent<HTMLButtonElement>) => {
         page === 'timeline' && dispatch(setSortByPersonIdAction(parseInt(e.currentTarget.value)))
     }
+    const onSortByGroupClick = (e: MouseEvent<HTMLButtonElement>) => {
+        page === 'timeline' && dispatch(setSortByGroupIdAction(parseInt(e.currentTarget.value)))
+    }
+    const onSetHideByTypeClick = (e: MouseEvent<HTMLButtonElement>) => {
+        page === 'timeline' && dispatch(setHideByTypeAction(e.currentTarget.value))
+    }
 
 
     return (
@@ -53,7 +63,7 @@ export function ButtonHub() {
 
                 <Menu transition='pop-top-left' transitionDuration={150}>
                     <Menu.Target>
-                        <Button className='button-panel-group' variant={sortByPersonId?'outline':'subtle'}><IconUser size={14} />Person</Button>
+                        <Button className='button-panel-group' variant={sortByPersonId ? 'outline' : 'subtle'}><IconUser size={14} />Person</Button>
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by person</Menu.Label>
@@ -75,14 +85,23 @@ export function ButtonHub() {
 
                 <Menu transition="pop-top-right" transitionDuration={150}>
                     <Menu.Target>
-                        <Button className='button-panel-group' variant='subtle'><IconFilter size={14} />Filter</Button>
+                        <Button className='button-panel-group' variant={sortByGroupId ? 'outline' : 'subtle'}><IconFilter size={14} />Filter</Button>
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by column</Menu.Label>
                         {page === 'timeline' && groupSummary.map((group, index) => {
-                            return <Menu.Item key={index} value={group.item_group_id} icon={<IconColumns size={14} />}>{group.item_group_name}</Menu.Item>
+                            return <Menu.Item
+                                key={index}
+                                value={group.item_group_id}
+                                icon={<IconColumns size={14} />}
+                                disabled={!!sortByGroupId}
+                                onClick={(e) => onSortByGroupClick(e)}
+                            >
+                                {group.item_group_name}
+                            </Menu.Item>
                         })}
-
+                        <Divider my="sm" />
+                        <Menu.Item value={undefined} icon={<IconArrowBack size={14} />} onClick={(e) => onSortByGroupClick(e)}>Reset</Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
 
@@ -91,9 +110,19 @@ export function ButtonHub() {
                         <Button className='button-panel-group' variant='subtle'><IconEyeOff size={14} />Hide</Button>
                     </Menu.Target>
                     <Menu.Dropdown>
-                        {page === 'timeline' && timelineColumn.map((column, index) => {
-                            return <Menu.Item value={column} icon={<IconColumns size={14} />}>{column}</Menu.Item>
+                        {page === 'timeline' && typeColumn.map((column, index) => {
+                            return <Menu.Item
+                                value={column}
+                                key={index}
+                                icon={<IconColumns size={14} />}
+                                disabled={!!setHideByType}
+                                onClick={e => onSetHideByTypeClick(e)}
+                            >
+                                {column.toUpperCase()}
+                            </Menu.Item>
                         })}
+                        <Divider my="sm" />
+                        <Menu.Item value={undefined} icon={<IconArrowBack size={14} />} onClick={(e) => onSetHideByTypeClick(e)}>Reset</Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
             </div>

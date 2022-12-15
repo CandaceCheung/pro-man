@@ -21,6 +21,8 @@ export interface ActiveProjectState {
     update_time_line_modal_opened: boolean
     target_element_id: number
     sort_by_person_id: number | undefined
+    sort_by_group_id: number | undefined
+    set_hide_by_type: string | undefined
 }
 
 const initialState: ActiveProjectState = {
@@ -40,6 +42,8 @@ const initialState: ActiveProjectState = {
     update_time_line_modal_opened: false,
     target_element_id: 0,
     sort_by_person_id: undefined,
+    sort_by_group_id: undefined,
+    set_hide_by_type: undefined,
 }
 
 const setActiveProject : CaseReducer<ActiveProjectState, PayloadAction<number>> =
@@ -70,7 +74,10 @@ const toggleStackItem : CaseReducer<ActiveProjectState, PayloadAction<boolean>> 
 (state, action) =>  {state.time_line_stack_item = action.payload} 
 const setSortByPersonId : CaseReducer<ActiveProjectState, PayloadAction<number>> =
 (state, action) =>  {state.sort_by_person_id = action.payload} 
-
+const setSortByGroupId : CaseReducer<ActiveProjectState, PayloadAction<number>> =
+(state, action) =>  {state.sort_by_group_id = action.payload} 
+const setHideByType : CaseReducer<ActiveProjectState, PayloadAction<string>> =
+(state, action) =>  {state.set_hide_by_type = action.payload} 
 
 const projectSlice = createSlice({
     name: 'project',
@@ -90,6 +97,8 @@ const projectSlice = createSlice({
         toggleLoading,
         toggleStackItem,
         setSortByPersonId,
+        setSortByGroupId,
+        setHideByType
     },
 })
 
@@ -108,6 +117,8 @@ export const {
     toggleLoading: toggleLoadingAction,
     toggleStackItem: toggleStackItemAction,
     setSortByPersonId: setSortByPersonIdAction,
+    setSortByGroupId: setSortByGroupIdAction,
+    setHideByType: setHideByTypeAction
 } = projectSlice.actions
 
 export default projectSlice.reducer

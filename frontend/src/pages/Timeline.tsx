@@ -61,22 +61,13 @@ export function TimeFrame() {
   const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
   const stack = useAppSelector(state=> state.project.time_line_stack_item)
   const sortByPersonId = useAppSelector(state=> state.project.sort_by_person_id)
-  let timelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times').sort((a, b) => a.item_group_id - b.item_group_id)
-  let datelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'dates').sort((a, b) => a.item_group_id - b.item_group_id)
-  const [timelineDetail, setTimelineDetail] = useState(timelineDetails)
-  const [datelineDetail, setDatelineDetail] = useState(datelineDetails)
+  const sortByGroupId = useAppSelector(state=> state.project.sort_by_group_id)
+  const setHideByType = useAppSelector(state => state.project.set_hide_by_type)
 
-
-  useEffect(()=>{
-    if (!sortByPersonId){
-      setTimelineDetail(timelineDetails)
-      setDatelineDetail(datelineDetails)
-    }
-    if (sortByPersonId){
-      setTimelineDetail(timelineDetail => timelineDetail.filter((project)=>project.item_person_user_id === sortByPersonId))
-      setDatelineDetail(datelineDetail => datelineDetail.filter((project)=>project.item_person_user_id === sortByPersonId))
-    }
-  },[sortByPersonId])
+  const unfilteredTimelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times').sort((a, b) => a.item_group_id - b.item_group_id)
+  const unfilteredDatelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'dates').sort((a, b) => a.item_group_id - b.item_group_id)
+  const timelineDetail = unfilteredTimelineDetails.filter((project)=> sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project)=> sortByGroupId ? project.item_group_id === sortByGroupId : project)
+  const datelineDetail = unfilteredDatelineDetails.filter((project)=> sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project)=> sortByGroupId ? project.item_group_id === sortByGroupId : project)
 
   const minZoom = 1 * 24 * 60 * 60 * 1000;
   const maxZoom = 31 * 24 * 60 * 60 * 1000;
@@ -225,7 +216,7 @@ export function TimeFrame() {
         :
         <Timeline
           groups={groups}
-          items={[...items, ...dateItems]}
+          items={!setHideByType ? [...items, ...dateItems] : setHideByType === 'dates' ? [...items] : [...dateItems]}
           defaultTimeStart={defaultTimeStart}
           defaultTimeEnd={defaultTimeEnd}
           visibleTimeStart={autofit ? firstStartedTime - 2.592e+8 : now ? startPointAnchor : undefined}
