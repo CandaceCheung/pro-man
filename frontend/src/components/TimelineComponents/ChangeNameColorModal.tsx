@@ -30,7 +30,7 @@ export function ChangNameColorModal() {
       setColor(timeItem.item_times_color)
       setName(timeItem.element_name)
     }
-  }, [targetElementId])
+  }, [targetElementId, dateItem.item_datetime_color, timeItem.item_times_color, timeItem.element_name, dateItem.element_name, itemType])
 
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

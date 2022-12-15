@@ -14,7 +14,7 @@ export default function InvitationDrawer(props: InvitationDrawerProps) {
   const dispatch = useAppDispatch()
   const [value, setValue] = useInputState('')
   const projectId = useAppSelector(state => state.project.project_id);
-  const userId = useAppSelector(state => state.auth.userId);
+  // const userId = useAppSelector(state => state.auth.userId);
 
   const submitHandler = ()=>{
     dispatch(sendInvitation(projectId as number, value))

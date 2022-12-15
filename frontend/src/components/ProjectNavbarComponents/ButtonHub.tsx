@@ -1,7 +1,7 @@
 import { Button, Divider, Menu } from "@mantine/core";
 import { IconEyeOff, IconFilter, IconUser, IconColumns, IconArrowBack } from "@tabler/icons";
 import { MouseEvent } from "react";
-import { setHideByTypeAction, setSortByGroupIdAction, setSortByPersonIdAction, triggerTimelineModalAction } from "../../redux/project/slice";
+import { setHideByTypeAction, setSortByGroupIdAction, setSortByPersonIdAction} from "../../redux/project/slice";
 import { insertItem, insertItemGroup } from "../../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { TimelineButton } from "../TimelineComponents/TimelineButtons";

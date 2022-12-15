@@ -8,7 +8,7 @@ export class InvitationService {
         const txn = await this.knex.transaction();
 
         try {
-            const check = await txn("users").select("username").where("username", username).returning('id')[0];
+            const check = await txn("users").select("username").where("username", username).returning('*')[0];
 
             if(check){
                 await txn('users').update({
