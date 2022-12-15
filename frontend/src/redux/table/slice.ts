@@ -120,7 +120,7 @@ const initialState: CombinedTableState = {
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> =
     (state, action) => { state.summary = action.payload }
 const getTableFailed: CaseReducer<CombinedTableState, PayloadAction> =
-    (state, action) => { state = state }
+    (state, action) => { state = {...state} }
 const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timelineID: number, startTime: number, endTime: number, name: string, color: string, typeId: number }>> =
     (state, action) => {
         for (let item of state.summary) {
@@ -159,10 +159,6 @@ const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemG
             }
         }
     }
-const updateItemGroupNameFailed: CaseReducer<CombinedTableState, PayloadAction> =
-    (state, action) => {
-        state = JSON.parse(JSON.stringify(state));
-    }
 
 const tableSlice = createSlice({
     name: 'table',
@@ -174,7 +170,6 @@ const tableSlice = createSlice({
         updateDatelineItem,
         getFavorite,
         updateItemGroupName,
-        updateItemGroupNameFailed,
         getTableList,
 
     },
@@ -187,7 +182,6 @@ export const {
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
     updateItemGroupName: updateItemGroupNameAction,
-    updateItemGroupNameFailed: updateItemGroupNameFailedAction,
     getTableList: getTableListAction
 } = tableSlice.actions
 

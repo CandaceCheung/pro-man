@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, updateItemGroupNameFailedAction, getTableListAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
 
@@ -147,7 +147,7 @@ export function getFavorite(userId: number) {
 }
 
 export function insertItem(projectId: number, userId: number) {
-	return async (dispatch: Dispatch) => {
+	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/insertItem`, {
 			method: "POST",
@@ -162,11 +162,7 @@ export function insertItem(projectId: number, userId: number) {
 		const result = await res.json();
 
 		if (result.success) {
-			const res = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/table/${userId}`
-			);
-			const tableResult = await res.json();
-			tableResult.success && dispatch(getTableAction(tableResult.table));
+			dispatch(getTable(userId, projectId));
 		} else {
 			showNotification({
 				title: 'Insert data notification',
@@ -177,7 +173,7 @@ export function insertItem(projectId: number, userId: number) {
 }
 
 export function insertItemGroup(projectId: number, userId: number) {
-	return async (dispatch: Dispatch) => {
+	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/insertItemGroup`, {
 			method: "POST",
@@ -192,11 +188,7 @@ export function insertItemGroup(projectId: number, userId: number) {
 		const result = await res.json();
 
 		if (result.success) {
-			const res = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/table/${userId}`
-			);
-			const tableResult = await res.json();
-			tableResult.success && dispatch(getTableAction(tableResult.table));
+			dispatch(getTable(userId, projectId));
 		} else {
 			showNotification({
 				title: 'Insert data notification',
