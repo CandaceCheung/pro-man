@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { icon } from "@fortawesome/fontawesome-svg-core";
 import {
