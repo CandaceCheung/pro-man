@@ -1,20 +1,38 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, updateItemGroupNameFailedAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, updateItemGroupNameFailedAction, getTableListAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 
-export function getTable(userID: number) {
+export function getTable(userID: number, projectID: number) {
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/${userID}`
+			`${process.env.REACT_APP_API_SERVER}/table/${userID}&${projectID}`
 		);
 		const result = await res.json();
 
 		if (result.success) {
 			console.log("Passed")
 			dispatch(getTableAction(result.table));
-			dispatch(setActiveProjectAction(result.table[0].project_id));
+			
+		} else {
+			dispatch(getTableFailedAction())
+		}
+	};
+}
+
+export function getTableList(userId: number) {
+	return async (dispatch: Dispatch) => {
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/list/${userId}`
+		);
+		const result = await res.json();
+
+		if (result.success) {
+			console.log("Request Passed")
+			dispatch(getTableListAction(result.list))
+			dispatch(setActiveProjectAction(result.list[0].project_id));
 		} else {
 			dispatch(getTableFailedAction())
 		}

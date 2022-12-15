@@ -311,7 +311,7 @@ export function TimeFrame() {
         </Timeline>
       }
       <ChangNameColorModal /> 
-      <AddNewItemModal groups={groups} />
+      {/* <AddNewItemModal groups={groups} /> */}
     </div>
   )
 }

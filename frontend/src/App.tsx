@@ -12,7 +12,7 @@ import { MyWork } from "./pages/MyWork";
 import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
-import { getFavorite, getTable } from "./redux/table/thunk";
+import { getFavorite, getTableList } from "./redux/table/thunk";
 import { getKanbanItems } from "./redux/kanban/thunk";
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
     useEffect(() => {
         isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
-        userId !== null && dispatch(getTable(userId));
+        userId !== null && dispatch(getTableList(userId));
         userId !== null && dispatch(getFavorite(userId))
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId]);

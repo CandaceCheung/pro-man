@@ -1,7 +1,7 @@
 import './styles/ProjectNavbar.css'
 import { Tabs, Tooltip } from '@mantine/core';
 import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp, IconUsers, IconArticle } from '@tabler/icons'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Cashflow } from '../pages/Cashflow';
 import { Kanban } from '../pages/Kanban';
 import { MainTable } from '../pages/MainTable';
@@ -15,7 +15,8 @@ import { ButtonHub } from './ProjectNavbarComponents/ButtonHub';
 import { TableStateArray } from '../redux/table/slice';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { ActivePageState, setActivePageAction } from '../redux/project/slice';
-import { useAppDispatch } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
+import { getTable } from '../redux/table/thunk';
 
 type ProjectNavbarProps = {
     projectId: number
@@ -28,6 +29,10 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
     const [like, setLike] = useState(false)
     const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
+    const projectId = useAppSelector(state => state.project.project_id);
+    const userId = useAppSelector(state => state.auth.userId);
+
+
     const dispatch = useAppDispatch()
 
     function onRemove() {
@@ -41,6 +46,10 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
         navigate(`/${value}`)
         dispatch(setActivePageAction(value))
     }
+
+    useEffect(()=>{
+        dispatch(getTable(userId as number, projectId as number))
+    }, [projectId])
 
     return (
         <div id="project-navbar">
