@@ -63,7 +63,11 @@ export function ButtonHub() {
 
                 <Menu transition='pop-top-left' transitionDuration={150}>
                     <Menu.Target>
-                        <Button className='button-panel-group' variant={sortByPersonId ? 'outline' : 'subtle'}><IconUser size={14} />Person</Button>
+                        {sortByPersonId ?
+                            <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSortByPersonsClick(e)}><IconArrowBack size={14} /> Reset</Button>
+                            :
+                            <Button className='button-panel-group' variant='subtle'><IconUser size={14} /> Person</Button>
+                        }
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by person</Menu.Label>
@@ -79,13 +83,16 @@ export function ButtonHub() {
                             </Menu.Item>
                         })}
                         <Divider my="sm" />
-                        <Menu.Item value={undefined} icon={<IconArrowBack size={14} />} onClick={(e) => onSortByPersonsClick(e)}>Reset</Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
 
                 <Menu transition="pop-top-right" transitionDuration={150}>
                     <Menu.Target>
-                        <Button className='button-panel-group' variant={sortByGroupId ? 'outline' : 'subtle'}><IconFilter size={14} />Filter</Button>
+                        {sortByGroupId ?
+                            <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSortByGroupClick(e)}><IconArrowBack size={14} /> Reset</Button>
+                            :
+                            <Button className='button-panel-group' variant='subtle'><IconFilter size={14} />Filter</Button>
+                        }
                     </Menu.Target>
                     <Menu.Dropdown>
                         <Menu.Label>Filter by column</Menu.Label>
@@ -100,14 +107,16 @@ export function ButtonHub() {
                                 {group.item_group_name}
                             </Menu.Item>
                         })}
-                        <Divider my="sm" />
-                        <Menu.Item value={undefined} icon={<IconArrowBack size={14} />} onClick={(e) => onSortByGroupClick(e)}>Reset</Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
 
                 <Menu>
                     <Menu.Target>
-                        <Button className='button-panel-group' variant='subtle'><IconEyeOff size={14} />Hide</Button>
+                        {setHideByType ?
+                            <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSetHideByTypeClick(e)}><IconArrowBack size={14} /> Reset</Button>
+                            :
+                            <Button className='button-panel-group' variant='subtle'><IconEyeOff size={14} />Hide</Button>
+                        }
                     </Menu.Target>
                     <Menu.Dropdown>
                         {page === 'timeline' && typeColumn.map((column, index) => {
@@ -121,8 +130,6 @@ export function ButtonHub() {
                                 {column.toUpperCase()}
                             </Menu.Item>
                         })}
-                        <Divider my="sm" />
-                        <Menu.Item value={undefined} icon={<IconArrowBack size={14} />} onClick={(e) => onSetHideByTypeClick(e)}>Reset</Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
             </div>
