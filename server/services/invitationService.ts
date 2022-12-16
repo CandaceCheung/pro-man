@@ -3,7 +3,7 @@ export class InvitationService {
     constructor(private knex: Knex) { }
 
     async inviteUser(projectId: number, userId: number, email: string) {
-        
+
         const txn = await this.knex.transaction();
 
         try {
@@ -13,7 +13,7 @@ export class InvitationService {
                 .where("email", email)
                 .where("project_id", projectId);
 
-            if(check){
+            if (check) {
                 return check
             }
 
@@ -33,20 +33,22 @@ export class InvitationService {
         }
     }
 
-    async acceptInvite(invitationId :number, projectId: number, userId:number) {
-        
+    async acceptInvite(invitationId: number, projectId: number, userId: number) {
+
         const txn = await this.knex.transaction();
 
         try {
-
+            const [member] = await txn('members').where("user_id", userId).where("project_id", projectId)
             const [invitation] = await txn('invitations').update({
                 status: 'accepted'
             }).where('id', invitationId).returning('*')
-            
-            await txn('members').insert({
-                user_id: userId,
-                project_id: projectId,
-            })
+
+            if (!member) {
+                await txn('members').insert({
+                    user_id: userId,
+                    project_id: projectId,
+                })
+            }
 
             await txn.commit();
             return invitation

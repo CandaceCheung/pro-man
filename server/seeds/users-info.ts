@@ -67,7 +67,6 @@ export async function seed(knex: Knex): Promise<void> {
         itemGroupIDs.push(eachItemGroupIDs);
     }
 
-
     insertArray = []
     for (const j in projectIDs) {
         for (const k of itemGroupIDs[j]) {

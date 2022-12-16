@@ -24,32 +24,29 @@ type ProjectNavbarProps = {
 }
 
 export default function ProjectNavbar(props: ProjectNavbarProps) {
-
+    const dispatch = useAppDispatch()
     let projectName = props.projectSummary[0]?.project_name;
     const [like, setLike] = useState(false)
     const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
     const projectId = useAppSelector(state => state.project.project_id);
     const userId = useAppSelector(state => state.auth.userId);
-
-
-    const dispatch = useAppDispatch()
+    const navigate = useNavigate();
+    const { tabValue } = useParams();
+    
+    useEffect(()=>{
+        dispatch(getTable(userId as number, projectId as number));
+    }, [projectId, dispatch, userId])
 
     function onRemove() {
         setLogsOpen(false)
         setInvitationOpen(false)
     }
-    const navigate = useNavigate();
-    const { tabValue } = useParams();
 
     function tabChangeHandler(value: ActivePageState | null) {
         navigate(`/${value}`)
         dispatch(setActivePageAction(value))
     }
-
-    useEffect(()=>{
-        dispatch(getTable(userId as number, projectId as number));
-    }, [projectId, dispatch, userId])
 
     return (
         <div id="project-navbar">

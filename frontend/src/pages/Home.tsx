@@ -11,11 +11,12 @@ export function Home() {
     const defaultID = projectSummary[0].project_id
     const activeProject = projectSummary.filter((date)=> date.project_id === activeProjectID)
     const token = localStorage.getItem('invitation')
+    const userId = useAppSelector(state=> state.auth.userId)
 
     useEffect(()=>{
-        token && dispatch(acceptInvitation(token))
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        token && dispatch(acceptInvitation(token, userId!))
+        localStorage.removeItem('invitation')
+    // eslint-disable-next-line
     },[token])
 
     return (
