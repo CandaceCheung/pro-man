@@ -7,7 +7,7 @@ const { REACT_APP_API_SERVER } = process.env;
 
 export function loginThunk(username: string, password: string) {
     return async (dispatch: AppDispatch) => {
-        const res = await fetch(`${REACT_APP_API_SERVER}/auth`,{
+        const res = await fetch(`${REACT_APP_API_SERVER}/auth`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ export function loginThunk(username: string, password: string) {
 
 export function signUpThunk(username: string, password: string, firstName: string, lastName: string) {
     return async () => {
-        const res = await fetch(`${REACT_APP_API_SERVER}/auth/registration`,{
+        const res = await fetch(`${REACT_APP_API_SERVER}/auth/registration`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -62,11 +62,11 @@ export function signUpThunk(username: string, password: string, firstName: strin
 
 export function logout() {
     return async (dispatch: AppDispatch) => {
-      localStorage.removeItem('token');
-      dispatch(logoutAction());
-      dispatch(clearActiveProject());
+        localStorage.removeItem('token');
+        dispatch(logoutAction());
+        dispatch(clearActiveProject());
     };
-  }
+}
 
 export function retriveLogin() {
     return async (dispatch: AppDispatch) => {
@@ -74,15 +74,15 @@ export function retriveLogin() {
         if (token) {
             const res = await fetch(`${process.env.REACT_APP_API_SERVER}/auth/userRetrieval`, {
                 headers: {
-                  'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`
                 },
-              })
-              const data = await res.json();
-              if (data.payload) {
-                  dispatch(loginAction(data.payload.id, data.payload.username));
-              } else {
+            })
+            const data = await res.json();
+            if (data.payload) {
+                dispatch(loginAction(data.payload.id, data.payload.username));
+            } else {
                 dispatch(logout());
-              }
+            }
         } else {
             dispatch(logoutAction());
         }
