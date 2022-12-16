@@ -3,13 +3,16 @@ import React, { useState } from "react";
 import { signUpThunk } from "../../redux/auth/thunk";
 import { useAppDispatch } from "../../store";
 
-const useStyles = createStyles(theme => ({
+const useStyles = createStyles(() => ({
     wrapper: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
     },
+    signUpButton: {
+        marginTop: 20
+    }
 }));
 
 export function Signup() {
@@ -21,11 +24,21 @@ export function Signup() {
 
     const { classes } = useStyles();
 
-    const login = () => {
+    const signUp = () => {
         if (confirmPassword === password) {
-            dispatch(signUpThunk(username, password));
+            if (password.length) {
+                dispatch(signUpThunk(username, password));
+            } else {
+                setError("Please enter password.");
+            }
         } else {
-            setError("Passwords do not match.")
+            setError("Passwords do not match.");
+        }
+    }
+
+    const handleInputKeyDown = (key: string) => {
+        if (key === "Enter") {
+            signUp();
         }
     }
 
@@ -36,6 +49,7 @@ export function Signup() {
                 placeholder="Custom layout"
                 inputWrapperOrder={['label', 'input']}
                 onChange={(e) => { setUsername(e.target.value) }}
+                onKeyDown={(e) => handleInputKeyDown(e.key)}
             />
             <TextInput
                 label="Password"
@@ -43,6 +57,7 @@ export function Signup() {
                 placeholder="Custom layout"
                 inputWrapperOrder={['label', 'input']}
                 onChange={(e) => { setPassword(e.target.value) }}
+                onKeyDown={(e) => handleInputKeyDown(e.key)}
             />
             <TextInput
                 label="Confirm Password"
@@ -51,9 +66,11 @@ export function Signup() {
                 placeholder="Custom layout"
                 inputWrapperOrder={['label', 'error', 'input']}
                 onChange={(e) => { setConfirmPassword(e.target.value) }}
+                onKeyDown={(e) => handleInputKeyDown(e.key)}
             />
             <Button
-                onClick={login}
+                onClick={signUp}
+                className={classes.signUpButton}
             >
                 Sign Up
             </Button>

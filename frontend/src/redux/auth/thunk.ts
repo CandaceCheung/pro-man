@@ -21,6 +21,10 @@ export function loginThunk(username: string, password: string) {
             dispatch(loginAction(result.data.id, result.data.username));
             localStorage.setItem("token", result.token);
         } else {
+            showNotification({
+                title: 'Login notification',
+                message: 'Failed to login! 🤥'
+            });
             dispatch(failedLoginAction());
         }
     }
