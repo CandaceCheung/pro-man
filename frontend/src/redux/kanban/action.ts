@@ -24,20 +24,20 @@ export function setKanbanGroup(groupList: []) {
 export function addKanbanItem(
     projectId: number,
     stateId: number,
-    userId: number,
+    itemId:number,
     itemName: string,
-    memberId: number,
-    date: string,
-    groupId: string
+    memberId: string[],
+    date: Date,
+    groupId: string[],
 ) {
+    const dateString = date.toISOString();
+    const item:Item = {id:itemId, name:itemName, date:dateString, membersList:memberId}
+
     return {
         type: "KANBAN/ADD" as const,
         projectId,
         stateId,
-        userId,
-        itemName,
-        memberId,
-        date,
+        item,
         groupId,
     };
 }
