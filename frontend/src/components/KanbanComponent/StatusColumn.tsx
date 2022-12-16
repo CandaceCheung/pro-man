@@ -77,11 +77,15 @@ export function StatusColumn(props: StatusProps) {
     const [groupId, setGroupId] = useState<number>();
     const addItem = () => {
         if (date !== undefined && groupId !== undefined) {
+
+            const nameList = memberId.map(id => memberList.find(member => member.id.toString() === id)!.username)
             dispatch(
-                postItem(projectId, props.id, itemName, memberId, date, groupId)
+                postItem(projectId, props.id, itemName, nameList, memberId, date, groupId)
             );
         }
     };
+
+
 
     const modalList = [
         {
