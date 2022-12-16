@@ -49,7 +49,7 @@ export class KanbanService {
 	}
 
 	async getGroupList(project_Id: number) {
-		const groupsList = await this.knex 
+		const groupsList = await this.knex
 			.select('item_groups.id', 'item_groups.name')
 			.from('item_groups')
 			.join('items', 'items.item_group_id', '=', 'item_groups.id')
@@ -59,36 +59,47 @@ export class KanbanService {
 
 	async addKanbanitem(
 		projectId: number,
+		stateId: number,
+		userId: number,
+		username: string,
 		itemName: string,
+		typePersonId: number,
 		groupId: number,
-		date: number,
-		userId: number
+		date: string
 	) {
 		const txn = await this.knex.transaction();
 		try {
 			const addItem = await txn
 				.insert({
-					project_id: projectId,
 					name: itemName,
+					project_id: projectId,
 					item_group_id: groupId
 				})
 				.into('items')
 				.returning('items.id');
 
-			addItem;
+			await txn
+				.insert({
+					name: username,
+					user_id: userId,
+					type_id: typePersonId,
+					item_id: addItem[0].id
+				})
+				.into('type_persons');
 
-			const addDate = await txn.insert({
-				datetime: format(new Date(date), 'yyyy-MM-dd')
-			});
+			await txn
+				.insert({
+					datetime: format(new Date(date), 'yyyy-MM-dd'),
+					item_id: addItem[0].id
+				})
+				.into('type_dates');
 
-			addDate;
+			await txn.commit();
 
-			const addMember = await txn.insert({ user_id: userId });
-
-			addMember;
+			return addItem[0].id as number;
 		} catch (e) {
 			await txn.rollback();
-			return;
+			throw e;
 		}
 	}
 }

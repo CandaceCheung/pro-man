@@ -1,6 +1,7 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { showNotification } from '@mantine/notifications';
 import { acceptInviteAction, sendInviteAction } from "./slice";
+import { useAppSelector } from "../../store";
 
 export function sendInvitation(projectId: number, userId: number, value: string) {
     return async (dispatch: Dispatch) => {
@@ -36,6 +37,7 @@ export function sendInvitation(projectId: number, userId: number, value: string)
 
 export function acceptInvitation(token: string) {
     return async (dispatch: Dispatch) => {
+        const userId = useAppSelector(state=> state.auth.userId)
         
         const res = await fetch(
             `${process.env.REACT_APP_API_SERVER}/invitation/response/`, {
@@ -44,6 +46,7 @@ export function acceptInvitation(token: string) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                userId,
                 token,
             })
         });

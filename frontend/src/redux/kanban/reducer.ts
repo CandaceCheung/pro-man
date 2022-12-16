@@ -35,7 +35,7 @@ export const kanbanReducer = (
             //immer applied
             const newStatus = produce(state, (draft) => {
                 const targetStatus = draft.statusList.find((status) => {
-                    if (action.statusId === status.id) {
+                    if (action.stateId === status.id) {
                         return true;
                     }
                 });
@@ -47,7 +47,6 @@ export const kanbanReducer = (
         case "KANBAN/FETCH_FAIL":
             console.error("Failed");
             return state;
-
 
         default:
             return state;
