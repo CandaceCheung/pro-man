@@ -28,7 +28,7 @@ export function addKanbanItem(
     itemName: string,
     memberId: string[],
     date: Date,
-    groupId: string[],
+    groupId: number,
 ) {
     const dateString = date.toISOString();
     const item:Item = {id:itemId, name:itemName, date:dateString, membersList:memberId}

@@ -11,6 +11,7 @@ import {
     Input,
     MultiSelect,
     Button,
+    Select,
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import {
@@ -73,10 +74,12 @@ export function StatusColumn(props: StatusProps) {
     const [itemName, setItemName] = useState("");
     const [memberId, setMemberId] = useState<string[]>([]);
     const [date, setDate] = useState<Date>();
-    const [groupId, setGroupId] = useState<string[]>([]);
+    const [groupId, setGroupId] = useState<number>();
     const addItem = () => {
-        if(date !== undefined) {
-            dispatch(postItem(projectId, props.id, itemName, memberId, date, groupId));
+        if (date !== undefined && groupId !== undefined) {
+            dispatch(
+                postItem(projectId, props.id, itemName, memberId, date, groupId)
+            );
         }
     };
 
@@ -119,10 +122,10 @@ export function StatusColumn(props: StatusProps) {
                     withAsterisk
                     required
                     icon={<IconCalendarEvent size={16} />}
-                    onChange={(value) => { if(value !==null){
-
-                        setDate(value);
-                    }
+                    onChange={(value) => {
+                        if (value !== null) {
+                            setDate(value);
+                        }
                     }}
                 />
             ),
@@ -130,7 +133,7 @@ export function StatusColumn(props: StatusProps) {
         {
             text: "Group",
             input: (
-                <MultiSelect
+                <Select
                     data={groupList.map((group) => ({
                         value: group.id.toString(),
                         label: group.name,
@@ -139,8 +142,11 @@ export function StatusColumn(props: StatusProps) {
                     placeholder="All options"
                     maxDropdownHeight={100}
                     icon={<IconBrandAsana size={16} />}
+                    required
                     onChange={(value) => {
-                        setGroupId(value);
+                        if (value !== null) {
+                            setGroupId(Number(value));
+                        }
                     }}
                 />
             ),

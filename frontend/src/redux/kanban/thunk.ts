@@ -1,5 +1,5 @@
 import { AppDispatch } from "../../store";
-import { addKanbanItem, failKanbanAction, setKanbanInfo, setKanbanMember } from "./action";
+import { addKanbanItem, failKanbanAction, setKanbanGroup, setKanbanInfo, setKanbanMember } from "./action";
 import { Status } from "./state";
 
 export function getKanbanItems(projectId: number) {
@@ -49,7 +49,7 @@ export function getGroup(projectId : number) {
         console.log(result);
 
         if (result.success) {
-            dispatch(setKanbanMember(result.groupList));
+            dispatch(setKanbanGroup(result.groupList));
         } else {
             dispatch(failKanbanAction());
             console.log("Get Kanban group list info fail");
@@ -58,25 +58,22 @@ export function getGroup(projectId : number) {
     }
 }
 
-export function postItem(projectId: number, itemName: string, member: string[], date: string, group: number ) {
+export function postItem(projectId:number, stateId: number, itemName:string, memberId:string[], date: Date, groupId:number) {
     return async (dispatch: AppDispatch) => {
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/kanban/`, {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/kanban/addItem`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                projectId,
-                itemName,
-                member,
-                date,
-                group,
+                projectId, stateId, itemName, memberId, date, groupId
             }),
         });
         const result = await res.json();
 
         if (result.success) {
-            // dispatch(addKanbanItem(result.state.id,result.state.item));
+           
+            dispatch(addKanbanItem(projectId,stateId,result.itemId, itemName,memberId,date,groupId));
         } else {
             dispatch(failKanbanAction());
             console.log("Post Kanban item fail");
