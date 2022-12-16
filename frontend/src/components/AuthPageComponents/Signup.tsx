@@ -20,6 +20,8 @@ export function Signup() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [error, setError] = useState<string | undefined>();
 
     const { classes } = useStyles();
@@ -27,7 +29,7 @@ export function Signup() {
     const signUp = () => {
         if (confirmPassword === password) {
             if (password.length) {
-                dispatch(signUpThunk(username, password));
+                dispatch(signUpThunk(username, password, firstName, lastName));
             } else {
                 setError("Please enter password.");
             }
@@ -45,27 +47,39 @@ export function Signup() {
     return (
         <div className={classes.wrapper}>
             <TextInput
-                label="Username"
-                placeholder="Custom layout"
+                label="Username *"
+                placeholder="Mandatory Field"
                 inputWrapperOrder={['label', 'input']}
                 onChange={(e) => { setUsername(e.target.value) }}
                 onKeyDown={(e) => handleInputKeyDown(e.key)}
             />
             <TextInput
-                label="Password"
+                label="Password *"
                 type='password'
-                placeholder="Custom layout"
+                placeholder="Mandatory Field"
                 inputWrapperOrder={['label', 'input']}
                 onChange={(e) => { setPassword(e.target.value) }}
                 onKeyDown={(e) => handleInputKeyDown(e.key)}
             />
             <TextInput
-                label="Confirm Password"
+                label="Confirm Password *"
                 error={error}
                 type='password'
-                placeholder="Custom layout"
+                placeholder="Mandatory Field"
                 inputWrapperOrder={['label', 'error', 'input']}
                 onChange={(e) => { setConfirmPassword(e.target.value) }}
+                onKeyDown={(e) => handleInputKeyDown(e.key)}
+            />
+            <TextInput
+                label="First Name"
+                placeholder="(Optional)"
+                onChange={(e) => { setFirstName(e.target.value) }}
+                onKeyDown={(e) => handleInputKeyDown(e.key)}
+            />
+            <TextInput
+                label="Last Name"
+                placeholder="Optional"
+                onChange={(e) => { setLastName(e.target.value) }}
                 onKeyDown={(e) => handleInputKeyDown(e.key)}
             />
             <Button

@@ -1,6 +1,7 @@
 import { AppDispatch } from "../../store";
 import { failedLoginAction, loginAction, logoutAction } from "./action";
 import { showNotification } from '@mantine/notifications';
+import { clearActiveProject } from "../project/thunk";
 
 const { REACT_APP_API_SERVER } = process.env;
 
@@ -30,7 +31,7 @@ export function loginThunk(username: string, password: string) {
     }
 }
 
-export function signUpThunk(username: string, password: string) {
+export function signUpThunk(username: string, password: string, firstName: string, lastName: string) {
     return async () => {
         const res = await fetch(`${REACT_APP_API_SERVER}/auth/registration`,{
             method: "POST",
@@ -39,7 +40,9 @@ export function signUpThunk(username: string, password: string) {
             },
             body: JSON.stringify({
                 username,
-                password
+                password,
+                firstName,
+                lastName
             })
         });
         const result = await res.json();
@@ -61,6 +64,7 @@ export function logout() {
     return async (dispatch: AppDispatch) => {
       localStorage.removeItem('token');
       dispatch(logoutAction());
+      dispatch(clearActiveProject());
     };
   }
 

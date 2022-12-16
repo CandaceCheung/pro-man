@@ -39,7 +39,7 @@ const useStyles = createStyles(theme => ({
         width: 250,
         height: 40,
         fontFamily: "Lalezar",
-        margin: "30px 0",
+        margin: "20px 0",
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'

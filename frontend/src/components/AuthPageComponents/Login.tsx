@@ -36,7 +36,6 @@ export function Login() {
         <div className={classes.wrapper}>
             <TextInput
                 label="Username"
-                placeholder="Custom layout"
                 inputWrapperOrder={['label', 'error', 'input', 'description']}
                 onChange={(e) => { setUsername(e.target.value) }}
                 onKeyDown={(e) => handleInputKeyDown(e.key)}
@@ -44,7 +43,6 @@ export function Login() {
             <TextInput
                 label="Password"
                 type='password'
-                placeholder="Custom layout"
                 inputWrapperOrder={['label', 'error', 'input', 'description']}
                 onChange={(e) => { setPassword(e.target.value) }}
                 onKeyDown={(e) => handleInputKeyDown(e.key)}

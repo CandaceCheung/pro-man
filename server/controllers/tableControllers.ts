@@ -8,7 +8,6 @@ export class TableController {
         try {
             const userID = req.params.userID
             const projectID = req.params.projectID
-            console.log(req.params)
             const result = await this.tableService.getTableInfo(parseInt(userID), parseInt(projectID));
 
             res.json({

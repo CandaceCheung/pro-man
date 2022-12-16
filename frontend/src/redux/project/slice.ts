@@ -50,6 +50,8 @@ const initialState: ActiveProjectState = {
 
 const setActiveProject : CaseReducer<ActiveProjectState, PayloadAction<number>> =
 (state, action) =>  {state.project_id = action.payload} 
+const clearActiveProject : CaseReducer<ActiveProjectState, PayloadAction> =
+(state, action) =>  {state.project_id = null} 
 const setTimeLineView : CaseReducer<ActiveProjectState, PayloadAction<{value: TimeLineViewState, start: Moment, end: Moment}>> =
 (state, action) =>  {state.time_line_view = action.payload.value; state.time_line_start_anchor = action.payload.start; state.time_line_end_anchor = action.payload.end} 
 const setAutofit : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
@@ -88,6 +90,7 @@ const projectSlice = createSlice({
     initialState,
     reducers: {
         setActiveProject,
+        clearActiveProject,
         setTimeLineView,
         setAutofit,
         setTimelineNow,
@@ -109,6 +112,7 @@ const projectSlice = createSlice({
 
 export const { 
     setActiveProject: setActiveProjectAction, 
+    clearActiveProject: clearActiveProjectAction, 
     setTimeLineView: setTimeLineViewAction, 
     setAutofit: setAutofitAction, 
     setTimelineNow: setTimelineNowAction, 
