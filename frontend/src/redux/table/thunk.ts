@@ -3,6 +3,7 @@ import { setActiveProjectAction } from "../project/slice";
 import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
+import { setActiveProject } from "../project/thunk";
 
 export function getTable(userID: number, projectID: number) {
 	return async (dispatch: Dispatch) => {
@@ -13,9 +14,8 @@ export function getTable(userID: number, projectID: number) {
 		const result = await res.json();
 
 		if (result.success) {
-			console.log("Passed")
 			dispatch(getTableAction(result.table));
-			
+
 		} else {
 			dispatch(getTableFailedAction())
 		}
@@ -31,7 +31,6 @@ export function getTableList(userId: number) {
 		const result = await res.json();
 
 		if (result.success) {
-			console.log("Request Passed")
 			dispatch(getTableListAction(result.list))
 			dispatch(setActiveProjectAction(result.list[0].project_id));
 		} else {
@@ -60,7 +59,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 		const result = await res.json();
 
 		if (result.success) {
-			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color, typeId: result.typeId}))
+			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color, typeId: result.typeId }))
 			showNotification({
 				title: 'Data update notification',
 				message: 'Update Success'
@@ -71,7 +70,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 	};
 }
 
-export function updateDatelineItem(datelineID: number, date: number, name: string, color :string) {
+export function updateDatelineItem(datelineID: number, date: number, name: string, color: string) {
 	return async (dispatch: Dispatch) => {
 
 		const res = await fetch(
@@ -90,7 +89,7 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
 		const result = await res.json();
 
 		if (result.success) {
-			dispatch(updateDatelineItemAction({ datelineID, date, name, color, typeId: result.typeId}))
+			dispatch(updateDatelineItemAction({ datelineID, date, name, color, typeId: result.typeId }))
 			showNotification({
 				title: 'Data update notification',
 				message: 'Update Success'
@@ -105,7 +104,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
 	return async (dispatch: AppDispatch) => {
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/updateItemGroupName`, {
+			`${process.env.REACT_APP_API_SERVER}/table/itemGroupName`, {
 			method: "PUT",
 			headers: {
 				'Content-Type': 'application/json'
@@ -149,7 +148,7 @@ export function getFavorite(userId: number) {
 export function insertItem(projectId: number, userId: number) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/insertItem`, {
+			`${process.env.REACT_APP_API_SERVER}/table/item`, {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
@@ -175,7 +174,7 @@ export function insertItem(projectId: number, userId: number) {
 export function insertItemGroup(projectId: number, userId: number) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/insertItemGroup`, {
+			`${process.env.REACT_APP_API_SERVER}/table/itemGroup`, {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
@@ -201,7 +200,7 @@ export function insertItemGroup(projectId: number, userId: number) {
 export function reorderItems(newOrder: number[], userId: number, projectID: number) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/reorderItems`, {
+			`${process.env.REACT_APP_API_SERVER}/table/itemsOrder`, {
 			method: "PUT",
 			headers: {
 				'Content-Type': 'application/json'
@@ -225,7 +224,7 @@ export function reorderItems(newOrder: number[], userId: number, projectID: numb
 export function reorderTypes(newOrder: number[], userId: number, projectID: number) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/reorderTypes`, {
+			`${process.env.REACT_APP_API_SERVER}/table/typesOrder`, {
 			method: "PUT",
 			headers: {
 				'Content-Type': 'application/json'
@@ -243,5 +242,37 @@ export function reorderTypes(newOrder: number[], userId: number, projectID: numb
 			});
 		}
 		dispatch(getTable(userId, projectID));
+	}
+}
+
+export function getPersonsName(userId: number) {
+	return async (dispatch: Dispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/personName/${userId}`);
+
+
+	}
+}
+
+export function insertNewProject(userId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/newProject`, {
+				method: "POST",
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({userId})
+			});
+		const result = await res.json();
+		if (result.success) {
+			const projectId = result.project_id;
+			dispatch(setActiveProject(projectId));
+		} else {
+			showNotification({
+				title: 'Insert data notification',
+				message: 'Failed to insert new project! 🤥'
+			});
+		}
 	}
 }

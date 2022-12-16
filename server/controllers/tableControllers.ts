@@ -143,4 +143,17 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Reorder Types" });
         }
     }
+    insertNewProject = async (req: Request, res: Response) => {
+        try {
+            const userId = req.body.userId;
+            const project_id = await this.tableService.insertNewProject(userId);
+            res.json({ 
+                success: true,
+                project_id
+            })
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Insert Project" });
+        }
+    }
 }
