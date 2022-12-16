@@ -31,9 +31,9 @@ export async function seed(knex: Knex): Promise<void> {
     await knex("users").del();
 
     const userIDs = await knex("users").insert([
-        { username: "frankie", password: bcrypt.hashSync("test", 10), role: "admin" },
-        { username: "duncan", password: bcrypt.hashSync("test", 10), role: "admin" },
-        { username: "candace", password: bcrypt.hashSync("test", 10), role: "admin" }
+        { username: "frankie", first_name: "Frankie", last_name: 'Yip', password: bcrypt.hashSync("test", 10), role: "admin" },
+        { username: "duncan", first_name: "Duncan", last_name: 'Tang',password: bcrypt.hashSync("test", 10), role: "admin" },
+        { username: "candace", first_name: "Candace", last_name: 'Cheung',password: bcrypt.hashSync("test", 10), role: "admin" }
     ]).returning('*');
 
     let insertArray = []
@@ -50,7 +50,7 @@ export async function seed(knex: Knex): Promise<void> {
     for (const i of projectIDs) {
         for (const j of userIDs) {
             insertArray.push(
-                { user_id: j.id, project_id: i.id },
+                { user_id: j.id, project_id: i.id, status: 'confirmed' },
             )
         }
     }
