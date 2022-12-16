@@ -14,6 +14,7 @@ type ExtendedCustomColors = 'lightViolet' |
                             'borderColor' | 
                             'boardContentBackgroundColor' | 
                             'personsTypeComponentColor' | 
+                            'statusLabelsColor' | 
                             DefaultMantineColor;
 
 declare module '@mantine/core' {
@@ -37,6 +38,7 @@ export const themeObject: MantineThemeOverride = {
         groupTag: ["#037F4C", "#E2445C", "#808080", "#579BFC", "#BB3354", "#FF158A", "#FF5AC4", "#A25DDC", "#FDAB3D"],
         borderColor: ["#ddd"],
         boardContentBackgroundColor: ["#F4F5F8"],
-        personsTypeComponentColor: ["#FB225D", "#FFACE1","#C4C4C4"]
+        personsTypeComponentColor: ["#FB225D", "#FFACE1","#C4C4C4"],
+        statusLabelsColor: ["#C4C4C4", "#FDAB3D", "#E2445C", "#00C875", "#0086C0", "#A25DDC", "#037F4C", "#579BFC", "#CAB641", "#FFCB00"]
     },
 }

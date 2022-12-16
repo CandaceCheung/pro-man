@@ -83,13 +83,14 @@ export async function seed(knex: Knex): Promise<void> {
     }
     const itemIDs = await knex("items").insert(insertArray).returning('*');
 
-    const defaultStates = ['Empty', 'Working on it', 'Done', 'Stuck', 'Checking']
+    const defaultStates = ['Empty', 'Stuck', 'Done', 'Working on it', 'Checking']
+    const statusLabelsColor = ["#C4C4C4", "#FDAB3D", "#E2445C", "#00C875", "#0086C0", "#A25DDC", "#037F4C", "#579BFC", "#CAB641", "#FFCB00"];
 
     insertArray = []
     for (let i of projectIDs) {
-        for (let j of defaultStates) {
+        for (let j in defaultStates) {
             insertArray.push(
-                { project_id: i.id, name: j, color: getRandomColor() },
+                { project_id: i.id, name: defaultStates[j], color: statusLabelsColor[j] },
             )
         }
     }

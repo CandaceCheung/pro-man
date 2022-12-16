@@ -48,7 +48,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
     }
 
     useEffect(()=>{
-        dispatch(getTable(userId as number, projectId as number))
+        userId && projectId && dispatch(getTable(userId as number, projectId as number))
     }, [projectId, dispatch, userId])
 
     return (

@@ -128,8 +128,6 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     tableCell: {
         ref: getRef("tableCell"),
         border: `1px solid ${theme.colors.borderColor[0]}`,
-        paddingLeft: 8,
-        paddingRight: 8,
         textAlign: "center",
         height: 40,
         display: "flex",

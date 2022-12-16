@@ -68,7 +68,7 @@ export function MainTable() {
         let personsColorsTemp: {[key in string]: string} = {};
 
         for (const cell of tableSummary) {
-            if (cell.project_id === projectID) {
+            if (cell.project_id) {
                 const itemGroupID = cell.item_group_id;
                 const itemID = cell.item_id;
                 const typeID = cell.horizontal_order_id;
