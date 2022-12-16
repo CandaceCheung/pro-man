@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { reorderItems, reorderTypes, retrieveNames, updateItemGroupName } from '../redux/table/thunk';
+import { reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -47,8 +47,6 @@ export function MainTable() {
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
     const [personsColors, setPersonsColors] = useState<{[key in number]: string}>({});
-    const [personsFirstName, setFirstName] = useState<{[key in number]: (string | null)}>({});
-    const [personsLastName, setLastName] = useState<{[key in number]: (string | null)}>({});
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -121,15 +119,6 @@ export function MainTable() {
                         if (!personsColorsTemp[cell.item_person_user_id]) {
                             const numberOfExistingPersons =  Object.keys(personsColorsTemp).length;
                             personsColorsTemp[cell.item_person_user_id] = theme.colors.personsTypeComponentColor[numberOfExistingPersons % theme.colors.personsTypeComponentColor.length];
-                        }
-                        if (!personsFirstName[cell.item_person_user_id] || !!personsLastName[cell.item_person_user_id]) {
-                            dispatch(retrieveNames(
-                                cell.item_person_user_id, 
-                                personsFirstName,
-                                setFirstName,
-                                personsLastName,
-                                setLastName
-                            ));
                         }
                         break;
                     case "status":
