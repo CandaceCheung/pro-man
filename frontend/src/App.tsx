@@ -36,9 +36,14 @@ function App() {
 
     useEffect(() => {
         isLoggedIn === null && dispatch(retriveLogin());
-        isLoggedIn && dispatch(getTableList(userId!));
-        isLoggedIn && dispatch(getFavorite(userId!))
-        isLoggedIn && navigate('/');
+        if (isLoggedIn) {
+            dispatch(getFavorite(userId!));
+            if (projectId) {
+                navigate('/');
+            } else {
+                dispatch(getTableList(userId!));
+            }
+        }
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId, projectId]);
 
@@ -54,7 +59,7 @@ function App() {
     return (
         <div className="App">
             {
-                isLoggedIn && 
+                isLoggedIn && projectId &&
                 (
                     <AppShell
                         navbar={<LeftNavbar />}

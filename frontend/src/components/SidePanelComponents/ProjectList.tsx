@@ -4,6 +4,8 @@ import { useAppDispatch, useAppSelector } from "../../store"
 import { setActiveProject } from '../../redux/project/thunk'
 import { MyTableListState } from '../../redux/table/slice'
 import { IconPlus } from '@tabler/icons'
+import { insertNewProject } from '../../redux/table/thunk'
+import { showNotification } from '@mantine/notifications'
 
 export function ProjectList() {
     const projectSummary = useAppSelector(state => state.table.project_list)
@@ -25,11 +27,16 @@ export function ProjectList() {
             projectList.push(obj)
         }
     }
+
+    const onAddProject = () => {
+        userId && dispatch(insertNewProject(userId));
+    }
+
     return (
         <div>
             <h2>Project List</h2>
             <div id="project-list">
-                <Button variant='subtle' rightIcon={<IconPlus size={14} />}> New Project </Button>
+                <Button variant='subtle' rightIcon={<IconPlus size={14} />} onClick={onAddProject}> New Project </Button>
                 <Divider labelPosition='center' my="md" label="Your Projects" color={'dark'} />
                 {projectList.map((content, index) => content?.creator_id === userId &&
                     <div key={content.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content?.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>

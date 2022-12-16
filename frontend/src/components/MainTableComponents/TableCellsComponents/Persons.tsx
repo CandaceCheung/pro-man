@@ -1,4 +1,5 @@
 import { createStyles } from '@mantine/core';
+import { useEffect, useState } from 'react';
 
 interface PersonsProps {
     itemPersonsNames: string[],
@@ -52,7 +53,16 @@ const useStyles = createStyles(() => ({
 }));
 
 export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: PersonsProps) {
+    const [firstName, setFirstName] = useState<Array<string | null>>([]);
+    const [lastName, setLastName] = useState<Array<string | null>>([]);
+    
     const { classes, cx } = useStyles();
+
+    useEffect(()=>{
+        for (const id of itemPersonsIds) {
+            
+        }
+    });
 
     switch (itemPersonsNames.length) {
         case 0:

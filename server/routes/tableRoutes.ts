@@ -9,11 +9,12 @@ import { tableController } from "../app";
     tableRoutes.get('/list/:userID', tableController.getTableList);
     tableRoutes.put('/updateTimeline', tableController.updateTimeline);
     tableRoutes.put('/updateDateline', tableController.updateDateline);
-    tableRoutes.put('/updateItemGroupName', tableController.updateItemGroupName);
-    tableRoutes.post('/insertItem', tableController.insertItem);
-    tableRoutes.post('/insertItemGroup', tableController.insertItemGroup);
-    tableRoutes.put('/reorderItems', tableController.reorderItems);
-    tableRoutes.put('/reorderTypes', tableController.reorderTypes);
+    tableRoutes.put('/itemGroupName', tableController.updateItemGroupName);
+    tableRoutes.post('/item', tableController.insertItem);
+    tableRoutes.post('/itemGroup', tableController.insertItemGroup);
+    tableRoutes.put('/itemsOrder', tableController.reorderItems);
+    tableRoutes.put('/typesOrder', tableController.reorderTypes);
+    tableRoutes.post('/newProject', tableController.insertNewProject);
 
     return tableRoutes;
  }

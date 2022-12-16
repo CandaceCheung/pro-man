@@ -23,11 +23,11 @@ import {
 } from "@tabler/icons";
 import { useState } from "react";
 import { Status } from "../../redux/kanban/state";
-import { useAppSelector } from "../../store";
+import { postItem } from "../../redux/kanban/thunk";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { ItemCard } from "./ItemCard";
 
-type StatusProps = Status; //state
-
+type StatusProps = Status;
 
 const useStyles = createStyles((theme, color: string) => ({
     cardHeader: {
@@ -59,27 +59,26 @@ const useStyles = createStyles((theme, color: string) => ({
     },
 
     modalText: {
-        minWidth: 50,
+        minWidth: 60,
     },
 }));
 
-
 export function StatusColumn(props: StatusProps) {
+    const dispatch = useAppDispatch();
     const [opened, setOpened] = useState(false);
     const { classes, theme } = useStyles(props.color);
     const memberList = useAppSelector((state) => state.kanban.memberList);
     const groupList = useAppSelector((state) => state.kanban.groupList);
-
-    const selectData = [
-        {
-            value: "group 1",
-            label: "add item in group 1",
-        },
-        {
-            value: "group 2",
-            label: "add item in group 2",
-        },
-    ];
+    const projectId = useAppSelector((state) => state.project.project_id)!;
+    const [itemName, setItemName] = useState("");
+    const [memberId, setMemberId] = useState<string[]>([]);
+    const [date, setDate] = useState<Date>();
+    const [groupId, setGroupId] = useState<string[]>([]);
+    const addItem = () => {
+        if(date !== undefined) {
+            dispatch(postItem(projectId, props.id, itemName, memberId, date, groupId));
+        }
+    };
 
     const modalList = [
         {
@@ -88,19 +87,27 @@ export function StatusColumn(props: StatusProps) {
                 <Input
                     variant="filled"
                     icon={<IconClipboardList size={16} />}
+                    onChange={(e) => {
+                        setItemName(e.target.value);
+                    }}
                 />
             ),
         },
         {
-            text: "People",
+            text: "Member",
             input: (
                 <MultiSelect
-
-                    data={memberList.map(member => ({value:member.id.toString(), label: member.username}))}
+                    data={memberList.map((member) => ({
+                        value: member.id.toString(),
+                        label: member.username,
+                    }))}
                     placeholder="All options"
                     maxDropdownHeight={100}
                     variant="filled"
                     icon={<IconUser size={16} />}
+                    onChange={(value) => {
+                        setMemberId(value);
+                    }}
                 />
             ),
         },
@@ -110,7 +117,13 @@ export function StatusColumn(props: StatusProps) {
                 <DatePicker
                     variant="filled"
                     withAsterisk
+                    required
                     icon={<IconCalendarEvent size={16} />}
+                    onChange={(value) => { if(value !==null){
+
+                        setDate(value);
+                    }
+                    }}
                 />
             ),
         },
@@ -118,11 +131,17 @@ export function StatusColumn(props: StatusProps) {
             text: "Group",
             input: (
                 <MultiSelect
-                    data={groupList.map(group => ({value:group.id.toString(), label: group.name}))}
+                    data={groupList.map((group) => ({
+                        value: group.id.toString(),
+                        label: group.name,
+                    }))}
                     variant="filled"
                     placeholder="All options"
                     maxDropdownHeight={100}
                     icon={<IconBrandAsana size={16} />}
+                    onChange={(value) => {
+                        setGroupId(value);
+                    }}
                 />
             ),
         },
@@ -191,14 +210,17 @@ export function StatusColumn(props: StatusProps) {
                     >
                         <div>
                             {modalList.map((eachRow) => (
-                                <Group className={classes.modalRow} key={eachRow.text}>
+                                <Group
+                                    className={classes.modalRow}
+                                    key={eachRow.text}
+                                >
                                     <Text className={classes.modalText}>
                                         {eachRow.text}
                                     </Text>
                                     {eachRow.input}
                                 </Group>
                             ))}
-                            <Button color="cyan" mt={5}>
+                            <Button color="cyan" mt={5} onClick={addItem}>
                                 Add item
                             </Button>
                         </div>
