@@ -4,6 +4,7 @@ import { itemCellsElement } from "../../pages/MainTable";
 import { Persons } from "./TableCellsComponents/Persons";
 import { useStyles } from "./styles";
 import { Text } from "./TableCellsComponents/Text";
+import { Status } from "./TableCellsComponents/Status";
 
 export interface TableRowProps {
     id: number,
@@ -80,8 +81,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                         className={cx(classes.tableCell, classes.status)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <div>{"Status:" + cell.item_status_name}</div>
-                        <div>{"Color:" + cell.item_status_color}</div>
+                        <Status status={cell.item_status_name!} color={cell.item_status_color!}></Status>
                     </div>
                 )
             case "text":
