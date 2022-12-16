@@ -59,7 +59,7 @@ const useStyles = createStyles((theme, color: string) => ({
     },
 
     modalText: {
-        minWidth: 50,
+        minWidth: 60,
     },
 }));
 
