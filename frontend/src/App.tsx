@@ -30,8 +30,8 @@ function App() {
     useEffect(() => {
         isLoggedIn === null && dispatch(retriveLogin());
         isLoggedIn && navigate('/');
-        userId !== null && dispatch(getTableList(userId));
-        userId !== null && dispatch(getFavorite(userId))
+        isLoggedIn && dispatch(getTableList(userId!));
+        isLoggedIn && dispatch(getFavorite(userId!))
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId, projectId]);
 
