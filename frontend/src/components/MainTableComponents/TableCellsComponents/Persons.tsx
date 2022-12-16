@@ -1,10 +1,9 @@
 import { createStyles } from '@mantine/core';
-import { useEffect, useState } from 'react';
 
 interface PersonsProps {
     itemPersonsNames: string[],
     itemPersonsIds: number[],
-    personsColors: { [key in string]: string }
+    personsColors: { [key in number]: string }
 }
 
 const useStyles = createStyles(() => ({
@@ -25,7 +24,7 @@ const useStyles = createStyles(() => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        fontSize: 15,
+        fontSize: 12,
         fontWeight: "bold",
         border: "2px solid #fff"
     },
@@ -52,17 +51,8 @@ const useStyles = createStyles(() => ({
     }
 }));
 
-export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: PersonsProps) {
-    const [firstName, setFirstName] = useState<Array<string | null>>([]);
-    const [lastName, setLastName] = useState<Array<string | null>>([]);
-    
+export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: PersonsProps) {    
     const { classes, cx } = useStyles();
-
-    useEffect(()=>{
-        for (const id of itemPersonsIds) {
-            
-        }
-    });
 
     switch (itemPersonsNames.length) {
         case 0:
@@ -73,7 +63,7 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                     <span
                         className={cx(classes.personsComponent, classes.personsSingleComponent)}
                         style={{
-                            backgroundColor: personsColors[itemPersonsNames[0]]
+                            backgroundColor: personsColors[itemPersonsIds[0]]
                         }}
                     >
                         {itemPersonsNames[0][0].toUpperCase()}
@@ -97,7 +87,7 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                                         cx(classes.personsComponent, classes.personsFirstComponent)
                                 }
                                 style={{
-                                    backgroundColor: personsColors[name]
+                                    backgroundColor: personsColors[itemPersonsIds[index]]
                                 }}
                             >
                                 {initial}
@@ -112,7 +102,7 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                     <span
                         key={"person_" + itemPersonsIds[0]}
                         className={cx(classes.personsComponent, classes.personsFirstComponent)}
-                        style={{ backgroundColor: personsColors[itemPersonsNames[0]] }}
+                        style={{ backgroundColor: personsColors[itemPersonsIds[0]] }}
                     >
                         {itemPersonsNames[0][0].toUpperCase()}
                     </span>

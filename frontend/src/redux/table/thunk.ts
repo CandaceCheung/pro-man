@@ -4,6 +4,7 @@ import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateD
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
 import { setActiveProject } from "../project/thunk";
+import produce from "immer";
 
 export function getTable(userID: number, projectID: number) {
 	return async (dispatch: Dispatch) => {
@@ -273,6 +274,37 @@ export function insertNewProject(userId: number) {
 				title: 'Insert data notification',
 				message: 'Failed to insert new project! 🤥'
 			});
+		}
+	}
+}
+
+export function retrieveNames(
+	userId: number,
+	firstName: (string | null)[],
+	setFirstName: React.Dispatch<React.SetStateAction<(string | null)[]>>,
+	lastName: (string | null)[],
+	setLastName: React.Dispatch<React.SetStateAction<(string | null)[]>>
+	) {
+	return async () => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/names/${userId}}`);
+		const result = await res.json();
+		
+		const newFirstName = result.success ? result.result.first_name : null;
+		const newLastName = result.success ? result.result.last_name : null;
+
+		if (firstName.length && lastName.length) {
+			const nextFirstNameState = produce(firstName, draftState => {
+				draftState.push(newFirstName);
+			});
+			setFirstName(nextFirstNameState);
+			const nextLastNameState = produce(lastName, draftState => {
+				draftState.push(newLastName);
+			});
+			setLastName(nextLastNameState);
+		} else {
+			setFirstName(newFirstName);
+			setLastName(newLastName);
 		}
 	}
 }
