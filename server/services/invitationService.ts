@@ -8,24 +8,26 @@ export class InvitationService {
         const txn = await this.knex.transaction();
 
         try {
-            const check = await txn("users").select("username").where("username", username).returning('*')[0];
+            const check = await txn("users").select("*").where("username", username);
 
             if(check){
-                delete check.password
-                return check
+                delete check[0].password
+                return check[0]
             }
 
-            const tempUser = await txn.insert({
+            const [tempUser] = await txn.insert({
                 username: username,
                 password: '',
                 first_name: '',
                 last_name: '',
                 role: 'pending',
-            }).into('users').returning('*')[0];
+            }).into('users').returning('*');
 
+            console.log(tempUser)
             await txn.insert({
                 user_id: tempUser.id,
                 project_id: projectId,
+                status: 'pending'
             }).into("members");
             
             await txn.commit();
@@ -37,6 +39,5 @@ export class InvitationService {
             throw e;
         }
     }
-
 }
 

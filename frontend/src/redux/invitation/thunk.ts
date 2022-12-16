@@ -32,3 +32,28 @@ export function sendInvitation(projectId: number, username: string) {
 		}
 	};
 }
+
+export function acceptInvitation() {
+	return async (dispatch: Dispatch) => {
+        const params = new URLSearchParams(window.location.search);
+        const projectId = params.get('projectId');
+        const token = params.get('token');
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/invitation/response/${projectId}/${token}`, 
+		);
+		const result = await res.json();
+
+		if (result.success) {
+			showNotification({
+				title: 'Invitation notification',
+				message: 'Invitation Accept'
+			});
+		} else {
+			showNotification({
+				title: 'Invitation notification',
+				message: 'Accept failed'
+			});
+		}
+	};
+}
