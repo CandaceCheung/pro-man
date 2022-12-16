@@ -50,7 +50,7 @@ export async function seed(knex: Knex): Promise<void> {
     for (const i of projectIDs) {
         for (const j of userIDs) {
             insertArray.push(
-                { user_id: j.id, project_id: i.id, status: 'confirmed' },
+                { user_id: j.id, project_id: i.id },
             )
         }
     }
