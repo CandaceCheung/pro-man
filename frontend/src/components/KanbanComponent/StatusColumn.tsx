@@ -105,7 +105,7 @@ export function StatusColumn(props: StatusProps) {
                         label: member.username,
                     }))}
                     placeholder="All options"
-                    maxDropdownHeight={100}
+                    maxDropdownHeight={200}
                     variant="filled"
                     icon={<IconUser size={16} />}
                     onChange={(value) => {
@@ -140,7 +140,7 @@ export function StatusColumn(props: StatusProps) {
                     }))}
                     variant="filled"
                     placeholder="All options"
-                    maxDropdownHeight={100}
+                    maxDropdownHeight={200}
                     icon={<IconBrandAsana size={16} />}
                     required
                     onChange={(value) => {
