@@ -99,6 +99,26 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Update Item Group Name" });
         }
     }
+    reorderItems = async (req: Request, res: Response) => {
+        try {
+            const newOrder = req.body.newOrder;
+            await this.tableService.reorderItems(newOrder);
+            res.json({ success: true });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Reorder Items" });
+        }
+    }
+    reorderTypes = async (req: Request, res: Response) => {
+        try {
+            const newOrder = req.body.newOrder;
+            await this.tableService.reorderTypes(newOrder);
+            res.json({ success: true });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Reorder Types" });
+        }
+    }
     insertItem = async (req: Request, res: Response) => {
         try {
             const projectId = req.body.projectId;
@@ -123,26 +143,6 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Insert Item Group" });
         }
     }
-    reorderItems = async (req: Request, res: Response) => {
-        try {
-            const newOrder = req.body.newOrder;
-            await this.tableService.reorderItems(newOrder);
-            res.json({ success: true });
-        } catch(e) {
-            console.error(e);
-            res.status(500).json({ msg: "[TAB] Fail to Reorder Items" });
-        }
-    }
-    reorderTypes = async (req: Request, res: Response) => {
-        try {
-            const newOrder = req.body.newOrder;
-            await this.tableService.reorderTypes(newOrder);
-            res.json({ success: true });
-        } catch(e) {
-            console.error(e);
-            res.status(500).json({ msg: "[TAB] Fail to Reorder Types" });
-        }
-    }
     insertNewProject = async (req: Request, res: Response) => {
         try {
             const userId = req.body.userId;
@@ -154,6 +154,19 @@ export class TableController {
         } catch(e) {
             console.error(e);
             res.status(500).json({ msg: "[TAB] Fail to Insert Project" });
+        }
+    }
+    retrieveUserName = async (req: Request, res: Response) => {
+        try {
+            const userId = parseInt(req.params.userID);
+            const result = await this.tableService.retrieveUserName(userId);
+            res.json({
+                success: !!result,
+                result
+            });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Retrieve Names" });
         }
     }
 }
