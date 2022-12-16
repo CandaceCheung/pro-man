@@ -7,13 +7,30 @@ import nodemailer from 'nodemailer'
 export class InvitationController {
     constructor(private invitationService: InvitationService) { }
 
+    acceptInvite = async (req: Request, res: Response) => {
+        try {
+            const token = req.params.token
+            console.log(token)
+            const userDetail = jwtSimple.decode(token, jwt.jwtSecret);
+            if (userDetail && !req.user){
+                res.redirect('')
+                res.json({ success: true })
+            }
+            
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "[INV] Incorrect Token" });
+        }
+    }
+
     sendInvite = async (req: Request, res: Response) => {
         try {
             const projectId = req.body.projectId;
             const username = req.body.username;
             
             const tempUser = await this.invitationService.inviteUser(projectId, username);
-            
+            console.log(tempUser)
+
             if (tempUser){
                 const token = jwtSimple.encode(tempUser, jwt.jwtSecret);
                 
@@ -21,7 +38,7 @@ export class InvitationController {
                     <p>Hello,</p>
                     <p>You have been invited to join Pro-man</p>
                     <p>Click the link below to accept invitation</p>
-                    ${process.env.REACT_APP_API_SERVER}/invitation/${token}
+                    ${process.env.REACT_APP_PUBLIC_HOSTNAME}/invitation/response/${projectId}/${token}
                 ` 
                 //send email
                 let transporter = nodemailer.createTransport({
