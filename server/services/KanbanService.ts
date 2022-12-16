@@ -52,8 +52,7 @@ export class KanbanService {
 		const groupsList = await this.knex
 			.select('item_groups.id', 'item_groups.name')
 			.from('item_groups')
-			.join('items', 'items.item_group_id', '=', 'item_groups.id')
-			.where('items.project_id', project_Id);
+			.where('item_groups.project_id', project_Id);
 		return groupsList;
 	}
 
@@ -77,6 +76,10 @@ export class KanbanService {
 				})
 				.into('items')
 				.returning('items.id');
+
+			await txn
+				.insert({ state_id: stateId, item_id: addItem[0].id })
+				.into('type_status');
 
 			await txn
 				.insert({

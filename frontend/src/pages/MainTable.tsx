@@ -47,8 +47,6 @@ export function MainTable() {
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
     const [personsColors, setPersonsColors] = useState<{[key in number]: string}>({});
-    const [personsFirstName, setFirstName] = useState<{[key in number]: (string | null)}>({});
-    const [personsLastName, setLastName] = useState<{[key in number]: (string | null)}>({});
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
