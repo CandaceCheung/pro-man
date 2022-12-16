@@ -11,25 +11,27 @@ export class InvitationService {
             const check = await txn("users").select("username").where("username", username).returning('*')[0];
 
             if(check){
-                await txn('users').update({
-                    token: '' //token
-                }).where('users.id', check.id)
-                return
+                delete check.password
+                return check
             }
 
-            const [{ userId }] = await txn.insert({
+            const tempUser = await txn.insert({
                 username: username,
-                password: '', 
+                password: '',
+                first_name: '',
+                last_name: '',
                 role: 'pending',
-                token: '' //token
-            }).into('users').returning('id as userId');
+            }).into('users').returning('*')[0];
 
             await txn.insert({
-                user_id: userId,
+                user_id: tempUser.id,
                 project_id: projectId,
             }).into("members");
             
             await txn.commit();
+            delete tempUser.password
+            return tempUser
+
         } catch (e) {
             await txn.rollback();
             throw e;
