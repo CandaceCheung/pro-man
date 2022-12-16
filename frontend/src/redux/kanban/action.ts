@@ -1,6 +1,6 @@
 import { Item, Status } from "./state";
 
-export function setKanbanInfo(statusList: Status[]){
+export function setKanbanInfo(statusList: Status[]) {
     return {
         type: "KANBAN/SET" as const,
         statusList,
@@ -11,24 +11,34 @@ export function setKanbanMember(memberList: []) {
     return {
         type: "KANBAN/SET_MEMBER" as const,
         memberList,
-    }
+    };
 }
 
 export function setKanbanGroup(groupList: []) {
     return {
         type: "KANBAN/SET_GROUP" as const,
         groupList,
-    }
+    };
 }
 
-export function addKanbanItem(statusId: number, item: Item, date: string, member: string, group: number) {
+export function addKanbanItem(
+    projectId: number,
+    stateId: number,
+    userId: number,
+    itemName: string,
+    memberId: number,
+    date: string,
+    groupId: string
+) {
     return {
         type: "KANBAN/ADD" as const,
-        statusId,
-        item,
+        projectId,
+        stateId,
+        userId,
+        itemName,
+        memberId,
         date,
-        member,
-        group,
+        groupId,
     };
 }
 
