@@ -68,7 +68,6 @@ export class KanbanController {
 				userId,
 				username,
 				itemName,
-				itemGroupId,
 				typePersonId,
 				groupId,
 				date
@@ -80,7 +79,6 @@ export class KanbanController {
 				userId,
 				username,
 				itemName,
-				itemGroupId,
 				typePersonId,
 				groupId,
 				date
