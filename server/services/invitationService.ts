@@ -33,15 +33,21 @@ export class InvitationService {
         }
     }
 
-    async acceptInvite(invitationId :number) {
+    async acceptInvite(invitationId :number, projectId: number, userId:number) {
         
         const txn = await this.knex.transaction();
 
         try {
+
             const [invitation] = await txn('invitations').update({
                 status: 'accepted'
             }).where('id', invitationId).returning('*')
             
+            await txn('members').insert({
+                user_id: userId,
+                project_id: projectId,
+            })
+
             await txn.commit();
             return invitation
         } catch (e) {

@@ -11,9 +11,11 @@ export class InvitationController {
         try {
             const invitationDetail = jwtSimple.decode(req.body.token, jwt.jwtSecret);
             const invitationId = invitationDetail.id
+            const projectId = invitationDetail.project_id
+            const userId = req.body.userId
 
             if (invitationDetail){
-                const invitation = await this.invitationService.acceptInvite(invitationId)
+                const invitation = await this.invitationService.acceptInvite(invitationId, projectId, userId)
                 
                 res.json({
                     success: true,

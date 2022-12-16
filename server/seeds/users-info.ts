@@ -26,6 +26,7 @@ export async function seed(knex: Knex): Promise<void> {
     await knex("states").del();
     await knex("items").del();
     await knex("item_groups").del();
+    await knex('invitations').del();
     await knex("members").del();
     await knex("projects").del();
     await knex("users").del();
@@ -50,7 +51,7 @@ export async function seed(knex: Knex): Promise<void> {
     for (const i of projectIDs) {
         for (const j of userIDs) {
             insertArray.push(
-                { user_id: j.id, project_id: i.id, status: 'confirmed' },
+                { user_id: j.id, project_id: i.id },
             )
         }
     }
