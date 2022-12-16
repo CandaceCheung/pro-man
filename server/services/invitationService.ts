@@ -1,39 +1,49 @@
 import { Knex } from "knex";
-
 export class InvitationService {
     constructor(private knex: Knex) { }
 
-    async inviteUser(projectId: number, username: string) {
+    async inviteUser(projectId: number, userId: number, email: string) {
         
         const txn = await this.knex.transaction();
 
         try {
-            const check = await txn("users").select("*").where("username", username);
+            const [check] = await txn("invitations")
+                .select("*")
+                .where("user_id", userId)
+                .where("email", email)
+                .where("project_id", projectId);
 
             if(check){
-                delete check[0].password
-                return check[0]
+                return check
             }
 
-            const [tempUser] = await txn.insert({
-                username: username,
-                password: '',
-                first_name: '',
-                last_name: '',
-                role: 'pending',
-            }).into('users').returning('*');
-
-            console.log(tempUser)
-            await txn.insert({
-                user_id: tempUser.id,
+            const [invitation] = await txn.insert({
+                user_id: userId,
                 project_id: projectId,
-                status: 'pending'
-            }).into("members");
+                email: email,
+                status: 'pending',
+            }).into('invitations').returning('*');
+
+            await txn.commit();
+            return invitation
+
+        } catch (e) {
+            await txn.rollback();
+            throw e;
+        }
+    }
+
+    async acceptInvite(invitationId :number) {
+        
+        const txn = await this.knex.transaction();
+
+        try {
+            const [invitation] = await txn('invitations').update({
+                status: 'accepted'
+            }).where('id', invitationId).returning('*')
             
             await txn.commit();
-            delete tempUser.password
-            return tempUser
-
+            return invitation
         } catch (e) {
             await txn.rollback();
             throw e;

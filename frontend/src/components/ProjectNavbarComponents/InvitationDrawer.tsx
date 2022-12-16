@@ -14,10 +14,11 @@ export default function InvitationDrawer(props: InvitationDrawerProps) {
   const dispatch = useAppDispatch()
   const [value, setValue] = useInputState('')
   const projectId = useAppSelector(state => state.project.project_id);
-  // const userId = useAppSelector(state => state.auth.userId);
+  const userId = useAppSelector(state => state.auth.userId);
+
 
   const submitHandler = ()=>{
-    dispatch(sendInvitation(projectId as number, value))
+    dispatch(sendInvitation(projectId!, userId!, value))
     console.log(value)
   }
 
@@ -37,7 +38,7 @@ export default function InvitationDrawer(props: InvitationDrawerProps) {
         type="email"
         value={value}
         icon={<IconUserPlus size={14}/>}
-        rightSection={<IconPlus onClick={submitHandler} size="xs" />}
+        rightSection={<IconPlus onClick={submitHandler} size={14} />}
         onChange={setValue}
       />
       <Divider my="xs" label="Invited List" labelPosition="center"/>
