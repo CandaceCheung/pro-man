@@ -58,7 +58,7 @@ export function getGroup(projectId : number) {
     }
 }
 
-export function postItem(itemName: string, date: string, member: string[], projectId: number) {
+export function postItem(projectId: number, itemName: string, member: string[], date: string, group: number ) {
     return async (dispatch: AppDispatch) => {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/kanban/`, {
             method: "POST",
@@ -68,14 +68,15 @@ export function postItem(itemName: string, date: string, member: string[], proje
             body: JSON.stringify({
                 projectId,
                 itemName,
-                date,
                 member,
+                date,
+                group,
             }),
         });
         const result = await res.json();
 
         if (result.success) {
-            // dispatch(addKanbanItem(result.));
+            // dispatch(addKanbanItem(result.state.id,result.state.item));
         } else {
             dispatch(failKanbanAction());
             console.log("Post Kanban item fail");

@@ -7,7 +7,7 @@ export function setKanbanInfo(statusList: Status[]){
     };
 }
 
-export function setKanbanMember(memberList:[]) {
+export function setKanbanMember(memberList: []) {
     return {
         type: "KANBAN/SET_MEMBER" as const,
         memberList,
@@ -21,11 +21,14 @@ export function setKanbanGroup(groupList: []) {
     }
 }
 
-export function addKanbanItem(statusId: number, item: Item) {
+export function addKanbanItem(statusId: number, item: Item, date: string, member: string, group: number) {
     return {
         type: "KANBAN/ADD" as const,
         statusId,
         item,
+        date,
+        member,
+        group,
     };
 }
 
