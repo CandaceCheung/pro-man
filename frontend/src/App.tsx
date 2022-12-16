@@ -17,22 +17,23 @@ import { getGroup, getKanbanItems, getMember } from "./redux/kanban/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
     const projectId = useAppSelector((state) => state.project.project_id); //active project state
+
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         document.title = 'Pro-Man: Project Management Tool';
     }, []);
 
     useEffect(() => {
-        isLoggedIn === true && navigate('/');
         isLoggedIn === null && dispatch(retriveLogin());
+        isLoggedIn && navigate('/');
         userId !== null && dispatch(getTableList(userId));
         userId !== null && dispatch(getFavorite(userId))
         // eslint-disable-next-line
-    }, [isLoggedIn, dispatch, userId]);
+    }, [isLoggedIn, dispatch, userId, projectId]);
 
     useEffect(() => {
         if (projectId !== null){
@@ -46,7 +47,7 @@ function App() {
     return (
         <div className="App">
             {
-                isLoggedIn === true &&
+                isLoggedIn && projectId && 
                 (
                     <AppShell
                         navbar={<LeftNavbar />}
