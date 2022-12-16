@@ -1,59 +1,67 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { showNotification } from '@mantine/notifications';
-import { sendInviteAction } from "./slice";
+import { acceptInviteAction, sendInviteAction } from "./slice";
 
-export function sendInvitation(projectId: number, username: string) {
-	return async (dispatch: Dispatch) => {
+export function sendInvitation(projectId: number, userId: number, value: string) {
+    return async (dispatch: Dispatch) => {
 
-		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/invitation`, {
-			method: "POST",
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				projectId,
-                username
-			})
-		});
-		const result = await res.json();
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/invitation`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                projectId,
+                userId,
+                email: value,
+            })
+        });
+        const result = await res.json();
 
-		if (result.success) {
-			dispatch(sendInviteAction(result.invitationList))
-			showNotification({
-				title: 'Invitation notification',
-				message: 'Invitation Sent'
-			});
-		} else {
-			showNotification({
-				title: 'Invitation notification',
-				message: 'Invitation Failed'
-			});
-		}
-	};
+        if (result.success) {
+            dispatch(sendInviteAction(result.invitation))
+            showNotification({
+                title: 'Invitation notification',
+                message: result.msg
+            });
+        } else {
+            showNotification({
+                title: 'Invitation notification',
+                message: result.msg
+            });
+        }
+    };
 }
 
-export function acceptInvitation() {
-	return async (dispatch: Dispatch) => {
-        const params = new URLSearchParams(window.location.search);
-        const projectId = params.get('projectId');
-        const token = params.get('token');
+export function acceptInvitation(token: string) {
+    return async (dispatch: Dispatch) => {
+        
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/invitation/response/`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                token,
+            })
+        });
+        const result = await res.json();
 
-		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/invitation/response/${projectId}/${token}`, 
-		);
-		const result = await res.json();
-
-		if (result.success) {
-			showNotification({
-				title: 'Invitation notification',
-				message: 'Invitation Accept'
-			});
-		} else {
-			showNotification({
-				title: 'Invitation notification',
-				message: 'Accept failed'
-			});
-		}
-	};
+        if (result.success) {
+            dispatch(acceptInviteAction(result.invitation))
+            showNotification({
+                title: 'Invitation notification',
+                message: result.msg
+            });
+        } else {
+            showNotification({
+                title: 'Invitation notification',
+                message: result.msg
+            });
+        }
+    };
 }
+
+
