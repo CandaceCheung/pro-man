@@ -163,6 +163,38 @@ export class TableService {
         }).where("id", id);
     }
 
+    async reorderItems(newOrder: number[]) {
+        const txn = await this.knex.transaction();
+        try {
+            for (const i in newOrder) {
+                const itemId = newOrder[i];
+                await this.knex("items")
+                    .where("id", itemId)
+                    .update({ order: parseInt(i) + 1 });
+            }
+            await txn.commit();
+        } catch (e) {
+            await txn.rollback();
+            throw e;
+        }
+    }
+
+    async reorderTypes(newOrder: number[]) {
+        const txn = await this.knex.transaction();
+        try {
+            for (const i in newOrder) {
+                const typeId = newOrder[i];
+                await txn("types")
+                    .where("id", typeId)
+                    .update({ order: parseInt(i) + 1 });
+            }
+            await txn.commit();
+        } catch (e) {
+            await txn.rollback();
+            throw e;
+        }
+    }
+
     async insertItem(projectId: number, userId: number) {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);
@@ -344,38 +376,6 @@ export class TableService {
         }
     }
 
-    async reorderItems(newOrder: number[]) {
-        const txn = await this.knex.transaction();
-        try {
-            for (const i in newOrder) {
-                const itemId = newOrder[i];
-                await this.knex("items")
-                    .where("id", itemId)
-                    .update({ order: parseInt(i) + 1 });
-            }
-            await txn.commit();
-        } catch (e) {
-            await txn.rollback();
-            throw e;
-        }
-    }
-
-    async reorderTypes(newOrder: number[]) {
-        const txn = await this.knex.transaction();
-        try {
-            for (const i in newOrder) {
-                const typeId = newOrder[i];
-                await txn("types")
-                    .where("id", typeId)
-                    .update({ order: parseInt(i) + 1 });
-            }
-            await txn.commit();
-        } catch (e) {
-            await txn.rollback();
-            throw e;
-        }
-    }
-
     async insertNewProject(userId: number) {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const txn = await this.knex.transaction();
@@ -479,5 +479,10 @@ export class TableService {
             await txn.rollback();
             throw e;
         }
+    }
+
+    async retrieveUserName(userId: number) {
+        const [names] = await this.knex("users").select("first_name", "last_name").where("id", userId);
+        return (names.first_name && names.last_name) && names;
     }
 }

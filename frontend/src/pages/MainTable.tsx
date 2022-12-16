@@ -46,7 +46,9 @@ export function MainTable() {
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
-    const [personsColors, setPersonsColors] = useState<{[key in string]: string}>({});
+    const [personsColors, setPersonsColors] = useState<{[key in number]: string}>({});
+    const [personsFirstName, setFirstName] = useState<{[key in number]: (string | null)}>({});
+    const [personsLastName, setLastName] = useState<{[key in number]: (string | null)}>({});
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -116,9 +118,9 @@ export function MainTable() {
                             itemCell.item_person_name = [cell.item_person_name];
                             itemCells[itemGroupID][itemID][typeID] = itemCell;
                         }
-                        if (!personsColorsTemp[cell.item_person_name]) {
+                        if (!personsColorsTemp[cell.item_person_user_id]) {
                             const numberOfExistingPersons =  Object.keys(personsColorsTemp).length;
-                            personsColorsTemp[cell.item_person_name] = theme.colors.personsTypeComponentColor[numberOfExistingPersons % theme.colors.personsTypeComponentColor.length];
+                            personsColorsTemp[cell.item_person_user_id] = theme.colors.personsTypeComponentColor[numberOfExistingPersons % theme.colors.personsTypeComponentColor.length];
                         }
                         break;
                     case "status":

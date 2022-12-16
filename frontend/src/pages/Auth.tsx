@@ -50,6 +50,7 @@ export function Auth() {
     const [value, setValue] = useState("login");
     const { classes, theme } = useStyles();
 
+
     const toggleOptions = [
         {
             label: "Login",

@@ -1,37 +1,47 @@
 import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type InvitationState = {
-    inviter_id: number
-    inviter_username: string
-    project_id: number
-    invitee_username: string
-    invitee_id: number
-}[]
+export type Invitation = {
+    user_id: number | null,
+    project_id: number | null,
+    email: string,
+    status: 'pending' | 'accepted'
+}
+
+export type InvitationState = Invitation[]
 
 const initialState: InvitationState = [{
-    inviter_id: 0,
-    inviter_username: "",
-    project_id: 0,
-    invitee_username: "",
-    invitee_id: 0,
+    user_id: null,
+    project_id: null,
+    email: "",
+    status: 'pending'
 }]
 
-const sendInvite: CaseReducer<InvitationState, PayloadAction <InvitationState>> = 
+const sendInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> =
     (state, action) => {
-        state = action.payload
+        state.push(action.payload)
     }
-    
+const acceptInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> =
+    (state, action) => {
+        for (let invite of state){
+            if(invite.email===action.payload.email && invite.project_id ===action.payload.project_id){
+                invite.status = action.payload.status
+            }
+        }
+    }
+
 const invitationSlice = createSlice({
     name: 'invitation',
     initialState,
     reducers: {
         sendInvite,
+        acceptInvite,
     },
 })
 
 export const {
     sendInvite: sendInviteAction,
-   
+    acceptInvite: acceptInviteAction,
+
 } = invitationSlice.actions
 
 export default invitationSlice.reducer

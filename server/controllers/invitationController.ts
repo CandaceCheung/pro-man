@@ -9,36 +9,43 @@ export class InvitationController {
 
     acceptInvite = async (req: Request, res: Response) => {
         try {
-            const token = req.params.token
-            console.log(token)
-            const userDetail = jwtSimple.decode(token, jwt.jwtSecret);
-            if (userDetail && !req.user){
-                res.redirect('')
-                res.json({ success: true })
+            const invitationDetail = jwtSimple.decode(req.body.token, jwt.jwtSecret);
+            const invitationId = invitationDetail.id
+            const projectId = invitationDetail.project_id
+            const userId = req.body.userId
+
+            if (invitationDetail){
+                const invitation = await this.invitationService.acceptInvite(invitationId, projectId, userId)
+                
+                res.json({
+                    success: true,
+                    msg: 'Invitation Accepted!',
+                    invitation
+                })
             }
-            
         } catch (e) {
             console.error(e);
-            res.status(500).json({ msg: "[INV] Incorrect Token" });
+            res.status(500).json({ msg: "Incorrect Token" });
         }
     }
 
     sendInvite = async (req: Request, res: Response) => {
         try {
             const projectId = req.body.projectId;
-            const username = req.body.username;
+            const userId = req.body.userId;
+            const email = req.body.email;
             
-            const tempUser = await this.invitationService.inviteUser(projectId, username);
-            console.log(tempUser)
+            const invitation = await this.invitationService.inviteUser(projectId, userId, email);
+            console.log(invitation)
 
-            if (tempUser){
-                const token = jwtSimple.encode(tempUser, jwt.jwtSecret);
+            if (invitation){
+                const token = jwtSimple.encode(invitation, jwt.jwtSecret);
                 
                 const emailContent = `
                     <p>Hello,</p>
                     <p>You have been invited to join Pro-man</p>
                     <p>Click the link below to accept invitation</p>
-                    ${process.env.REACT_APP_PUBLIC_HOSTNAME}/invitation/response/${projectId}/${token}
+                    ${process.env.REACT_APP_PUBLIC_HOSTNAME}/?token=${token}
                 ` 
                 //send email
                 let transporter = nodemailer.createTransport({
@@ -54,7 +61,7 @@ export class InvitationController {
                 // send mail with defined transport object
                 await transporter.sendMail({
                     from: `"Pro-man Admin" <${process.env.EMAIL_LOGIN}>`, // sender address
-                    to: username, // list of receivers
+                    to: email, // list of receivers
                     subject: "Hello, Someone Invited You to Join Pro-man!", // Subject line
                     text: "Invitation", // plain text body
                     html: emailContent, // html body
@@ -68,6 +75,7 @@ export class InvitationController {
             }
             res.json({ 
                 success: true,
+                invitation,
                 msg: 'Invitation sent!' 
             })
         } catch (e) {

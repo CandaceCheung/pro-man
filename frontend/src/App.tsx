@@ -19,9 +19,16 @@ function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const userId = useAppSelector((state) => state.auth.userId);
     const projectId = useAppSelector((state) => state.project.project_id); //active project state
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    useEffect(()=>{
+        token && localStorage.setItem('invitation', token)  
+        token && console.log('token detected')
+    },[token])
 
     useEffect(() => {
         document.title = 'Pro-Man: Project Management Tool';
