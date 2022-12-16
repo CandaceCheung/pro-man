@@ -280,10 +280,10 @@ export function insertNewProject(userId: number) {
 
 export function retrieveNames(
 	userId: number,
-	firstName: (string | null)[],
-	setFirstName: React.Dispatch<React.SetStateAction<(string | null)[]>>,
-	lastName: (string | null)[],
-	setLastName: React.Dispatch<React.SetStateAction<(string | null)[]>>
+	firstName: {[x: number]: string | null},
+	setFirstName: React.Dispatch<React.SetStateAction<{[x: number]: string | null;}>>,
+	lastName: {[x: number]: string | null},
+	setLastName: React.Dispatch<React.SetStateAction<{[x: number]: string | null;}>>
 	) {
 	return async () => {
 		const res = await fetch(
@@ -293,18 +293,13 @@ export function retrieveNames(
 		const newFirstName = result.success ? result.result.first_name : null;
 		const newLastName = result.success ? result.result.last_name : null;
 
-		if (firstName.length && lastName.length) {
-			const nextFirstNameState = produce(firstName, draftState => {
-				draftState.push(newFirstName);
-			});
-			setFirstName(nextFirstNameState);
-			const nextLastNameState = produce(lastName, draftState => {
-				draftState.push(newLastName);
-			});
-			setLastName(nextLastNameState);
-		} else {
-			setFirstName(newFirstName);
-			setLastName(newLastName);
-		}
+		const nextFirstNameState = produce(firstName, draftState => {
+			draftState[userId] = newFirstName;
+		});
+		setFirstName(nextFirstNameState);
+		const nextLastNameState = produce(lastName, draftState => {
+			draftState[userId] = newLastName;
+		});
+		setLastName(nextLastNameState);
 	}
 }
