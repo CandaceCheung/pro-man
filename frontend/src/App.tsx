@@ -14,6 +14,7 @@ import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 import { getFavorite, getTableList } from "./redux/table/thunk";
 import { getGroup, getKanbanItems, getMember } from "./redux/kanban/thunk";
+import { acceptInvitation } from "./redux/invitation/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -25,10 +26,10 @@ function App() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    useEffect(()=>{
-        token && localStorage.setItem('invitation', token)  
+    useEffect(() => {
+        token && localStorage.setItem('invitation', token)
         token && console.log('token detected')
-    },[token])
+    }, [token])
 
     useEffect(() => {
         document.title = 'Pro-Man: Project Management Tool';
@@ -48,12 +49,12 @@ function App() {
     }, [isLoggedIn, dispatch, userId, projectId]);
 
     useEffect(() => {
-        if (projectId !== null){
+        if (projectId !== null) {
             dispatch(getKanbanItems(projectId));
             dispatch(getMember(projectId));
             dispatch(getGroup(projectId));
         }
-    },[projectId,dispatch]);
+    }, [projectId, dispatch]);
 
 
     return (
@@ -65,8 +66,8 @@ function App() {
                         navbar={<LeftNavbar />}
                     >
                         <Routes>
-                            <Route path="/*" element={<Home />}/>
-                            <Route path="/home/*" element={<Home />}/>
+                            <Route path="/*" element={<Home />} />
+                            <Route path="/home/*" element={<Home />} />
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/notification" element={<Notification />} />
                             <Route path="/my-work" element={<MyWork />} />

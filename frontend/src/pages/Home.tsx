@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import ProjectNavbar from "../components/ProjectNavbar";
 import { SidePanel } from "../components/SidePanel";
 import { acceptInvitation } from "../redux/invitation/thunk";
+import { getTableList } from "../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
 export function Home() {
@@ -14,8 +15,9 @@ export function Home() {
     const userId = useAppSelector(state=> state.auth.userId)
 
     useEffect(()=>{
-        token && dispatch(acceptInvitation(token, userId!))
         localStorage.removeItem('invitation')
+        token && dispatch(acceptInvitation(token, userId!))
+        dispatch(getTableList(userId!));
     // eslint-disable-next-line
     },[token])
 
