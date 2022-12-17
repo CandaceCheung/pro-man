@@ -1,9 +1,16 @@
 import { Group } from "@mantine/core";
 import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
+import { Status } from "../redux/kanban/state";
 import { useAppSelector } from "../store";
+
+
 
 export function Kanban() {
     const statusList = useAppSelector((state) => state.kanban.statusList);
+
+    const handleDragEndColumn = (event: any, statusID: Status["id"]) => {
+        const { active, over } = event;
+    };
 
     return (
         <div className="kanban-table">

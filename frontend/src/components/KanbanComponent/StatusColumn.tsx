@@ -1,4 +1,4 @@
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, useSensor, useSensors } from "@dnd-kit/core";
 import {
     Card,
     Group,
@@ -23,6 +23,7 @@ import {
     IconUser,
 } from "@tabler/icons";
 import { useState } from "react";
+import { SmartPointerSensor } from "../../pointerSensor";
 import { Status } from "../../redux/kanban/state";
 import { postItem } from "../../redux/kanban/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -63,6 +64,10 @@ const useStyles = createStyles((theme, color: string) => ({
         minWidth: 60,
     },
 }));
+
+const sensors = useSensors(
+    useSensor(SmartPointerSensor)
+);
 
 export function StatusColumn(props: StatusProps) {
     const dispatch = useAppDispatch();
@@ -154,12 +159,12 @@ export function StatusColumn(props: StatusProps) {
         },
     ];
 
-    const handleDnd = (event: DragEndEvent) => {
+    const handleDragEndColumn = (event: any, itemCardId: Status) => {
         const { active, over } = event;
     };
 
     return (
-        <DndContext onDragEnd={handleDnd}>
+        <DndContext sensors={sensors}>
             <Card
                 shadow="md"
                 pt={1}
@@ -212,6 +217,7 @@ export function StatusColumn(props: StatusProps) {
                     <Modal
                         opened={opened}
                         onClose={() => setOpened(false)}
+                        closeOnEscape
                         title="Add Item"
                         size="sm"
                     >
