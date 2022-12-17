@@ -26,12 +26,12 @@ export function addKanbanItem(
     stateId: number,
     itemId:number,
     itemName: string,
-    memberId: string[],
+    memberName: string[],
     date: Date,
     groupId: number,
 ) {
     const dateString = date.toISOString();
-    const item:Item = {id:itemId, name:itemName, date:dateString, membersList:memberId}
+    const item:Item = {id:itemId, name:itemName, date:dateString, membersList:memberName}
 
     return {
         type: "KANBAN/ADD" as const,
