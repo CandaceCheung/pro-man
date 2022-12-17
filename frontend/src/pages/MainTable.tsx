@@ -18,6 +18,7 @@ export interface itemCellsElement {
     type_name: TableState["type_name"],
     element_name: TableState["element_name"],
     item_dates_datetime?: TableState["item_dates_datetime"],
+    item_dates_date?: TableState["item_dates_date"],
     item_money_cashflow?: TableState["item_money_cashflow"],
     item_money_date?: TableState["item_money_date"],
     item_person_name?: Array<TableState["item_person_name"]>,
@@ -104,6 +105,7 @@ export function MainTable() {
                 switch (cell.type_name) {
                     case "dates":
                         itemCell["item_dates_datetime"] = cell.item_dates_datetime;
+                        itemCell["item_dates_date"] = cell.item_dates_date;
                         itemCells[itemGroupID][itemID][typeID] = itemCell;
                         break;
                     case "money":

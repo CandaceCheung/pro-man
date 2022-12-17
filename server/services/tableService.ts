@@ -25,6 +25,7 @@ export class TableService {
             'type_persons.id as item_person_id',
             'type_persons.user_id as item_person_user_id',
             'type_dates.datetime as item_dates_datetime',
+            'type_dates.date as item_dates_date',
             'type_dates.color as item_datetime_color',
             'type_dates.id as item_datetime_id',
             'type_times.start_date as item_times_start_date',
