@@ -1,7 +1,7 @@
 import { Button, Card, Loader, Table } from "@mantine/core"
 import { IconEraser, IconSend } from "@tabler/icons";
-import { MouseEvent } from "react";
-import { sendInvitation } from "../../redux/invitation/thunk";
+import { MouseEvent, useEffect } from "react";
+import { getInvitationList, sendInvitation } from "../../redux/invitation/thunk";
 import { toggleInvitationButtonAction } from "../../redux/project/slice";
 import { useAppDispatch, useAppSelector } from "../../store";
 
@@ -14,15 +14,20 @@ export function InvitationList() {
 
     const elements = []
     for (let item of invitationList) {
-        console.log(item.email)
-        const obj = {
-            id: item.id,
-            email: item.email,
-            updated_at: new Date(item.updated_at).toLocaleString('en-us'),
-            status: item.status
+        if (item.email){
+            const obj = {
+                id: item.id,
+                email: item.email,
+                updated_at: new Date(item.updated_at).toLocaleString('en-us'),
+                status: item.status
+            }
+            elements.push(obj)
         }
-        elements.push(obj)
     }
+
+    useEffect(()=>{
+        dispatch(getInvitationList(projectId!))
+      },[projectId, dispatch])
 
     function clickHandler(e: MouseEvent<HTMLButtonElement>){
         dispatch(sendInvitation(projectId!, userID!, e.currentTarget.value))

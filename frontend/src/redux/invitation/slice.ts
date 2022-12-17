@@ -24,6 +24,12 @@ const initialState: InvitationState = [{
 
 const sendInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> =
     (state, action) => {
+        for (let item of state){
+            if(item.id === action.payload.id){
+                item.updated_at = action.payload.updated_at
+                return
+            } 
+        }
         state.push(action.payload)
     }
 const acceptInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> =
