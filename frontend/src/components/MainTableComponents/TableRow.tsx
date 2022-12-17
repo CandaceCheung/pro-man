@@ -5,6 +5,7 @@ import { Persons } from "./TableCellsComponents/Persons";
 import { useStyles } from "./styles";
 import { Text } from "./TableCellsComponents/Text";
 import { Status } from "./TableCellsComponents/Status";
+import { Times } from "./TableCellsComponents/Times";
 
 export interface TableRowProps {
     id: number,
@@ -52,7 +53,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                         className={cx(classes.tableCell, classes.dates)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        {cell.item_dates_datetime}
+                        {cell.item_dates_date}
                     </div>
                 )
             case "money":
@@ -71,8 +72,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                         className={cx(classes.tableCell, classes.times)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <div>{"Start:" + cell.item_times_start_date}</div>
-                        <div>{"End:" + cell.item_times_end_date}</div>
+                        <Times startDate={cell.item_times_start_date} endDate={cell.item_times_end_date} />
                     </div>
                 )
             case "status":
