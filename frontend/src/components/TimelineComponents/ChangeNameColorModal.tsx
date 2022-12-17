@@ -16,11 +16,11 @@ export function ChangNameColorModal() {
   const page = useAppSelector(state => state.project.active_page)
   const id = useId()
   const projectSummary = useAppSelector(state => state.table.summary)
-  const dateItem = projectSummary.filter(project => project.item_times_id === itemId && project.type_name==='times')[0]
+  const dateItem = projectSummary.filter(project => project.item_datetime_id === itemId && project.type_name==='dates')[0]
   const timeItem = projectSummary.filter(project => project.item_times_id === itemId && project.type_name==='times')[0]
   const [color, setColor] = useState('#FFFFFF')
   const [name, setName] = useState<string>('')
-
+  
   useEffect(() => {
     if (itemType === 'dates') {
       setColor(dateItem.item_datetime_color)
@@ -33,7 +33,7 @@ export function ChangNameColorModal() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetElementId, itemType])
 
-
+  
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (itemType === 'dates') {
@@ -49,7 +49,7 @@ export function ChangNameColorModal() {
   }
 
   const onClose = () => {
-    if (page === 'timeline') dispatch(triggerUpdateTimelineModalAction(false))
+    page === 'timeline' && dispatch(triggerUpdateTimelineModalAction(false))
   }
 
   return (

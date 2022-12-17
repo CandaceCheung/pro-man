@@ -15,8 +15,8 @@ export function Home() {
     const userId = useAppSelector(state=> state.auth.userId)
 
     useEffect(()=>{
-        localStorage.removeItem('invitation')
         token && dispatch(acceptInvitation(token, userId!))
+        localStorage.removeItem('invitation')
         dispatch(getTableList(userId!));
     // eslint-disable-next-line
     },[token])
