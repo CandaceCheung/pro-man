@@ -146,10 +146,13 @@ export class TableController {
     insertNewProject = async (req: Request, res: Response) => {
         try {
             const userId = req.body.userId;
-            const project_id = await this.tableService.insertNewProject(userId);
+            const {project_id, project_name, member_table_id, username} = await this.tableService.insertNewProject(userId);
             res.json({ 
                 success: true,
-                project_id
+                project_id,
+                project_name,
+                member_table_id,
+                username
             })
         } catch(e) {
             console.error(e);

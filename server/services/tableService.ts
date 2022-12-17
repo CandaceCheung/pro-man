@@ -380,15 +380,15 @@ export class TableService {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const txn = await this.knex.transaction();
         try {
-            const [{ project_id }] = await txn("projects").insert({
+            const [{ project_id, project_name }] = await txn("projects").insert({
                 name: "New Project",
                 creator_id: userId,
                 is_deleted: false
-            }).returning("id as project_id");
-            await txn("members").insert({
+            }).returning(["id as project_id", "name as project_name"]);
+            const [{ member_table_id }] = await txn("members").insert({
                 user_id: userId,
                 project_id
-            });
+            }).returning("id as member_table_id");
             const [{ item_group_id }] = await txn("item_groups").insert({
                 project_id,
                 name: "New Group"
@@ -474,7 +474,7 @@ export class TableService {
             }).into("transactions");
 
             await txn.commit();
-            return project_id;
+            return { project_id, project_name, member_table_id, username };
         } catch (e) {
             await txn.rollback();
             throw e;

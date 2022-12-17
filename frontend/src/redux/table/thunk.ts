@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
 import { setActiveProject } from "../project/thunk";
@@ -267,7 +267,17 @@ export function insertNewProject(userId: number) {
 		const result = await res.json();
 		if (result.success) {
 			const projectId = result.project_id;
+			const projectName = result.project_name;
+			const memberTableId = result.member_table_id;
+			const username = result.username;
 			dispatch(setActiveProject(projectId));
+			dispatch(addProjectAction({
+				creator_id: userId,
+				project_id: projectId,
+				member_table_id: memberTableId,
+				username: username,
+				project_name: projectName,
+			}));
 		} else {
 			showNotification({
 				title: 'Insert data notification',

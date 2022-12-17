@@ -47,13 +47,15 @@ export type MyFavoriteListState = {
     project_name: string
 }[]
 
-export type MyTableListState = {
+export type MyTableState = {
     creator_id?: number
     project_id?: number
     member_table_id?: number
     username: string
     project_name: string
-}[]
+}
+
+export interface MyTableListState extends Array<MyTableState> { };
 
 export interface TableStateArray extends Array<TableState> { }
 export interface CombinedTableState {
@@ -159,6 +161,10 @@ const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemG
             }
         }
     }
+const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = 
+    (state, action) => {
+        state.project_list.push(action.payload);
+    }
 
 const tableSlice = createSlice({
     name: 'table',
@@ -171,7 +177,7 @@ const tableSlice = createSlice({
         getFavorite,
         updateItemGroupName,
         getTableList,
-
+        addProject
     },
 })
 
@@ -182,7 +188,8 @@ export const {
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
     updateItemGroupName: updateItemGroupNameAction,
-    getTableList: getTableListAction
+    getTableList: getTableListAction,
+    addProject: addProjectAction
 } = tableSlice.actions
 
 export default tableSlice.reducer
