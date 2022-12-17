@@ -7,6 +7,25 @@ import nodemailer from 'nodemailer'
 export class InvitationController {
     constructor(private invitationService: InvitationService) { }
 
+    getInvitationList = async (req: Request, res: Response) => {
+        try {
+            const projectId = req.params.projectId
+
+            if (projectId){
+                const invitationList = await this.invitationService.getInvitationList(parseInt(projectId))
+                
+                res.json({
+                    success: true,
+                    msg: 'Get List Success',
+                    invitationList
+                })
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "Something Went wrong when fetching invitation records." });
+        }
+    }
+
     acceptInvite = async (req: Request, res: Response) => {
         try {
             const invitationDetail = jwtSimple.decode(req.body.token, jwt.jwtSecret);
@@ -16,12 +35,18 @@ export class InvitationController {
 
             if (invitationDetail){
                 const invitation = await this.invitationService.acceptInvite(invitationId, projectId, userId)
-                
-                res.json({
-                    success: true,
-                    msg: 'Invitation Accepted!',
-                    invitation
-                })
+                if (invitation){
+                    res.json({
+                        success: true,
+                        msg: 'Invitation Accepted!',
+                        invitation
+                    })
+                } else {
+                    res.json({
+                        success: false,
+                        msg: 'Invitation Not Existed!',
+                    })
+                }
             }
         } catch (e) {
             console.error(e);

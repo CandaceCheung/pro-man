@@ -24,6 +24,7 @@ export interface ActiveProjectState {
     sort_by_group_id: number | undefined
     set_hide_by_type: string | undefined
     set_timeline_item_height: number
+    toggle_invitation_button: boolean
 }
 
 const initialState: ActiveProjectState = {
@@ -45,7 +46,8 @@ const initialState: ActiveProjectState = {
     sort_by_person_id: undefined,
     sort_by_group_id: undefined,
     set_hide_by_type: undefined,
-    set_timeline_item_height: 50
+    set_timeline_item_height: 50,
+    toggle_invitation_button: false
 }
 
 const setActiveProject : CaseReducer<ActiveProjectState, PayloadAction<number>> =
@@ -84,6 +86,8 @@ const setHideByType : CaseReducer<ActiveProjectState, PayloadAction<string>> =
 (state, action) =>  {state.set_hide_by_type = action.payload} 
 const setTimelineItemHeight : CaseReducer<ActiveProjectState, PayloadAction<number>> =
 (state, action) =>  {state.set_timeline_item_height = action.payload} 
+const toggleInvitationButton : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.toggle_invitation_button = action.payload} 
 
 const projectSlice = createSlice({
     name: 'project',
@@ -106,7 +110,8 @@ const projectSlice = createSlice({
         setSortByPersonId,
         setSortByGroupId,
         setHideByType,
-        setTimelineItemHeight
+        setTimelineItemHeight,
+        toggleInvitationButton
     },
 })
 
@@ -128,7 +133,8 @@ export const {
     setSortByPersonId: setSortByPersonIdAction,
     setSortByGroupId: setSortByGroupIdAction,
     setHideByType: setHideByTypeAction,
-    setTimelineItemHeight: setTimelineItemHeightAction
+    setTimelineItemHeight: setTimelineItemHeightAction,
+    toggleInvitationButton: toggleInvitationButtonAction
 } = projectSlice.actions
 
 export default projectSlice.reducer

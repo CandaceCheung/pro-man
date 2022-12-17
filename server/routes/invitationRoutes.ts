@@ -5,7 +5,7 @@ import { invitationController } from "../app";
     const invitationRoutes = express.Router();
     invitationRoutes.post('/', invitationController.sendInvite);
     invitationRoutes.put('/response', invitationController.acceptInvite);
+    invitationRoutes.get('/:projectId', invitationController.getInvitationList);
     
-
     return invitationRoutes;
  }

@@ -33,6 +33,25 @@ export class InvitationService {
         }
     }
 
+    async getInvitationList(projectId: number) {
+
+        const txn = await this.knex.transaction();
+
+        try {
+            const invitationList = await txn.select("*")
+                .from('invitations')
+                .where("project_id", projectId)
+                .orderBy('created_at', 'asc')
+
+            await txn.commit();
+            return invitationList
+
+        } catch (e) {
+            await txn.rollback();
+            throw e;
+        }
+    }
+
     async acceptInvite(invitationId: number, projectId: number, userId: number) {
 
         const txn = await this.knex.transaction();
