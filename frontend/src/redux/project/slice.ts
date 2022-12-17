@@ -17,6 +17,7 @@ export interface ActiveProjectState {
     time_line_start_anchor: Moment
     time_line_end_anchor: Moment
     time_line_modal_opened: boolean
+    warning_modal_opened: boolean
     time_line_stack_item: boolean
     update_time_line_modal_opened: boolean
     target_element_id: number
@@ -40,6 +41,7 @@ const initialState: ActiveProjectState = {
     time_line_start_anchor: moment().startOf('minute').add(-0.5, 'weeks'),
     time_line_end_anchor: moment().startOf('minute').add(0.5, 'weeks'),
     time_line_modal_opened: false,
+    warning_modal_opened: false,
     time_line_stack_item: true,
     update_time_line_modal_opened: false,
     target_element_id: 0,
@@ -62,6 +64,8 @@ const setTimelineNow : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_now = action.payload}
 const setShowMarker : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_show_marker = action.payload} 
+const triggerWarningModal : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.warning_modal_opened = action.payload} 
 const triggerTimelineModal : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.time_line_modal_opened = action.payload} 
 const setActivePage : CaseReducer<ActiveProjectState, PayloadAction<ActivePageState|null>> =
@@ -100,6 +104,7 @@ const projectSlice = createSlice({
         setTimelineNow,
         setShowMarker,
         triggerTimelineModal,
+        triggerWarningModal,
         setActivePage,
         toggleSidePanel,
         toggleFavorite,
@@ -123,6 +128,7 @@ export const {
     setTimelineNow: setTimelineNowAction, 
     setShowMarker: setShowMarkerAction,
     triggerTimelineModal: triggerTimelineModalAction,
+    triggerWarningModal: triggerWarningModalAction,
     setActivePage: setActivePageAction,
     toggleSidePanel: toggleSidePanelAction,
     toggleFavorite: toggleFavoriteAction,
