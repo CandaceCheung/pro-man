@@ -1,4 +1,4 @@
-import { DndContext, DragEndEvent, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, useSensor, useSensors } from "@dnd-kit/core";
 import {
     Card,
     Group,
@@ -65,9 +65,9 @@ const useStyles = createStyles((theme, color: string) => ({
     },
 }));
 
-const sensors = useSensors(
-    useSensor(SmartPointerSensor)
-);
+// const sensors = useSensors(
+//     useSensor(SmartPointerSensor)
+// );
 
 export function StatusColumn(props: StatusProps) {
     const dispatch = useAppDispatch();
@@ -159,12 +159,9 @@ export function StatusColumn(props: StatusProps) {
         },
     ];
 
-    const handleDragEndColumn = (event: any, itemCardId: Status) => {
-        const { active, over } = event;
-    };
 
     return (
-        <DndContext sensors={sensors}>
+        <DndContext >
             <Card
                 shadow="md"
                 pt={1}
