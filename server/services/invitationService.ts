@@ -8,10 +8,13 @@ export class InvitationService {
 
         try {
             const [check] = await txn("invitations")
-                .select("*")
+                .update({
+                    updated_at: new Date()
+                })
                 .where("user_id", userId)
                 .where("email", email)
-                .where("project_id", projectId);
+                .where("project_id", projectId)
+                .returning('*')
 
             if (check) {
                 return check
@@ -38,6 +41,27 @@ export class InvitationService {
         const txn = await this.knex.transaction();
 
         try {
+            const invitationList = await txn.select("*")
+                .from('invitations')
+                .where("project_id", projectId)
+                .orderBy('created_at', 'asc')
+
+            await txn.commit();
+            return invitationList
+
+        } catch (e) {
+            await txn.rollback();
+            throw e;
+        }
+    }
+
+    async deleteInvitation(invitationId: number, projectId:number) {
+
+        const txn = await this.knex.transaction();
+
+        try {
+            await txn('invitations').del().where('id', invitationId)
+
             const invitationList = await txn.select("*")
                 .from('invitations')
                 .where("project_id", projectId)

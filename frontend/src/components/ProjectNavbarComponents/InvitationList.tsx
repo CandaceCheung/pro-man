@@ -1,7 +1,7 @@
 import { Button, Card, Loader, Table } from "@mantine/core"
 import { IconEraser, IconSend } from "@tabler/icons";
 import { MouseEvent, useEffect } from "react";
-import { getInvitationList, sendInvitation } from "../../redux/invitation/thunk";
+import { deleteInvitation, getInvitationList, sendInvitation } from "../../redux/invitation/thunk";
 import { toggleInvitationButtonAction } from "../../redux/project/slice";
 import { useAppDispatch, useAppSelector } from "../../store";
 
@@ -34,13 +34,17 @@ export function InvitationList() {
         dispatch(toggleInvitationButtonAction(true))
     }
 
+    function onDelete(e: MouseEvent<HTMLButtonElement>){
+        dispatch(deleteInvitation(parseInt(e.currentTarget.value), projectId!))
+    }
+
     const rows = elements.map((element) => (
         <tr key={element.email}>
             <td>{element.email}</td>
             <td>{element.updated_at}</td>
             <td><Card style={{ background: element.status === 'pending' ? '#FDAB3D' : '#00C875', color: 'white', textAlign: 'center' }}>{element.status.toUpperCase()}</Card></td>
             <td><Button value={element.email} onClick={(e)=>clickHandler(e)} variant='subtle' disabled={toggle}>{toggle? <Loader size={14} /> : <IconSend size={14} />}</Button></td>
-            <td><Button value={element.id!} variant='subtle'>{<IconEraser size={14} />}</Button></td>
+            <td><Button value={element.id!} onClick={(e)=>onDelete(e)} variant='subtle'>{<IconEraser size={14} />}</Button></td>
         </tr>
     ))
     return (

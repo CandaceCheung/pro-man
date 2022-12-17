@@ -6,6 +6,8 @@ import { invitationController } from "../app";
     invitationRoutes.post('/', invitationController.sendInvite);
     invitationRoutes.put('/response', invitationController.acceptInvite);
     invitationRoutes.get('/:projectId', invitationController.getInvitationList);
+    invitationRoutes.delete('/:projectId&:invitationId', invitationController.deleteInvitation);
     
+
     return invitationRoutes;
  }

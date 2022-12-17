@@ -7,6 +7,27 @@ import nodemailer from 'nodemailer'
 export class InvitationController {
     constructor(private invitationService: InvitationService) { }
 
+    deleteInvitation = async (req: Request, res: Response) => {
+        try {
+            const invitationId = req.params.invitationId
+            const projectId = req.params.projectId
+
+
+            if (invitationId){
+                const invitationList = await this.invitationService.deleteInvitation(parseInt(invitationId), parseInt(projectId))
+                
+                res.json({
+                    success: true,
+                    msg: 'Delete Success',
+                    invitationList
+                })
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "Something Went wrong during deletion" });
+        }
+    }
+
     getInvitationList = async (req: Request, res: Response) => {
         try {
             const projectId = req.params.projectId

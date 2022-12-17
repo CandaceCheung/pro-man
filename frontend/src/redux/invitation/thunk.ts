@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { showNotification } from '@mantine/notifications';
-import { acceptInviteAction, getInvitationListAction, sendInviteAction } from "./slice";
+import { acceptInviteAction, deleteInvitationAction, getInvitationListAction, sendInviteAction } from "./slice";
 
 export function sendInvitation(projectId: number, userId: number, value: string) {
     return async (dispatch: Dispatch) => {
@@ -77,6 +77,30 @@ export function getInvitationList(projectId: number) {
         if (result.success) {
             dispatch(getInvitationListAction(result.invitationList))
             console.log(result.msg)
+        } else {
+            showNotification({
+                title: 'Invitation notification',
+                message: result.msg
+            });
+        }
+    };
+}
+
+export function deleteInvitation(invitationId: number, projectId: number) {
+    return async (dispatch: Dispatch) => {
+
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/invitation/${projectId}&${invitationId}`, {
+            method: "DELETE",
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(deleteInvitationAction({id :invitationId}))
+            showNotification({
+                title: 'Invitation notification',
+                message: result.msg
+            });
         } else {
             showNotification({
                 title: 'Invitation notification',
