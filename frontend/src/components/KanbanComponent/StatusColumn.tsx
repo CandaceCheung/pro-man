@@ -67,7 +67,7 @@ const useStyles = createStyles((theme, color: string) => ({
 export function StatusColumn(props: StatusProps) {
     const dispatch = useAppDispatch();
     const [opened, setOpened] = useState(false);
-    const { classes, theme } = useStyles(props.color);
+    const { classes } = useStyles(props.color);
     const memberList = useAppSelector((state) => state.kanban.memberList);
     const groupList = useAppSelector((state) => state.kanban.groupList);
     const projectId = useAppSelector((state) => state.project.project_id)!;
@@ -77,15 +77,12 @@ export function StatusColumn(props: StatusProps) {
     const [groupId, setGroupId] = useState<number>();
     const addItem = () => {
         if (date !== undefined && groupId !== undefined) {
-
             const nameList = memberId.map(id => memberList.find(member => member.id.toString() === id)!.username)
             dispatch(
                 postItem(projectId, props.id, itemName, nameList, memberId, date, groupId)
             );
         }
     };
-
-
 
     const modalList = [
         {
