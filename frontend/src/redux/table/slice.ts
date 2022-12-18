@@ -42,6 +42,7 @@ export interface TableState {
 }
 
 export type MyFavoriteListState = {
+    user_id?: number
     creator_id?: number
     project_id?: number
     favorite_id?: number
@@ -114,6 +115,7 @@ const initialState: CombinedTableState = {
         project_name: ""
     }],
     my_favorite_list: [{
+        user_id: undefined,
         creator_id: undefined,
         project_id: undefined,
         favorite_id: undefined,

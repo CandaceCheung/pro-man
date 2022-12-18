@@ -98,9 +98,35 @@ export class TableService {
         return tableList
     }
 
+    async getLikeStatus(userId: number, projectId: number) {
+        const [likeStatus] = await this.knex.select('*')
+            .from('favorite')
+            .where('favorite.user_id', userId)
+            .where('favorite.project_id', projectId)
+            .limit(1)
+
+        return likeStatus
+    }
+    async deleteLike(userId: number, projectId: number) {
+        await this.knex('favorite').del()
+            .where('favorite.user_id', userId)
+            .where('favorite.project_id', projectId)
+
+        return 
+    }
+    async likeProject(userId: number, projectId: number) {
+        await this.knex('favorite')
+            .insert({
+                user_id: userId,
+                project_id: projectId
+            })
+        return 
+    }
+
     async getFavorite(userId: number) {
         const favoriteList = await this.knex.select(
             'projects.creator_id as creator_id',
+            'favorite.user_id as user_id',
             'projects.id as project_id',
             'projects.name as project_name',
             'favorite.id as favorite_id'

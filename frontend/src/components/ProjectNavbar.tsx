@@ -16,7 +16,7 @@ import { TableStateArray } from '../redux/table/slice';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { ActivePageState, setActivePageAction } from '../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../store';
-import { getTable } from '../redux/table/thunk';
+import { getTable, likeProject } from '../redux/table/thunk';
 
 type ProjectNavbarProps = {
     projectId: number
@@ -26,14 +26,13 @@ type ProjectNavbarProps = {
 export default function ProjectNavbar(props: ProjectNavbarProps) {
     const dispatch = useAppDispatch()
     let projectName = props.projectSummary[0]?.project_name;
-    const [like, setLike] = useState(false)
     const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
     const projectId = useAppSelector(state => state.project.project_id);
     const userId = useAppSelector(state => state.auth.userId);
+    const like = useAppSelector(state => state.table.my_favorite_list).filter(project=>project.project_id===projectId && project.user_id ===userId)
     const navigate = useNavigate();
     const { tabValue } = useParams();
-    
     useEffect(()=>{
         dispatch(getTable(userId as number, projectId as number));
     }, [projectId, dispatch, userId])
@@ -48,6 +47,11 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
         dispatch(setActivePageAction(value))
     }
 
+    function onLikeClick(){
+        console.log(projectId!, userId!)
+        dispatch(likeProject(projectId!, userId!))
+    }
+
     return (
         <div id="project-navbar">
             <div className='navbar-header'>
@@ -55,7 +59,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
                     <span id='navbar-project-title'>
                         {projectName ? projectName : "Project Title"}
                     </span>
-                    <FontAwesomeIcon id="like-button" icon={like ? faStarS : faStarR} onClick={() => setLike((like) => !like)} />
+                    <FontAwesomeIcon id="like-button" icon={like[0] ? faStarS : faStarR} onClick={onLikeClick} />
                 </span>
                 <span className='icon-hub' >
                     <Tooltip

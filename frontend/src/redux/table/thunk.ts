@@ -5,6 +5,38 @@ import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
 import { setActiveProject } from "../project/thunk";
 
+export function likeProject (projectId: number, userId: number) {
+	return async (dispatch: Dispatch) => {
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/favorite`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				projectId,
+				userId
+			})
+		});
+		const result = await res.json();
+
+		if (result.success) {
+			dispatch(getFavoriteAction(result.favorite))
+			showNotification({
+				title: 'Like Project notification',
+				message: result.msg
+			});
+		} else {
+			dispatch(getTableFailedAction())
+			showNotification({
+				title: 'Like Project notification',
+				message: result.msg
+			});
+		}
+	};
+}
+
 export function getTable(userID: number, projectID: number) {
 	return async (dispatch: Dispatch) => {
 
@@ -247,6 +279,7 @@ export function reorderTypes(newOrder: number[], userId: number, projectID: numb
 
 export function getPersonsName(userId: number) {
 	return async (dispatch: Dispatch) => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/personName/${userId}`);
 

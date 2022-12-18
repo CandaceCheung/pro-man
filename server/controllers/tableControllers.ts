@@ -4,6 +4,34 @@ import { Request, Response } from "express";
 export class TableController {
     constructor(private tableService: TableService) { }
 
+    likeProject = async (req: Request, res: Response) => {
+        try {
+            const userId = req.body.userId
+            const projectId = req.body.projectId
+            const likeStatus = await this.tableService.getLikeStatus(userId, projectId);
+
+            if(likeStatus){
+                await this.tableService.deleteLike(userId, projectId)
+            } else {
+                await this.tableService.likeProject(userId, projectId)
+            }
+
+            const result = await this.tableService.getFavorite(userId);
+
+            res.json({
+                success: true,
+                favorite: result,
+                msg: 'Like project successfully toggled'
+            });
+        } catch (e) {
+            console.error(e);
+            res.json({
+                success: false, 
+                msg: "Fail to toggle like project" 
+            });
+        }
+    }
+
     getTable = async (req: Request, res: Response) => {
         try {
             const userID = req.params.userID
