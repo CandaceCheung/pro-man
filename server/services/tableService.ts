@@ -25,7 +25,6 @@ export class TableService {
             'type_persons.id as item_person_id',
             'type_persons.user_id as item_person_user_id',
             'type_dates.datetime as item_dates_datetime',
-            'type_dates.date as item_dates_date',
             'type_dates.color as item_datetime_color',
             'type_dates.id as item_datetime_id',
             'type_times.start_date as item_times_start_date',
@@ -45,6 +44,7 @@ export class TableService {
             'types.type as type_name',
             'types.id as horizontal_order_id'
         )
+            .select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD') as item_dates_date`))
             .from('members')
             .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
