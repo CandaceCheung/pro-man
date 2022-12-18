@@ -7,19 +7,20 @@ export class InvitationService {
         const txn = await this.knex.transaction();
 
         try {
-            const [check] = await txn("invitations")
-                .update({
-                    updated_at: new Date()
-                })
-                .where("user_id", userId)
+            const [check] = await txn.select('*')
+                .from('invitations')
                 .where("email", email)
                 .where("project_id", projectId)
-                .returning('*')
 
             if (check) {
+                if (check.status !== 'accepted') {
+                    await txn("invitations")
+                        .update({ updated_at: new Date() })
+                        .where("id", check.id)
+                }
                 return check
             }
-
+                
             const [invitation] = await txn.insert({
                 user_id: userId,
                 project_id: projectId,
@@ -55,12 +56,12 @@ export class InvitationService {
         }
     }
 
-    async deleteInvitation(invitationId: number, projectId:number) {
+    async deleteInvitation(invitationId: number, projectId: number) {
 
         const txn = await this.knex.transaction();
 
         try {
-            await txn('invitations').del().where('id', invitationId)
+            await txn('invitations').where('id', invitationId).del()
 
             const invitationList = await txn.select("*")
                 .from('invitations')
@@ -76,23 +77,41 @@ export class InvitationService {
         }
     }
 
+    async checkValidity(invitationId: number, projectId: number, userId: number) {
+
+        const txn = await this.knex.transaction();
+
+        try {
+            const [member] = await txn('members').where("user_id", userId).where("project_id", projectId)
+            const [invitation] = await txn('invitations').where('id', invitationId)
+            
+            await txn.commit();
+            return {invitation, member}
+        } catch (e) {
+            await txn.rollback();
+            throw e;
+        }
+    }
+
     async acceptInvite(invitationId: number, projectId: number, userId: number) {
 
         const txn = await this.knex.transaction();
 
         try {
             const [member] = await txn('members').where("user_id", userId).where("project_id", projectId)
-            const [invitation] = await txn('invitations').update({
-                status: 'accepted'
-            }).where('id', invitationId).returning('*')
-
+            
             if (!member) {
                 await txn('members').insert({
                     user_id: userId,
                     project_id: projectId,
                 })
+            
             }
-
+            const [invitation] = await txn('invitations').update({
+                status: 'accepted',
+                validity: false
+            }).where('id', invitationId).returning('*')
+            
             await txn.commit();
             return invitation
         } catch (e) {

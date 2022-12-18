@@ -2,7 +2,7 @@ import { Divider, Drawer, Loader, TextInput } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconPlus, IconUserPlus } from '@tabler/icons';
 import { useEffect } from 'react';
-import { getInvitationList, sendInvitation } from '../../redux/invitation/thunk';
+import { sendInvitation } from '../../redux/invitation/thunk';
 import { toggleInvitationButtonAction } from '../../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { InvitationList } from './InvitationList';

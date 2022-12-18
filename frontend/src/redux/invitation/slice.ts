@@ -43,19 +43,17 @@ const acceptInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> =
     }
 const getInvitationList: CaseReducer<InvitationState, PayloadAction<InvitationState>> =
     (state, action) => {
-        for (let i = 0; i < action.payload.length; i++) {
-            state[i] = action.payload[i]
+        return state = action.payload  
+    }
+const deleteInvitation: CaseReducer<InvitationState, PayloadAction<{ id: number }>> =
+    (state, action) => {
+        for (let i = 0; i < state.length; i++) {
+            if (state[i].id === action.payload.id) {
+                state.splice(i, 1)
+                break
+            }
         }
     }
-const deleteInvitation: CaseReducer<InvitationState, PayloadAction<{id : number }>> =
-(state, action) => {
-    for (let i = 0; i < state.length; i++) {
-        if (state[i].id === action.payload.id){
-            state.splice(i ,1)
-            break
-        }
-    }
-}
 
 const invitationSlice = createSlice({
     name: 'invitation',

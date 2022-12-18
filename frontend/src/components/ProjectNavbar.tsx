@@ -17,6 +17,7 @@ import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { ActivePageState, setActivePageAction } from '../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../store';
 import { getTable, likeProject } from '../redux/table/thunk';
+import { getInvitationList } from '../redux/invitation/thunk';
 
 type ProjectNavbarProps = {
     projectId: number
@@ -33,9 +34,15 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
     const like = useAppSelector(state => state.table.my_favorite_list).filter(project=>project.project_id===projectId && project.user_id ===userId)
     const navigate = useNavigate();
     const { tabValue } = useParams();
+
     useEffect(()=>{
-        dispatch(getTable(userId as number, projectId as number));
+        dispatch(getTable(userId!, projectId!));
     }, [projectId, dispatch, userId])
+
+    function invitationHandler (){
+        dispatch(getInvitationList(projectId!))
+        setInvitationOpen((open) => !open)
+    }
 
     function onRemove() {
         setLogsOpen(false)
@@ -79,7 +86,7 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
                         transitionDuration={200}
                         label="Invite Users"
                     >
-                        <span ><IconUsers id="add-users-button" size={20} onClick={() => setInvitationOpen((open) => !open)} /></span>
+                        <span ><IconUsers id="add-users-button" size={20} onClick={invitationHandler} /></span>
                     </Tooltip>
                 </span>
             </div>

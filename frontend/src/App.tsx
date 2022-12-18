@@ -14,7 +14,7 @@ import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 import { getFavorite, getTableList } from "./redux/table/thunk";
 import { getGroup, getKanbanItems, getMember } from "./redux/kanban/thunk";
-import { acceptInvitation, getInvitationList } from "./redux/invitation/thunk";
+import { showNotification } from "@mantine/notifications";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -25,15 +25,20 @@ function App() {
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        token && localStorage.setItem('invitation', token)
-        token && console.log('token detected')
-    }, [token])
-
+    
     useEffect(() => {
         document.title = 'Pro-Man: Project Management Tool';
     }, []);
+
+    useEffect(() => {
+        token && localStorage.setItem('invitation', token)
+        token && showNotification({
+            title: 'Invitation notification',
+            message: 'Invitation token detected'
+        })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
 
     useEffect(() => {
         isLoggedIn === null && dispatch(retriveLogin());

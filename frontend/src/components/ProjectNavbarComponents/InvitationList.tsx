@@ -1,7 +1,7 @@
 import { Button, Card, Loader, Table } from "@mantine/core"
 import { IconChecks, IconEraser, IconSend } from "@tabler/icons";
-import { MouseEvent, useEffect, useState } from "react";
-import { deleteInvitation, getInvitationList, sendInvitation } from "../../redux/invitation/thunk";
+import { MouseEvent, useState } from "react";
+import { deleteInvitation,  sendInvitation } from "../../redux/invitation/thunk";
 import { toggleInvitationButtonAction } from "../../redux/project/slice";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { ConfirmationHub } from "./ConfirmationHub";
@@ -12,6 +12,7 @@ export function InvitationList() {
     const userID = useAppSelector(state => state.auth.userId)
     const projectId = useAppSelector(state => state.project.project_id)
     const [toggle, setToggle] = useState(false)
+    const loading = useAppSelector(state => state.project.toggle_invitation_button)
     const [targetInvitationId, setTargetInvitationId] = useState(0)
 
     const elements = []
@@ -26,10 +27,6 @@ export function InvitationList() {
             elements.push(obj)
         }
     }
-
-    useEffect(() => {
-        dispatch(getInvitationList(projectId!))
-    }, [projectId, dispatch])
 
     function clickHandler(e: MouseEvent<HTMLButtonElement>) {
         dispatch(sendInvitation(projectId!, userID!, e.currentTarget.value))
@@ -52,7 +49,7 @@ export function InvitationList() {
             <td>{element.email}</td>
             <td>{element.updated_at}</td>
             <td><Card style={{ background: element.status === 'pending' ? '#FDAB3D' : '#00C875', color: 'white', textAlign: 'center' }}>{element.status.toUpperCase()}</Card></td>
-            <td>{element.status === 'pending' ? <Button value={element.email} onClick={(e) => clickHandler(e)} variant='subtle' disabled={toggle}>{toggle ? <Loader size={14} /> : <IconSend size={16} />}</Button>:<Button variant='subtle'><IconChecks size={20}/></Button>}</td>
+            <td>{element.status === 'pending' ? <Button value={element.email} onClick={(e) => clickHandler(e)} variant='subtle' disabled={loading}>{loading ? <Loader size={14} /> : <IconSend size={16} />}</Button>:<Button variant='subtle'><IconChecks size={20}/></Button>}</td>
             <td><Button value={element.id!} onClick={(e) => onDelete(e)} variant='subtle'>{<IconEraser size={16} />}</Button></td>
         </tr>
     ))

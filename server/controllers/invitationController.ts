@@ -1,6 +1,5 @@
 import jwtSimple from 'jwt-simple';
-import jwt from '../jwt';import 
-{ Request, Response } from "express";
+import jwt from '../jwt'; import { Request, Response } from "express";
 import { InvitationService } from "../services/invitationService";
 import nodemailer from 'nodemailer'
 
@@ -13,9 +12,9 @@ export class InvitationController {
             const projectId = req.params.projectId
 
 
-            if (invitationId){
+            if (invitationId) {
                 const invitationList = await this.invitationService.deleteInvitation(parseInt(invitationId), parseInt(projectId))
-                
+
                 res.json({
                     success: true,
                     msg: 'Delete Success',
@@ -32,9 +31,9 @@ export class InvitationController {
         try {
             const projectId = req.params.projectId
 
-            if (projectId){
+            if (projectId) {
                 const invitationList = await this.invitationService.getInvitationList(parseInt(projectId))
-                
+
                 res.json({
                     success: true,
                     msg: 'Get List Success',
@@ -54,24 +53,35 @@ export class InvitationController {
             const projectId = invitationDetail.project_id
             const userId = req.body.userId
 
-            if (invitationDetail){
-                const invitation = await this.invitationService.acceptInvite(invitationId, projectId, userId)
-                if (invitation){
+            if (invitationDetail) {
+                const check = await this.invitationService.checkValidity(invitationId, projectId, userId)
+                if (!check.invitation || !check.invitation.validity) {
+                    res.json({
+                        success: false,
+                        msg: 'Join Failed: Invitation expired',
+                    })
+                } else if (check.member) {
+                    res.json({
+                        success: false,
+                        msg: 'Join Failed: You are already a member',
+                    })
+                } else {
+                    const invitation = await this.invitationService.acceptInvite(invitationId, projectId, userId)
                     res.json({
                         success: true,
                         msg: 'Invitation Accepted!',
                         invitation
                     })
-                } else {
-                    res.json({
-                        success: false,
-                        msg: 'Invitation Not Existed!',
-                    })
                 }
+            } else {
+                res.json({
+                    success: false,
+                    msg: 'Join Failed: Token invalid',
+                })
             }
         } catch (e) {
             console.error(e);
-            res.status(500).json({ msg: "Incorrect Token" });
+            res.status(500).json({ msg: "Server Error" });
         }
     }
 
@@ -79,20 +89,28 @@ export class InvitationController {
         try {
             const projectId = req.body.projectId;
             const userId = req.body.userId;
-            const email = req.body.email;
-            
-            const invitation = await this.invitationService.inviteUser(projectId, userId, email);
-            console.log(invitation)
+            const email = req.body.email.trim();
 
-            if (invitation){
+            const invitation = await this.invitationService.inviteUser(projectId, userId, email);
+
+            if (invitation) {
+                if (invitation.status === 'accepted') {
+                    res.json({
+                        success: false,
+                        invitation,
+                        msg: 'Duplicate Request: Invitee Existed'
+                    })
+                    return
+                }
+
                 const token = jwtSimple.encode(invitation, jwt.jwtSecret);
-                
+
                 const emailContent = `
                     <p>Hello,</p>
                     <p>You have been invited to join Pro-man</p>
                     <p>Click the link below to accept invitation</p>
                     ${process.env.REACT_APP_PUBLIC_HOSTNAME}/?token=${token}
-                ` 
+                `
                 //send email
                 let transporter = nodemailer.createTransport({
                     host: "smtp.office365.com",
@@ -103,7 +121,7 @@ export class InvitationController {
                         pass: `${process.env.EMAIL_PASSWORD}`, // generated ethereal password
                     },
                 });
-    
+
                 // send mail with defined transport object
                 await transporter.sendMail({
                     from: `"Pro-man Admin" <${process.env.EMAIL_LOGIN}>`, // sender address
@@ -119,10 +137,10 @@ export class InvitationController {
                     console.log(info.response)
                 });
             }
-            res.json({ 
+            res.json({
                 success: true,
                 invitation,
-                msg: 'Invitation sent!' 
+                msg: 'Invitation Sent'
             })
         } catch (e) {
             console.error(e);
