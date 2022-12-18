@@ -23,12 +23,16 @@ export function ChangNameColorModal() {
   
   useEffect(() => {
     if (itemType === 'dates') {
-      setColor(dateItem.item_datetime_color)
-      setName(dateItem.element_name)
+      if(dateItem){
+        setColor(dateItem.item_datetime_color)
+        setName(dateItem.element_name)
+      }
     }
     if (itemType === 'times') {
-      setColor(timeItem.item_times_color)
-      setName(timeItem.element_name)
+      if (timeItem){
+        setColor(timeItem.item_times_color)
+        setName(timeItem.element_name)  
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetElementId, itemType])
