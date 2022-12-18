@@ -90,7 +90,8 @@ export class TableController {
 
             res.json({ 
                 success: true, 
-                typeId 
+                typeId,
+                msg: 'Update Timeline Successful!'
             });
         } catch (e) {
             console.error(e);
@@ -108,7 +109,8 @@ export class TableController {
 
             res.json({ 
                 success: true,
-                typeId
+                typeId,
+                msg: 'Update Timeline Successful!'
             });
         } catch (e) {
             console.error(e);

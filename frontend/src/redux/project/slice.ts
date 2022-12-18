@@ -33,7 +33,7 @@ const initialState: ActiveProjectState = {
     active_page: 'mainTable',
     toggle_side_panel: false,
     toggle_favorite: false,
-    toggle_loading: true,
+    toggle_loading: false,
     time_line_view: 'weeks',
     time_line_autofit: false,
     time_line_now: false,

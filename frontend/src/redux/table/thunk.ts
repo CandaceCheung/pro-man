@@ -94,7 +94,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color, typeId: result.typeId }))
 			showNotification({
 				title: 'Data update notification',
-				message: 'Update Success'
+				message: result.msg
 			});
 		} else {
 			dispatch(getTableFailedAction())
@@ -124,7 +124,7 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
 			dispatch(updateDatelineItemAction({ datelineID, date, name, color, typeId: result.typeId }))
 			showNotification({
 				title: 'Data update notification',
-				message: 'Update Success'
+				message: result.msg
 			});
 		} else {
 			dispatch(getTableFailedAction())

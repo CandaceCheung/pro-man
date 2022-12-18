@@ -70,8 +70,6 @@ export function TimeFrame() {
   const timelineDetail = unfilteredTimelineDetails.filter((project)=> sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project)=> sortByGroupId ? project.item_group_id === sortByGroupId : project)
   const datelineDetail = unfilteredDatelineDetails.filter((project)=> sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project)=> sortByGroupId ? project.item_group_id === sortByGroupId : project)
 
-  console.log(unfilteredTimelineDetails)
-
   const minZoom = 1 * 24 * 60 * 60 * 1000;
   const maxZoom = 31 * 24 * 60 * 60 * 1000;
   const defaultTimeStart = moment().startOf('day');
@@ -184,17 +182,13 @@ export function TimeFrame() {
     if (itemId.toString()[0] === '1') {
       const name = items.filter(x => x.id === itemId)[0].title
       const color = items.filter(x => x.id === itemId)[0].color
-      const typeId = items.filter(x => x.id === itemId)[0].type_id
       const newEndTime = newStartTime - items[index].start_time + parseInt(items[index].end_time + "")
       
-      console.log(typeId, name)
       dispatch(updateTimelineItem(id, newStartTime, newEndTime, name, color))
     }
     if (itemId.toString()[0] === '2') {
       const name = dateItems.filter(x => x.id === itemId)[0].title
       const color = dateItems.filter(x => x.id === itemId)[0].color
-      const typeId = dateItems.filter(x => x.id === itemId)[0].type_id
-      console.log(typeId, name)
 
       dispatch(updateDatelineItem(id, newStartTime, name, color))
     }

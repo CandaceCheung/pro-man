@@ -27,7 +27,7 @@ const sendInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> =
         for (let item of state) {
             if (item.id === action.payload.id) {
                 item.updated_at = action.payload.updated_at
-                break
+                return
             }
         }
         state.push(action.payload)

@@ -48,7 +48,6 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
     }
 
     function onLikeClick(){
-        console.log(projectId!, userId!)
         dispatch(likeProject(projectId!, userId!))
     }
 
