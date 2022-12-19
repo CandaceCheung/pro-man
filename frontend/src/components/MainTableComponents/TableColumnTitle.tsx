@@ -69,32 +69,36 @@ export function TableColumnTitle({ id, groupId, cellColumnType, cellColumnCustom
 
     return (
         <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-            <div
+            <div 
                 key={"cell_column" + index}
                 className={retrieveCellData(cellColumnType, index)}
             >
-                {
-                    typeNameInputSelected
-                        ?
-                        <input
-                            onBlur={deselectTypeNameInput}
-                            type="text"
-                            autoFocus
-                            className={classes.typeNameInput}
-                            value={typeNameInput}
-                            onKeyDown={(e) => handleTypeNameInputKeyDown(e.key)}
-                            onChange={(e) => setTypeNameInput(e.target.value)}
-                        >
+                <div
+                    className={cx(classes.typeNameContainer, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}
+                >
+                    {
+                        typeNameInputSelected
+                            ?
+                            <input
+                                onBlur={deselectTypeNameInput}
+                                type="text"
+                                autoFocus
+                                className={classes.typeNameInput}
+                                value={typeNameInput}
+                                onKeyDown={(e) => handleTypeNameInputKeyDown(e.key)}
+                                onChange={(e) => setTypeNameInput(e.target.value)}
+                            >
 
-                        </input>
-                        :
-                        <span
-                            className={classes.typeName}
-                            onClick={onSelectTypeInput}
-                        >
-                            {cellColumnCustomName}
-                        </span>
-                }
+                            </input>
+                            :
+                            <span
+                                className={classes.typeName}
+                                onClick={onSelectTypeInput}
+                            >
+                                {cellColumnCustomName}
+                            </span>
+                    }
+                </div>
             </div>
         </div>
     )

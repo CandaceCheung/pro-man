@@ -134,8 +134,16 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        overflow: "hidden",
-        padding: "0 10px"
+        overflow: "hidden"
+    },
+
+    typeNameContainer: {
+        width: "100%",
+        height: "100%",
+        padding: "0 10px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     },
 
     typeName: {

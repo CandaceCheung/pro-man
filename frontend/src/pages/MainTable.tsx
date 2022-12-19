@@ -41,14 +41,14 @@ export function MainTable() {
     const tableSummary = useAppSelector(state => state.table.summary);
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
-    const [itemsOrdersState, setItemsOrdersState] = useState<{ [keys in number]: number[] }>({});
-    const [typesOrdersState, setTypesOrdersState] = useState<{ [keys in number]: number[] }>({});
+    const [itemsOrdersState, setItemsOrdersState] = useState<Record<number, Array<number>>>({});
+    const [typesOrdersState, setTypesOrdersState] = useState<Record<number, Array<number>>>({});
     const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
-    const [personsColors, setPersonsColors] = useState<{[key in number]: string}>({});
-    const [moneySums, setMoneySums] = useState<{[key in number]: number}>({});
+    const [personsColors, setPersonsColors] = useState<Record<number, string>>({});
+    const [moneySums, setMoneySums] = useState<Record<number, number>>({});
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -67,14 +67,14 @@ export function MainTable() {
         let itemGroupsCollapsed: boolean[] = [];
         let itemGroupsInputSelected: boolean[] = [];
         let itemGroupsInputValue: string[] = [];
-        let itemsOrders: { [keys in number]: number[] } = {};
-        let typesOrders: { [keys in number]: number[] } = {};
+        let itemsOrders: Record<number, Array<number>> = {};
+        let typesOrders: Record<number, Array<number>> = {};
         let typesOrderSet: Set<number> = new Set();
 
-        let personsColorsTemp: {[key in number]: string} = {};
+        let personsColorsTemp: Record<number, string> = {};
         let personsMembers: Set<number> = new Set();
 
-        let moneySumsTemp: {[key in number]: number} = {};
+        let moneySumsTemp: Record<number, number> = {};
 
         for (const cell of tableSummary) {
             if (cell.project_id) {
