@@ -12,15 +12,20 @@ import { Item } from "./TableCellsComponents/Item";
 
 export interface TableRowProps {
     id: number,
+    groupId: number,
     typeOrder: number[],
-    cellDetails: {[key in number]: itemCellsElement},
+    cellDetails: { [key in number]: itemCellsElement },
     color: string,
     lastRow: boolean,
-    personsColors: {[key in number]: string},
-    moneySums: {[key in number]: number}
+    personsColors: { [key in number]: string },
+    moneySums: { [key in number]: number },
+    onItemRename: (groupId: number, itemId: number, name: string) => void
 }
 
-export function TableRow({id, typeOrder, cellDetails, color, lastRow, personsColors, moneySums}: TableRowProps) {
+export function TableRow({ 
+    id, groupId, typeOrder, cellDetails, color, lastRow, personsColors, moneySums, 
+    onItemRename 
+}: TableRowProps) {
     const {
         attributes,
         listeners,
@@ -32,9 +37,9 @@ export function TableRow({id, typeOrder, cellDetails, color, lastRow, personsCol
     const { classes, cx } = useStyles();
 
     const style = {
-		transform: CSS.Transform.toString(transform),
-		transition
-	}
+        transform: CSS.Transform.toString(transform),
+        transition
+    }
 
     const retrieveCellData = (cell: itemCellsElement, cellIndex: number): JSX.Element => {
         switch (cell.type_name) {
@@ -44,9 +49,9 @@ export function TableRow({id, typeOrder, cellDetails, color, lastRow, personsCol
                         className={cx(classes.tableCell, classes.persons)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <Persons 
-                            itemPersonsNames={cell.item_person_name!} 
-                            itemPersonsIds={cell.item_person_user_id!} 
+                        <Persons
+                            itemPersonsNames={cell.item_person_name!}
+                            itemPersonsIds={cell.item_person_user_id!}
                             personsColors={personsColors}
                         />
                     </div>
@@ -66,7 +71,7 @@ export function TableRow({id, typeOrder, cellDetails, color, lastRow, personsCol
                         className={cx(classes.tableCell, classes.money)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <Money moneySum={moneySums[id]}/>
+                        <Money moneySum={moneySums[id]} />
                     </div>
                 )
             case "times":
@@ -106,16 +111,16 @@ export function TableRow({id, typeOrder, cellDetails, color, lastRow, personsCol
     }
 
     return (
-        <div 
+        <div
             className={cx(classes.tableRow, { [classes.lastRow]: lastRow })}
             ref={setNodeRef} style={style} {...listeners} {...attributes}
         >
-            <div 
+            <div
                 className={classes.tableCell}
                 style={{ backgroundColor: color }}
             ></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                <Item itemName={cellDetails[typeOrder[0]].item_name} />
+                <Item itemId={id} groupId={groupId} itemName={cellDetails[typeOrder[0]].item_name} onItemRename={onItemRename} />
             </div>
             {
                 typeOrder.map((typeId, cellIndex) => {

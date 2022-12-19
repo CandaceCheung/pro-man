@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getTable, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
+import { getTable, renameItem, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -269,6 +269,16 @@ export function MainTable() {
         }
     }
 
+    const onItemRename = (groupId: number, itemId: number, name:string) => {
+        const newItemCellsState = produce(itemCellsState, draftState => {
+            Object.keys(draftState[groupId][itemId]).forEach((typeId,_)=>{
+                draftState[groupId][itemId][parseInt(typeId)].item_name = name;
+            });
+        });
+        setItemCellsState(newItemCellsState);
+        dispatch(renameItem(itemId, name, userId!, projectID!));
+    }
+
     return (
         <div className="main-table">
             {
@@ -331,7 +341,7 @@ export function MainTable() {
                                             :
                                             <span
                                                 onClick={() => selectItemGroupInput(itemGroupArrayIndex)}
-                                                className={classes.groupName + " " + classes.hovertext + " " + classes.itemCount}
+                                                className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
                                                 data-hover="Click to edit"
                                                 item-count={
                                                     itemsOrdersState[item_group_id].length
@@ -382,12 +392,14 @@ export function MainTable() {
                                                         <TableRow
                                                             key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
                                                             id={itemId}
+                                                            groupId={item_group_id}
                                                             typeOrder={typesOrdersState[item_group_id]}
                                                             cellDetails={itemCellsState[item_group_id][itemId]}
                                                             color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
                                                             lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                             personsColors={personsColors}
                                                             moneySums={moneySums}
+                                                            onItemRename={onItemRename}
                                                         />
                                                     )
                                                 }

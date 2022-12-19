@@ -38,11 +38,11 @@ const useStyle = createStyles((theme, _params) => ({
 export function Status({ status, color }: StatusProps) {
     const { classes } = useStyle();
     return (
-        <span 
+        <div 
             className={classes.statusContainer}
             style={{backgroundColor: color}}
         >
             {status === "Empty" ? "" : status}
-        </span>
+        </div>
     )
 }

@@ -15,8 +15,8 @@ const useStyle = createStyles(() => ({
 export function Money({ moneySum }: MoneyProps) {
     const { classes } = useStyle();
     return (
-        <span className={classes.moneyContainer}>
+        <div className={classes.moneyContainer}>
             {moneySum.toLocaleString()}
-        </span>
+        </div>
     )
 }

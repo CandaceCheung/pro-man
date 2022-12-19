@@ -98,7 +98,7 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
             )
         default:
             return (
-                <span className={classes.personsComponentsContainer}>
+                <div className={classes.personsComponentsContainer}>
                     <span
                         key={"person_" + itemPersonsIds[0]}
                         className={cx(classes.personsComponent, classes.personsFirstComponent)}
@@ -113,7 +113,7 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                     >
                         {`+${itemPersonsNames.length - 1}`}
                     </span>
-                </span>
+                </div>
             )
     }
 }

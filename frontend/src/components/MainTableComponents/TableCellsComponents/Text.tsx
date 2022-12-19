@@ -15,8 +15,8 @@ const useStyle = createStyles(() => ({
 export function Text({ text }: TextProps) {
     const { classes } = useStyle();
     return (
-        <span className={classes.textContainer}>
+        <div className={classes.textContainer}>
             {text}
-        </span>
+        </div>
     )
 }

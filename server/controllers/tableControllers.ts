@@ -149,6 +149,17 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Reorder Types" });
         }
     }
+    renameItem = async (req: Request, res: Response) => {
+        try {
+            const itemId = req.body.itemId;
+            const name = req.body.name;
+            await this.tableService.renameItem(itemId, name);
+            res.json({ success: true });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Rename Item" });
+        }
+    }
     insertItem = async (req: Request, res: Response) => {
         try {
             const projectId = req.body.projectId;

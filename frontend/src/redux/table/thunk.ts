@@ -319,3 +319,24 @@ export function insertNewProject(userId: number) {
 		}
 	}
 }
+
+export function renameItem(itemId: number, name: string, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/newItemName`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, name })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Update data notification',
+				message: 'Failed to rename item! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+}

@@ -15,8 +15,8 @@ const useStyle = createStyles(() => ({
 export function Date({ date }: DateProps) {
     const { classes } = useStyle();
     return (
-        <span className={classes.dateContainer}>
+        <div className={classes.dateContainer}>
             {date}
-        </span>
+        </div>
     )
 }

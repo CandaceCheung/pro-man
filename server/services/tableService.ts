@@ -112,7 +112,7 @@ export class TableService {
             .where('favorite.user_id', userId)
             .where('favorite.project_id', projectId)
 
-        return 
+        return
     }
     async likeProject(userId: number, projectId: number) {
         await this.knex('favorite')
@@ -120,7 +120,7 @@ export class TableService {
                 user_id: userId,
                 project_id: projectId
             })
-        return 
+        return
     }
 
     async getFavorite(userId: number) {
@@ -220,6 +220,12 @@ export class TableService {
             await txn.rollback();
             throw e;
         }
+    }
+
+    async renameItem(itemId: number, newName: string) {
+        await this.knex("items").update({
+            name: newName
+        }).where("id", itemId);
     }
 
     async insertItem(projectId: number, userId: number) {

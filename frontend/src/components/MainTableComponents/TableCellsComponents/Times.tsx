@@ -104,7 +104,7 @@ export function Times({ startDate, endDate }: TimesProps) {
         totalDays = (endDate - startDate) / (1000*60*60*24);
     }
     return (
-        <span className={classes.dateContainer}>
+        <div className={classes.dateContainer}>
             {
                 (startDate && endDate) 
                 ?
@@ -126,7 +126,7 @@ export function Times({ startDate, endDate }: TimesProps) {
                 :
                 <span className={classes.emptyBar}>-</span>
             }
-        </span>
+        </div>
     )
 }
 
