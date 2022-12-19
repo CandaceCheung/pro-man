@@ -51,11 +51,12 @@ const useStyle = createStyles((theme) => ({
     },
 
     emptyBar: {
+        position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        width: 35,
-        height: 160,
+        width: 160,
+        height: 25,
         backgroundColor: theme.colors.dateBarColor[3],
         color: "#fff",
         fontSize: 10,
@@ -75,7 +76,7 @@ const useStyle = createStyles((theme) => ({
             color: "#fff",
             fontSize: 10,
             borderRadius: 50,
-            content: "Set Dates",
+            content: '"Set Dates"',
             visibility: "hidden",
             opacity: 0,
             zIndex: 1,
