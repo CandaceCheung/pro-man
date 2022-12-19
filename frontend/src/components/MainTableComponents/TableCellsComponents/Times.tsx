@@ -2,8 +2,8 @@ import { format } from "date-fns";
 import { createStyles } from '@mantine/core';
 
 interface TimesProps {
-    startDate: number,
-    endDate: number
+    startDate?: number,
+    endDate?: number
 }
 
 const useStyle = createStyles((theme) => ({
@@ -60,27 +60,48 @@ const useStyle = createStyles((theme) => ({
         color: "#fff",
         fontSize: 10,
         borderRadius: 50,
-        "&:hover": {
-            backgroundColor: theme.colors.dateBarColor[4]
+        "&:hover::before": {
+            opacity: 1,
+            visibility: "visible"
+        },
+        "&::before": {
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: 160,
+            height: 25,
+            backgroundColor: theme.colors.dateBarColor[4],
+            color: "#fff",
+            fontSize: 10,
+            borderRadius: 50,
+            content: "Set Dates",
+            visibility: "hidden",
+            opacity: 0,
+            zIndex: 1,
+            left: 0,
+            top: 0
         }
     }
 }));
 
 export function Times({ startDate, endDate }: TimesProps) {
     const { classes, theme } = useStyle();
+    let pastTime = null;
+    let barLeftPercentage = null;
+    let totalDays = null;
     const timeNow = new Date(new Date().toDateString()).getTime();
-    const pastTime = startDate && endDate 
-                    ? (timeNow - startDate) / (endDate - startDate)
-                    : 0;
-    let barLeftPercentage = "";
-    if (pastTime < 0) {
-        barLeftPercentage = "0%";
-    } else if (pastTime >= 1) {
-        barLeftPercentage = "100%";
-    } else {
-        barLeftPercentage = (roundToTen(pastTime * 100)).toString() + "%";
+    if (startDate && endDate) {
+        pastTime = (timeNow - startDate) / (endDate - startDate);
+        if (pastTime < 0) {
+            barLeftPercentage = "0%";
+        } else if (pastTime >= 1) {
+            barLeftPercentage = "100%";
+        } else {
+            barLeftPercentage = (roundToTen(pastTime * 100)).toString() + "%";
+        }
+        totalDays = (endDate - startDate) / (1000*60*60*24);
     }
-    const totalDays = (endDate - startDate) / (1000*60*60*24);
     return (
         <span className={classes.dateContainer}>
             {
