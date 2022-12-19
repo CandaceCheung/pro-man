@@ -65,10 +65,6 @@ const useStyles = createStyles((theme, color: string) => ({
     },
 }));
 
-// const sensors = useSensors(
-//     useSensor(SmartPointerSensor)
-// );
-
 export function StatusColumn(props: StatusProps) {
     const dispatch = useAppDispatch();
     const [opened, setOpened] = useState(false);
@@ -82,9 +78,21 @@ export function StatusColumn(props: StatusProps) {
     const [groupId, setGroupId] = useState<number>();
     const addItem = () => {
         if (date !== undefined && groupId !== undefined) {
-            const nameList = memberId.map(id => memberList.find(member => member.id.toString() === id)!.username)
+            const nameList = memberId.map(
+                (id) =>
+                    memberList.find((member) => member.id.toString() === id)!
+                        .username
+            );
             dispatch(
-                postItem(projectId, props.id, itemName, nameList, memberId, date, groupId)
+                postItem(
+                    projectId,
+                    props.id,
+                    itemName,
+                    nameList,
+                    memberId,
+                    date,
+                    groupId
+                )
             );
         }
     };
@@ -159,84 +167,77 @@ export function StatusColumn(props: StatusProps) {
         },
     ];
 
-
     return (
-        <DndContext >
-            <Card
-                shadow="md"
-                pt={1}
-                pb={10}
-                pr={6}
-                pl={6}
-                radius="md"
-                withBorder
-                mt={15}
-                mr={6}
-                w={290}
-            >
-                <div className={classes.cardHeader}>
-                    <Group position="left" pt={10} pb={10} m={5}>
-                        <IconGripVertical className="grip" size={20} />
-                        <Text weight={570} className="headerText">
-                            {props.name} / {props.name.length}
-                        </Text>
-                    </Group>
-                </div>
+        <Card
+            shadow="md"
+            pt={1}
+            pb={10}
+            pr={6}
+            pl={6}
+            radius="md"
+            withBorder
+            mt={15}
+            mr={6}
+            w={290}
+        >
+            <div className={classes.cardHeader}>
+                <Group position="left" pt={10} pb={10} m={5}>
+                    <IconGripVertical className="grip" size={20} />
+                    <Text weight={570} className="headerText">
+                        {props.name} / {props.name.length}
+                    </Text>
+                </Group>
+            </div>
 
-                <ScrollArea
-                    style={{ height: 750 }}
-                    type="auto"
-                    scrollbarSize={6}
+            <ScrollArea style={{ height: 750 }} type="auto" scrollbarSize={6}>
+                <div>
+                    {props.itemsList.map((item) => (
+                        <ItemCard
+                            key={item.id}
+                            id={item.id}
+                            name={item.name}
+                            date={item.date.slice(0, -15)}
+                            membersList={item.membersList}
+                        />
+                    ))}
+                </div>
+            </ScrollArea>
+
+            <UnstyledButton onClick={() => setOpened(true)}>
+                <Group position="left" m="sm" mb={5}>
+                    <ThemeIcon variant="light" radius="xl" color="gray">
+                        <IconPlus />
+                    </ThemeIcon>
+                    <Text color="dimmed">Add Item</Text>
+                </Group>
+            </UnstyledButton>
+
+            <>
+                <Modal
+                    opened={opened}
+                    onClose={() => setOpened(false)}
+                    closeOnEscape
+                    title="Add Item"
+                    size="sm"
                 >
                     <div>
-                        {props.itemsList.map((item) => (
-                            <ItemCard
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                date={item.date.slice(0, -15)}
-                                membersList={item.membersList}
-                            />
+                        {modalList.map((eachRow) => (
+                            <Group
+                                className={classes.modalRow}
+                                key={eachRow.text}
+                            >
+                                <Text className={classes.modalText}>
+                                    {eachRow.text}
+                                </Text>
+                                {eachRow.input}
+                            </Group>
                         ))}
+                        <Button color="cyan" mt={5} onClick={addItem}>
+                            Add item
+                        </Button>
                     </div>
-                </ScrollArea>
-
-                <UnstyledButton onClick={() => setOpened(true)}>
-                    <Group position="left" m="sm" mb={5}>
-                        <ThemeIcon variant="light" radius="xl" color="gray">
-                            <IconPlus />
-                        </ThemeIcon>
-                        <Text color="dimmed">Add Item</Text>
-                    </Group>
-                </UnstyledButton>
-
-                <>
-                    <Modal
-                        opened={opened}
-                        onClose={() => setOpened(false)}
-                        closeOnEscape
-                        title="Add Item"
-                        size="sm"
-                    >
-                        <div>
-                            {modalList.map((eachRow) => (
-                                <Group
-                                    className={classes.modalRow}
-                                    key={eachRow.text}
-                                >
-                                    <Text className={classes.modalText}>
-                                        {eachRow.text}
-                                    </Text>
-                                    {eachRow.input}
-                                </Group>
-                            ))}
-                            <Button color="cyan" mt={5} onClick={addItem}>
-                                Add item
-                            </Button>
-                        </div>
-                    </Modal>
-                </>
-            </Card>
-        </DndContext>
+                </Modal>
+            </>
+        </Card>
     );
 }
