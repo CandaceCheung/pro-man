@@ -24,6 +24,7 @@ const useStyle = createStyles((theme) => ({
         cursor: "text",
         border: "1px solid transparent",
         borderRadius: 5,
+        padding: "0 5px",
 
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`
@@ -42,6 +43,7 @@ const useStyle = createStyles((theme) => ({
         fontFamily: "inherit",
         fontWeight: "inherit",
         borderColor: theme.colors.itemInputBorderColor[0],
+        padding: "0 5px",
 
         "&:focus": {
             width: "100%",

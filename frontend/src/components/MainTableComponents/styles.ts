@@ -92,6 +92,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         fontSize: "inherit",
         fontFamily: "inherit",
         fontWeight: "inherit",
+        padding: "0 5px",
 
         "&:focus": {
             width: "100%",
@@ -108,6 +109,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     groupName: {
         border: "1px solid transparent",
         borderRadius: 5,
+        padding: "0 5px",
 
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`
@@ -149,6 +151,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     typeName: {
         border: "1px solid transparent",
         borderRadius: 5,
+        padding: "0 5px",
 
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`,
@@ -169,6 +172,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         fontFamily: "inherit",
         fontWeight: "inherit",
         borderColor: theme.colors.itemInputBorderColor[0],
+        padding: "0 5px",
 
         "&:focus": {
             width: "100%",

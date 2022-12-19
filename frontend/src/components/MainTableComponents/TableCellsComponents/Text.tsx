@@ -45,6 +45,7 @@ const useStyle = createStyles((theme) => ({
         fontFamily: "inherit",
         fontWeight: "inherit",
         borderColor: theme.colors.itemInputBorderColor[0],
+        padding: "0 5px",
 
         "&:focus": {
             width: "100%",
