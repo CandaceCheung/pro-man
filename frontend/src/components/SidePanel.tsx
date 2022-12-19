@@ -13,7 +13,6 @@ export function SidePanel() {
     const clickHandler = () => {
         dispatch(toggleSidePanelAction(!toggle))
         dispatch(toggleFavoriteAction(false))
-
     }
 
     return (

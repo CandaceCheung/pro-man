@@ -126,7 +126,7 @@ const initialState: CombinedTableState = {
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> =
     (state, action) => { state.summary = action.payload }
 const getTableFailed: CaseReducer<CombinedTableState, PayloadAction> =
-    (state, action) => { state = {...state} }
+    (state, action) => { state = { ...state } }
 const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timelineID: number, startTime: number, endTime: number, name: string, color: string, typeId: number }>> =
     (state, action) => {
         for (let item of state.summary) {
@@ -157,6 +157,8 @@ const getFavorite: CaseReducer<CombinedTableState, PayloadAction<MyFavoriteListS
     (state, action) => { state.my_favorite_list = action.payload }
 const getTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableListState>> =
     (state, action) => { state.project_list = action.payload }
+const updateTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> =
+    (state, action) => { state.project_list.push(action.payload) }
 const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemGroupId: number, itemGroupName: string }>> =
     (state, action) => {
         for (let item of state.summary) {
@@ -165,7 +167,7 @@ const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemG
             }
         }
     }
-const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = 
+const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> =
     (state, action) => {
         state.project_list.push(action.payload);
     }
@@ -181,7 +183,8 @@ const tableSlice = createSlice({
         getFavorite,
         updateItemGroupName,
         getTableList,
-        addProject
+        addProject,
+        updateTableList
     },
 })
 
@@ -193,7 +196,8 @@ export const {
     getFavorite: getFavoriteAction,
     updateItemGroupName: updateItemGroupNameAction,
     getTableList: getTableListAction,
-    addProject: addProjectAction
+    addProject: addProjectAction,
+    updateTableList: updateTableListAction
 } = tableSlice.actions
 
 export default tableSlice.reducer
