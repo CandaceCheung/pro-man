@@ -135,6 +135,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         alignItems: "center",
         flexDirection: "column",
         overflow: "hidden",
+        padding: "0 10px"
     },
 
     typeName: {
@@ -144,6 +145,33 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`,
             cursor: "text"
+        }
+    },
+
+    typeNameInput: {
+        width: "100%",
+        transition: "0.5s",
+        outline: "none",
+        border: "1px solid",
+        borderRadius: 5,
+        boxSizing: "border-box",
+        height: 12,
+        color: "inherit",
+        fontSize: "inherit",
+        fontFamily: "inherit",
+        fontWeight: "inherit",
+        borderColor: theme.colors.itemInputBorderColor[0],
+
+        "&:focus": {
+            width: "100%",
+            transition: "0.5s",
+            outline: "none",
+            border: "1px solid",
+            borderRadius: 5,
+            minHeight: 30,
+            boxSizing: "border-box",
+            height: 12,
+            borderColor: theme.colors.itemInputBorderColor[0]
         }
     },
 

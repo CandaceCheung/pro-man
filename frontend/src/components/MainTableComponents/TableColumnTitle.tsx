@@ -1,16 +1,23 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from '@dnd-kit/utilities';
+import { useState } from "react";
 import { useStyles } from "./styles";
 
 export interface TableColumnTitleProps {
     id: number,
+    groupId: number,
     cellColumnType: string,
     cellColumnCustomName: string,
     index: number,
-    lastCell: boolean
+    lastCell: boolean,
+    onTypeRename: (groupId: number, typeId: number, name: string) => void
 }
 
-export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, index, lastCell }: TableColumnTitleProps) {
+export function TableColumnTitle({ id, groupId, cellColumnType, cellColumnCustomName, index, lastCell, onTypeRename }: TableColumnTitleProps) {
+    const [typeNameInput, setTypeNameInput] = useState(cellColumnCustomName);
+    const [typeNameInputSelected, setTypeNameInputSelected] = useState(false);
+    const { classes, cx } = useStyles();
+
     const {
         attributes,
         listeners,
@@ -19,35 +26,76 @@ export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, ind
         transition
     } = useSortable({ id: id });
 
-    const { classes, cx } = useStyles();
-
     const style = {
         transform: CSS.Translate.toString(transform),
         transition
     }
 
-    const retrieveCellData = (cellColumnType: string, index: number): JSX.Element => {
+    const retrieveCellData = (cellColumnType: string, index: number) => {
         switch (cellColumnType) {
             case "persons":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.persons, classes.draggableTitleCell,{ [classes.lastCell]: lastCell })}><span className={classes.typeName}>{cellColumnCustomName}</span></div>
+                return cx(classes.tableCell, classes.persons, classes.draggableTitleCell, { [classes.lastCell]: lastCell })
             case "dates":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.dates, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}><span className={classes.typeName}>{cellColumnCustomName}</span></div>
+                return cx(classes.tableCell, classes.dates, classes.draggableTitleCell, { [classes.lastCell]: lastCell })
             case "money":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.money, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}><span className={classes.typeName}>{cellColumnCustomName}</span></div>
+                return cx(classes.tableCell, classes.money, classes.draggableTitleCell, { [classes.lastCell]: lastCell })
             case "times":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.times, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}><span className={classes.typeName}>{cellColumnCustomName}</span></div>
+                return cx(classes.tableCell, classes.times, classes.draggableTitleCell, { [classes.lastCell]: lastCell })
             case "status":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.status, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}><span className={classes.typeName}>{cellColumnCustomName}</span></div>
+                return cx(classes.tableCell, classes.status, classes.draggableTitleCell, { [classes.lastCell]: lastCell })
             case "text":
-                return <div key={"cell_column" + index} className={cx(classes.tableCell, classes.text, classes.draggableTitleCell, { [classes.lastCell]: lastCell })}><span className={classes.typeName}>{cellColumnCustomName}</span></div>
+                return cx(classes.tableCell, classes.text, classes.draggableTitleCell, { [classes.lastCell]: lastCell })
             default:
-                return <div key={"cell_column" + index}></div>
+                return ""
+        }
+    }
+
+    const onSelectTypeInput = () => {
+        setTypeNameInputSelected(true);
+    }
+
+    const deselectTypeNameInput = () => {
+        if (typeNameInput !== cellColumnCustomName) {
+            onTypeRename(groupId, id, typeNameInput);
+        }
+        setTypeNameInputSelected(false);
+    }
+
+    const handleTypeNameInputKeyDown = (key: string) => {
+        if (key === "Enter") {
+            deselectTypeNameInput();
         }
     }
 
     return (
         <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-            {retrieveCellData(cellColumnType, index)}
+            <div
+                key={"cell_column" + index}
+                className={retrieveCellData(cellColumnType, index)}
+            >
+                {
+                    typeNameInputSelected
+                        ?
+                        <input
+                            onBlur={deselectTypeNameInput}
+                            type="text"
+                            autoFocus
+                            className={classes.typeNameInput}
+                            value={typeNameInput}
+                            onKeyDown={(e) => handleTypeNameInputKeyDown(e.key)}
+                            onChange={(e) => setTypeNameInput(e.target.value)}
+                        >
+
+                        </input>
+                        :
+                        <span
+                            className={classes.typeName}
+                            onClick={onSelectTypeInput}
+                        >
+                            {cellColumnCustomName}
+                        </span>
+                }
+            </div>
         </div>
     )
 }

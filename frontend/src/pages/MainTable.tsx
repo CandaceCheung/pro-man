@@ -279,6 +279,10 @@ export function MainTable() {
         dispatch(renameItem(itemId, name, userId!, projectID!));
     }
 
+    const onTypeRename = (groupId: number, typeId: number, name: string) => {
+        // dispatch here not done
+    }
+
     return (
         <div className="main-table">
             {
@@ -374,10 +378,12 @@ export function MainTable() {
                                                         <TableColumnTitle
                                                             key={typeId}
                                                             id={typeId}
+                                                            groupId={item_group_id}
                                                             cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
                                                             cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
                                                             index={index}
                                                             lastCell={index === typesOrdersState[item_group_id].length - 1}
+                                                            onTypeRename={onTypeRename}
                                                         />
                                                     ))}
                                                 </SortableContext>
