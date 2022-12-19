@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getTable, renameItem, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
+import { getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -280,7 +280,17 @@ export function MainTable() {
     }
 
     const onTypeRename = (groupId: number, typeId: number, name: string) => {
-        // dispatch here not done
+        const newItemCellsState = produce(itemCellsState, draftState => {
+            Object.keys(draftState[groupId]).forEach((itemId,_)=>{
+                Object.keys(draftState[groupId][parseInt(itemId)]).forEach((each, _)=> {
+                    if (parseInt(each) === typeId) {
+                        draftState[groupId][parseInt(itemId)][typeId].element_name = name;
+                    }
+                })
+            });
+        });
+        setItemCellsState(newItemCellsState);
+        dispatch(renameType(typeId, name, userId!, projectID!));
     }
 
     return (

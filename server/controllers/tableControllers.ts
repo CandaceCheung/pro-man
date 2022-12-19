@@ -160,6 +160,17 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Rename Item" });
         }
     }
+    renameType = async (req: Request, res: Response) => {
+        try {
+            const typeId = req.body.typeId;
+            const name = req.body.name;
+            await this.tableService.renameType(typeId, name);
+            res.json({ success: true });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Rename Type" });
+        }
+    }
     insertItem = async (req: Request, res: Response) => {
         try {
             const projectId = req.body.projectId;
