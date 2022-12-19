@@ -41,6 +41,6 @@ export const themeObject: MantineThemeOverride = {
         boardContentBackgroundColor: ["#F4F5F8"],
         personsTypeComponentColor: ["#FB225D", "#FFACE1","#C4C4C4"],
         statusLabelsColor: ["#C4C4C4", "#FDAB3D", "#E2445C", "#00C875", "#0086C0", "#A25DDC", "#037F4C", "#579BFC", "#CAB641", "#FFCB00"],
-        dateBarColor: ["#579BFC", "#257DFB", "#C4C4C4", "#ABABAB"]
+        dateBarColor: ["#333333", "#579BFC", "#257DFB", "#C4C4C4", "#ABABAB"]
     },
 }

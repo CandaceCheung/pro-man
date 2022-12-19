@@ -74,7 +74,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                         className={cx(classes.tableCell, classes.times)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <Times startDate={cell.item_times_start_date} endDate={cell.item_times_end_date} />
+                        <Times startDate={cell.item_times_start_date!} endDate={cell.item_times_end_date!} />
                     </div>
                 )
             case "status":
