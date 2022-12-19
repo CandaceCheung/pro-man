@@ -69,7 +69,7 @@
       "react-app/jest"
     ],
     "rules": {
-      "no-use-before-define": "warn"
+      "no-unused-vars": "warn"
     }
   },
   "browserslist": {

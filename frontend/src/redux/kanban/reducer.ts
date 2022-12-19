@@ -34,12 +34,7 @@ export const kanbanReducer = (
         case "KANBAN/ADD":
             //immer applied
             const newStatus = produce(state, (draft) => {
-                const targetStatus = draft.statusList.find((status) => {
-                    if (action.stateId === status.id) {
-                        return true;
-                    }
-                    return false;
-                });
+                const targetStatus = draft.statusList.find((status) => action.stateId === status.id);
                 targetStatus?.itemsList.push(action.item);
             });
             return newStatus;
