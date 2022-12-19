@@ -5,7 +5,6 @@ import { setActiveProject } from '../../redux/project/thunk'
 import { MyTableListState } from '../../redux/table/slice'
 import { IconPlus } from '@tabler/icons'
 import { insertNewProject } from '../../redux/table/thunk'
-import { showNotification } from '@mantine/notifications'
 
 export function ProjectList() {
     const projectSummary = useAppSelector(state => state.table.project_list)

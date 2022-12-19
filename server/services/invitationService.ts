@@ -100,12 +100,12 @@ export class InvitationService {
         try {
             const [member] = await txn('members').where("user_id", userId).where("project_id", projectId)
             
+            
             if (!member) {
                 await txn('members').insert({
                     user_id: userId,
                     project_id: projectId,
                 })
-            
             }
             const [invitation] = await txn('invitations').update({
                 status: 'accepted',

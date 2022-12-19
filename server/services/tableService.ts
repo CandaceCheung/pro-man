@@ -232,14 +232,15 @@ export class TableService {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);
         const [{ itemGroupId }] = await this.knex("item_groups").select("id as itemGroupId").where("project_id", projectId).orderBy("itemGroupId", "desc").limit(1);
-
         const txn = await this.knex.transaction();
 
         try {
             const [{ previousItemId }] = await this.knex("items").select("id as previousItemId").where("item_group_id", itemGroupId).limit(1);
             const types = await this.knex.select(
-                "types.id"
-            ).from("items")
+                ("types.id as typesId")
+            )
+            .distinctOn('typesId')
+            .from("items")
                 .join('type_persons', 'type_persons.item_id', '=', 'items.id')
                 .join('type_dates', 'type_dates.item_id', '=', 'items.id')
                 .join('type_times', 'type_times.item_id', '=', 'items.id')
@@ -256,12 +257,12 @@ export class TableService {
                         .orOn('type_persons.type_id', '=', 'types.id')
                 }).where("items.id", previousItemId)
                 .orderBy("types.id", "asc");
-            const typesId_persons = types[0].id;
-            const typesId_dates = types[1].id;
-            const typesId_times = types[2].id;
-            const typesId_money = types[3].id;
-            const typesId_status = types[4].id;
-            const typesId_text = types[5].id;
+            const typesId_persons = types[0].typesId;
+            const typesId_dates = types[1].typesId;
+            const typesId_times = types[2].typesId;
+            const typesId_money = types[3].typesId;
+            const typesId_status = types[4].typesId;
+            const typesId_text = types[5].typesId;
 
             await txn("items")
                 .where("item_group_id", itemGroupId)

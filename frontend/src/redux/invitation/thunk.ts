@@ -1,6 +1,7 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { showNotification } from '@mantine/notifications';
 import { acceptInviteAction, deleteInvitationAction, getInvitationListAction, sendInviteAction } from "./slice";
+import { getTableListAction } from "../table/slice";
 
 export function sendInvitation(projectId: number, userId: number, value: string) {
     return async (dispatch: Dispatch) => {
@@ -52,6 +53,7 @@ export function acceptInvitation(token: string, userId: number) {
 
         if (result.success) {
             dispatch(acceptInviteAction(result.invitation))
+            dispatch(getTableListAction(result.tableList))
             showNotification({
                 title: 'Invitation notification',
                 message: result.msg

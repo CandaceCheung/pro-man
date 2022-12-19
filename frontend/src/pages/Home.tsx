@@ -2,28 +2,22 @@ import { useEffect } from "react";
 import ProjectNavbar from "../components/ProjectNavbar";
 import { SidePanel } from "../components/SidePanel";
 import { acceptInvitation } from "../redux/invitation/thunk";
-import { getTableList } from "../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
 export function Home() {
-    const dispatch = useAppDispatch()
+
     const activeProjectID = useAppSelector(state => state.project.project_id)
     const projectSummary = useAppSelector((state)=> state.table.summary)
     const defaultID = projectSummary[0].project_id
     const activeProject = projectSummary.filter((date)=> date.project_id === activeProjectID)
     const token = localStorage.getItem('invitation')
     const userId = useAppSelector(state => state.auth.userId)
-
+    const dispatch = useAppDispatch()
 
     useEffect(()=>{
-        if(token){
-            dispatch(acceptInvitation(token, userId!))
-            localStorage.removeItem('invitation')
-            console.log('token deleted')
-        }
-    // eslint-disable-next-line
-    },[])
-
+        token && dispatch(acceptInvitation(token, userId!))
+        token && localStorage.removeItem('invitation')
+    })
 
     return (
         <div id='home-page'>

@@ -15,6 +15,7 @@ import { LeftNavbar } from "./components/LeftNavbar";
 import { getFavorite, getTableList } from "./redux/table/thunk";
 import { getGroup, getKanbanItems, getMember } from "./redux/kanban/thunk";
 import { showNotification } from "@mantine/notifications";
+import { acceptInvitation } from "./redux/invitation/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -36,7 +37,7 @@ function App() {
             title: 'Invitation notification',
             message: 'Invitation token detected'
         })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
     }, [])
 
 
