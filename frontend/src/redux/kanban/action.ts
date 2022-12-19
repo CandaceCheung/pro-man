@@ -24,14 +24,19 @@ export function setKanbanGroup(groupList: []) {
 export function addKanbanItem(
     projectId: number,
     stateId: number,
-    itemId:number,
+    itemId: number,
     itemName: string,
     memberName: string[],
     date: Date,
-    groupId: number,
+    groupId: number
 ) {
     const dateString = date.toISOString();
-    const item:Item = {id:itemId, name:itemName, date:dateString, membersList:memberName}
+    const item: Item = {
+        id: itemId,
+        name: itemName,
+        date: dateString,
+        membersList: memberName,
+    };
 
     return {
         type: "KANBAN/ADD" as const,
@@ -40,6 +45,10 @@ export function addKanbanItem(
         item,
         groupId,
     };
+}
+
+export function putKanbanOrder(order: number[]) {
+    return { type: "KANBAN/PUT_ORDER" as const, order };
 }
 
 export function failKanbanAction() {
@@ -53,4 +62,5 @@ export type KanbanAction =
     | ReturnType<typeof setKanbanMember>
     | ReturnType<typeof setKanbanGroup>
     | ReturnType<typeof addKanbanItem>
+    | ReturnType<typeof putKanbanOrder>
     | ReturnType<typeof failKanbanAction>;

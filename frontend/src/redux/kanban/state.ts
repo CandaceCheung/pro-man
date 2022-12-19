@@ -8,6 +8,7 @@ export interface Status {
     id: number, 
     name: string,
     color: string,
+    order: number,
     itemsList: Item[],
 }
 
