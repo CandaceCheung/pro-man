@@ -2,6 +2,7 @@ import jwtSimple from 'jwt-simple';
 import jwt from '../jwt'; import { Request, Response } from "express";
 import { InvitationService } from "../services/invitationService";
 import nodemailer from 'nodemailer'
+import { tableService } from '../app';
 
 export class InvitationController {
     constructor(private invitationService: InvitationService) { }
@@ -67,10 +68,12 @@ export class InvitationController {
                     })
                 } else {
                     const invitation = await this.invitationService.acceptInvite(invitationId, projectId, userId)
+                    const tableList = await tableService.getTableList(userId)
                     res.json({
                         success: true,
                         msg: 'Invitation Accepted!',
-                        invitation
+                        invitation,
+                        tableList
                     })
                 }
             } else {
