@@ -196,28 +196,6 @@ export function MainTable() {
         }));
     }
 
-    const deselectItemGroupInput = (index: number, value: string) => {
-        if (userId && projectID) {
-            const newItemGroupsInputSelectState = [...itemGroupsInputSelectState];
-            setItemGroupsInputSelectState(newItemGroupsInputSelectState.map((each: boolean, i: number) => {
-                if (index === i) {
-                    each = !each;
-                }
-                return each;
-            }));
-            if (value !== itemGroupsState[index].item_group_name) {
-                // Set new group name into itemGroupsState
-                const nextNewItemGroupsState = produce(itemGroupsState, draftState => {
-                    draftState[index].item_group_name = value;
-                })
-                setItemGroupsState(nextNewItemGroupsState);
-    
-                // Fetch to the server
-                dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, value, userId, projectID));
-            }
-        } 
-    }
-
     const changeItemGroupInputValue = (index: number, value: string) => {
         const newItemGroupsInputValueState = [...itemGroupsInputValueState];
         setItemGroupsInputValueState(newItemGroupsInputValueState.map((each: string, i: number) => {
@@ -228,18 +206,36 @@ export function MainTable() {
         }))
     }
 
-    const handleItemGroupInputKeyDown = (index: number, key: string) => {
-        if (key === "Enter" && userId && projectID) {
-            // Set new group name into itemGroupsState
-            const groupId = itemGroupsState[index].item_group_id;
-            const newValue = itemGroupsInputValueState[index];
-            let nextitemGroupsState = produce(itemGroupsState, draftState => {
-                draftState[index].item_group_name = newValue;
-            })
-            setItemGroupsState(nextitemGroupsState);
+    const deselectItemGroupInput = (index: number) => {
+        if (userId && projectID) {
+            const newItemGroupsInputSelectState = produce(itemGroupsInputSelectState, draftState => {
+                draftState[index] = false
+            });
+            setItemGroupsInputSelectState(newItemGroupsInputSelectState);
 
-            // Fetch to the server
-            dispatch(updateItemGroupName(groupId, newValue, userId, projectID));
+            if (itemGroupsInputValueState[index] !== itemGroupsState[index].item_group_name) {
+                if (itemGroupsInputValueState[index].length) {
+                    // Set new group name into itemGroupsState
+                    const nextNewItemGroupsState = produce(itemGroupsState, draftState => {
+                        draftState[index].item_group_name = itemGroupsInputValueState[index];
+                    })
+                    setItemGroupsState(nextNewItemGroupsState);
+        
+                    // Fetch to the server
+                    dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, itemGroupsInputValueState[index], userId, projectID));
+                } else {
+                    const newItemGroupsInputValueState = produce(itemGroupsInputValueState, draftState => {
+                        draftState[index] = itemGroupsState[index].item_group_name;
+                    });
+                    setItemGroupsInputValueState(newItemGroupsInputValueState);
+                }
+            }
+        } 
+    }
+
+    const handleItemGroupInputKeyDown = (index: number, key: string) => {
+        if (key === "Enter") {
+            deselectItemGroupInput(index);
         }
     }
 
@@ -330,10 +326,7 @@ export function MainTable() {
                                         itemGroupsInputSelectState[itemGroupArrayIndex]
                                             ?
                                             <input
-                                                onBlur={(e) => deselectItemGroupInput(
-                                                    itemGroupArrayIndex,
-                                                    e.target.value
-                                                )}
+                                                onBlur={() => deselectItemGroupInput(itemGroupArrayIndex)}
                                                 type="text"
                                                 autoFocus
                                                 className={classes.groupNameInput}

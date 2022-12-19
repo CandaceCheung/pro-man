@@ -65,7 +65,11 @@ export function Item({ itemId, groupId, itemName, onItemRename }: ItemProps) {
 
     const deselectItemNameInput = () => {
         if (itemNameInput !== itemName) {
-            onItemRename(groupId, itemId, itemNameInput);
+            if (itemNameInput.length) {
+                onItemRename(groupId, itemId, itemNameInput);
+            } else {
+                setItemNameInput(itemName);
+            }
         }
         setSelectedItemNameInput(false);
     }

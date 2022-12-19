@@ -56,7 +56,11 @@ export function TableColumnTitle({ id, groupId, cellColumnType, cellColumnCustom
 
     const deselectTypeNameInput = () => {
         if (typeNameInput !== cellColumnCustomName) {
-            onTypeRename(groupId, id, typeNameInput);
+            if (typeNameInput) {
+                onTypeRename(groupId, id, typeNameInput);
+            } else {
+                setTypeNameInput(cellColumnCustomName);
+            }
         }
         setTypeNameInputSelected(false);
     }
