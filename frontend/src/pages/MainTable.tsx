@@ -48,6 +48,7 @@ export function MainTable() {
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
     const [personsColors, setPersonsColors] = useState<{[key in number]: string}>({});
+    const [moneySums, setMoneySums] = useState<{[key in number]: number}>({});
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -70,8 +71,10 @@ export function MainTable() {
         let typesOrders: { [keys in number]: number[] } = {};
         let typesOrderSet: Set<number> = new Set();
 
-        let personsColorsTemp: {[key in string]: string} = {};
+        let personsColorsTemp: {[key in number]: string} = {};
         let personsMembers: Set<number> = new Set();
+
+        let moneySumsTemp: {[key in number]: number} = {};
 
         for (const cell of tableSummary) {
             if (cell.project_id) {
@@ -113,6 +116,11 @@ export function MainTable() {
                         itemCell["item_money_cashflow"] = cell.item_money_cashflow;
                         itemCell["item_money_date"] = cell.item_money_date;
                         itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        if (moneySumsTemp[cell.item_id]) {
+                            moneySumsTemp[cell.item_id] += cell.item_money_cashflow;
+                        } else {
+                            moneySumsTemp[cell.item_id] = cell.item_money_cashflow;
+                        }
                         break;
                     case "persons":
                         if (itemCells[itemGroupID][itemID][typeID]) {
@@ -165,6 +173,7 @@ export function MainTable() {
         setTypesOrdersState(typesOrders);
 
         setPersonsColors(personsColorsTemp);
+        setMoneySums(moneySumsTemp);
     }, [tableSummary, projectID, theme.colors.personsTypeComponentColor]);
 
     const toggleItemGroupCollapsed = (index: number) => {
@@ -378,6 +387,7 @@ export function MainTable() {
                                                             color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
                                                             lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                             personsColors={personsColors}
+                                                            moneySums={moneySums}
                                                         />
                                                     )
                                                 }

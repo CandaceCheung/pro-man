@@ -7,6 +7,7 @@ import { Text } from "./TableCellsComponents/Text";
 import { Status } from "./TableCellsComponents/Status";
 import { Times } from "./TableCellsComponents/Times";
 import { Date } from "./TableCellsComponents/Date";
+import { Money } from "./TableCellsComponents/Money";
 
 export interface TableRowProps {
     id: number,
@@ -14,10 +15,11 @@ export interface TableRowProps {
     cellDetails: {[key in number]: itemCellsElement},
     color: string,
     lastRow: boolean,
-    personsColors: {[key in string]: string}
+    personsColors: {[key in number]: string},
+    moneySums: {[key in number]: number}
 }
 
-export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColors}: TableRowProps) {
+export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColors, moneySums}: TableRowProps) {
     const {
         attributes,
         listeners,
@@ -63,8 +65,7 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                         className={cx(classes.tableCell, classes.money)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <span>{cell.item_money_date}</span>
-                        <span>{cell.item_money_cashflow}</span>
+                        <Money moneySum={moneySums[id]}/>
                     </div>
                 )
             case "times":
