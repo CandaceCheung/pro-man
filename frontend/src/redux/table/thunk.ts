@@ -272,8 +272,8 @@ export function reorderTypes(newOrder: number[], userId: number, projectID: numb
 				title: 'Insert data notification',
 				message: 'Failed to reorder types! 🤥'
 			});
+			dispatch(getTable(userId, projectID));
 		}
-		dispatch(getTable(userId, projectID));
 	}
 }
 
