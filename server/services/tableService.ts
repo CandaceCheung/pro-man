@@ -234,6 +234,12 @@ export class TableService {
         }).where("id", typeId);
     }
 
+    async updateText(itemId: number, text: string) {
+        await this.knex("type_text").update({
+            text: text
+        }).where("item_id", itemId);
+    }
+
     async insertItem(projectId: number, userId: number) {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);

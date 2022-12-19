@@ -16,6 +16,7 @@ import { tableController } from "../app";
     tableRoutes.put('/typesOrder', tableController.reorderTypes);
     tableRoutes.put('/newItemName', tableController.renameItem);
     tableRoutes.put('/newTypeName', tableController.renameType);
+    tableRoutes.put('/newText', tableController.updateText);
     tableRoutes.post('/item', tableController.insertItem);
     tableRoutes.post('/itemGroup', tableController.insertItemGroup);
     tableRoutes.post('/newProject', tableController.insertNewProject);

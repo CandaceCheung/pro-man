@@ -4,23 +4,30 @@ import { useState } from 'react';
 interface TextProps {
     groupId: number,
     itemId: number,
+    typeId: number,
     text: string,
-    onTextChange: (groupId: number, itemId: number, text: string) => void
+    onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void
 }
 
 const useStyle = createStyles((theme) => ({
     textContainer: {
         display: "flex",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+        padding: 3
     },
     text: {
+        position: "relative",
         display: "flex",
+        width: "100%",
+        height: "100%",
         justifyContent: "center",
         alignItems: "center",
         cursor: "text",
         border: "1px solid transparent",
-        borderRadius: 5,
+        zIndex: 1,
 
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`
@@ -31,7 +38,6 @@ const useStyle = createStyles((theme) => ({
         transition: "0.5s",
         outline: "none",
         border: "1px solid",
-        borderRadius: 5,
         boxSizing: "border-box",
         height: 12,
         color: "inherit",
@@ -45,7 +51,6 @@ const useStyle = createStyles((theme) => ({
             transition: "0.5s",
             outline: "none",
             border: "1px solid",
-            borderRadius: 5,
             minHeight: 30,
             boxSizing: "border-box",
             height: 12,
@@ -54,7 +59,7 @@ const useStyle = createStyles((theme) => ({
     },
 }));
 
-export function Text({ groupId, itemId, text, onTextChange }: TextProps) {
+export function Text({ groupId, itemId, typeId, text, onTextChange }: TextProps) {
     const [selectedTextInput, setSelectedTextInput] = useState(false);
     const [textInput, setTextInput] = useState(text);
 
@@ -62,11 +67,7 @@ export function Text({ groupId, itemId, text, onTextChange }: TextProps) {
 
     const deselectTextInput = () => {
         if (textInput !== text) {
-            if (textInput.length) {
-                onTextChange(groupId, itemId, textInput);
-            } else {
-                setTextInput(text);
-            }
+            onTextChange(groupId, itemId, typeId, textInput);
         }
         setSelectedTextInput(false);
     }

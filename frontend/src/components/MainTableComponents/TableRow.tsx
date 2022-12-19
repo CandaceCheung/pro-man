@@ -20,7 +20,7 @@ export interface TableRowProps {
     personsColors: { [key in number]: string },
     moneySums: { [key in number]: number },
     onItemRename: (groupId: number, itemId: number, name: string) => void,
-    onTextChange: (groupId: number, itemId: number, text: string) => void
+    onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void
 }
 
 export function TableRow({ 
@@ -99,7 +99,7 @@ export function TableRow({
                         className={cx(classes.tableCell, classes.text)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <Text groupId={groupId} itemId={id} text={cell.item_text_text!} onTextChange={onTextChange}></Text>
+                        <Text groupId={groupId} itemId={id} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange}></Text>
                     </div>
                 )
             default:

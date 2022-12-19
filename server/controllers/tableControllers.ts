@@ -171,6 +171,17 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Rename Type" });
         }
     }
+    updateText = async (req: Request, res: Response) => {
+        try {
+            const itemId = req.body.itemId;
+            const text = req.body.text;
+            await this.tableService.updateText(itemId, text);
+            res.json({ success: true });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Change Text" });
+        }
+    }
     insertItem = async (req: Request, res: Response) => {
         try {
             const projectId = req.body.projectId;

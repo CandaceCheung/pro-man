@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
+import { getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -15,6 +15,7 @@ import produce from "immer";
 export interface itemCellsElement {
     item_id: TableState["item_id"],
     item_name: TableState["item_name"],
+    type_id: TableState["horizontal_order_id"],
     type_name: TableState["type_name"],
     element_name: TableState["element_name"],
     item_dates_datetime?: TableState["item_dates_datetime"],
@@ -57,7 +58,7 @@ export function MainTable() {
         useSensor(SmartPointerSensor)
     );
 
-    useEffect(()=>{
+    useEffect(() => {
         userId && projectID && dispatch(getTable(userId!, projectID!));
     }, [userId, projectID, dispatch]);
 
@@ -84,6 +85,7 @@ export function MainTable() {
                 let itemCell: itemCellsElement = {
                     item_id: cell.item_id,
                     item_name: cell.item_name,
+                    type_id: cell.horizontal_order_id,
                     type_name: cell.type_name,
                     element_name: cell.element_name
                 }
@@ -161,7 +163,7 @@ export function MainTable() {
 
         // Set type_persons members initials colors
         let personsMembersArray = Array.from(personsMembers).sort();
-        personsMembersArray.forEach((id, index) => {personsColorsTemp[id] = theme.colors.personsTypeComponentColor[index % theme.colors.personsTypeComponentColor.length]});
+        personsMembersArray.forEach((id, index) => { personsColorsTemp[id] = theme.colors.personsTypeComponentColor[index % theme.colors.personsTypeComponentColor.length] });
 
         setItemCellsState(itemCells);
         setItemGroupsState(itemGroups);
@@ -177,33 +179,24 @@ export function MainTable() {
     }, [tableSummary, projectID, theme.colors.personsTypeComponentColor]);
 
     const toggleItemGroupCollapsed = (index: number) => {
-        const newItemGroupsCollapsedState = [...itemGroupsCollapsedState];
-        setItemGroupCollapsedState(newItemGroupsCollapsedState.map((each: boolean, i: number) => {
-            if (index === i) {
-                each = !each;
-            }
-            return each;
-        }));
+        const newItemGroupsCollapsedState = produce(itemGroupsCollapsedState, draftState => {
+            draftState[index] = false;
+        })
+        setItemGroupCollapsedState(newItemGroupsCollapsedState);
     }
 
     const selectItemGroupInput = (index: number) => {
-        const newItemGroupsInputSelectState = [...itemGroupsInputSelectState];
-        setItemGroupsInputSelectState(newItemGroupsInputSelectState.map((each: boolean, i: number) => {
-            if (index === i) {
-                each = !each;
-            }
-            return each;
-        }));
+        const newItemGroupsInputSelectState = produce(itemGroupsInputSelectState, draftState => {
+            draftState[index] = true;
+        })
+        setItemGroupsInputSelectState(newItemGroupsInputSelectState);
     }
 
     const changeItemGroupInputValue = (index: number, value: string) => {
-        const newItemGroupsInputValueState = [...itemGroupsInputValueState];
-        setItemGroupsInputValueState(newItemGroupsInputValueState.map((each: string, i: number) => {
-            if (index === i) {
-                each = value;
-            }
-            return each;
-        }))
+        const newItemGroupsInputValueState = produce(itemGroupsInputValueState, draftState => {
+            draftState[index] = value;
+        })
+        setItemGroupsInputValueState(newItemGroupsInputValueState);
     }
 
     const deselectItemGroupInput = (index: number) => {
@@ -220,7 +213,7 @@ export function MainTable() {
                         draftState[index].item_group_name = itemGroupsInputValueState[index];
                     })
                     setItemGroupsState(nextNewItemGroupsState);
-        
+
                     // Fetch to the server
                     dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, itemGroupsInputValueState[index], userId, projectID));
                 } else {
@@ -230,7 +223,7 @@ export function MainTable() {
                     setItemGroupsInputValueState(newItemGroupsInputValueState);
                 }
             }
-        } 
+        }
     }
 
     const handleItemGroupInputKeyDown = (index: number, key: string) => {
@@ -265,9 +258,9 @@ export function MainTable() {
         }
     }
 
-    const onItemRename = (groupId: number, itemId: number, name:string) => {
+    const onItemRename = (groupId: number, itemId: number, name: string) => {
         const newItemCellsState = produce(itemCellsState, draftState => {
-            Object.keys(draftState[groupId][itemId]).forEach((typeId,_)=>{
+            Object.keys(draftState[groupId][itemId]).forEach((typeId, _) => {
                 draftState[groupId][itemId][parseInt(typeId)].item_name = name;
             });
         });
@@ -277,8 +270,8 @@ export function MainTable() {
 
     const onTypeRename = (groupId: number, typeId: number, name: string) => {
         const newItemCellsState = produce(itemCellsState, draftState => {
-            Object.keys(draftState[groupId]).forEach((itemId,_)=>{
-                Object.keys(draftState[groupId][parseInt(itemId)]).forEach((each, _)=> {
+            Object.keys(draftState[groupId]).forEach((itemId, _) => {
+                Object.keys(draftState[groupId][parseInt(itemId)]).forEach((each, _) => {
                     if (parseInt(each) === typeId) {
                         draftState[groupId][parseInt(itemId)][typeId].element_name = name;
                     }
@@ -289,8 +282,12 @@ export function MainTable() {
         dispatch(renameType(typeId, name, userId!, projectID!));
     }
 
-    const onTextChange = (groupId: number, itemId: number, text:string) => {
-
+    const onTextChange = (groupId: number, itemId: number, typeId: number, text: string) => {
+        const newItemCellsState = produce(itemCellsState, draftState => {
+            draftState[groupId][itemId][typeId].item_text_text = text;
+        });
+        setItemCellsState(newItemCellsState);
+        dispatch(updateText(itemId, text, userId!, projectID!));
     }
 
     return (
