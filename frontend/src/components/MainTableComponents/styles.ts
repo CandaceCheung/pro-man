@@ -137,6 +137,16 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         overflow: "hidden",
     },
 
+    typeName: {
+        border: "1px solid transparent",
+        borderRadius: 5,
+
+        "&:hover": {
+            border: `1px solid ${theme.colors.borderColor[0]}`,
+            cursor: "text"
+        }
+    },
+
     item: {
         width: 200
     },
