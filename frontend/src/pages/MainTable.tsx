@@ -71,6 +71,7 @@ export function MainTable() {
         let typesOrderSet: Set<number> = new Set();
 
         let personsColorsTemp: {[key in string]: string} = {};
+        let personsMembers: Set<number> = new Set();
 
         for (const cell of tableSummary) {
             if (cell.project_id) {
@@ -122,10 +123,7 @@ export function MainTable() {
                             itemCell.item_person_name = [cell.item_person_name];
                             itemCells[itemGroupID][itemID][typeID] = itemCell;
                         }
-                        if (!personsColorsTemp[cell.item_person_user_id]) {
-                            const numberOfExistingPersons =  Object.keys(personsColorsTemp).length;
-                            personsColorsTemp[cell.item_person_user_id] = theme.colors.personsTypeComponentColor[numberOfExistingPersons % theme.colors.personsTypeComponentColor.length];
-                        }
+                        personsMembers.add(cell.item_person_user_id);
                         break;
                     case "status":
                         itemCell["item_status_color"] = cell.item_status_color;
@@ -152,6 +150,11 @@ export function MainTable() {
                 typesOrders[itemGroupID] = Array.from(typesOrderSet);
             }
         }
+
+        // Set type_persons members initials colors
+        let personsMembersArray = Array.from(personsMembers).sort();
+        personsMembersArray.forEach((id, index) => {personsColorsTemp[id] = theme.colors.personsTypeComponentColor[index % theme.colors.personsTypeComponentColor.length]});
+
         setItemCellsState(itemCells);
         setItemGroupsState(itemGroups);
         setItemGroupCollapsedState(itemGroupsCollapsed);
