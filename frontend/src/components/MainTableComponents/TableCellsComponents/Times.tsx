@@ -16,6 +16,7 @@ const useStyle = createStyles((theme) => ({
     },
 
     dateBar: {
+        position: "relative",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -24,7 +25,29 @@ const useStyle = createStyles((theme) => ({
         backgroundColor: theme.colors.dateBarColor[1],
         color: "#fff",
         fontSize: 10,
-        borderRadius: 50
+        borderRadius: 50,
+        "&:hover::before": {
+            opacity: 1,
+            visibility: "visible"
+        },
+        "&::before": {
+            position: "absolute",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: 160,
+            height: 25,
+            backgroundColor: theme.colors.dateBarColor[2],
+            color: "#fff",
+            fontSize: 10,
+            borderRadius: 50,
+            content: "attr(data-hover)",
+            visibility: "hidden",
+            opacity: 0,
+            zIndex: 1,
+            left: 0,
+            top: 0
+        }
     },
 
     emptyBar: {
@@ -33,10 +56,13 @@ const useStyle = createStyles((theme) => ({
         alignItems: "center",
         width: 35,
         height: 160,
-        backgroundColor: theme.colors.dateBarColor[2],
+        backgroundColor: theme.colors.dateBarColor[3],
         color: "#fff",
         fontSize: 10,
-        borderRadius: 50
+        borderRadius: 50,
+        "&:hover": {
+            backgroundColor: theme.colors.dateBarColor[4]
+        }
     }
 }));
 
@@ -54,8 +80,7 @@ export function Times({ startDate, endDate }: TimesProps) {
     } else {
         barLeftPercentage = (roundToTen(pastTime * 100)).toString() + "%";
     }
-    const startDateString = new Date(startDate).toDateString();
-    const endDateString = new Date(endDate).toDateString();
+    const totalDays = (endDate - startDate) / (1000*60*60*24);
     return (
         <span className={classes.dateContainer}>
             {
@@ -66,6 +91,13 @@ export function Times({ startDate, endDate }: TimesProps) {
                     style={{
                         backgroundImage: `linear-gradient(to right, transparent ${barLeftPercentage}, ${theme.colors.dateBarColor[0]} ${barLeftPercentage})`,
                     }}
+                    data-hover={
+                        totalDays === 1
+                        ?
+                        totalDays + " day"
+                        :
+                        totalDays + " days"
+                    }
                 >   
                     {`${format(new Date(Number(startDate)), 'MMM dd')} - ${format(new Date(Number(endDate)), 'MMM dd')}`}
                 </span>
