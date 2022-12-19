@@ -32,7 +32,7 @@ jobs:
         env:
           REACT_APP_API_SERVER: https://api.pro-man.co
           REACT_APP_PUBLIC_HOSTNAME: https://pro-man.co
-        run: yarn ci-build
+        run: yarn build
       - name: archive react built files
         uses: actions/upload-artifact@v3
         with:
