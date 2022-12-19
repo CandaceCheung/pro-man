@@ -38,6 +38,7 @@ export const kanbanReducer = (
                     if (action.stateId === status.id) {
                         return true;
                     }
+                    return false;
                 });
                 targetStatus?.itemsList.push(action.item);
             });
