@@ -289,6 +289,10 @@ export function MainTable() {
         dispatch(renameType(typeId, name, userId!, projectID!));
     }
 
+    const onTextChange = (groupId: number, itemId: number, text:string) => {
+
+    }
+
     return (
         <div className="main-table">
             {
@@ -409,6 +413,7 @@ export function MainTable() {
                                                             personsColors={personsColors}
                                                             moneySums={moneySums}
                                                             onItemRename={onItemRename}
+                                                            onTextChange={onTextChange}
                                                         />
                                                     )
                                                 }
