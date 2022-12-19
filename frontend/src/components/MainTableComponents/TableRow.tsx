@@ -8,10 +8,11 @@ import { Status } from "./TableCellsComponents/Status";
 import { Times } from "./TableCellsComponents/Times";
 import { Date } from "./TableCellsComponents/Date";
 import { Money } from "./TableCellsComponents/Money";
+import { Item } from "./TableCellsComponents/Item";
 
 export interface TableRowProps {
     id: number,
-    rowOrder: number[],
+    typeOrder: number[],
     cellDetails: {[key in number]: itemCellsElement},
     color: string,
     lastRow: boolean,
@@ -19,7 +20,7 @@ export interface TableRowProps {
     moneySums: {[key in number]: number}
 }
 
-export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColors, moneySums}: TableRowProps) {
+export function TableRow({id, typeOrder, cellDetails, color, lastRow, personsColors, moneySums}: TableRowProps) {
     const {
         attributes,
         listeners,
@@ -114,10 +115,10 @@ export function TableRow({id, rowOrder, cellDetails, color, lastRow, personsColo
                 style={{ backgroundColor: color }}
             ></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                {cellDetails[rowOrder[0]].item_name}
+                <Item itemName={cellDetails[typeOrder[0]].item_name} />
             </div>
             {
-                rowOrder.map((typeId, cellIndex) => {
+                typeOrder.map((typeId, cellIndex) => {
                     return retrieveCellData(cellDetails[typeId], cellIndex)
                 })
             }

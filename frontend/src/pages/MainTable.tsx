@@ -382,7 +382,7 @@ export function MainTable() {
                                                         <TableRow
                                                             key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
                                                             id={itemId}
-                                                            rowOrder={typesOrdersState[item_group_id]}
+                                                            typeOrder={typesOrdersState[item_group_id]}
                                                             cellDetails={itemCellsState[item_group_id][itemId]}
                                                             color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
                                                             lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
