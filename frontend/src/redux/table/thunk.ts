@@ -248,8 +248,8 @@ export function reorderItems(newOrder: number[], userId: number, projectID: numb
 				title: 'Insert data notification',
 				message: 'Failed to reorder items! 🤥'
 			});
+			dispatch(getTable(userId, projectID));
 		}
-		dispatch(getTable(userId, projectID));
 	}
 }
 
