@@ -1,5 +1,4 @@
 import { showNotification } from "@mantine/notifications";
-import { showNotification } from "@mantine/notifications";
 import { Dispatch } from "@reduxjs/toolkit";
 import { checkUsernameAction, clearActiveProjectAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction } from "./slice";
 
