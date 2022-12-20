@@ -20,14 +20,52 @@
 }
 
 #navbar-project-title {
-    padding-left: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    height: 45px;
     font-size: calc(20px + 1vw);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: text;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    padding: 0 5px;
 }
+
+#navbar-project-title:hover {
+    border: 1px solid #C4C4C4;
+}
+
+#navbar-project-title-input {
+    height: 45px;
+    font-size: calc(20px + 1vw);
+    padding: 0 5px;
+    transition: 0.5s;
+    outline: none;
+    border: 1px solid;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border-color: #C4C4C4;
+    padding: 0 5px;
+}
+
+#navbar-project-title-input:focus {
+    height: 45px;
+    font-size: calc(20px + 1vw);
+    transition: 0.5s;
+    outline: "none";
+    border: "1px solid";
+    border-radius: 5px;
+    box-sizing: "border-box";
+    border-color: #C4C4C4;
+    padding: 0 5px;
+}
+
 
 #project-title-container {
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #like-button {

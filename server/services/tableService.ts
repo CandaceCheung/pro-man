@@ -44,7 +44,7 @@ export class TableService {
             'types.type as type_name',
             'types.id as horizontal_order_id'
         )
-            .select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD') as item_dates_date`))
+            .select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD, YYYY') as item_dates_date`))
             .from('members')
             .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
@@ -238,6 +238,12 @@ export class TableService {
         await this.knex("type_text").update({
             text: text
         }).where("item_id", itemId);
+    }
+
+    async renameProject(projectId: number, projectName: string) {
+        await this.knex("projects").update({
+            name: projectName
+        }).where("id", projectId);
     }
 
     async insertItem(projectId: number, userId: number) {

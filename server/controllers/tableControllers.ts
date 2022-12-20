@@ -182,6 +182,17 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Change Text" });
         }
     }
+    renameProject = async (req: Request, res: Response) => {
+        try {
+            const projectId = req.body.projectId;
+            const projectName = req.body.projectName;
+            await this.tableService.renameProject(projectId, projectName);
+            res.json({ success: true });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Rename Project" });
+        }
+    }
     insertItem = async (req: Request, res: Response) => {
         try {
             const projectId = req.body.projectId;

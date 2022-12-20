@@ -121,7 +121,7 @@ export function Times({ startDate, endDate }: TimesProps) {
                         totalDays + " days"
                     }
                 >   
-                    {`${format(new Date(Number(startDate)), 'MMM dd')} - ${format(new Date(Number(endDate)), 'MMM dd')}`}
+                    {`${format(new Date(Number(startDate)), 'MMM dd, yyyy')} - ${format(new Date(Number(endDate)), 'MMM dd, yyyy')}`}
                 </span>
                 :
                 <span className={classes.emptyBar}>-</span>

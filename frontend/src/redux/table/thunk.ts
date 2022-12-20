@@ -1,5 +1,5 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { setActiveProjectAction } from "../project/slice";
+import { setActiveProjectAction, setProjectNameAction } from "../project/slice";
 import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
@@ -65,6 +65,7 @@ export function getTableList(userId: number) {
 		if (result.success) {
 			dispatch(getTableListAction(result.list))
 			dispatch(setActiveProjectAction(result.list[0].project_id));
+			dispatch(setProjectNameAction(result.list[0].project_name));
 		} else {
 			dispatch(getTableFailedAction())
 		}
@@ -277,16 +278,6 @@ export function reorderTypes(newOrder: number[], userId: number, projectID: numb
 	}
 }
 
-export function getPersonsName(userId: number) {
-	return async (dispatch: Dispatch) => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/personName/${userId}`);
-
-
-	}
-}
-
 export function insertNewProject(userId: number) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
@@ -303,7 +294,7 @@ export function insertNewProject(userId: number) {
 			const projectName = result.project_name;
 			const memberTableId = result.member_table_id;
 			const username = result.username;
-			dispatch(setActiveProject(projectId));
+			dispatch(setActiveProject(projectId, projectName));
 			dispatch(addProjectAction({
 				creator_id: userId,
 				project_id: projectId,

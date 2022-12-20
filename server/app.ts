@@ -12,8 +12,12 @@ import { kanbanRoutes } from './routes/kanbanRoutes';
 import { KanbanController } from './controllers/kanbanControllers';
 import cors from 'cors';
 import { InvitationService } from './services/invitationService';
-import { InvitationController } from './controllers/invitationController';
+import { NotificationController } from './controllers/notificationController';
 import { invitationRoutes } from './routes/invitationRoutes';
+import { NotificationService } from './services/notificationService';
+import { InvitationController } from './controllers/invitationController';
+import { notificationRoutes } from './routes/notificationRoutes';
+
 
 dotenv.config();
 
@@ -35,12 +39,17 @@ export const kanbanController = new KanbanController(kanbanService);
 export const invitationService = new InvitationService(knex);
 export const invitationController = new InvitationController(invitationService);
 
+export const notificationService = new NotificationService(knex);
+export const notificationController = new NotificationController(notificationService);
+
+
 app.use(express.json(), cors());
 
 app.use('/auth', authRoutes());
 app.use('/table', tableRoutes());
 app.use('/kanban', kanbanRoutes());
 app.use('/invitation', invitationRoutes());
+app.use('/notification', notificationRoutes());
 
 const PORT = 8080;
 app.listen(PORT, () => {
