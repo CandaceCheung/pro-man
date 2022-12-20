@@ -1,7 +1,7 @@
 import { Button, Divider, Menu } from "@mantine/core";
 import { IconEyeOff, IconFilter, IconUser, IconColumns, IconArrowBack } from "@tabler/icons";
 import { MouseEvent } from "react";
-import { setHideByTypeAction, setSortByGroupIdAction, setSortByPersonIdAction} from "../../redux/project/slice";
+import { setHideByTypeAction, setSortByGroupIdAction, setSortByPersonIdAction } from "../../redux/project/slice";
 import { insertItem, insertItemGroup } from "../../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { TimelineButton } from "../TimelineComponents/TimelineButtons";
@@ -60,81 +60,81 @@ export function ButtonHub() {
                 <Button className='button-panel-group' onClick={onNewItemClick}>New Item</Button>
                 <Button className='button-panel-group' onClick={onNewGroupClick}>New Group</Button>
 
-                {page!=='kanban' && 
-                <Menu transition='pop-top-left' transitionDuration={150}>
-                    <Menu.Target>
-                        {sortByPersonId ?
-                            <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSortByPersonsClick(e)}><IconArrowBack size={14} /> Reset</Button>
-                            :
-                            <Button className='button-panel-group' variant='subtle'><IconUser size={14} /> Person</Button>
-                        }
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Label>Filter by person</Menu.Label>
-                        {page === 'timeline' && personsSummaryArr.map((person, index) => {
-                            return <Menu.Item
-                                key={index}
-                                disabled={!!sortByPersonId}
-                                value={person.userId}
-                                icon={<IconUser size={14} />}
-                                onClick={(e) => onSortByPersonsClick(e)}
-                            >
-                                {person.name}
-                            </Menu.Item>
-                        })}
-                        <Divider my="sm" />
-                    </Menu.Dropdown>
-                </Menu>
+                {page !== 'kanban' &&
+                    <Menu transition='pop-top-left' transitionDuration={150}>
+                        <Menu.Target>
+                            {sortByPersonId ?
+                                <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSortByPersonsClick(e)}><IconArrowBack size={14} /> Reset</Button>
+                                :
+                                <Button className='button-panel-group' variant='subtle'><IconUser size={14} /> Person</Button>
+                            }
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Label>Filter by person</Menu.Label>
+                            {page === 'timeline' && personsSummaryArr.map((person, index) => {
+                                return <Menu.Item
+                                    key={index}
+                                    disabled={!!sortByPersonId}
+                                    value={person.userId}
+                                    icon={<IconUser size={14} />}
+                                    onClick={(e) => onSortByPersonsClick(e)}
+                                >
+                                    {person.name}
+                                </Menu.Item>
+                            })}
+                            <Divider my="sm" />
+                        </Menu.Dropdown>
+                    </Menu>
                 }
-                {page!=='kanban' && 
-                <Menu transition="pop-top-right" transitionDuration={150}>
-                    <Menu.Target>
-                        {sortByGroupId ?
-                            <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSortByGroupClick(e)}><IconArrowBack size={14} /> Reset</Button>
-                            :
-                            <Button className='button-panel-group' variant='subtle'><IconFilter size={14} />Filter</Button>
-                        }
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        <Menu.Label>Filter by column</Menu.Label>
-                        {page === 'timeline' && groupSummary.map((group, index) => {
-                            return <Menu.Item
-                                key={index}
-                                value={group.item_group_id}
-                                icon={<IconColumns size={14} />}
-                                disabled={!!sortByGroupId}
-                                onClick={(e) => onSortByGroupClick(e)}
-                            >
-                                {group.item_group_name}
-                            </Menu.Item>
-                        })}
-                    </Menu.Dropdown>
-                </Menu>
+                {page !== 'kanban' &&
+                    <Menu transition="pop-top-right" transitionDuration={150}>
+                        <Menu.Target>
+                            {sortByGroupId ?
+                                <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSortByGroupClick(e)}><IconArrowBack size={14} /> Reset</Button>
+                                :
+                                <Button className='button-panel-group' variant='subtle'><IconFilter size={14} />Filter</Button>
+                            }
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            <Menu.Label>Filter by column</Menu.Label>
+                            {page === 'timeline' && groupSummary.map((group, index) => {
+                                return <Menu.Item
+                                    key={index}
+                                    value={group.item_group_id}
+                                    icon={<IconColumns size={14} />}
+                                    disabled={!!sortByGroupId}
+                                    onClick={(e) => onSortByGroupClick(e)}
+                                >
+                                    {group.item_group_name}
+                                </Menu.Item>
+                            })}
+                        </Menu.Dropdown>
+                    </Menu>
                 }
-                {page!=='kanban' && 
-                <Menu>
-                    <Menu.Target>
-                        {setHideByType ?
-                            <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSetHideByTypeClick(e)}><IconArrowBack size={14} /> Reset</Button>
-                            :
-                            <Button className='button-panel-group' variant='subtle'><IconEyeOff size={14} />Hide</Button>
-                        }
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                        {page === 'timeline' && typeColumn.map((column, index) => {
-                            return <Menu.Item
-                                value={column}
-                                key={index}
-                                icon={<IconColumns size={14} />}
-                                disabled={!!setHideByType}
-                                onClick={e => onSetHideByTypeClick(e)}
-                            >
-                                {column.toUpperCase()}
-                            </Menu.Item>
-                        })}
-                    </Menu.Dropdown>
-                </Menu>
-}
+                {page !== 'kanban' &&
+                    <Menu>
+                        <Menu.Target>
+                            {setHideByType ?
+                                <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSetHideByTypeClick(e)}><IconArrowBack size={14} /> Reset</Button>
+                                :
+                                <Button className='button-panel-group' variant='subtle'><IconEyeOff size={14} />Hide</Button>
+                            }
+                        </Menu.Target>
+                        <Menu.Dropdown>
+                            {page === 'timeline' && typeColumn.map((column, index) => {
+                                return <Menu.Item
+                                    value={column}
+                                    key={index}
+                                    icon={<IconColumns size={14} />}
+                                    disabled={!!setHideByType}
+                                    onClick={e => onSetHideByTypeClick(e)}
+                                >
+                                    {column.toUpperCase()}
+                                </Menu.Item>
+                            })}
+                        </Menu.Dropdown>
+                    </Menu>
+                }
             </div>
             {page === "timeline" && <TimelineButton />}
         </div>
