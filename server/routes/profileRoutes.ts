@@ -6,6 +6,7 @@ export const profileRoutes = () => {
     const profileRoutes = express.Router();
 
     profileRoutes.get('/:userId', profileController.getProfile)
+    profileRoutes.put('/update/:userId', profileController.putProfile)
     
     return profileRoutes;
 }
