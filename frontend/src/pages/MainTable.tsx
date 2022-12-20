@@ -180,7 +180,7 @@ export function MainTable() {
 
     const toggleItemGroupCollapsed = (index: number) => {
         const newItemGroupsCollapsedState = produce(itemGroupsCollapsedState, draftState => {
-            draftState[index] = false;
+            draftState[index] = !draftState[index];
         })
         setItemGroupCollapsedState(newItemGroupsCollapsedState);
     }

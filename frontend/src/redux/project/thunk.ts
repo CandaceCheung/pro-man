@@ -17,6 +17,31 @@ export function clearActiveProject() {
 	};
 }
 
+export function renameProject (projectId: number, projectName: string) {
+	return async (dispatch: Dispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/newProjectName`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				projectId,
+				projectName
+			})
+		});
+		const result = await res.json();
+		if (result.success) {
+			dispatch(setProjectNameAction(projectName));
+		} else {
+			showNotification({
+				title: 'Rename Project notification',
+				message: 'Failed to rename project! 🤥'
+			});
+		}
+	};
+}
+
 export function checkUsername(value: string) {
     return async (dispatch: Dispatch) => {
 
