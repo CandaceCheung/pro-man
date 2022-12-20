@@ -94,6 +94,7 @@ export function StatusColumn(props: StatusProps) {
                     groupId
                 )
             );
+            setOpened(false);
         }
     };
 
@@ -199,7 +200,7 @@ export function StatusColumn(props: StatusProps) {
                 </div>
 
                 <ScrollArea
-                    style={{ height: 750 }}
+                    style={{ height: 740 }}
                     type="auto"
                     scrollbarSize={6}
                 >
@@ -217,7 +218,7 @@ export function StatusColumn(props: StatusProps) {
                 </ScrollArea>
 
                 <UnstyledButton onClick={() => setOpened(true)}>
-                    <Group position="left" m="sm" mb={5}>
+                    <Group position="left" p="sm">
                         <ThemeIcon variant="light" radius="xl" color="gray">
                             <IconPlus />
                         </ThemeIcon>
@@ -229,7 +230,6 @@ export function StatusColumn(props: StatusProps) {
                     <Modal
                         opened={opened}
                         onClose={() => setOpened(false)}
-                        closeOnEscape
                         title="Add Item"
                         size="sm"
                     >
