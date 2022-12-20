@@ -12,7 +12,6 @@ import { faStar as faStarR } from '@fortawesome/free-regular-svg-icons'
 import LogsDrawer from './ProjectNavbarComponents/LogsDrawer';
 import InvitationDrawer from './ProjectNavbarComponents/InvitationDrawer';
 import { ButtonHub } from './ProjectNavbarComponents/ButtonHub';
-import { TableStateArray } from '../redux/table/slice';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { ActivePageState, setActivePageAction } from '../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../store';
