@@ -115,7 +115,11 @@ export function Status({ groupId, itemId, typeId, status, color, onStatusChange 
                             key={"status_tag_" + status.id}
                             className={classes.statusTag}
                             style={{ backgroundColor: status.color }}
-                            onClick={() => onStatusChange(groupId, itemId, status.id!, typeId, status.name!, status.color!)}
+                            onClick={() => {
+                                onStatusChange(groupId, itemId, status.id!, typeId, status.name!, status.color!)
+                                setOpened((o) => !o)
+                            }
+                            }
                         >
                             {status.name}
                         </span>
