@@ -1,0 +1,7 @@
+.read-message {
+    background: rgba(141, 139, 139, 0.377);
+}
+
+.unread-message {
+    background: none;
+}

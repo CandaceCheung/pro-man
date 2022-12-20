@@ -1,11 +1,34 @@
 import jwtSimple from 'jwt-simple';
-import jwt from '../jwt'; import { Request, Response } from "express";
+import jwt from '../jwt'; 
+import { Request, Response } from "express";
 import { InvitationService } from "../services/invitationService";
 import nodemailer from 'nodemailer'
 import { tableService } from '../app';
 
 export class InvitationController {
     constructor(private invitationService: InvitationService) { }
+
+    checkUsername = async (req: Request, res: Response) => {
+        try {
+            const value = req.body.value
+            const username = await this.invitationService.checkUsername(value)
+            if (username) {
+                res.json({
+                    success: true,
+                    msg: 'User found',
+                    username
+                })
+            } else {
+                res.json({
+                    success: false,
+                    msg: 'User not found',
+                })
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "Something Went wrong during deletion" });
+        }
+    }
 
     deleteInvitation = async (req: Request, res: Response) => {
         try {
