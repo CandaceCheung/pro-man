@@ -261,4 +261,19 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Retrieve Names" });
         }
     }
+    addState = async (req: Request, res: Response) => {
+        try {
+            const projectId = req.body.projectId;
+            const name = req.body.name;
+            const color = req.body.color;
+            const id = await this.tableService.addState(projectId, name, color);
+            res.json({
+                success: true,
+                id
+            })
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Add State" });
+        }
+    }
 }

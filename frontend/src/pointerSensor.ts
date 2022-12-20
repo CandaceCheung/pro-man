@@ -22,12 +22,21 @@ function isInteractiveElement(element: Element | null) {
         "textarea",
         "span"
     ];
+    const classNameElements = [
+        "mantine-Popover-dropdown"
+    ];
     if (
         element?.tagName &&
         interactiveElements.includes(element.tagName.toLowerCase())
     ) {
         return true;
     }
-
+    if(element?.classList) {
+        for (const classNameElement of classNameElements) {
+            if (element.classList.contains(classNameElement)) {
+                return true;
+            }
+        }
+    }
     return false;
 }

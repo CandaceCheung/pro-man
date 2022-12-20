@@ -1,5 +1,7 @@
-import { createStyles, Popover } from '@mantine/core';
+import { Button, createStyles, Popover } from '@mantine/core';
 import { useState } from 'react';
+import { newState } from '../../../redux/table/thunk';
+import { useAppDispatch, useAppSelector } from '../../../store';
 
 interface StatusProps {
     status: string,
@@ -33,12 +35,64 @@ const useStyle = createStyles((theme, _params) => ({
             transitionDelay: ".2s",
             borderWidth: 5
         }
+    },
+    statusList: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    statusTag: {
+        width: 160,
+        height: 35,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "#FFF",
+        margin: "5px 0",
+
+        "&:hover": {
+            opacity: .8
+        }
+    },
+    statusTagInputContainer: {
+        width: 160,
+        height: 35,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "#FFF",
+        margin: "5px 0"
+    },
+    statusTagInput: {
+        width: "100%",
+        height: "100%",
+        color: "inherit",
+        backgroundColor: "inherit",
+        outline: "none",
+        boxSizing: "border-box"
     }
 }));
 
 export function Status({ status, color }: StatusProps) {
+    const statusList = useAppSelector(state => state.table.status_list);
+    const projectId = useAppSelector(state => state.project.project_id);
     const [opened, setOpened] = useState(false);
-    const { classes } = useStyle();
+    const [editStatus, setEditStatus] = useState(false);
+    const [newStatusInputValue, setNewStatusInputValue] = useState("");
+
+    const { classes, theme } = useStyle();
+    const dispatch = useAppDispatch();
+
+    const handleNewStatusInputKeyDown = (key: string) => {
+        if (key === "Enter") {
+            projectId && dispatch(newState(projectId, newStatusInputValue, theme.colors.statusLabelsColor[statusList.length]));
+            setEditStatus(false);
+            setNewStatusInputValue("");
+        }
+    }
+
     return (
         <Popover width={200} position="bottom" withArrow shadow="md" opened={opened} onChange={setOpened}>
             <Popover.Target>
@@ -51,7 +105,39 @@ export function Status({ status, color }: StatusProps) {
                 </span>
             </Popover.Target>
             <Popover.Dropdown>
-                <div>This is uncontrolled popover, it is opened when button is clicked</div>
+                <span className={classes.statusList}>
+                    {statusList.map(status => (
+                        <span
+                            key={"status_tag_" + status.id}
+                            className={classes.statusTag}
+                            style={{ backgroundColor: status.color }}
+                        >
+                            {status.name}
+                        </span>
+                    ))}
+                    {
+                        editStatus && 
+                        <span 
+                            className={classes.statusTagInputContainer}
+                            style={{backgroundColor: theme.colors.statusLabelsColor[statusList.length]}}
+                        >
+                            <input 
+                                className={classes.statusTagInput}
+                                value={newStatusInputValue}
+                                onChange={(e) => setNewStatusInputValue(e.target.value)}
+                                onKeyDown={(e) => handleNewStatusInputKeyDown(e.key)}
+                            >
+                            </input>
+                        </span>
+                    }
+                    <Button 
+                        variant="subtle" 
+                        style={{marginTop: 10}}
+                        onClick={() => setEditStatus((e) => !e)}
+                    >
+                        {editStatus ? "Cancel" : "Add Status"}
+                    </Button>
+                </span>
             </Popover.Dropdown>
         </Popover>
     )

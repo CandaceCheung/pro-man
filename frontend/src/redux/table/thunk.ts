@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction, setProjectNameAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction, getStatusListAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction, getStatusListAction, addStatusAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
 import { setActiveProject } from "../project/thunk";
@@ -389,6 +389,32 @@ export function updateText(itemId: number, text: string, userId: number, project
 				message: 'Failed to update text! 🤥'
 			});
 			dispatch(getTable(userId, projectId));
+		}
+	}
+}
+
+export function newState(projectId: number, name: string, color: string) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/newState`, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ projectId, name, color })
+		});
+		const result = await res.json();
+		if (result.success) {
+			dispatch(addStatusAction({
+				id: result.id,
+				name,
+				color
+			}));
+		} else {
+			showNotification({
+				title: 'Add state notification',
+				message: 'Failed to add state! 🤥'
+			});
 		}
 	}
 }

@@ -118,7 +118,7 @@ export class KanbanService {
 		const txn = await this.knex.transaction();
 		try {
 			for (let i in order) {
-				await txn.update({ status_order:i+1}).from('states').where('id',order[i]);
+				await txn.update({ status_order:parseInt(i)+1}).from('states').where('id',order[i]);
 			}
 
 			await txn.commit();
