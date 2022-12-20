@@ -60,7 +60,7 @@ const useStyle = createStyles((theme) => ({
     },
 }));
 
-export function Text({ groupId, itemId, typeId, text, onTextChange }: TextProps) {
+export function TextCell({ groupId, itemId, typeId, text, onTextChange }: TextProps) {
     const [selectedTextInput, setSelectedTextInput] = useState(false);
     const [textInput, setTextInput] = useState(text);
 

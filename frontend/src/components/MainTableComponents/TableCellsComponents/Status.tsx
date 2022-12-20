@@ -1,4 +1,5 @@
-import { createStyles } from '@mantine/core';
+import { createStyles, Popover } from '@mantine/core';
+import { useState } from 'react';
 
 interface StatusProps {
     status: string,
@@ -36,13 +37,22 @@ const useStyle = createStyles((theme, _params) => ({
 }));
 
 export function Status({ status, color }: StatusProps) {
+    const [opened, setOpened] = useState(false);
     const { classes } = useStyle();
     return (
-        <div 
-            className={classes.statusContainer}
-            style={{backgroundColor: color}}
-        >
-            {status === "Empty" ? "" : status}
-        </div>
+        <Popover width={200} position="bottom" withArrow shadow="md" opened={opened} onChange={setOpened}>
+            <Popover.Target>
+                <span
+                    className={classes.statusContainer}
+                    style={{ backgroundColor: color }}
+                    onClick={() => setOpened((o) => !o)}
+                >
+                    {status === "Empty" ? "" : status}
+                </span>
+            </Popover.Target>
+            <Popover.Dropdown>
+                <div>This is uncontrolled popover, it is opened when button is clicked</div>
+            </Popover.Dropdown>
+        </Popover>
     )
 }
