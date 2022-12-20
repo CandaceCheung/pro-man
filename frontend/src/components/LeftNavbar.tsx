@@ -9,7 +9,7 @@ import {
 import {
     IconGauge,
     IconBell,
-    IconCalendarStats,
+    IconUsers,
     IconUser,
     IconStar,
     IconLogout,
@@ -83,9 +83,8 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 
 const navButtons = [
     { icon: Logo, label: "Home", path: "/home" },
-    { icon: IconGauge, label: "Dashboard", path: "/dashboard"},
     { icon: IconBell, label: "Notification", path: "/notification"},
-    { icon: IconCalendarStats, label: "My Work", path: "/my-work" },
+    { icon: IconUsers, label: "Member", path: "/member" },
     { icon: IconStar, label: "Favorite", path: "favorite" }
 ];
 
