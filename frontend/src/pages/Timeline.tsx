@@ -5,20 +5,20 @@ import { useAppDispatch, useAppSelector } from '../store'
 import { IconArrowBadgeLeft, IconArrowBadgeRight, IconPinned } from '@tabler/icons'
 import { useEffect, useState } from 'react'
 import moment from 'moment';
-import { updateDatelineItem, updateTimelineItem } from '../redux/table/thunk'
+import { getTable, updateDatelineItem, updateTimelineItem } from '../redux/table/thunk'
 // import { AddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
 import ClockLoader from "react-spinners/ClockLoader";
 import { setTargetUpdateElementAction, toggleLoadingAction, triggerUpdateTimelineModalAction } from '../redux/project/slice'
 import { ChangNameColorModal } from '../components/TimelineComponents/ChangeNameColorModal'
 
 
-const keys = { 
+const keys = {
   groupIdKey: 'id',
   groupTitleKey: 'title',
   groupRightTitleKey: 'rightTitle',
   itemIdKey: 'id',
-  itemTitleKey: 'title',    
-  itemDivTitleKey: 'title', 
+  itemTitleKey: 'title',
+  itemDivTitleKey: 'title',
   itemGroupKey: 'group',
   itemTimeStartKey: 'start_time',
   itemTimeEndKey: 'end_time',
@@ -48,6 +48,7 @@ type ItemState = {
 export function TimeFrame() {
 
   const dispatch = useAppDispatch()
+  const userId = useAppSelector(state => state.auth.userId);
   const targetProjectId = useAppSelector(state => state.project.project_id)
   const projectSummary = useAppSelector(state => state.table.summary)
   const [toggle, setToggle] = useState<boolean | null>(false)
@@ -57,25 +58,29 @@ export function TimeFrame() {
   const endPointAnchor = useAppSelector(state => state.project.time_line_end_anchor)
   const now = useAppSelector(state => state.project.time_line_now)
   const show = useAppSelector(state => state.project.time_line_show_marker)
-  const loading = useAppSelector(state=>state.project.toggle_loading)
-  const toggleUpdateModal = useAppSelector(state=>state.project.update_time_line_modal_opened)
-  const stack = useAppSelector(state=> state.project.time_line_stack_item)
-  const sortByPersonId = useAppSelector(state=> state.project.sort_by_person_id)
-  const sortByGroupId = useAppSelector(state=> state.project.sort_by_group_id)
+  const loading = useAppSelector(state => state.project.toggle_loading)
+  const toggleUpdateModal = useAppSelector(state => state.project.update_time_line_modal_opened)
+  const stack = useAppSelector(state => state.project.time_line_stack_item)
+  const sortByPersonId = useAppSelector(state => state.project.sort_by_person_id)
+  const sortByGroupId = useAppSelector(state => state.project.sort_by_group_id)
   const setHideByType = useAppSelector(state => state.project.set_hide_by_type)
-  const itemHeight = useAppSelector(state=> state.project.set_timeline_item_height)
+  const itemHeight = useAppSelector(state => state.project.set_timeline_item_height)
 
   const unfilteredTimelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'times').sort((a, b) => a.item_group_id - b.item_group_id)
   const unfilteredDatelineDetails = projectSummary.filter((project) => project.project_id === targetProjectId && project.type_name === 'dates').sort((a, b) => a.item_group_id - b.item_group_id)
-  const timelineDetail = unfilteredTimelineDetails.filter((project)=> sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project)=> sortByGroupId ? project.item_group_id === sortByGroupId : project)
-  const datelineDetail = unfilteredDatelineDetails.filter((project)=> sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project)=> sortByGroupId ? project.item_group_id === sortByGroupId : project)
+  const timelineDetail = unfilteredTimelineDetails.filter((project) => sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project) => sortByGroupId ? project.item_group_id === sortByGroupId : project)
+  const datelineDetail = unfilteredDatelineDetails.filter((project) => sortByPersonId ? project.item_person_user_id === sortByPersonId : project).filter((project) => sortByGroupId ? project.item_group_id === sortByGroupId : project)
 
   const minZoom = 1 * 24 * 60 * 60 * 1000;
   const maxZoom = 31 * 24 * 60 * 60 * 1000;
   const defaultTimeStart = moment().startOf('day');
   const defaultTimeEnd = moment().add(1, zoom);
   const interval = 24 * 60 * 60 * 1000;
-  
+
+  useEffect(() => {
+    userId && targetProjectId && dispatch(getTable(userId, targetProjectId));
+  }, [userId, targetProjectId, dispatch]);
+
   let groups: GroupState = []
   let items: ItemState = []
   let dateItems: ItemState = []
@@ -157,7 +162,7 @@ export function TimeFrame() {
     firstStartedTime = Math.min(item.item_times_start_date, firstStartedTime)
     firstStartedTime = Math.min(new Date(item.item_dates_datetime).getTime(), firstStartedTime)
   }
-  
+
   function handleItemResize(itemId: number, time: number, edge: 'left' | 'right') {
     if (itemId.toString()[0] === '1') {
       const id = parseInt(itemId.toString().slice(1))
@@ -183,7 +188,7 @@ export function TimeFrame() {
       const name = items.filter(x => x.id === itemId)[0].title
       const color = items.filter(x => x.id === itemId)[0].color
       const newEndTime = newStartTime - items[index].start_time + parseInt(items[index].end_time + "")
-      
+
       dispatch(updateTimelineItem(id, newStartTime, newEndTime, name, color))
     }
     if (itemId.toString()[0] === '2') {
@@ -202,7 +207,7 @@ export function TimeFrame() {
 
   useEffect(() => {
     let timeout = setTimeout(() => dispatch(toggleLoadingAction(false)), 500)
-    return ()=>{clearTimeout(timeout)}
+    return () => { clearTimeout(timeout) }
   }, [loading, zoom, dispatch])
 
   return (
@@ -314,7 +319,7 @@ export function TimeFrame() {
           </TimelineHeaders>
         </Timeline>
       }
-      <ChangNameColorModal /> 
+      <ChangNameColorModal />
       {/* <AddNewItemModal groups={groups} /> */}
     </div>
   )
