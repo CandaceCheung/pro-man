@@ -2,7 +2,6 @@ import './styles/ProjectNavbar.css'
 import { Tabs, Tooltip } from '@mantine/core';
 import { IconHome, IconTimelineEvent, IconBrandTrello, IconBrandCashapp, IconUsers, IconArticle } from '@tabler/icons'
 import { useEffect, useState } from 'react';
-import { Cashflow } from '../pages/Cashflow';
 import { Kanban } from '../pages/Kanban';
 import { MainTable } from '../pages/MainTable';
 import { TimeFrame } from '../pages/Timeline';

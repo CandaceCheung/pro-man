@@ -182,6 +182,11 @@ const renameProjectInTableList: CaseReducer<CombinedTableState, PayloadAction<{p
         if (project.project_id === action.payload.projectId) {
             project.project_name = action.payload.projectName;
         }
+    });
+    state.my_favorite_list.map(project => {
+        if (project.project_id === action.payload.projectId) {
+            project.project_name = action.payload.projectName;
+        }
     })
  }
 const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemGroupId: number, itemGroupName: string }>> =
