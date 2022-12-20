@@ -278,16 +278,6 @@ export function reorderTypes(newOrder: number[], userId: number, projectID: numb
 	}
 }
 
-export function getPersonsName(userId: number) {
-	return async (dispatch: Dispatch) => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/personName/${userId}`);
-
-
-	}
-}
-
 export function insertNewProject(userId: number) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
