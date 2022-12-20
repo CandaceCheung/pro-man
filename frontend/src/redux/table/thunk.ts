@@ -340,3 +340,45 @@ export function renameItem(itemId: number, name: string, userId: number, project
 		}
 	}
 }
+
+export function renameType(typeId: number, name: string, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/newTypeName`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ typeId, name })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Update data notification',
+				message: 'Failed to rename type! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+}
+
+export function updateText(itemId: number, text: string, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/newText`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, text })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Update data notification',
+				message: 'Failed to update text! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+}

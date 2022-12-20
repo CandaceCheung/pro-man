@@ -92,6 +92,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         fontSize: "inherit",
         fontFamily: "inherit",
         fontWeight: "inherit",
+        padding: "0 5px",
 
         "&:focus": {
             width: "100%",
@@ -108,6 +109,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     groupName: {
         border: "1px solid transparent",
         borderRadius: 5,
+        padding: "0 5px",
 
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`
@@ -134,16 +136,54 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
-        overflow: "hidden",
+        overflow: "hidden"
+    },
+
+    typeNameContainer: {
+        width: "100%",
+        height: "100%",
+        padding: "0 10px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     },
 
     typeName: {
         border: "1px solid transparent",
         borderRadius: 5,
+        padding: "0 5px",
 
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`,
             cursor: "text"
+        }
+    },
+
+    typeNameInput: {
+        width: "100%",
+        transition: "0.5s",
+        outline: "none",
+        border: "1px solid",
+        borderRadius: 5,
+        boxSizing: "border-box",
+        height: 12,
+        color: "inherit",
+        fontSize: "inherit",
+        fontFamily: "inherit",
+        fontWeight: "inherit",
+        borderColor: theme.colors.itemInputBorderColor[0],
+        padding: "0 5px",
+
+        "&:focus": {
+            width: "100%",
+            transition: "0.5s",
+            outline: "none",
+            border: "1px solid",
+            borderRadius: 5,
+            minHeight: 30,
+            boxSizing: "border-box",
+            height: 12,
+            borderColor: theme.colors.itemInputBorderColor[0]
         }
     },
 
