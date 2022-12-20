@@ -44,7 +44,7 @@ export class TableService {
             'types.type as type_name',
             'types.id as horizontal_order_id'
         )
-            .select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD') as item_dates_date`))
+            .select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD, YYYY') as item_dates_date`))
             .from('members')
             .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
