@@ -66,6 +66,7 @@
     border-radius: 100px;
     background-color: white;
     display: flex;
+    cursor: pointer;
 }
 
 #side-panel-arrow-active {
@@ -78,6 +79,7 @@
     border-style: solid;
     border-color: white;
     display: flex;
+    cursor: pointer;
 }
 
 #side-panel-arrow:hover {
