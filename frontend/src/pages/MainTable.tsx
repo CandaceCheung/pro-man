@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateText } from '../redux/table/thunk';
+import { getProjectStatusList, getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -60,7 +60,8 @@ export function MainTable() {
     );
 
     useEffect(() => {
-        userId && projectID && dispatch(getTable(userId!, projectID!));
+        userId && projectID && dispatch(getTable(userId, projectID));
+        projectID && dispatch(getProjectStatusList(projectID));
     }, [userId, projectID, dispatch]);
 
     useEffect(() => {
@@ -252,7 +253,9 @@ export function MainTable() {
             const oldIndex = typesOrdersState[item_group_id].indexOf(active.id);
             const newIndex = typesOrdersState[item_group_id].indexOf(over.id);
             const nextTypesOrdersState = produce(typesOrdersState, draftState => {
-                draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
+                Object.keys(draftState).forEach((itemGroupId, _) => {
+                    draftState[parseInt(itemGroupId)] = arrayMove(draftState[parseInt(itemGroupId)], oldIndex, newIndex)
+                });
             });
             setTypesOrdersState(nextTypesOrdersState);
             userId && dispatch(reorderTypes(nextTypesOrdersState[item_group_id], userId, projectID));
@@ -269,15 +272,17 @@ export function MainTable() {
         dispatch(renameItem(itemId, name, userId!, projectID!));
     }
 
-    const onTypeRename = (groupId: number, typeId: number, name: string) => {
+    const onTypeRename = (typeId: number, name: string) => {
         const newItemCellsState = produce(itemCellsState, draftState => {
-            Object.keys(draftState[groupId]).forEach((itemId, _) => {
-                Object.keys(draftState[groupId][parseInt(itemId)]).forEach((each, _) => {
-                    if (parseInt(each) === typeId) {
-                        draftState[groupId][parseInt(itemId)][typeId].element_name = name;
-                    }
-                })
-            });
+            Object.keys(draftState).forEach((groupId, _) => {
+                Object.keys(draftState[parseInt(groupId)]).forEach((itemId, _) => {
+                    Object.keys(draftState[parseInt(groupId)][parseInt(itemId)]).forEach((each, _) => {
+                        if (parseInt(each) === typeId) {
+                            draftState[parseInt(groupId)][parseInt(itemId)][typeId].element_name = name;
+                        }
+                    })
+                });
+            })
         });
         setItemCellsState(newItemCellsState);
         dispatch(renameType(typeId, name, userId!, projectID!));
@@ -384,7 +389,6 @@ export function MainTable() {
                                                             <TableColumnTitle
                                                                 key={typeId}
                                                                 id={typeId}
-                                                                groupId={item_group_id}
                                                                 cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
                                                                 cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
                                                                 index={index}
