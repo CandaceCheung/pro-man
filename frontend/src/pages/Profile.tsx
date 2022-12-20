@@ -1,4 +1,11 @@
-import { Button, createStyles, Group, Input, Text } from "@mantine/core";
+import {
+    Button,
+    createStyles,
+    Group,
+    Input,
+    PasswordInput,
+    Text,
+} from "@mantine/core";
 import { IconKey, IconSignature, IconUserCircle } from "@tabler/icons";
 import React from "react";
 
@@ -49,13 +56,18 @@ export function Profile() {
                         <Text className={classes.profileText}>First Name:</Text>
                         <Input icon={<IconSignature size={16} />}></Input>
                     </Group>
-                    <Group position="center" m={10}>
+                    <Group position="center" m={10} >
                         <Text className={classes.profileText}> Last Name:</Text>
-                        <Input icon={<IconSignature size={16} />}></Input>
+                        <Input icon={<IconSignature size={16} />} ></Input>
                     </Group>
                     <Group position="center" m={10}>
-                        <Text className={classes.profileText}>Password:</Text>
-                        <Input icon={<IconKey size={16} />}></Input>
+                    <Text className={classes.profileText}> Password:</Text>
+                        <PasswordInput
+                            placeholder="Password"
+                            description="Password must include at least one letter, number and special character"
+                            withAsterisk
+                            icon={<IconKey size={16} />}
+                        />
                     </Group>
                     <Group position="center">
                         <Button color="cyan" mt={10} maw={120}>
