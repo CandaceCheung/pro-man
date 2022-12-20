@@ -1,7 +1,7 @@
 import { showNotification } from "@mantine/notifications";
 import { Dispatch } from "@reduxjs/toolkit";
 import { renameProjectInTableListAction } from "../table/slice";
-import { checkUsernameAction, clearActiveProjectAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleReadAction } from "./slice";
+import { checkUsernameAction, clearActiveProjectAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleDeleteAction, toggleReadAction, toggleReceiverDeleteAction } from "./slice";
 
 export function setActiveProject (projectId: number, projectName: string) {
 	return async (dispatch: Dispatch) => {
@@ -149,6 +149,53 @@ export function toggleRead(notificationId: number, checked: boolean) {
 
         if (result.success) {
             dispatch(toggleReadAction({notificationId, checked: result.check}))
+			showNotification({
+				title: 'Message Notification',
+				message: result.msg
+			});
+        } else {
+			showNotification({
+				title: 'Message Notification',
+				message: result.msg
+			});
+        }
+    };
+}
+
+export function toggleDelete(notificationId: number) {
+    return async (dispatch: Dispatch) => {
+
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/notification/${notificationId}`, {
+            method: "DELETE",
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(toggleDeleteAction({notificationId, isDeleted: result.is_deleted }))
+			showNotification({
+				title: 'Message Notification',
+				message: result.msg
+			});
+        } else {
+			showNotification({
+				title: 'Message Notification',
+				message: result.msg
+			});
+        }
+    };
+}
+export function toggleReceiverDelete(notificationId: number) {
+    return async (dispatch: Dispatch) => {
+
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/notification/receiver/${notificationId}`, {
+            method: "DELETE",
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(toggleReceiverDeleteAction({notificationId, isDeletedReceiver: result.is_deleted_receiver }))
 			showNotification({
 				title: 'Message Notification',
 				message: result.msg

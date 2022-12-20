@@ -15,7 +15,46 @@ export class NotificationService {
                 .where('id', notificationId).returning('*')
 
             await txn.commit();
-            return check
+            return check.status
+
+        } catch (e) {
+            await txn.rollback();
+            throw e;
+        }
+    }
+    async toggleDelete(notificationId: number) {
+
+        const txn = await this.knex.transaction();
+
+        try {
+            const [check] = await txn('notifications')
+                .update({
+                    is_deleted: true,
+                    status: true
+                })
+                .where('id', notificationId).returning('*')
+
+            await txn.commit();
+            return check.is_deleted
+
+        } catch (e) {
+            await txn.rollback();
+            throw e;
+        }
+    }
+    async toggleReceiverDelete(notificationId: number) {
+
+        const txn = await this.knex.transaction();
+
+        try {
+            const [check] = await txn('notifications')
+                .update({
+                    is_deleted_receiver: true,
+                })
+                .where('id', notificationId).returning('*')
+
+            await txn.commit();
+            return check.is_deleted_receiver
 
         } catch (e) {
             await txn.rollback();

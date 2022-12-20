@@ -25,6 +25,7 @@ export async function seed(knex: Knex): Promise<void> {
     await knex("states").del();
     await knex("items").del();
     await knex("item_groups").del();
+    await knex('notifications').del();
     await knex('invitations').del();
     await knex("members").del();
     await knex("projects").del();

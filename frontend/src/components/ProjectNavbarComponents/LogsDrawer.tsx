@@ -15,7 +15,7 @@ export default function LogsDrawer(props: LogsDrawerProps) {
         position="right"
         opened={props.toggle}
         onClose={() => props.onRemove()}
-        title="Logs"
+        title={<h2>Edit Logs</h2>}
         padding="xl"
         size="40%"
       >
