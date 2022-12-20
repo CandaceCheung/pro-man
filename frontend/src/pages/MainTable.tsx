@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getProjectStatusList, getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateText } from '../redux/table/thunk';
+import { getProjectStatusList, getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -296,6 +296,15 @@ export function MainTable() {
         dispatch(updateText(itemId, text, userId!, projectID!));
     }
 
+    const onStatusChange = (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => {
+        const newItemCellsState = produce(itemCellsState, draftState => {
+            draftState[groupId][itemId][typeId].item_status_name = name;
+            draftState[groupId][itemId][typeId].item_status_color = color;
+        });
+        setItemCellsState(newItemCellsState);
+        dispatch(updateState(itemId, stateId, userId!, projectID!));
+    }
+
     return (
         <ScrollArea style={{ width: "calc(100vw - 140px)", height: "calc(100vh - 160px)" }} type="auto" >
             <div className="main-table">
@@ -407,7 +416,7 @@ export function MainTable() {
                                                         itemsOrdersState[item_group_id].map((itemId, itemIndex) =>
                                                             <TableRow
                                                                 key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
-                                                                id={itemId}
+                                                                itemId={itemId}
                                                                 groupId={item_group_id}
                                                                 typeOrder={typesOrdersState[item_group_id]}
                                                                 cellDetails={itemCellsState[item_group_id][itemId]}
@@ -417,6 +426,7 @@ export function MainTable() {
                                                                 moneySums={moneySums}
                                                                 onItemRename={onItemRename}
                                                                 onTextChange={onTextChange}
+                                                                onStatusChange={onStatusChange}
                                                             />
                                                         )
                                                     }

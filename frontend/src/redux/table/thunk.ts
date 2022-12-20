@@ -418,3 +418,24 @@ export function newState(projectId: number, name: string, color: string) {
 		}
 	}
 }
+
+export function updateState(itemId: number, stateId: number, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/state`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, stateId })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Update state notification',
+				message: 'Failed to update state! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+}

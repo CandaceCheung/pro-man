@@ -4,8 +4,12 @@ import { newState } from '../../../redux/table/thunk';
 import { useAppDispatch, useAppSelector } from '../../../store';
 
 interface StatusProps {
+    groupId: number,
+    itemId: number,
+    typeId: number,
     status: string,
-    color: string
+    color: string,
+    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void
 }
 
 const useStyle = createStyles((theme, _params) => ({
@@ -75,7 +79,7 @@ const useStyle = createStyles((theme, _params) => ({
     }
 }));
 
-export function Status({ status, color }: StatusProps) {
+export function Status({ groupId, itemId, typeId, status, color, onStatusChange }: StatusProps) {
     const statusList = useAppSelector(state => state.table.status_list);
     const projectId = useAppSelector(state => state.project.project_id);
     const [opened, setOpened] = useState(false);
@@ -111,6 +115,7 @@ export function Status({ status, color }: StatusProps) {
                             key={"status_tag_" + status.id}
                             className={classes.statusTag}
                             style={{ backgroundColor: status.color }}
+                            onClick={() => onStatusChange(groupId, itemId, status.id!, typeId, status.name!, status.color!)}
                         >
                             {status.name}
                         </span>

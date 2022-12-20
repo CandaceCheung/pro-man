@@ -550,4 +550,10 @@ export class TableService {
         }).returning("id");
         return id;
     }
+
+    async updateState(itemId: number, stateId: number) {
+        await this.knex("type_status").update({
+            state_id: stateId
+        }).where("item_id", itemId);
+    }
 }

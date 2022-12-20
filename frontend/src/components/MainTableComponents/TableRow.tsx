@@ -11,7 +11,7 @@ import { Money } from "./TableCellsComponents/Money";
 import { Item } from "./TableCellsComponents/Item";
 
 export interface TableRowProps {
-    id: number,
+    itemId: number,
     groupId: number,
     typeOrder: number[],
     cellDetails: { [key in number]: itemCellsElement },
@@ -20,12 +20,13 @@ export interface TableRowProps {
     personsColors: { [key in number]: string },
     moneySums: { [key in number]: number },
     onItemRename: (groupId: number, itemId: number, name: string) => void,
-    onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void
+    onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void,
+    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void
 }
 
 export function TableRow({ 
-    id, groupId, typeOrder, cellDetails, color, lastRow, personsColors, moneySums, 
-    onItemRename, onTextChange 
+    itemId, groupId, typeOrder, cellDetails, color, lastRow, personsColors, moneySums, 
+    onItemRename, onTextChange, onStatusChange
 }: TableRowProps) {
     const {
         attributes,
@@ -33,7 +34,7 @@ export function TableRow({
         setNodeRef,
         transform,
         transition
-    } = useSortable({ id: id });
+    } = useSortable({ id: itemId });
 
     const { classes, cx } = useStyles();
 
@@ -48,7 +49,7 @@ export function TableRow({
                 return (
                     <div
                         className={cx(classes.tableCell, classes.persons)}
-                        key={"item" + id + "cell" + cellIndex}
+                        key={"item" + itemId + "cell" + cellIndex}
                     >
                         <Persons
                             itemPersonsNames={cell.item_person_name!}
@@ -61,7 +62,7 @@ export function TableRow({
                 return (
                     <div
                         className={cx(classes.tableCell, classes.dates)}
-                        key={"item" + id + "cell" + cellIndex}
+                        key={"item" + itemId + "cell" + cellIndex}
                     >
                         <DateCell date={cell.item_dates_date!} />
                     </div>
@@ -70,16 +71,16 @@ export function TableRow({
                 return (
                     <div
                         className={cx(classes.tableCell, classes.money)}
-                        key={"item" + id + "cell" + cellIndex}
+                        key={"item" + itemId + "cell" + cellIndex}
                     >
-                        <Money moneySum={moneySums[id]} />
+                        <Money moneySum={moneySums[itemId]} />
                     </div>
                 )
             case "times":
                 return (
                     <div
                         className={cx(classes.tableCell, classes.times)}
-                        key={"item" + id + "cell" + cellIndex}
+                        key={"item" + itemId + "cell" + cellIndex}
                     >
                         <Times startDate={cell.item_times_start_date} endDate={cell.item_times_end_date} />
                     </div>
@@ -88,24 +89,31 @@ export function TableRow({
                 return (
                     <div
                         className={cx(classes.tableCell, classes.status)}
-                        key={"item" + id + "cell" + cellIndex}
+                        key={"item" + itemId + "cell" + cellIndex}
                     >   
-                        <Status status={cell.item_status_name!} color={cell.item_status_color!}></Status>
+                        <Status 
+                            groupId={groupId}
+                            itemId={itemId}
+                            typeId={cell.type_id}
+                            status={cell.item_status_name!} 
+                            color={cell.item_status_color!}
+                            onStatusChange={onStatusChange}
+                        />
                     </div>
                 )
             case "text":
                 return (
                     <div
                         className={cx(classes.tableCell, classes.text)}
-                        key={"item" + id + "cell" + cellIndex}
+                        key={"item" + itemId + "cell" + cellIndex}
                     >
-                        <TextCell groupId={groupId} itemId={id} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange}></TextCell>
+                        <TextCell groupId={groupId} itemId={itemId} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange} />
                     </div>
                 )
             default:
                 return (
                     <div
-                        key={"item" + id + "cell" + cellIndex}
+                        key={"item" + itemId + "cell" + cellIndex}
                     ></div>
                 )
         }
@@ -121,7 +129,7 @@ export function TableRow({
                 style={{ backgroundColor: color }}
             ></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                <Item itemId={id} groupId={groupId} itemName={cellDetails[typeOrder[0]].item_name} onItemRename={onItemRename} />
+                <Item itemId={itemId} groupId={groupId} itemName={cellDetails[typeOrder[0]].item_name} onItemRename={onItemRename} />
             </div>
             {
                 typeOrder.map((typeId, cellIndex) => {
