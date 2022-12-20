@@ -1,4 +1,4 @@
-import { DndContext, useSensor, useSensors } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import {
     Card,
     Group,
@@ -23,11 +23,11 @@ import {
     IconUser,
 } from "@tabler/icons";
 import { useState } from "react";
-import { SmartPointerSensor } from "../../pointerSensor";
 import { Status } from "../../redux/kanban/state";
 import { postItem } from "../../redux/kanban/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { ItemCard } from "./ItemCard";
+import { CSS } from "@dnd-kit/utilities";
 
 type StatusProps = Status;
 
@@ -65,10 +65,6 @@ const useStyles = createStyles((theme, color: string) => ({
     },
 }));
 
-// const sensors = useSensors(
-//     useSensor(SmartPointerSensor)
-// );
-
 export function StatusColumn(props: StatusProps) {
     const dispatch = useAppDispatch();
     const [opened, setOpened] = useState(false);
@@ -82,9 +78,21 @@ export function StatusColumn(props: StatusProps) {
     const [groupId, setGroupId] = useState<number>();
     const addItem = () => {
         if (date !== undefined && groupId !== undefined) {
-            const nameList = memberId.map(id => memberList.find(member => member.id.toString() === id)!.username)
+            const nameList = memberId.map(
+                (id) =>
+                    memberList.find((member) => member.id.toString() === id)!
+                        .username
+            );
             dispatch(
-                postItem(projectId, props.id, itemName, nameList, memberId, date, groupId)
+                postItem(
+                    projectId,
+                    props.id,
+                    itemName,
+                    nameList,
+                    memberId,
+                    date,
+                    groupId
+                )
             );
         }
     };
@@ -159,9 +167,16 @@ export function StatusColumn(props: StatusProps) {
         },
     ];
 
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({ id: props.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
 
     return (
-        <DndContext >
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
             <Card
                 shadow="md"
                 pt={1}
@@ -237,6 +252,6 @@ export function StatusColumn(props: StatusProps) {
                     </Modal>
                 </>
             </Card>
-        </DndContext>
+        </div>
     );
 }

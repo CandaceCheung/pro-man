@@ -80,3 +80,27 @@ export function postItem(projectId:number, stateId: number, itemName:string,memb
         }
     };
 }
+
+export function putOrder(statusList: Status[]) {
+    return async (dispatch: AppDispatch) => {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/kanban/order`,{
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                order: statusList.map((status) => status.id )
+            }),
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(setKanbanInfo(statusList));
+
+        } else {
+            dispatch(failKanbanAction());
+            console.log("Put Kanban order fail");
+        }
+    }
+
+}

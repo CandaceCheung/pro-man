@@ -1,10 +1,11 @@
 import { showNotification } from "@mantine/notifications";
 import { Dispatch } from "@reduxjs/toolkit";
-import { checkUsernameAction, clearActiveProjectAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction } from "./slice";
+import { checkUsernameAction, clearActiveProjectAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction } from "./slice";
 
-export function setActiveProject (projectId: number) {
+export function setActiveProject (projectId: number, projectName: string) {
 	return async (dispatch: Dispatch) => {
         dispatch(setActiveProjectAction(projectId))
+        dispatch(setProjectNameAction(projectName))
 		// in case needed to save state to db
 	};
 }

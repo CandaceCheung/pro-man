@@ -19,12 +19,13 @@ export interface TableRowProps {
     lastRow: boolean,
     personsColors: { [key in number]: string },
     moneySums: { [key in number]: number },
-    onItemRename: (groupId: number, itemId: number, name: string) => void
+    onItemRename: (groupId: number, itemId: number, name: string) => void,
+    onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void
 }
 
 export function TableRow({ 
     id, groupId, typeOrder, cellDetails, color, lastRow, personsColors, moneySums, 
-    onItemRename 
+    onItemRename, onTextChange 
 }: TableRowProps) {
     const {
         attributes,
@@ -98,7 +99,7 @@ export function TableRow({
                         className={cx(classes.tableCell, classes.text)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <Text text={cell.item_text_text!}></Text>
+                        <Text groupId={groupId} itemId={id} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange}></Text>
                     </div>
                 )
             default:

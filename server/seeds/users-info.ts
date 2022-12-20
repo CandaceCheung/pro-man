@@ -21,7 +21,6 @@ export async function seed(knex: Knex): Promise<void> {
     await knex('type_dates').del();
     await knex('type_persons').del();
     await knex('types').del();
-    await knex('kanban_order').del();
     await knex("favorite").del();
     await knex("states").del();
     await knex("items").del();
@@ -90,7 +89,7 @@ export async function seed(knex: Knex): Promise<void> {
     for (let i of projectIDs) {
         for (let j in defaultStates) {
             insertArray.push(
-                { project_id: i.id, name: defaultStates[j], color: statusLabelsColor[j] },
+                { project_id: i.id, name: defaultStates[j], color: statusLabelsColor[j], status_order: (Number(j))+1 },
             )
         }
     }
@@ -107,16 +106,6 @@ export async function seed(knex: Knex): Promise<void> {
         }
     }
     await knex("favorite").insert(insertArray);
-
-    insertArray = []
-    let itemIdOrder = 1
-    for (const i of stateIDs) {
-        insertArray.push(
-            { state_id: i.id, item_id_order: itemIdOrder },
-        );
-        itemIdOrder++
-    }
-    await knex("kanban_order").insert(insertArray)
 
     insertArray = []
     const typeArr = ['Persons', 'Dates', 'Times', 'Money', 'Status', 'Text']

@@ -22,7 +22,7 @@ export function Home() {
     return (
         <div id='home-page'>
             <SidePanel/>
-            <ProjectNavbar projectId={activeProjectID? activeProjectID : defaultID} projectSummary={activeProject} />
+            <ProjectNavbar />
         </div>
     )
 }

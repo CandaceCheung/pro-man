@@ -5,6 +5,7 @@ import { Item } from "../../redux/kanban/state";
 export type itemCardProps = Item
 
 export function ItemCard(props: itemCardProps) {
+    
     return (
         <Card
             shadow="sm"
@@ -33,7 +34,7 @@ export function ItemCard(props: itemCardProps) {
                         <Text weight={500} color="dimmed">
                             Person
                         </Text>
-                        <div>{props.membersList}</div> 
+                        <div>{props.membersList + ", "}</div> 
                     </Group>
                 </div>
                 <div className="item-date">

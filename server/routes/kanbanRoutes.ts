@@ -8,6 +8,7 @@ export const kanbanRoutes = () => {
     kanbanRoutes.get('/member/:projectId', kanbanController.getMemberList)
     kanbanRoutes.get('/group/:projectId', kanbanController.getGroupList)
     kanbanRoutes.post('/addItem', kanbanController.postKanban)
+    kanbanRoutes.put('/order', kanbanController.putKanbanOrder)
 
     return kanbanRoutes;
 }

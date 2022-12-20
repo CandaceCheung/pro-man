@@ -39,6 +39,7 @@ export const kanbanReducer = (
             });
             return newStatus;
 
+    
 
         case "KANBAN/FETCH_FAIL":
             console.error("Failed");

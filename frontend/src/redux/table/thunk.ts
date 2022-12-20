@@ -1,5 +1,5 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { setActiveProjectAction } from "../project/slice";
+import { setActiveProjectAction, setProjectNameAction } from "../project/slice";
 import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
@@ -65,6 +65,7 @@ export function getTableList(userId: number) {
 		if (result.success) {
 			dispatch(getTableListAction(result.list))
 			dispatch(setActiveProjectAction(result.list[0].project_id));
+			dispatch(setProjectNameAction(result.list[0].project_name));
 		} else {
 			dispatch(getTableFailedAction())
 		}
@@ -303,7 +304,7 @@ export function insertNewProject(userId: number) {
 			const projectName = result.project_name;
 			const memberTableId = result.member_table_id;
 			const username = result.username;
-			dispatch(setActiveProject(projectId));
+			dispatch(setActiveProject(projectId, projectName));
 			dispatch(addProjectAction({
 				creator_id: userId,
 				project_id: projectId,
@@ -335,6 +336,48 @@ export function renameItem(itemId: number, name: string, userId: number, project
 			showNotification({
 				title: 'Update data notification',
 				message: 'Failed to rename item! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+}
+
+export function renameType(typeId: number, name: string, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/newTypeName`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ typeId, name })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Update data notification',
+				message: 'Failed to rename type! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+}
+
+export function updateText(itemId: number, text: string, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/newText`, {
+			method: "PUT",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, text })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Update data notification',
+				message: 'Failed to update text! 🤥'
 			});
 			dispatch(getTable(userId, projectId));
 		}

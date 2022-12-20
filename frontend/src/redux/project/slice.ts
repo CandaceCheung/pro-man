@@ -16,6 +16,7 @@ export type MessageState = {
 export type MessageStateArr = MessageState[]
 export interface ActiveProjectState {
     project_id : number | null
+    project_name: string | null
     active_page : ActivePageState | null
     toggle_side_panel: boolean
     toggle_favorite: boolean
@@ -43,6 +44,7 @@ export interface ActiveProjectState {
 
 const initialState: ActiveProjectState = {
     project_id: null,
+    project_name: null,
     active_page: 'mainTable',
     toggle_side_panel: false,
     toggle_favorite: false,
@@ -76,6 +78,8 @@ const initialState: ActiveProjectState = {
 
 const setActiveProject : CaseReducer<ActiveProjectState, PayloadAction<number>> =
 (state, action) =>  {state.project_id = action.payload} 
+const setProjectName : CaseReducer<ActiveProjectState, PayloadAction<string>> =
+(state, action) =>  {state.project_name = action.payload} 
 const clearActiveProject : CaseReducer<ActiveProjectState, PayloadAction> =
 (state, action) =>  {state.project_id = null} 
 const setTimeLineView : CaseReducer<ActiveProjectState, PayloadAction<{value: TimeLineViewState, start: Moment, end: Moment}>> =
@@ -126,6 +130,7 @@ const projectSlice = createSlice({
     initialState,
     reducers: {
         setActiveProject,
+        setProjectName,
         clearActiveProject,
         setTimeLineView,
         setAutofit,
@@ -153,6 +158,7 @@ const projectSlice = createSlice({
 
 export const { 
     setActiveProject: setActiveProjectAction, 
+    setProjectName: setProjectNameAction,
     clearActiveProject: clearActiveProjectAction, 
     setTimeLineView: setTimeLineViewAction, 
     setAutofit: setAutofitAction, 
