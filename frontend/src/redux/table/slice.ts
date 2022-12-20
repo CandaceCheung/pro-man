@@ -57,13 +57,23 @@ export type MyTableState = {
     project_name: string
 }
 
+export type StatusListState = {
+    id?: number
+    name?: string
+    color?: string
+}
+
 export interface MyTableListState extends Array<MyTableState> { };
 
 export interface TableStateArray extends Array<TableState> { }
+
+export interface StatusListStateArray extends Array<StatusListState> { }
+
 export interface CombinedTableState {
     summary: TableStateArray
     my_favorite_list: MyFavoriteListState
     project_list: MyTableListState
+    status_list: StatusListStateArray
 }
 
 const initialState: CombinedTableState = {
@@ -120,6 +130,11 @@ const initialState: CombinedTableState = {
         project_id: undefined,
         favorite_id: undefined,
         project_name: ""
+    }],
+    status_list: [{
+        id: undefined,
+        name: undefined,
+        color: undefined
     }]
 }
 
@@ -157,8 +172,18 @@ const getFavorite: CaseReducer<CombinedTableState, PayloadAction<MyFavoriteListS
     (state, action) => { state.my_favorite_list = action.payload }
 const getTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableListState>> =
     (state, action) => { state.project_list = action.payload }
+const getStatusList: CaseReducer<CombinedTableState, PayloadAction<StatusListStateArray>> =
+    (state, action) => { state.status_list = action.payload }
 const updateTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> =
     (state, action) => { state.project_list.push(action.payload) }
+const renameProjectInTableList: CaseReducer<CombinedTableState, PayloadAction<{projectId: number, projectName: string}>> =
+(state, action) => { 
+    state.project_list.map(project => {
+        if (project.project_id === action.payload.projectId) {
+            project.project_name = action.payload.projectName;
+        }
+    })
+ }
 const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemGroupId: number, itemGroupName: string }>> =
     (state, action) => {
         for (let item of state.summary) {
@@ -181,10 +206,12 @@ const tableSlice = createSlice({
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
+        getStatusList,
         updateItemGroupName,
         getTableList,
         addProject,
-        updateTableList
+        updateTableList,
+        renameProjectInTableList
     },
 })
 
@@ -194,10 +221,12 @@ export const {
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
+    getStatusList: getStatusListAction,
     updateItemGroupName: updateItemGroupNameAction,
     getTableList: getTableListAction,
     addProject: addProjectAction,
-    updateTableList: updateTableListAction
+    updateTableList: updateTableListAction,
+    renameProjectInTableList: renameProjectInTableListAction
 } = tableSlice.actions
 
 export default tableSlice.reducer

@@ -78,6 +78,21 @@ export class TableController {
         }
     }
 
+    getProjectStatus = async (req: Request, res: Response) => {
+        try {
+            const projectId = req.params.projectID;
+            const result = await this.tableService.getProjectStatus(parseInt(projectId));
+
+            res.json({
+                success: true,
+                statusList: result
+            });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Get Status List." });
+        }
+    }
+
     updateTimeline = async (req: Request, res: Response) => {
         try {
             const typeTimeId = req.body.typeTimeId

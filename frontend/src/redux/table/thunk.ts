@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction, setProjectNameAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction, getStatusListAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
 import { setActiveProject } from "../project/thunk";
@@ -68,6 +68,25 @@ export function getTableList(userId: number) {
 			dispatch(setProjectNameAction(result.list[0].project_name));
 		} else {
 			dispatch(getTableFailedAction())
+		}
+	};
+}
+
+export function getProjectStatusList(projectId: number) {
+	return async (dispatch: Dispatch) => {
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/status/${projectId}`
+		);
+		const result = await res.json();
+
+		if (result.success) {
+			dispatch(getStatusListAction(result.statusList));
+		} else {
+			showNotification({
+				title: 'Data retrieve notification',
+				message: "Failed to get status list! 🤥"
+			});
 		}
 	};
 }

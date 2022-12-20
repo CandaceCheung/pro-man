@@ -8,6 +8,7 @@ import { tableController } from "../app";
     tableRoutes.get('/favorite/:userID', tableController.getFavorite);
     tableRoutes.get('/list/:userID', tableController.getTableList);
     tableRoutes.get('/names/:userID', tableController.retrieveUserName);
+    tableRoutes.get('/status/:projectID', tableController.getProjectStatus);
     tableRoutes.put('/favorite', tableController.likeProject);
     tableRoutes.put('/updateTimeline', tableController.updateTimeline);
     tableRoutes.put('/updateDateline', tableController.updateDateline);
