@@ -60,6 +60,7 @@ export function ButtonHub() {
                 <Button className='button-panel-group' onClick={onNewItemClick}>New Item</Button>
                 <Button className='button-panel-group' onClick={onNewGroupClick}>New Group</Button>
 
+                {page!=='kanban' && 
                 <Menu transition='pop-top-left' transitionDuration={150}>
                     <Menu.Target>
                         {sortByPersonId ?
@@ -84,7 +85,8 @@ export function ButtonHub() {
                         <Divider my="sm" />
                     </Menu.Dropdown>
                 </Menu>
-
+                }
+                {page!=='kanban' && 
                 <Menu transition="pop-top-right" transitionDuration={150}>
                     <Menu.Target>
                         {sortByGroupId ?
@@ -108,7 +110,8 @@ export function ButtonHub() {
                         })}
                     </Menu.Dropdown>
                 </Menu>
-
+                }
+                {page!=='kanban' && 
                 <Menu>
                     <Menu.Target>
                         {setHideByType ?
@@ -131,6 +134,7 @@ export function ButtonHub() {
                         })}
                     </Menu.Dropdown>
                 </Menu>
+}
             </div>
             {page === "timeline" && <TimelineButton />}
         </div>

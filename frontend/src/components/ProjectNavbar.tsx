@@ -139,7 +139,6 @@ export default function ProjectNavbar() {
                     <Tabs.Tab value="mainTable" icon={<IconHome size={14} />}>Main Table</Tabs.Tab>
                     <Tabs.Tab value="timeline" icon={<IconTimelineEvent size={14} />}>Timeline</Tabs.Tab>
                     <Tabs.Tab value="kanban" icon={<IconBrandTrello size={14} />}>Kanban</Tabs.Tab>
-                    <Tabs.Tab value="cashflow" icon={<IconBrandCashapp size={14} />}>Cashflow</Tabs.Tab>
                 </Tabs.List>
             </Tabs>
 
@@ -150,8 +149,7 @@ export default function ProjectNavbar() {
                     <Route path="/" element={<MainTable />} />
                     <Route path="/mainTable" element={<MainTable />} />
                     <Route path="/timeline" element={<TimeFrame />} />
-                    <Route path="/kanban" element={<Kanban />} />
-                    <Route path="/cashflow" element={<Cashflow />} />
+                    <Route path="/kanban" element={<Kanban />} />   
                 </Routes>
             </div>
         </div>
