@@ -6,7 +6,7 @@ export class ProfileController {
 
 	getProfile = async (req: Request, res: Response) => {
 		try {
-			const userId = req.params.userId;
+			const userId = req.user!.id;
 
 			const result = await this.profileService.getProfileInfo(
 				Number(userId)
@@ -24,7 +24,13 @@ export class ProfileController {
 
     putProfile = async (req: Request, res: Response) => {
         try {
-            
+			const userId = req.user!.id;
+		
+            const { password, firstName, lastName } = req.body;
+
+			await this.profileService.updateProfile( userId, {password, firstName, lastName});
+
+			res.json({success: true})
 
         } catch (e) {
             console.error(e);
