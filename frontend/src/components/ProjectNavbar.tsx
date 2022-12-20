@@ -19,27 +19,28 @@ import { useAppDispatch, useAppSelector } from '../store';
 import { getTable, likeProject } from '../redux/table/thunk';
 import { getInvitationList } from '../redux/invitation/thunk';
 
-type ProjectNavbarProps = {
-    projectId: number
-    projectSummary: TableStateArray
-}
-
-export default function ProjectNavbar(props: ProjectNavbarProps) {
+export default function ProjectNavbar() {
     const dispatch = useAppDispatch()
-    let projectName = props.projectSummary[0]?.project_name;
+    const projectId = useAppSelector(state => state.project.project_id);
+    const projectName = useAppSelector(state => state.project.project_name);
+    const userId = useAppSelector(state => state.auth.userId);
     const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
-    const projectId = useAppSelector(state => state.project.project_id);
-    const userId = useAppSelector(state => state.auth.userId);
-    const like = useAppSelector(state => state.table.my_favorite_list).filter(project=>project.project_id===projectId && project.user_id ===userId)
+    const [projectTitleInputSelected, setProjectTitleInputSelected] = useState(false);
+    const [projectTitleInputValue, setProjectTitleInputValue] = useState("");
+    const like = useAppSelector(state => state.table.my_favorite_list).filter(project => project.project_id === projectId && project.user_id === userId)
     const navigate = useNavigate();
     const { tabValue } = useParams();
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(getTable(userId!, projectId!));
     }, [projectId, dispatch, userId])
 
-    function invitationHandler (){
+    useEffect(()=>{
+        projectName && setProjectTitleInputValue(projectName);
+    }, [projectName, setProjectTitleInputValue]);
+
+    function invitationHandler() {
         dispatch(getInvitationList(projectId!))
         setInvitationOpen((open) => !open)
     }
@@ -54,17 +55,57 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
         dispatch(setActivePageAction(value))
     }
 
-    function onLikeClick(){
+    function onLikeClick() {
         dispatch(likeProject(projectId!, userId!))
+    }
+
+    function deselectProjectTitleInput() {
+        if (projectTitleInputValue !== projectName) {
+            if (projectTitleInputValue.length) {
+                // dispatch thunk
+            } else {
+                projectName && setProjectTitleInputValue(projectName);
+            }
+        }
+        setProjectTitleInputSelected(false);
+    }
+
+    function handleProjectTitleInputKeyDown(key: string) {
+        if (key === "Enter") {
+            deselectProjectTitleInput();
+        }
+    }
+
+    function onSelectProjectTitleInput() {
+        setProjectTitleInputSelected(true);
     }
 
     return (
         <div id="project-navbar">
             <div className='navbar-header'>
                 <span id="project-title-container">
-                    <span id='navbar-project-title'>
-                        {projectName ? projectName : "Project Title"}
-                    </span>
+                    {
+                        projectTitleInputSelected
+                            ?
+                            <input
+                                onBlur={deselectProjectTitleInput}
+                                type="text"
+                                autoFocus
+                                id="navbar-project-title-input"
+                                value={projectTitleInputValue}
+                                onKeyDown={(e) => handleProjectTitleInputKeyDown(e.key)}
+                                onChange={(e) => setProjectTitleInputValue(e.target.value)}
+                            >
+
+                            </input>
+                            :
+                            <span 
+                                id='navbar-project-title'
+                                onClick={onSelectProjectTitleInput}
+                            >
+                                {projectName ? projectName : "Project"}
+                            </span>
+                    }
                     <FontAwesomeIcon id="like-button" icon={like[0] ? faStarS : faStarR} onClick={onLikeClick} />
                 </span>
                 <span className='icon-hub' >
@@ -102,13 +143,13 @@ export default function ProjectNavbar(props: ProjectNavbarProps) {
                 </Tabs.List>
             </Tabs>
 
-            <ButtonHub/>
+            <ButtonHub />
 
             <div id="tab-content" className='container'>
                 <Routes>
                     <Route path="/" element={<MainTable />} />
                     <Route path="/mainTable" element={<MainTable />} />
-                    <Route path="/timeline" element={<TimeFrame/>} />
+                    <Route path="/timeline" element={<TimeFrame />} />
                     <Route path="/kanban" element={<Kanban />} />
                     <Route path="/cashflow" element={<Cashflow />} />
                 </Routes>

@@ -26,10 +26,6 @@ function App() {
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    
-    useEffect(() => {
-        document.title = 'Pro-Man: Project Management Tool';
-    }, []);
 
     useEffect(() => {
         token && localStorage.setItem('invitation', token)

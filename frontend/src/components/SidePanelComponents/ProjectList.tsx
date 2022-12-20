@@ -38,11 +38,11 @@ export function ProjectList() {
                 <Button variant='subtle' rightIcon={<IconPlus size={14} />} onClick={onAddProject}> New Project </Button>
                 <Divider labelPosition='center' my="md" label="Your Projects" color={'dark'} />
                 {projectList.map((content, index) => content?.creator_id === userId &&
-                    <div key={content.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content?.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
+                    <div key={content.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].project_name))} value={content?.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
                 )}
                 <Divider labelPosition='center' my="md" label="Joined Projects" color={'dark'} />
                 {projectList.map((content, index) => content?.creator_id !== userId &&
-                    <div key={content?.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value)))} value={content?.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
+                    <div key={content?.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].project_name))} value={content?.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
                 )}
             </div>
         </div>
