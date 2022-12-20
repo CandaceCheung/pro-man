@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { itemCellsElement } from "../../pages/MainTable";
 import { Persons } from "./TableCellsComponents/Persons";
 import { useStyles } from "./styles";
-import { Text } from "./TableCellsComponents/Text";
+import { TextCell } from "./TableCellsComponents/Text";
 import { Status } from "./TableCellsComponents/Status";
 import { Times } from "./TableCellsComponents/Times";
 import { DateCell } from "./TableCellsComponents/Date";
@@ -89,7 +89,7 @@ export function TableRow({
                     <div
                         className={cx(classes.tableCell, classes.status)}
                         key={"item" + id + "cell" + cellIndex}
-                    >
+                    >   
                         <Status status={cell.item_status_name!} color={cell.item_status_color!}></Status>
                     </div>
                 )
@@ -99,7 +99,7 @@ export function TableRow({
                         className={cx(classes.tableCell, classes.text)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <Text groupId={groupId} itemId={id} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange}></Text>
+                        <TextCell groupId={groupId} itemId={id} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange}></TextCell>
                     </div>
                 )
             default:
