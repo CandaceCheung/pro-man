@@ -1,13 +1,11 @@
-import { ClassNames } from "@emotion/react";
 import {
     Button,
-    Center,
     createStyles,
     Group,
     Input,
     Text,
 } from "@mantine/core";
-import { IconAt, IconKey, IconUserCircle } from "@tabler/icons";
+import { IconKey, IconSignature, IconUserCircle } from "@tabler/icons";
 import React from "react";
 
 const useStyles = createStyles((theme) => ({
@@ -55,8 +53,12 @@ export function Profile() {
                 </div>
                 <div className="profileInfo">
                     <Group position="center">
-                        <Text className={classes.profileText}>Email:</Text>
-                        <Input icon={<IconAt size={16} />}></Input>
+                        <Text className={classes.profileText}>First Name:</Text>
+                        <Input icon={<IconSignature size={16} />}></Input>
+                    </Group>
+                    <Group position="center">    
+                        <Text className={classes.profileText}> last Name:</Text>
+                        <Input icon={<IconSignature size={16} />}></Input>
                     </Group>
                     <Group position="center">
                         <Text className={classes.profileText}>Password:</Text>
