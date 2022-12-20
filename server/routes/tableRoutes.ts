@@ -22,6 +22,7 @@ import { tableController } from "../app";
     tableRoutes.post('/item', tableController.insertItem);
     tableRoutes.post('/itemGroup', tableController.insertItemGroup);
     tableRoutes.post('/newProject', tableController.insertNewProject);
+    tableRoutes.post('/newState', tableController.addState);
 
     return tableRoutes;
  }

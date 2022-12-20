@@ -542,4 +542,12 @@ export class TableService {
         const [names] = await this.knex("users").select("first_name", "last_name").where("id", userId);
         return (names.first_name && names.last_name) && names;
     }
+
+    async addState(projectId: number, name: string, color: string) {
+        const [{status_order}] = await this.knex("states").select("status_order").where("project_id", projectId).orderBy("status_order", "desc").limit(1);
+        const [{id}] = await this.knex("states").insert({
+            name, color, project_id: projectId, status_order: status_order + 1
+        }).returning("id");
+        return id;
+    }
 }

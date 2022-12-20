@@ -193,9 +193,13 @@ const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemG
         }
     }
 const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> =
-    (state, action) => {
-        state.project_list.push(action.payload);
-    }
+    (state, action) => { state.project_list.push(action.payload) }
+const addStatus: CaseReducer<CombinedTableState, PayloadAction<StatusListState>> =
+(state, action) => { state.status_list.push({
+    id: action.payload.id,
+    name: action.payload.name,
+    color: action.payload.color
+})}
 
 const tableSlice = createSlice({
     name: 'table',
@@ -211,7 +215,8 @@ const tableSlice = createSlice({
         getTableList,
         addProject,
         updateTableList,
-        renameProjectInTableList
+        renameProjectInTableList,
+        addStatus
     },
 })
 
@@ -226,7 +231,8 @@ export const {
     getTableList: getTableListAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
-    renameProjectInTableList: renameProjectInTableListAction
+    renameProjectInTableList: renameProjectInTableListAction,
+    addStatus: addStatusAction
 } = tableSlice.actions
 
 export default tableSlice.reducer
