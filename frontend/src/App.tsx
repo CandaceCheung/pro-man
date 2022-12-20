@@ -15,6 +15,7 @@ import { LeftNavbar } from "./components/LeftNavbar";
 import { getFavorite, getTableList } from "./redux/table/thunk";
 import { getGroup, getKanbanItems, getMember } from "./redux/kanban/thunk";
 import { showNotification } from "@mantine/notifications";
+import { getMessages } from "./redux/project/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -40,6 +41,7 @@ function App() {
         isLoggedIn === null && dispatch(retriveLogin());
         if (isLoggedIn) {
             dispatch(getFavorite(userId!));
+            dispatch(getMessages(userId!));
             if (projectId) {
                 navigate('/');
             } else {

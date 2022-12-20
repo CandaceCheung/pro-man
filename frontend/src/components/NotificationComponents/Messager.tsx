@@ -2,13 +2,14 @@ import { Modal, Button, Group, Input, Tooltip, Textarea, Loader } from '@mantine
 import { IconAlertCircle, IconChecks, IconChevronDown } from '@tabler/icons';
 import { checkUsernameAction, toggleMessagerAction } from '../../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { checkUsername, sendMessage } from '../../redux/project/thunk';
 import { showNotification } from '@mantine/notifications';
 
 export function Messager() {
     const dispatch = useAppDispatch()
     const opened = useAppSelector(state => state.project.toggle_messager)
+    const name = useAppSelector(state => state.auth.username)
     const userId = useAppSelector(state => state.auth.userId)
     const check = useAppSelector(state => state.project.check_username)
     const targetUser = useAppSelector(state => state.project.message_target)
@@ -57,12 +58,13 @@ export function Messager() {
         setText('')
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         if (messageType === 'invite'){
             
 
         } else if (messageType ==='message'){
-            dispatch(sendMessage(userId!, targetUser!, text))
+            dispatch(sendMessage(name!, userId!, username, targetUser!, text))
 
         } else {
             showNotification({
@@ -82,7 +84,7 @@ export function Messager() {
                 title="New Message"
             >
                 <form
-                    onSubmit={handleSubmit}
+                    onSubmit={(e)=>handleSubmit(e)}
                 >
                     <Input.Wrapper label="Receiver" required>
                         <Input
