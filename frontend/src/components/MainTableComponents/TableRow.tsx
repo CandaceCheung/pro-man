@@ -63,7 +63,7 @@ export function TableRow({
                         className={cx(classes.tableCell, classes.dates)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <DateCell date={cell.item_dates_date!} datetime={cell.item_dates_datetime!} />
+                        <DateCell date={cell.item_dates_date!} />
                     </div>
                 )
             case "money":
