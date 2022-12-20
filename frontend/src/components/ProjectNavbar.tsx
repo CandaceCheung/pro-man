@@ -12,7 +12,7 @@ import { faStar as faStarR } from '@fortawesome/free-regular-svg-icons'
 import LogsDrawer from './ProjectNavbarComponents/LogsDrawer';
 import InvitationDrawer from './ProjectNavbarComponents/InvitationDrawer';
 import { ButtonHub } from './ProjectNavbarComponents/ButtonHub';
-import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { ActivePageState, setActivePageAction } from '../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../store';
 import { getTable, likeProject } from '../redux/table/thunk';
@@ -29,8 +29,8 @@ export default function ProjectNavbar() {
     const [projectTitleInputSelected, setProjectTitleInputSelected] = useState(false);
     const [projectTitleInputValue, setProjectTitleInputValue] = useState("");
     const like = useAppSelector(state => state.table.my_favorite_list).filter(project => project.project_id === projectId && project.user_id === userId)
+    const page = useAppSelector(state=> state.project.active_page)
     const navigate = useNavigate();
-    const { tabValue } = useParams();
 
     useEffect(() => {
         dispatch(getTable(userId!, projectId!));
@@ -134,7 +134,7 @@ export default function ProjectNavbar() {
             <LogsDrawer toggle={logsOpen} onRemove={onRemove} />
             <InvitationDrawer toggle={invitationOpen} onRemove={onRemove} />
 
-            <Tabs defaultValue="mainTable" value={tabValue} onTabChange={(value) => tabChangeHandler(value as ActivePageState)}>
+            <Tabs defaultValue="mainTable" value={page} onTabChange={(value) => tabChangeHandler(value as ActivePageState)}>
                 <Tabs.List>
                     <Tabs.Tab value="mainTable" icon={<IconHome size={14} />}>Main Table</Tabs.Tab>
                     <Tabs.Tab value="timeline" icon={<IconTimelineEvent size={14} />}>Timeline</Tabs.Tab>

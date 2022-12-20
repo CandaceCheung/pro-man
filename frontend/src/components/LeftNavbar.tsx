@@ -97,7 +97,7 @@ export function LeftNavbar() {
     const navigate = useNavigate();
     const toggleSidePanel = useAppSelector(state=>state.project.toggle_side_panel)
     const toggleFavorite = useAppSelector(state=>state.project.toggle_favorite)
-    
+    const page = useAppSelector(state=>state.project.active_page)
 
     const iconLinks = navButtons.map((item, index) => (
         <NavbarLink
@@ -108,12 +108,12 @@ export function LeftNavbar() {
                 if (item.path === 'favorite'){
                     if (toggleSidePanel && !toggleFavorite){
                         setActive(index)
-                        navigate('/home')
+                        navigate(`/${page}`)
                         dispatch(toggleSidePanelAction(true))
                         dispatch(toggleFavoriteAction(true))
                     } else {
                         setActive(index)
-                        navigate('/home')
+                        navigate(`/${page}`)
                         dispatch(toggleFavoriteAction(!toggleFavorite))
                         dispatch(toggleSidePanelAction(!toggleSidePanel))
                     }
