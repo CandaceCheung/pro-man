@@ -11,6 +11,7 @@ import { useStyles } from '../components/MainTableComponents/styles';
 import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
 import { SmartPointerSensor } from '../pointerSensor';
 import produce from "immer";
+import { ScrollArea } from '@mantine/core';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -291,138 +292,140 @@ export function MainTable() {
     }
 
     return (
-        <div className="main-table">
-            {
-                itemGroupsState.map((
-                    {
-                        item_group_id,
-                        item_group_name
-                    }, itemGroupArrayIndex) => {
-                    return (
-                        <div
-                            className={classes.itemGroup}
-                            key={itemGroupArrayIndex}
-                        >
+        <ScrollArea style={{ width: "calc(100vw - 140px)", height: "calc(100vh - 160px)" }} type="auto" >
+            <div className="main-table">
+                {
+                    itemGroupsState.map((
+                        {
+                            item_group_id,
+                            item_group_name
+                        }, itemGroupArrayIndex) => {
+                        return (
                             <div
-                                style={{
-                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length],
-                                }}
+                                className={classes.itemGroup}
+                                key={itemGroupArrayIndex}
                             >
-                                <span
-                                    onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
-                                    className={classes.hovertext}
-                                    data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? "Expand group" : "Collapse Group"}
-                                    key={itemGroupArrayIndex}
-                                >
-                                    {
-                                        <ItemGroupCollapser
-                                            size={20}
-                                            className={itemGroupsCollapsedState[itemGroupArrayIndex] ? "" : classes.collapserButton}
-                                        />}
-                                </span>
-                                <span
-                                    className={classes.itemCount}
-                                >
-                                    {
-                                        itemGroupsInputSelectState[itemGroupArrayIndex]
-                                            ?
-                                            <input
-                                                onBlur={() => deselectItemGroupInput(itemGroupArrayIndex)}
-                                                type="text"
-                                                autoFocus
-                                                className={classes.groupNameInput}
-                                                style={{
-                                                    borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
-                                                }}
-                                                value={itemGroupsInputValueState[itemGroupArrayIndex]}
-                                                onChange={(e) => changeItemGroupInputValue(
-                                                    itemGroupArrayIndex,
-                                                    e.target.value
-                                                )}
-                                                onKeyDown={(e) => handleItemGroupInputKeyDown(
-                                                    itemGroupArrayIndex,
-                                                    e.key
-                                                )}
-                                            >
-
-                                            </input>
-                                            :
-                                            <span
-                                                onClick={() => selectItemGroupInput(itemGroupArrayIndex)}
-                                                className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
-                                                data-hover="Click to edit"
-                                                item-count={
-                                                    itemsOrdersState[item_group_id].length
-                                                        ?
-                                                        itemsOrdersState[item_group_id].length
-                                                        + " item"
-                                                        + `${itemsOrdersState[item_group_id].length === 1 ? "" : "s"}`
-                                                        :
-                                                        "No items"
-                                                }
-                                            >
-                                                {item_group_name}
-                                            </span>
-                                    }
-                                </span>
-                            </div>
-                            {
-                                !itemGroupsCollapsedState[itemGroupArrayIndex] &&
                                 <div
-                                    id={`table_group_${item_group_id}`}
-                                    className={classes.tableGroup}
+                                    style={{
+                                        color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length],
+                                    }}
                                 >
-                                    <div className={classes.tableHead}>
-                                        <div className={classes.tableRow}>
-                                            <div className={classes.tableCell}></div>
-                                            <div className={cx(classes.tableCell, classes.item)}><span>Item</span></div>
-                                            <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
-                                                <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
-                                                    {typesOrdersState[item_group_id].map((typeId, index) => (
-                                                        <TableColumnTitle
-                                                            key={typeId}
-                                                            id={typeId}
-                                                            groupId={item_group_id}
-                                                            cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
-                                                            cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
-                                                            index={index}
-                                                            lastCell={index === typesOrdersState[item_group_id].length - 1}
-                                                            onTypeRename={onTypeRename}
-                                                        />
-                                                    ))}
+                                    <span
+                                        onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
+                                        className={classes.hovertext}
+                                        data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? "Expand group" : "Collapse Group"}
+                                        key={itemGroupArrayIndex}
+                                    >
+                                        {
+                                            <ItemGroupCollapser
+                                                size={20}
+                                                className={itemGroupsCollapsedState[itemGroupArrayIndex] ? "" : classes.collapserButton}
+                                            />}
+                                    </span>
+                                    <span
+                                        className={classes.itemCount}
+                                    >
+                                        {
+                                            itemGroupsInputSelectState[itemGroupArrayIndex]
+                                                ?
+                                                <input
+                                                    onBlur={() => deselectItemGroupInput(itemGroupArrayIndex)}
+                                                    type="text"
+                                                    autoFocus
+                                                    className={classes.groupNameInput}
+                                                    style={{
+                                                        borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                    }}
+                                                    value={itemGroupsInputValueState[itemGroupArrayIndex]}
+                                                    onChange={(e) => changeItemGroupInputValue(
+                                                        itemGroupArrayIndex,
+                                                        e.target.value
+                                                    )}
+                                                    onKeyDown={(e) => handleItemGroupInputKeyDown(
+                                                        itemGroupArrayIndex,
+                                                        e.key
+                                                    )}
+                                                >
+
+                                                </input>
+                                                :
+                                                <span
+                                                    onClick={() => selectItemGroupInput(itemGroupArrayIndex)}
+                                                    className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
+                                                    data-hover="Click to edit"
+                                                    item-count={
+                                                        itemsOrdersState[item_group_id].length
+                                                            ?
+                                                            itemsOrdersState[item_group_id].length
+                                                            + " item"
+                                                            + `${itemsOrdersState[item_group_id].length === 1 ? "" : "s"}`
+                                                            :
+                                                            "No items"
+                                                    }
+                                                >
+                                                    {item_group_name}
+                                                </span>
+                                        }
+                                    </span>
+                                </div>
+                                {
+                                    !itemGroupsCollapsedState[itemGroupArrayIndex] &&
+                                    <div
+                                        id={`table_group_${item_group_id}`}
+                                        className={classes.tableGroup}
+                                    >
+                                        <div className={classes.tableHead}>
+                                            <div className={classes.tableRow}>
+                                                <div className={classes.tableCell}></div>
+                                                <div className={cx(classes.tableCell, classes.item)}><span>Item</span></div>
+                                                <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
+                                                    <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
+                                                        {typesOrdersState[item_group_id].map((typeId, index) => (
+                                                            <TableColumnTitle
+                                                                key={typeId}
+                                                                id={typeId}
+                                                                groupId={item_group_id}
+                                                                cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
+                                                                cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
+                                                                index={index}
+                                                                lastCell={index === typesOrdersState[item_group_id].length - 1}
+                                                                onTypeRename={onTypeRename}
+                                                            />
+                                                        ))}
+                                                    </SortableContext>
+                                                </DndContext >
+                                            </div>
+                                        </div>
+                                        <div className={classes.tableBody}>
+                                            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
+                                                <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
+                                                    {
+                                                        itemsOrdersState[item_group_id].map((itemId, itemIndex) =>
+                                                            <TableRow
+                                                                key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
+                                                                id={itemId}
+                                                                groupId={item_group_id}
+                                                                typeOrder={typesOrdersState[item_group_id]}
+                                                                cellDetails={itemCellsState[item_group_id][itemId]}
+                                                                color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
+                                                                lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
+                                                                personsColors={personsColors}
+                                                                moneySums={moneySums}
+                                                                onItemRename={onItemRename}
+                                                                onTextChange={onTextChange}
+                                                            />
+                                                        )
+                                                    }
                                                 </SortableContext>
                                             </DndContext >
                                         </div>
                                     </div>
-                                    <div className={classes.tableBody}>
-                                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
-                                            <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
-                                                {
-                                                    itemsOrdersState[item_group_id].map((itemId, itemIndex) =>
-                                                        <TableRow
-                                                            key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
-                                                            id={itemId}
-                                                            groupId={item_group_id}
-                                                            typeOrder={typesOrdersState[item_group_id]}
-                                                            cellDetails={itemCellsState[item_group_id][itemId]}
-                                                            color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
-                                                            lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
-                                                            personsColors={personsColors}
-                                                            moneySums={moneySums}
-                                                            onItemRename={onItemRename}
-                                                            onTextChange={onTextChange}
-                                                        />
-                                                    )
-                                                }
-                                            </SortableContext>
-                                        </DndContext >
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    )
-                })
-            }
-        </div>
+                                }
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        </ScrollArea>
     )
 }
