@@ -1,5 +1,6 @@
+import { showNotification } from "@mantine/notifications";
 import { Dispatch } from "@reduxjs/toolkit";
-import { clearActiveProjectAction, setActiveProjectAction } from "./slice";
+import { checkUsernameAction, clearActiveProjectAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction } from "./slice";
 
 export function setActiveProject (projectId: number) {
 	return async (dispatch: Dispatch) => {
@@ -13,4 +14,68 @@ export function clearActiveProject() {
         dispatch(clearActiveProjectAction())
 		// in case needed to remove state to db
 	};
+}
+
+export function checkUsername(value: string) {
+    return async (dispatch: Dispatch) => {
+
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/invitation/username`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                value
+            })
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(checkUsernameAction(true))
+			dispatch(setMessageTargetAction(result.username.id))
+			showNotification({
+				title: 'Username Format Notification',
+				message: result.msg
+			});
+        } else {
+            dispatch(checkUsernameAction(false))
+			showNotification({
+				title: 'Username Format Notification',
+				message: result.msg
+			});
+        }
+    };
+}
+
+export function sendMessage(userId:number, targetUserId: number, text: string) {
+    return async (dispatch: Dispatch) => {
+
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/message/`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+				userId,
+                targetUserId,
+				text
+            })
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(sendMessageAction(result))
+			showNotification({
+				title: 'Message Notification',
+				message: result.msg
+			});
+        } else {
+			showNotification({
+				title: 'Message Notification',
+				message: result.msg
+			});
+        }
+    };
 }
