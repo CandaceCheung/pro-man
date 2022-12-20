@@ -1,10 +1,4 @@
-import {
-    Button,
-    createStyles,
-    Group,
-    Input,
-    Text,
-} from "@mantine/core";
+import { Button, createStyles, Group, Input, Text } from "@mantine/core";
 import { IconKey, IconSignature, IconUserCircle } from "@tabler/icons";
 import React from "react";
 
@@ -26,17 +20,16 @@ const useStyles = createStyles((theme) => ({
             Group: {
                 display: "flex",
                 justifyContent: "center",
-
             },
         },
     },
 
-    profileText:{
+    profileText: {
         minWidth: 80,
         fontSize: "inherit",
         fontFamily: "inherit",
         fontWeight: "inherit",
-    }
+    },
 }));
 
 export function Profile() {
@@ -52,23 +45,22 @@ export function Profile() {
                     <Text>User Name</Text>
                 </div>
                 <div className="profileInfo">
-                    <Group position="center">
+                    <Group position="center" m={10}>
                         <Text className={classes.profileText}>First Name:</Text>
                         <Input icon={<IconSignature size={16} />}></Input>
                     </Group>
-                    <Group position="center">    
-                        <Text className={classes.profileText}> last Name:</Text>
+                    <Group position="center" m={10}>
+                        <Text className={classes.profileText}> Last Name:</Text>
                         <Input icon={<IconSignature size={16} />}></Input>
                     </Group>
-                    <Group position="center">
+                    <Group position="center" m={10}>
                         <Text className={classes.profileText}>Password:</Text>
                         <Input icon={<IconKey size={16} />}></Input>
                     </Group>
                     <Group position="center">
-                    <Button color="cyan" mt={10} maw={100}>
-                        Update
-                    </Button>
-
+                        <Button color="cyan" mt={10} maw={120}>
+                            Update
+                        </Button>
                     </Group>
                 </div>
             </div>
