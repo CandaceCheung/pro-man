@@ -1,6 +1,6 @@
 import { Button, Center, Checkbox, Container, Input, Table } from "@mantine/core";
 import { IconArrowBackUp, IconPlus } from "@tabler/icons";
-import { ChangeEvent, MouseEvent } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 import { checkUsernameAction, setMessageTargetAction, toggleIReplyModalAction, toggleMessagerAction } from "../../redux/project/slice";
 import { toggleRead } from "../../redux/project/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -11,7 +11,9 @@ export function Inbox() {
     const dispatch = useAppDispatch()
     const userId = useAppSelector(state=>state.auth.userId)
     const messageSummary = useAppSelector(state=> state.project.message_summary)
-    const messages = messageSummary.filter((message)=> message.receiver_id === userId)
+    const [search, setSearch] = useState('')
+    let messages = messageSummary.filter((message)=> message.receiver_id === userId)
+    messages = messages.filter(message=> message.sender?.includes(search) || message.message?.includes(search) || new Date(message.created_at).toLocaleString('en-us')?.includes(search))
 
     const rows = messages.map((message) => (
         <tr key={message.id} className={message.status ? "read-message" : 'unread-message'}>
@@ -24,7 +26,6 @@ export function Inbox() {
     ));
 
     function onReply(e : MouseEvent<HTMLButtonElement>){
-        console.log(e.currentTarget)
         dispatch(setMessageTargetAction(parseInt(e.currentTarget.value)))
         dispatch(toggleIReplyModalAction(true))
     }
@@ -37,21 +38,24 @@ export function Inbox() {
     function onToggleRead(e :ChangeEvent<HTMLInputElement>){
         dispatch(toggleRead(parseInt(e.currentTarget.value), e.target.checked))
     }
+    function onSearch(e :ChangeEvent<HTMLInputElement>){
+        setSearch(e.currentTarget.value)
+    }
 
     return (
         <div style={{ padding: '10px' }}>
             <Container fluid={true}>
                 <Input.Wrapper
-                    id="input-demo"
+                    id="search"
                     withAsterisk
                     label="Search"
-                    error="Search not found"
+                    error={search.length===0 ? "" : messages.length===0 ? "Search not found": undefined}
                     className="row"
                 >
-                    <Input id="input-demo" placeholder="Your email" />
+                    <Input value={search} onChange={e=>onSearch(e)} id="search" placeholder="Content/Name/Date Search" />
                 </Input.Wrapper>
                 <Container fluid={true} >
-                    <Center style={{paddingBottom: '10px'}}>
+                    <Center style={{padding: '20px'}}>
                         <Button onClick={clickHandler} variant='outline' rightIcon={<IconPlus size={14} />}>New Message</Button>
                     </Center>
                         <Table horizontalSpacing='sm'>
