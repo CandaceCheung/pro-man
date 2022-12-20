@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import bcrypt from "bcryptjs";
 
 export class ProfileService {
 	constructor(private knex: Knex) {}
@@ -16,15 +17,19 @@ export class ProfileService {
 		return userDetail;
 	}
 
-	async putProfileInfo(user_Id: number) {
+	async updateProfile(user_Id: number, password: string, firstName: string, lastName: string ) {
 		const txn = await this.knex.transaction();
 		try {
+
+            const hashedPassword = bcrypt.hashSync(password, 10);
+
 			await txn
-				.update('users.first_name', 'users.last_name')
+				.update({first_name: firstName, last_name: lastName, password: hashedPassword})
 				.from('users')
 				.where('id', user_Id);
 
 			await txn.commit();
+
 		} catch (e) {
 			await txn.rollback();
 			throw e;

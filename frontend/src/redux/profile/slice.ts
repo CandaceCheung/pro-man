@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface ProfileState {
-    userId: number,
+    id: number,
     username: string,
     firstName: string,
     lastName: string,
 };
 
 const initialState: ProfileState = {
-    userId: 0,
+    id: 0,
     username: '',
     firstName: '',
     lastName: '',

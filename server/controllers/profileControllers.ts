@@ -31,4 +31,6 @@ export class ProfileController {
 			res.status(500).json({ msg: '[PRO02] Fail to Put Data.' });
         }
     }
+
+
 }

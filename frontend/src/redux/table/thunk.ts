@@ -1,6 +1,6 @@
 import { Dispatch } from "@reduxjs/toolkit";
 import { setActiveProjectAction, setProjectNameAction } from "../project/slice";
-import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction } from "./slice";
+import { getTableFailedAction, getTableAction, updateTimelineItemAction, updateDatelineItemAction, getFavoriteAction, updateItemGroupNameAction, getTableListAction, addProjectAction, getStatusListAction } from "./slice";
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
 import { setActiveProject } from "../project/thunk";
@@ -81,8 +81,7 @@ export function getProjectStatusList(projectId: number) {
 		const result = await res.json();
 
 		if (result.success) {
-			console.log(result.statusList)
-			// dispatch here
+			dispatch(getStatusListAction(result.statusList));
 		} else {
 			showNotification({
 				title: 'Data retrieve notification',

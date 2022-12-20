@@ -20,6 +20,7 @@ import { notificationRoutes } from './routes/notificationRoutes';
 import { ProfileService } from './services/ProfileService';
 import { ProfileController } from './controllers/profileControllers';
 import { profileRoutes } from './routes/profileRoutes';
+import { isLoggedIn } from './guard';
 
 
 dotenv.config();
@@ -53,10 +54,10 @@ app.use(express.json(), cors());
 
 app.use('/auth', authRoutes());
 app.use('/table', tableRoutes());
-app.use('/kanban', kanbanRoutes());
+app.use('/kanban', isLoggedIn, kanbanRoutes());
 app.use('/invitation', invitationRoutes());
 app.use('/notification', notificationRoutes());
-app.use('/profile', profileRoutes());
+app.use('/profile', isLoggedIn, profileRoutes());
 
 const PORT = 8080;
 app.listen(PORT, () => {
