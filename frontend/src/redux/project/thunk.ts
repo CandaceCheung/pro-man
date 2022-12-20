@@ -1,7 +1,7 @@
 import { showNotification } from "@mantine/notifications";
 import { Dispatch } from "@reduxjs/toolkit";
 import { renameProjectInTableListAction } from "../table/slice";
-import { checkUsernameAction, clearActiveProjectAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleReadAction } from "./slice";
+import { checkUsernameAction, clearActiveProjectAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleDeleteAction, toggleReadAction, toggleReceiverDeleteAction } from "./slice";
 
 export function setActiveProject (projectId: number, projectName: string) {
 	return async (dispatch: Dispatch) => {
