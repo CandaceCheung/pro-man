@@ -2,10 +2,9 @@ import { Card, Text, Group, ThemeIcon } from "@mantine/core";
 import { IconCalendarStats, IconUserCircle } from "@tabler/icons";
 import { Item } from "../../redux/kanban/state";
 
-export type itemCardProps = Item
+export type itemCardProps = Item;
 
 export function ItemCard(props: itemCardProps) {
-    
     return (
         <Card
             shadow="sm"
@@ -22,7 +21,7 @@ export function ItemCard(props: itemCardProps) {
                     {props.name}
                 </Text>
                 <div className="person-name">
-                    <Group position="left">
+                    <Group align="stretch">
                         <ThemeIcon
                             radius="lg"
                             size="sm"
@@ -34,7 +33,11 @@ export function ItemCard(props: itemCardProps) {
                         <Text weight={500} color="dimmed">
                             Person
                         </Text>
-                        <div>{props.membersList + ", "}</div> 
+                        <div className="each-member">
+                            {props.membersList.map((name) => (
+                                <div>{name}</div>
+                            ))}
+                        </div>
                     </Group>
                 </div>
                 <div className="item-date">
@@ -50,7 +53,7 @@ export function ItemCard(props: itemCardProps) {
                         <Text weight={500} color="dimmed">
                             Date
                         </Text>
-                        <div>{props.date}</div>
+                        <div>{props.date.slice(0, 10)}</div>
                     </Group>
                 </div>
             </div>
