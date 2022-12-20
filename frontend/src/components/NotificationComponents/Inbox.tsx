@@ -1,34 +1,41 @@
 import { Button, Center, Checkbox, Container, Input, Table } from "@mantine/core";
 import { IconArrowBackUp, IconPlus } from "@tabler/icons";
-import { checkUsernameAction, toggleMessagerAction } from "../../redux/project/slice";
+import { ChangeEvent, MouseEvent } from "react";
+import { checkUsernameAction, setMessageTargetAction, toggleIReplyModalAction, toggleMessagerAction } from "../../redux/project/slice";
+import { toggleRead } from "../../redux/project/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Messager } from "./Messager";
+import { ReplyModal } from "./ReplyModal";
 
 export function Inbox() {
     const dispatch = useAppDispatch()
-    const toggle = useAppSelector(state=> state.project.toggle_messager)
+    const userId = useAppSelector(state=>state.auth.userId)
+    const messageSummary = useAppSelector(state=> state.project.message_summary)
+    const messages = messageSummary.filter((message)=> message.receiver_id === userId)
 
-    const elements = [
-        { message: 6, sender: 12.011, created_at: 'C', status: true },
-        { message: 7, sender: 14.007, created_at: 'N', status: true },
-        { message: 39, sender: 88.906, created_at: 'Y', status: true },
-        { message: 56, sender: 137.33, created_at: 'Ba', status: true },
-        { message: 58, sender: 140.12, created_at: 'Ce', status: true },
-    ];
-
-    const rows = elements.map((element) => (
-        <tr key={element.sender} className={element.status ? "read-message" : 'unread-message'}>
-            <td >{element.message}</td>
-            <td>{element.sender}</td>
-            <td>{element.created_at}</td>
-            <td><Button variant="subtle"><IconArrowBackUp size={16} /></Button></td>
-            <td><Checkbox checked={element.status} /></td>
+    const rows = messages.map((message) => (
+        <tr key={message.id} className={message.status ? "read-message" : 'unread-message'}>
+            <td >{message.message}</td>
+            <td>{message.sender}</td>
+            <td>{new Date(message.created_at).toLocaleString('en-us')}</td>
+            <td><Button onClick={(e)=>onReply(e)} value={message.sender_id!} variant="subtle" leftIcon={<IconArrowBackUp size={16} />}></Button></td>
+            <td><Checkbox value={message.id!} defaultChecked={message.status} onChange={e=>onToggleRead(e)}/></td>
         </tr>
     ));
+
+    function onReply(e : MouseEvent<HTMLButtonElement>){
+        console.log(e.currentTarget)
+        dispatch(setMessageTargetAction(parseInt(e.currentTarget.value)))
+        dispatch(toggleIReplyModalAction(true))
+    }
 
     function clickHandler (){
         dispatch(checkUsernameAction(false))
         dispatch(toggleMessagerAction(true))
+    }
+
+    function onToggleRead(e :ChangeEvent<HTMLInputElement>){
+        dispatch(toggleRead(parseInt(e.currentTarget.value), e.target.checked))
     }
 
     return (
@@ -62,6 +69,7 @@ export function Inbox() {
                 </Container>
             </Container>
             <Messager />
+            <ReplyModal />
         </div>
     )
 }

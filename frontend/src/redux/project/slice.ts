@@ -7,10 +7,14 @@ export type ActivePageState = 'timeline'|'mainTable'|'kanban'|'cashflow'
 
 export type MessageState = {
     id: number | null
-    user_id: number | null
-    target_user_id: number | null
+    sender: string | null
+    sender_id: number | null
+    receiver: string | null
+    receiver_id: number | null
     message: string
     status: boolean
+    created_at: Date
+    updated_at: Date
 }
 
 export type MessageStateArr = MessageState[]
@@ -37,6 +41,7 @@ export interface ActiveProjectState {
     set_hide_by_type: string | undefined
     set_timeline_item_height: number
     toggle_invitation_button: boolean
+    toggle_reply_modal: boolean
     check_username: boolean | null
     message_target: number | null
     message_summary: MessageStateArr
@@ -65,14 +70,19 @@ const initialState: ActiveProjectState = {
     set_hide_by_type: undefined,
     set_timeline_item_height: 50,
     toggle_invitation_button: false,
+    toggle_reply_modal: false,
     check_username: null,
     message_target: null,
     message_summary: [{
         id: null,
-        user_id: null,
-        target_user_id: null,
+        sender: null,
+        sender_id: null,
+        receiver: null,
+        receiver_id: null,
         message: '',
-        status: false
+        status: false,
+        created_at: new Date(),
+        updated_at: new Date(),
     }]
 }
 
@@ -118,12 +128,25 @@ const setTimelineItemHeight : CaseReducer<ActiveProjectState, PayloadAction<numb
 (state, action) =>  {state.set_timeline_item_height = action.payload} 
 const toggleInvitationButton : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.toggle_invitation_button = action.payload} 
+const toggleIReplyModal : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+(state, action) =>  {state.toggle_reply_modal = action.payload} 
 const checkUsername : CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 (state, action) =>  {state.check_username = action.payload} 
 const setMessageTarget : CaseReducer<ActiveProjectState, PayloadAction<number>> =
 (state, action) =>  {state.message_target = action.payload}
 const sendMessage : CaseReducer<ActiveProjectState, PayloadAction<MessageState>> =
 (state, action) =>  {state.message_summary.push(action.payload)}
+const getMessages : CaseReducer<ActiveProjectState, PayloadAction<MessageStateArr>> =
+(state, action) =>  {state.message_summary =action.payload}
+const toggleRead : CaseReducer<ActiveProjectState, PayloadAction<{notificationId: number, checked: boolean}>> =
+(state, action) =>  {
+    for (let message of state.message_summary){
+       if (message.id === action.payload.notificationId){
+        message.status = action.payload.checked
+        return
+       }
+    }
+} 
 
 const projectSlice = createSlice({
     name: 'project',
@@ -150,9 +173,12 @@ const projectSlice = createSlice({
         setHideByType,
         setTimelineItemHeight,
         toggleInvitationButton,
+        toggleIReplyModal,
         checkUsername,
         setMessageTarget,
-        sendMessage
+        sendMessage,
+        getMessages,
+        toggleRead
     },
 })
 
@@ -178,9 +204,12 @@ export const {
     setHideByType: setHideByTypeAction,
     setTimelineItemHeight: setTimelineItemHeightAction,
     toggleInvitationButton: toggleInvitationButtonAction,
+    toggleIReplyModal: toggleIReplyModalAction,
     checkUsername: checkUsernameAction,
     setMessageTarget: setMessageTargetAction,
     sendMessage: sendMessageAction,
+    getMessages: getMessagesAction,
+    toggleRead: toggleReadAction
 } = projectSlice.actions
 
 export default projectSlice.reducer
