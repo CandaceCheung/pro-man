@@ -8,6 +8,7 @@ import  invitationReducer, { InvitationState } from "./redux/invitation/slice";
 import { KanbanAction } from "./redux/kanban/action";
 import { kanbanReducer } from "./redux/kanban/reducer";
 import { KanbanState } from "./redux/kanban/state";
+import profileReducer, { ProfileState } from "./redux/profile/slice";
 import projectReducer,{ ActiveProjectState } from "./redux/project/slice";
 import  tableReducer, { CombinedTableState }  from "./redux/table/slice";
 
@@ -17,6 +18,7 @@ export interface IRootState {
     project: ActiveProjectState,
     kanban: KanbanState,
     invitation: InvitationState,
+    profile: ProfileState,
 }
 
 const rootReducer = combineReducers({
@@ -25,6 +27,7 @@ const rootReducer = combineReducers({
     project: projectReducer,
     kanban: kanbanReducer,
     invitation: invitationReducer,
+    profile: profileReducer,
 });
 
 export type IRootAction = AuthAction;
