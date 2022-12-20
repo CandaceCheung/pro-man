@@ -18,6 +18,7 @@ import { ActivePageState, setActivePageAction } from '../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../store';
 import { getTable, likeProject } from '../redux/table/thunk';
 import { getInvitationList } from '../redux/invitation/thunk';
+import { renameProject } from '../redux/project/thunk';
 
 export default function ProjectNavbar() {
     const dispatch = useAppDispatch()
@@ -62,7 +63,7 @@ export default function ProjectNavbar() {
     function deselectProjectTitleInput() {
         if (projectTitleInputValue !== projectName) {
             if (projectTitleInputValue.length) {
-                // dispatch thunk
+                projectId && dispatch(renameProject(projectId!, projectTitleInputValue));
             } else {
                 projectName && setProjectTitleInputValue(projectName);
             }
