@@ -1,8 +1,7 @@
 import { createStyles } from '@mantine/core';
 
 interface DateProps {
-    date: string,
-    datetime: string
+    date: string
 }
 
 const useStyle = createStyles(() => ({
@@ -13,7 +12,7 @@ const useStyle = createStyles(() => ({
     }
 }));
 
-export function DateCell({ date, datetime }: DateProps) {
+export function DateCell({ date }: DateProps) {
     const { classes } = useStyle();
 
     return (
