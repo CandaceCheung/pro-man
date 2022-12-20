@@ -54,17 +54,20 @@ export function Profile() {
                     <Text>User Name</Text>
                 </div>
                 <div className="profileInfo">
-                    <Group>
+                    <Group position="center">
                         <Text className={classes.profileText}>Email:</Text>
                         <Input icon={<IconAt size={16} />}></Input>
                     </Group>
-                    <Group>
+                    <Group position="center">
                         <Text className={classes.profileText}>Password:</Text>
                         <Input icon={<IconKey size={16} />}></Input>
                     </Group>
+                    <Group position="center">
                     <Button color="cyan" mt={10} maw={100}>
                         Update
                     </Button>
+
+                    </Group>
                 </div>
             </div>
         </div>
