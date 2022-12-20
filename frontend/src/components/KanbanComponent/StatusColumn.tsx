@@ -177,7 +177,7 @@ export function StatusColumn(props: StatusProps) {
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div ref={setNodeRef} style={style} {...attributes} >
             <Card
                 shadow="md"
                 pt={1}
@@ -192,7 +192,7 @@ export function StatusColumn(props: StatusProps) {
             >
                 <div className={classes.cardHeader}>
                     <Group position="left" pt={10} pb={10} m={5}>
-                        <IconGripVertical className="grip" size={20} />
+                        <IconGripVertical className="grip" size={20} {...listeners}/>
                         <Text weight={570} className="headerText">
                             {props.name} / {props.name.length}
                         </Text>
@@ -210,7 +210,7 @@ export function StatusColumn(props: StatusProps) {
                                 key={item.id}
                                 id={item.id}
                                 name={item.name}
-                                date={item.date.slice(0, -15)}
+                                date={item.date}
                                 membersList={item.membersList}
                             />
                         ))}
