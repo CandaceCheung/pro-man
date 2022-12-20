@@ -126,6 +126,10 @@ export function Status({ status, color }: StatusProps) {
                                 value={newStatusInputValue}
                                 onChange={(e) => setNewStatusInputValue(e.target.value)}
                                 onKeyDown={(e) => handleNewStatusInputKeyDown(e.key)}
+                                onBlur={()=>{
+                                    setEditStatus(false);
+                                    setNewStatusInputValue("");
+                                }}
                             >
                             </input>
                         </span>
