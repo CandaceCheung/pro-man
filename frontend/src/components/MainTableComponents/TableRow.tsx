@@ -6,7 +6,7 @@ import { useStyles } from "./styles";
 import { Text } from "./TableCellsComponents/Text";
 import { Status } from "./TableCellsComponents/Status";
 import { Times } from "./TableCellsComponents/Times";
-import { Date } from "./TableCellsComponents/Date";
+import { DateCell } from "./TableCellsComponents/Date";
 import { Money } from "./TableCellsComponents/Money";
 import { Item } from "./TableCellsComponents/Item";
 
@@ -63,7 +63,7 @@ export function TableRow({
                         className={cx(classes.tableCell, classes.dates)}
                         key={"item" + id + "cell" + cellIndex}
                     >
-                        <Date date={cell.item_dates_date!} />
+                        <DateCell date={cell.item_dates_date!} datetime={cell.item_dates_datetime} />
                     </div>
                 )
             case "money":
