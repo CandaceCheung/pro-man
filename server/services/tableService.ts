@@ -138,6 +138,11 @@ export class TableService {
         return favoriteList
     }
 
+    async getProjectStatus(projectId: number) {
+        const statusList = await this.knex("states").select("id", "name", "color").where("project_id", projectId).orderBy("id", "asc");
+        return statusList;
+    }
+
     async updateTimelineService(id: number, start: number, end: number, name: string, color: string) {
         const txn = await this.knex.transaction();
         try {

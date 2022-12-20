@@ -72,6 +72,26 @@ export function getTableList(userId: number) {
 	};
 }
 
+export function getProjectStatusList(projectId: number) {
+	return async (dispatch: Dispatch) => {
+
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/status/${projectId}`
+		);
+		const result = await res.json();
+
+		if (result.success) {
+			console.log(result.statusList)
+			// dispatch here
+		} else {
+			showNotification({
+				title: 'Data retrieve notification',
+				message: "Failed to get status list! 🤥"
+			});
+		}
+	};
+}
+
 export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
 	return async (dispatch: Dispatch) => {
 
