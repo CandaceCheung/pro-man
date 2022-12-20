@@ -1,5 +1,6 @@
 import { showNotification } from "@mantine/notifications";
 import { Dispatch } from "@reduxjs/toolkit";
+import { renameProjectInTableListAction } from "../table/slice";
 import { checkUsernameAction, clearActiveProjectAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleReadAction } from "./slice";
 
 export function setActiveProject (projectId: number, projectName: string) {
@@ -33,6 +34,9 @@ export function renameProject (projectId: number, projectName: string) {
 		const result = await res.json();
 		if (result.success) {
 			dispatch(setProjectNameAction(projectName));
+            dispatch(renameProjectInTableListAction({
+                projectId, projectName
+            }));
 		} else {
 			showNotification({
 				title: 'Rename Project notification',

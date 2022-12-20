@@ -17,8 +17,8 @@ import { invitationRoutes } from './routes/invitationRoutes';
 import { NotificationService } from './services/notificationService';
 import { InvitationController } from './controllers/invitationController';
 import { notificationRoutes } from './routes/notificationRoutes';
-import { ProfileService } from './services/ProfileService';
-import { ProfileController } from './controllers/profileControllers';
+// import { ProfileService } from './services/ProfileService';
+// import { ProfileController } from './controllers/profileControllers';
 import { profileRoutes } from './routes/profileRoutes';
 
 
@@ -45,8 +45,8 @@ export const invitationController = new InvitationController(invitationService);
 export const notificationService = new NotificationService(knex);
 export const notificationController = new NotificationController(notificationService);
 
-export const profileService = new ProfileService(knex);
-export const profileController = new ProfileController(profileService);
+// export const profileService = new ProfileService(knex);
+// export const profileController = new ProfileController(profileService);
 
 
 app.use(express.json(), cors());
