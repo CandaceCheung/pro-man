@@ -33,9 +33,10 @@ export function ItemCard(props: itemCardProps) {
                         <Text weight={500} color="dimmed">
                             Person
                         </Text>
-                        <div className="each-member">
-                            {props.membersList.map((name) => (
-                                <div>{name}</div>
+                        <div className="each-member" >
+
+                            {props.membersList.map((name,index) => (
+                                <div key={index}>{name}</div>
                             ))}
                         </div>
                     </Group>

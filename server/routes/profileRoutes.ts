@@ -1,11 +1,12 @@
 import express from "express";
-// import { profileController } from "../app";
+import { profileController } from "../app";
 
 
 export const profileRoutes = () => {
     const profileRoutes = express.Router();
 
-    // profileRoutes.get('/:userId', profileController.getProfile)
+    profileRoutes.get('/:userId', profileController.getProfile)
+    profileRoutes.put('/update/:userId', profileController.putProfile)
     
     return profileRoutes;
 }
