@@ -38,7 +38,7 @@ export default function InvitationDrawer(props: InvitationDrawerProps) {
         position="right"
         opened={props.toggle}
         onClose={() => props.onRemove()}
-        title="Invite Users"
+        title={<h2>Invite Users</h2>}
         padding="xl"
         size="50%"
       >

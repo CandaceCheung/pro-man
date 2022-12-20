@@ -13,6 +13,8 @@ export type MessageState = {
     receiver_id: number | null
     message: string
     status: boolean
+    is_deleted: boolean
+    is_deleted_receiver: boolean
     created_at: Date
     updated_at: Date
 }
@@ -81,6 +83,8 @@ const initialState: ActiveProjectState = {
         receiver_id: null,
         message: '',
         status: false,
+        is_deleted: false,
+        is_deleted_receiver: false,
         created_at: new Date(),
         updated_at: new Date(),
     }]
@@ -147,6 +151,25 @@ const toggleRead : CaseReducer<ActiveProjectState, PayloadAction<{notificationId
        }
     }
 } 
+const toggleDelete : CaseReducer<ActiveProjectState, PayloadAction<{notificationId: number, isDeleted: boolean}>> =
+(state, action) =>  {
+    for (let message of state.message_summary){
+       if (message.id === action.payload.notificationId){
+        message.status = true
+        message.is_deleted = action.payload.isDeleted
+        return
+       }
+    }
+}
+const toggleReceiverDelete : CaseReducer<ActiveProjectState, PayloadAction<{notificationId: number, isDeletedReceiver: boolean}>> =
+(state, action) =>  {
+    for (let message of state.message_summary){
+       if (message.id === action.payload.notificationId){
+        message.is_deleted_receiver = action.payload.isDeletedReceiver
+        return
+       }
+    }
+} 
 
 const projectSlice = createSlice({
     name: 'project',
@@ -178,7 +201,9 @@ const projectSlice = createSlice({
         setMessageTarget,
         sendMessage,
         getMessages,
-        toggleRead
+        toggleRead,
+        toggleDelete,
+        toggleReceiverDelete,
     },
 })
 
@@ -209,7 +234,9 @@ export const {
     setMessageTarget: setMessageTargetAction,
     sendMessage: sendMessageAction,
     getMessages: getMessagesAction,
-    toggleRead: toggleReadAction
+    toggleRead: toggleReadAction,
+    toggleDelete: toggleDeleteAction,
+    toggleReceiverDelete: toggleReceiverDeleteAction,
 } = projectSlice.actions
 
 export default projectSlice.reducer

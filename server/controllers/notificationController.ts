@@ -61,8 +61,44 @@ export class NotificationController {
 
             res.json({
                 success: true,
-                msg: 'Message Read',
+                msg: check ? 'Message Read' : 'Message Unread',
                 check
+            })
+
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "Something Went Wrong During Reading Database" });
+        }
+    }
+
+    toggleDelete = async (req: Request, res: Response) => {
+        try {
+            const notificationId = req.params.notificationId
+
+            const is_deleted = await this.notificationService.toggleDelete(parseInt(notificationId))
+
+            res.json({
+                success: true,
+                msg: 'Message Deleted',
+                is_deleted
+            })
+
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "Something Went Wrong During Reading Database" });
+        }
+    }
+
+    toggleReceiverDelete = async (req: Request, res: Response) => {
+        try {
+            const notificationId = req.params.notificationId
+
+            const is_deleted_receiver = await this.notificationService.toggleReceiverDelete(parseInt(notificationId))
+
+            res.json({
+                success: true,
+                msg: 'Message Deleted',
+                is_deleted_receiver
             })
 
         } catch (e) {

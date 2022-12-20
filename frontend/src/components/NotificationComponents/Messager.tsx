@@ -51,11 +51,11 @@ export function Messager() {
     }
 
     const onClose = () => {
+        setText('')
+        setUsername('')
         clearTimeout(timer)
         dispatch(toggleMessagerAction(false))
         dispatch(checkUsernameAction(false))
-        setUsername('')
-        setText('')
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -63,7 +63,7 @@ export function Messager() {
         if (messageType === 'invite'){
             
 
-        } else if (messageType ==='message'){
+        } else if (messageType ==='message' && text.trim().length > 0){
             dispatch(sendMessage(name!, userId!, username, targetUser!, text))
 
         } else {

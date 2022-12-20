@@ -18,6 +18,7 @@ export function Notification() {
                     <Tooltip label={`You have ${count} unread messages`}>
                         <Tabs.Tab
                             rightSection={
+                                count > 0 &&
                                 <Badge
                                     sx={{ width: 16, height: 16, pointerEvents: 'none' }}
                                     variant="filled"
@@ -25,7 +26,7 @@ export function Notification() {
                                     p={0}
                                 >
                                     {count}
-                                </Badge>
+                                </Badge> 
                             }
                             value="inbox"
                         >

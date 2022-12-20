@@ -1,47 +1,65 @@
-import { Container, Input, Table } from "@mantine/core";
+import { Button, Card, Center, Container, Input, Table } from "@mantine/core";
+import { IconCheck, IconChecks, IconEraser } from "@tabler/icons";
+import { ChangeEvent, MouseEvent, useState } from "react";
+import { toggleReceiverDelete} from "../../redux/project/thunk";
+import { useAppDispatch, useAppSelector } from "../../store";
+
 
 export function Sent() {
-    const elements = [
-        { message: 6, receiver: 12.011, created_at: 'C', status: 'Carbon' },
-        { message: 7, receiver: 14.007, created_at: 'N', status: 'Nitrogen' },
-        { message: 39, receiver: 88.906, created_at: 'Y', status: 'Yttrium' },
-        { message: 56, receiver: 137.33, created_at: 'Ba', status: 'Barium' },
-        { message: 58, receiver: 140.12, created_at: 'Ce', status: 'Cerium' },
-      ];
+    const dispatch = useAppDispatch()
+    const userId = useAppSelector(state=>state.auth.userId)
+    const messageSummary = useAppSelector(state=> state.project.message_summary)
+    const [search, setSearch] = useState('')
+    let messages = messageSummary.filter((message)=> message.sender_id === userId && !message.is_deleted_receiver)
+    messages = messages.filter(message=> message.receiver?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || new Date(message.created_at).toLocaleString('en-us')?.includes(search))
 
-    const rows = elements.map((element) => (
-        <tr key={element.receiver}>
-          <td>{element.message}</td>
-          <td>{element.receiver}</td>
-          <td>{element.created_at}</td>
-          <td>{element.status}</td>
+    const rows = messages.map((message) => (
+        <tr key={message.id} className={message.status ? "read-message" : 'unread-message'}>
+            <td >{message.message}</td>
+            <td>{message.receiver}</td>
+            <td>{new Date(message.created_at).toLocaleString('en-us')}</td>
+            <td>{message.status? <IconChecks size={16} style={{color: 'green'}} /> : <IconCheck size={16} style={{color: 'grey'}}/>}</td>
+            <td><Button onClick={(e)=>onDelete(e)} value={message.id!} variant="subtle" leftIcon={<IconEraser size={16} />}></Button></td>
         </tr>
-      ));
+    ));
+
+    function onDelete(e : MouseEvent<HTMLButtonElement>){
+        dispatch(toggleReceiverDelete(parseInt(e.currentTarget.value)))
+    }
+
+    function onSearch(e :ChangeEvent<HTMLInputElement>){
+        setSearch(e.currentTarget.value)
+    }
 
     return (
-        <div style={{padding: '10px'}}>
+        <div style={{ paddingTop: '20px' }}>
             <Container fluid={true}>
                 <Input.Wrapper
-                    id="input-demo"
+                    id="search"
                     withAsterisk
                     label="Search"
-                    error="Search not found"
+                    error={search.length===0 ? "" : messages.length===0 ? "Search not found": undefined}
+                    className="row"
                 >
-                    <Input id="input-demo" placeholder="Your email" />
+                    <Input value={search} onChange={e=>onSearch(e)} id="search" placeholder="Content/Name/Date Search" />
                 </Input.Wrapper>
-                <Container fluid={true}>
-                    <Table>
-                        <thead>
-                            <tr>
-                                <th>Message</th>
-                                <th>Receiver</th>
-                                <th>Sent On</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
+                <Container fluid={true} style={{ paddingTop: '20px' }}>
+                        <Table horizontalSpacing='sm'>
+                            <thead>
+                                <tr >
+                                    <th style={{ width: '500px' }}>Message</th>
+                                    <th style={{ width: '100px' }}>Receiver</th>
+                                    <th style={{ width: '120px' }}>Sent On</th>
+                                    <th style={{ width: '120px' }}>Status</th>
+                                    <th style={{ width: '40px' }}>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>{rows}</tbody>
+                        </Table>
                 </Container>
+                <Center style={{ padding: '20px' }}>
+                    <Card style={{color: "#238BE6"}}>You Have No Sent Messages</Card>
+                </Center>
             </Container>
         </div>
     )
