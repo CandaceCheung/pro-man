@@ -18,7 +18,7 @@ export class KanbanController {
 			});
 		} catch (e) {
 			console.error(e);
-			res.status(500).json({ msg: '[KAN] Fail to Get Data.' });
+			res.status(500).json({ msg: '[KAN01] Fail to Get Data.' });
 		}
 	};
 
@@ -37,7 +37,7 @@ export class KanbanController {
 		} catch (e) {
 			console.error(e);
 			res.status(500).json({
-				msg: '[KAN] Fail to Get Member List Data.'
+				msg: '[KAN02] Fail to Get Member List Data.'
 			});
 		}
 	};
@@ -56,7 +56,7 @@ export class KanbanController {
 			});
 		} catch (e) {
 			console.error(e);
-			res.status(500).json({ msg: '[KAN] Fail to Get Group List Data.' });
+			res.status(500).json({ msg: '[KAN03] Fail to Get Group List Data.' });
 		}
 	};
 
@@ -90,7 +90,23 @@ export class KanbanController {
 			});
 		} catch (e) {
 			console.error(e);
-			res.status(500).json({ msg: '[KAN] Fail to Post Data.' });
+			res.status(500).json({ msg: '[KAN04] Fail to Post Data.' });
+		}
+	};
+
+	putKanbanOrder = async (req: Request, res: Response) => {
+		try {
+			const {
+				order,
+			} = req.body; 
+
+			await this.kanbanService.reorderKanban(order);
+
+			res.json({success: true});
+
+		} catch (e) {
+			console.error(e);
+			res.status(500).json({ msg: '[KAN05] Fail to Put Order.' })
 		}
 	};
 }

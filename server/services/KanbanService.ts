@@ -34,14 +34,15 @@ export class KanbanService {
 			.leftJoin('type_status', 'type_status.state_id', '=', 'states.id')
 			.leftJoin('items', 'type_status.item_id', '=', 'items.id')
 			.where('states.project_id', project_Id)
-			.groupBy('states.id').orderBy('states.status_order');
+			.groupBy('states.id')
+			.orderBy('states.status_order');
 
-			// for null status
-			kanbanDetail.forEach(state => {
-				if(state.itemsList[0] === null){
-					state.itemsList = [];
-				}
-			})
+		// for null status
+		kanbanDetail.forEach((state) => {
+			if (state.itemsList[0] === null) {
+				state.itemsList = [];
+			}
+		});
 
 		return kanbanDetail;
 	}
@@ -107,6 +108,22 @@ export class KanbanService {
 			await txn.commit();
 
 			return addItem[0].id as number;
+		} catch (e) {
+			await txn.rollback();
+			throw e;
+		}
+	}
+
+	async reorderKanban (order: number[]) {
+		const txn = await this.knex.transaction();
+		try {
+			for (let i in order) {
+				await txn.update({ status_order:i+1}).from('states').where('id',order[i]);
+			}
+
+			await txn.commit();
+
+			
 		} catch (e) {
 			await txn.rollback();
 			throw e;

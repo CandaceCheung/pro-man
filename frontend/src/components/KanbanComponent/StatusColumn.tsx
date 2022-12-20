@@ -1,4 +1,4 @@
-import { DndContext, useSensor, useSensors } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import {
     Card,
     Group,
@@ -23,11 +23,11 @@ import {
     IconUser,
 } from "@tabler/icons";
 import { useState } from "react";
-import { SmartPointerSensor } from "../../pointerSensor";
 import { Status } from "../../redux/kanban/state";
 import { postItem } from "../../redux/kanban/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { ItemCard } from "./ItemCard";
+import { CSS } from "@dnd-kit/utilities";
 
 type StatusProps = Status;
 
@@ -167,77 +167,91 @@ export function StatusColumn(props: StatusProps) {
         },
     ];
 
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({ id: props.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
+
     return (
-        <Card
-            shadow="md"
-            pt={1}
-            pb={10}
-            pr={6}
-            pl={6}
-            radius="md"
-            withBorder
-            mt={15}
-            mr={6}
-            w={290}
-        >
-            <div className={classes.cardHeader}>
-                <Group position="left" pt={10} pb={10} m={5}>
-                    <IconGripVertical className="grip" size={20} />
-                    <Text weight={570} className="headerText">
-                        {props.name} / {props.name.length}
-                    </Text>
-                </Group>
-            </div>
-
-            <ScrollArea style={{ height: 750 }} type="auto" scrollbarSize={6}>
-                <div>
-                    {props.itemsList.map((item) => (
-                        <ItemCard
-                            key={item.id}
-                            id={item.id}
-                            name={item.name}
-                            date={item.date.slice(0, -15)}
-                            membersList={item.membersList}
-                        />
-                    ))}
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            <Card
+                shadow="md"
+                pt={1}
+                pb={10}
+                pr={6}
+                pl={6}
+                radius="md"
+                withBorder
+                mt={15}
+                mr={6}
+                w={290}
+            >
+                <div className={classes.cardHeader}>
+                    <Group position="left" pt={10} pb={10} m={5}>
+                        <IconGripVertical className="grip" size={20} />
+                        <Text weight={570} className="headerText">
+                            {props.name} / {props.name.length}
+                        </Text>
+                    </Group>
                 </div>
-            </ScrollArea>
 
-            <UnstyledButton onClick={() => setOpened(true)}>
-                <Group position="left" m="sm" mb={5}>
-                    <ThemeIcon variant="light" radius="xl" color="gray">
-                        <IconPlus />
-                    </ThemeIcon>
-                    <Text color="dimmed">Add Item</Text>
-                </Group>
-            </UnstyledButton>
-
-            <>
-                <Modal
-                    opened={opened}
-                    onClose={() => setOpened(false)}
-                    closeOnEscape
-                    title="Add Item"
-                    size="sm"
+                <ScrollArea
+                    style={{ height: 750 }}
+                    type="auto"
+                    scrollbarSize={6}
                 >
                     <div>
-                        {modalList.map((eachRow) => (
-                            <Group
-                                className={classes.modalRow}
-                                key={eachRow.text}
-                            >
-                                <Text className={classes.modalText}>
-                                    {eachRow.text}
-                                </Text>
-                                {eachRow.input}
-                            </Group>
+                        {props.itemsList.map((item) => (
+                            <ItemCard
+                                key={item.id}
+                                id={item.id}
+                                name={item.name}
+                                date={item.date.slice(0, -15)}
+                                membersList={item.membersList}
+                            />
                         ))}
-                        <Button color="cyan" mt={5} onClick={addItem}>
-                            Add item
-                        </Button>
                     </div>
-                </Modal>
-            </>
-        </Card>
+                </ScrollArea>
+
+                <UnstyledButton onClick={() => setOpened(true)}>
+                    <Group position="left" m="sm" mb={5}>
+                        <ThemeIcon variant="light" radius="xl" color="gray">
+                            <IconPlus />
+                        </ThemeIcon>
+                        <Text color="dimmed">Add Item</Text>
+                    </Group>
+                </UnstyledButton>
+
+                <>
+                    <Modal
+                        opened={opened}
+                        onClose={() => setOpened(false)}
+                        closeOnEscape
+                        title="Add Item"
+                        size="sm"
+                    >
+                        <div>
+                            {modalList.map((eachRow) => (
+                                <Group
+                                    className={classes.modalRow}
+                                    key={eachRow.text}
+                                >
+                                    <Text className={classes.modalText}>
+                                        {eachRow.text}
+                                    </Text>
+                                    {eachRow.input}
+                                </Group>
+                            ))}
+                            <Button color="cyan" mt={5} onClick={addItem}>
+                                Add item
+                            </Button>
+                        </div>
+                    </Modal>
+                </>
+            </Card>
+        </div>
     );
 }

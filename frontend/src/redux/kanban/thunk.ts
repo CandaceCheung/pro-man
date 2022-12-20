@@ -83,7 +83,7 @@ export function postItem(projectId:number, stateId: number, itemName:string,memb
 
 export function putOrder(statusList: Status[]) {
     return async (dispatch: AppDispatch) => {
-        const res = await fetch(`${process.env.REACT_APP_SERVER}/kanban/order`,{
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/kanban/order`,{
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
