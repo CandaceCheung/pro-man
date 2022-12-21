@@ -42,8 +42,15 @@ export function Money({ moneySum, transactionIds, cashFlows, transactionDates }:
                         <tbody>
                             {
                                 transactionIds.map((transactionId, index) => (
-                                    <tr key={"transaction_" + transactionId}>
-                                        <td>{transactionDates[index]}</td>
+                                    <tr 
+                                        key={"transaction_" + transactionId}
+                                        style={{textAlign: "left"}}
+                                    >
+                                        <td>
+                                            {
+                                                (new Date(transactionDates[index])).toDateString()
+                                            }
+                                        </td>
                                         <td>{cashFlows[index]}</td>
                                     </tr>
                                 ))
