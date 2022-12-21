@@ -15,6 +15,7 @@ import { ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
 import { format } from 'date-fns';
+import { IconX } from '@tabler/icons';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -65,6 +66,8 @@ export function MainTable() {
 
     const [newItemInputSelected, setNewItemInputSelected] = useState<Record<number, boolean>>({});
     const [newItemInputValue, setNewItemInputValue] = useState<Record<number, string>>({});
+
+    const [deleteGroupModalOpened, setDeleteGroupModalOpened] = useState(false);
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -443,9 +446,9 @@ export function MainTable() {
     const onDeleteItem = (groupId: number, itemId: number) => {
         if (Object.keys(itemCellsState[groupId]).length <= 1) {
             showNotification({
-				title: 'Item delete notification',
-				message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
-			});
+                title: 'Item delete notification',
+                message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
+            });
         } else {
             userId && projectID && dispatch(deleteItem(groupId, itemId, userId, projectID));
         }
@@ -466,10 +469,17 @@ export function MainTable() {
                                 key={itemGroupArrayIndex}
                             >
                                 <div
+                                    className={classes.itemGroupBar}
                                     style={{
                                         color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length],
                                     }}
                                 >
+                                    <span
+                                        className={classes.itemGroupIcon}
+                                        onClick={() => setDeleteGroupModalOpened(true)}
+                                    >
+                                        <IconX size={16} />
+                                    </span>
                                     <span
                                         onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
                                         className={classes.hovertext}
@@ -609,7 +619,7 @@ export function MainTable() {
 
                                                         </input>
                                                         :
-                                                        <div 
+                                                        <div
                                                             className={classes.typeName}
                                                             onClick={() => toggleNewItemInputSelected(item_group_id)}
                                                         >

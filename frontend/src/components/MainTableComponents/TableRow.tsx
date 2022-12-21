@@ -39,7 +39,7 @@ export function TableRow({
     onRemovePerson, onAddPerson, onAddTransaction, 
     onDeleteTransaction, onDeleteItem
 }: TableRowProps) {
-    const [deleteItemModelOpened, setDeleteItemModelOpened] = useState(false);
+    const [deleteItemModalOpened, setDeleteItemModalOpened] = useState(false);
 
     const {
         attributes,
@@ -147,7 +147,7 @@ export function TableRow({
     }
 
     const handleDeleteItem = () => {
-        setDeleteItemModelOpened(false);
+        setDeleteItemModalOpened(false);
         onDeleteItem(groupId, itemId);
     }
 
@@ -169,8 +169,8 @@ export function TableRow({
                 })
             }
             <Modal
-                opened={deleteItemModelOpened}
-                onClose={() => setDeleteItemModelOpened(false)}
+                opened={deleteItemModalOpened}
+                onClose={() => setDeleteItemModalOpened(false)}
                 title={
                     <span
                         className={classes.modalTitle}
@@ -199,7 +199,7 @@ export function TableRow({
             
             <span
                 className={classes.rowIcon}
-                onClick={() => setDeleteItemModelOpened(true)}
+                onClick={() => setDeleteItemModalOpened(true)}
             >
                 <IconX size={16} />
             </span>
