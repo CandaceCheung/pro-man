@@ -192,8 +192,8 @@ export function StatusColumn(props: StatusProps) {
                 w={290}
             >
                 <div className={classes.cardHeader}>
-                    <Group position="left" pt={10} pb={10} m={5}>
-                        <IconGripVertical className="grip" size={20} {...listeners}/>
+                    <Group position="left" pt={10} pb={10} m={5} {...listeners}>
+                        <IconGripVertical className="grip" size={20} />
                         <Text weight={570} className="headerText">
                             {props.name} / {props.itemsList.length}
                         </Text>
@@ -201,7 +201,7 @@ export function StatusColumn(props: StatusProps) {
                 </div>
 
                 <ScrollArea
-                    style={{ height: 740 }}
+                    style={{ height: 720 }}
                     type="auto"
                     scrollbarSize={6}
                 >
