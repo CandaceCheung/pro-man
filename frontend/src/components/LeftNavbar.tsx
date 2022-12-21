@@ -83,7 +83,6 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 
 const navButtons = [
     { icon: Logo, label: "Home", path: "/home" },
-    { icon: IconGauge, label: "Dashboard", path: "/dashboard"},
     { icon: IconBell, label: "Notification", path: "/notification"},
     { icon: IconUsers, label: "My Member", path: "/myMember" },
     { icon: IconStar, label: "Favorite", path: "favorite" }

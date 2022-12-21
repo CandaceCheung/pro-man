@@ -7,8 +7,8 @@ import {
     Text,
 } from "@mantine/core";
 import { IconKey, IconSignature, IconUserCircle } from "@tabler/icons";
-import React, { useState } from "react";
-import { putProfileInfo } from "../redux/profile/thunk";
+import React, { useEffect, useState } from "react";
+import { getProfile, putProfileInfo } from "../redux/profile/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
 const useStyles = createStyles((theme) => ({
@@ -44,16 +44,18 @@ const useStyles = createStyles((theme) => ({
 export function Profile() {
     const dispatch = useAppDispatch();
     const { classes } = useStyles();
+    const userId = useAppSelector((state) => state.auth.userId);
     const username = useAppSelector((state) => state.profile.username);
+
+    useEffect(() => {
+        userId && dispatch(getProfile(userId));
+    }, [userId, dispatch]);
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const updateInfo = () => {
-        dispatch(putProfileInfo(
-            firstName,
-            lastName,
-            password
-        ));
+        dispatch(putProfileInfo(firstName, lastName, password));
     };
 
     return (
@@ -85,12 +87,18 @@ export function Profile() {
                         ></Input>
                     </Group>
                     <Group position="center" m={10}>
-                        <Text className={classes.profileText}> New Password:</Text>
+                        <Text className={classes.profileText}>
+                            {" "}
+                            New Password:
+                        </Text>
                         <PasswordInput
                             placeholder="Password"
                             description="Password must include at least one letter, number and special character"
                             withAsterisk
                             icon={<IconKey size={16} />}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                            }}
                         />
                     </Group>
                     <Group position="center">

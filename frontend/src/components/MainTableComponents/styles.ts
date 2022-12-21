@@ -121,7 +121,6 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         borderRadius: 10,
         boxShadow: `0 0 0 1px ${theme.colors.borderColor[0]}`,
         fontSize: 12,
-        margin: 5,
         display: "flex",
         flexDirection: "column",
         width: "max-content"
@@ -251,12 +250,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     },
 
     lastRow: {
-        borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
-
-        [`& .${getRef('tableCell')}:first-of-type`]: {
-            borderBottomLeftRadius: 10
-        },
         [`& .${getRef('tableCell')}:last-of-type`]: {
             borderBottomRightRadius: 10
         }
@@ -273,6 +267,36 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         },
         "&:active": {
             cursor: "grabbing"
+        }
+    },
+    addItemCell: {
+        display: "flex",
+        borderBottomRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        fontFamily: "Roboto",
+        fontSize: 12,
+        color: "grey",
+
+        [`& > .${getRef('tableCell')}`]: {
+            "&:first-of-type": {
+                borderBottomLeftRadius: 10,
+                padding: 0,
+                width: 8,
+                border: "none",
+                opacity: .7
+            }
+        },
+        [`& .${getRef('tableCell')}:last-of-type`]: {
+            cursor: "text",
+            borderBottomRightRadius: 10,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            padding: "0 10px",
+            "&:hover": {
+                backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`,
+                boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`
+            }
         }
     }
 }));

@@ -333,13 +333,13 @@ export function MainTable() {
     const onRemovePerson = (groupId: number, itemId: number, typeId: number, personId: number) => {
         if (itemCellsState[groupId][itemId][typeId].item_person_user_id!.length <= 1) {
             showNotification({
-				title: 'Delete person notification',
-				message: 'Failed to delete person! At least one person is required for items! 🤥'
-			});
+                title: 'Delete person notification',
+                message: 'Failed to delete person! At least one person is required for items! 🤥'
+            });
         } else {
             const newItemCellsState = produce(itemCellsState, draftState => {
-                draftState[groupId][itemId][typeId].item_person_user_id = 
-                draftState[groupId][itemId][typeId].item_person_user_id?.filter(id => id !== personId);
+                draftState[groupId][itemId][typeId].item_person_user_id =
+                    draftState[groupId][itemId][typeId].item_person_user_id?.filter(id => id !== personId);
             });
             setItemCellsState(newItemCellsState);
             dispatch(removePerson(itemId, personId, userId!, projectID!));
@@ -375,12 +375,12 @@ export function MainTable() {
         dispatch(addTransaction(itemId, format(date, 'yyyy-MM-dd'), cashFlow, updateState));
     }
 
-    const onDeleteTransaction= (groupId: number, itemId: number, typeId: number, transactionId: number) => {
+    const onDeleteTransaction = (groupId: number, itemId: number, typeId: number, transactionId: number) => {
         if (itemCellsState[groupId][itemId][typeId].transaction_id!.length <= 1) {
             showNotification({
-				title: 'Delete transaction notification',
-				message: 'Failed to delete transaction! At least one transaction is required for items! 🤥'
-			});
+                title: 'Delete transaction notification',
+                message: 'Failed to delete transaction! At least one transaction is required for items! 🤥'
+            });
         } else {
             const newItemCellsState = produce(itemCellsState, draftState => {
                 const deleteIndex = draftState[groupId][itemId][typeId].transaction_id!.indexOf(transactionId);
@@ -388,7 +388,7 @@ export function MainTable() {
                     draftState[groupId][itemId][typeId].transaction_id!.splice(deleteIndex, 1);
                     draftState[groupId][itemId][typeId].item_money_cashflow!.splice(deleteIndex, 1);
                     draftState[groupId][itemId][typeId].item_money_date!.splice(deleteIndex, 1);
-                  }
+                }
             });
             setItemCellsState(newItemCellsState);
             dispatch(removeTransaction(itemId, transactionId, userId!, projectID!));
@@ -474,58 +474,73 @@ export function MainTable() {
                                 </div>
                                 {
                                     !itemGroupsCollapsedState[itemGroupArrayIndex] &&
-                                    <div
-                                        id={`table_group_${item_group_id}`}
-                                        className={classes.tableGroup}
-                                    >
-                                        <div className={classes.tableHead}>
-                                            <div className={classes.tableRow}>
-                                                <div className={classes.tableCell}></div>
-                                                <div className={cx(classes.tableCell, classes.item)}><span>Item</span></div>
-                                                <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
-                                                    <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
-                                                        {typesOrdersState[item_group_id].map((typeId, index) => (
-                                                            <TableColumnTitle
-                                                                key={typeId}
-                                                                id={typeId}
-                                                                cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
-                                                                cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
-                                                                index={index}
-                                                                lastCell={index === typesOrdersState[item_group_id].length - 1}
-                                                                onTypeRename={onTypeRename}
-                                                            />
-                                                        ))}
+                                    <div>
+                                        <div
+                                            id={`table_group_${item_group_id}`}
+                                            className={classes.tableGroup}
+                                        >
+                                            <div className={classes.tableHead}>
+                                                <div className={classes.tableRow}>
+                                                    <div className={classes.tableCell}></div>
+                                                    <div className={cx(classes.tableCell, classes.item)}><span>Item</span></div>
+                                                    <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
+                                                        <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
+                                                            {typesOrdersState[item_group_id].map((typeId, index) => (
+                                                                <TableColumnTitle
+                                                                    key={typeId}
+                                                                    id={typeId}
+                                                                    cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
+                                                                    cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
+                                                                    index={index}
+                                                                    lastCell={index === typesOrdersState[item_group_id].length - 1}
+                                                                    onTypeRename={onTypeRename}
+                                                                />
+                                                            ))}
+                                                        </SortableContext>
+                                                    </DndContext >
+                                                </div>
+                                            </div>
+                                            <div className={classes.tableBody}>
+                                                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
+                                                    <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
+                                                        {
+                                                            itemsOrdersState[item_group_id].map((itemId, itemIndex) =>
+                                                                <TableRow
+                                                                    key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
+                                                                    itemId={itemId}
+                                                                    groupId={item_group_id}
+                                                                    typeOrder={typesOrdersState[item_group_id]}
+                                                                    cellDetails={itemCellsState[item_group_id][itemId]}
+                                                                    color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
+                                                                    lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
+                                                                    personsColors={personsColors}
+                                                                    membersFullName={membersFullName}
+                                                                    onItemRename={onItemRename}
+                                                                    onTextChange={onTextChange}
+                                                                    onStatusChange={onStatusChange}
+                                                                    onRemovePerson={onRemovePerson}
+                                                                    onAddPerson={onAddPerson}
+                                                                    onAddTransaction={onAddTransaction}
+                                                                    onDeleteTransaction={onDeleteTransaction}
+                                                                />
+                                                            )
+                                                        }
                                                     </SortableContext>
                                                 </DndContext >
                                             </div>
                                         </div>
-                                        <div className={classes.tableBody}>
-                                            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
-                                                <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
-                                                    {
-                                                        itemsOrdersState[item_group_id].map((itemId, itemIndex) =>
-                                                            <TableRow
-                                                                key={"group_" + itemGroupArrayIndex + "_item_" + itemId}
-                                                                itemId={itemId}
-                                                                groupId={item_group_id}
-                                                                typeOrder={typesOrdersState[item_group_id]}
-                                                                cellDetails={itemCellsState[item_group_id][itemId]}
-                                                                color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
-                                                                lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
-                                                                personsColors={personsColors}
-                                                                membersFullName={membersFullName}
-                                                                onItemRename={onItemRename}
-                                                                onTextChange={onTextChange}
-                                                                onStatusChange={onStatusChange}
-                                                                onRemovePerson={onRemovePerson}
-                                                                onAddPerson={onAddPerson}
-                                                                onAddTransaction={onAddTransaction}
-                                                                onDeleteTransaction={onDeleteTransaction}
-                                                            />
-                                                        )
-                                                    }
-                                                </SortableContext>
-                                            </DndContext >
+                                        <div className={classes.addItemCell}>
+                                            <div
+                                                className={classes.tableCell}
+                                                style={{
+                                                    backgroundColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                }}
+                                            ></div>
+                                            <div className={cx(classes.tableCell, classes.item)}>
+                                                <div className={classes.typeName}>
+                                                    + Add Item
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 }

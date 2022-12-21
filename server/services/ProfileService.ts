@@ -14,7 +14,7 @@ export class ProfileService {
 			)
 			.from('users')
 			.where('id', user_Id);
-		return userDetail;
+		return userDetail[0];
 	}
 
 	async updateProfile(
