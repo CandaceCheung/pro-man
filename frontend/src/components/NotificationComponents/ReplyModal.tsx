@@ -17,7 +17,7 @@ export function ReplyModal() {
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        dispatch(sendMessage(sender!, userId!, targetUser!, targetId!, text))
+        dispatch(sendMessage(sender!, userId!, targetUser!, targetId!, text, 'message'))
         onClose()
     }
 

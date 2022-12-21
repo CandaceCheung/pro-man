@@ -5,12 +5,13 @@ import { getTableListAction } from "../table/slice";
 
 export function sendInvitation(projectId: number, userId: number, value: string) {
     return async (dispatch: Dispatch) => {
-
+        const token = localStorage.getItem("token");
         const res = await fetch(
             `${process.env.REACT_APP_API_SERVER}/invitation`, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 projectId,
@@ -37,12 +38,14 @@ export function sendInvitation(projectId: number, userId: number, value: string)
 
 export function acceptInvitation(token: string, userId: number) {
     return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
 
         const res = await fetch(
             `${process.env.REACT_APP_API_SERVER}/invitation/response/`, {
             method: "PUT",
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 userId,
@@ -67,12 +70,50 @@ export function acceptInvitation(token: string, userId: number) {
     };
 }
 
-export function getInvitationList(projectId: number) {
+export function acceptMemberInvitation(projectId: number, userId: number) {
     return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
 
         const res = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/invitation/${projectId}`,
+            `${process.env.REACT_APP_API_SERVER}/invitation/members/`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                userId,
+                projectId,
+            })
+        });
+        const result = await res.json();
 
+        if (result.success) {
+            dispatch(acceptInviteAction(result.invitation))
+            dispatch(getTableListAction(result.tableList))
+            showNotification({
+                title: 'Invitation notification',
+                message: result.msg
+            });
+        } else {
+            showNotification({
+                title: 'Invitation notification',
+                message: result.msg
+            });
+        }
+    };
+}
+
+export function getInvitationList(projectId: number) {
+    return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/invitation/${projectId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
         );
         const result = await res.json();
 
@@ -90,10 +131,14 @@ export function getInvitationList(projectId: number) {
 
 export function deleteInvitation(invitationId: number, projectId: number) {
     return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
 
         const res = await fetch(
             `${process.env.REACT_APP_API_SERVER}/invitation/${projectId}&${invitationId}`, {
             method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
         const result = await res.json();
 

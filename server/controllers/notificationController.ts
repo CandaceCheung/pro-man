@@ -33,7 +33,9 @@ export class NotificationController {
             const receiver = req.body.receiver
             const receiverId = req.body.receiverId
             const text = req.body.text
-            const message = await this.notificationService.sendMessage(sender, senderId, receiver, receiverId, text)
+            const messageType = req.body.messageType
+
+            const message = await this.notificationService.sendMessage(sender, senderId, receiver, receiverId, text, messageType)
             if (message) {
                 res.json({
                     success: true,
@@ -46,6 +48,7 @@ export class NotificationController {
                     msg: 'Send Message Failed',
                 })
             }
+
         } catch (e) {
             console.error(e);
             res.status(500).json({ msg: "Something Went Wrong During Reading Database" });

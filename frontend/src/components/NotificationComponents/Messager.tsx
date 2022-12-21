@@ -1,6 +1,6 @@
 import { Modal, Button, Group, Input, Tooltip, Textarea, Loader } from '@mantine/core';
 import { IconAlertCircle, IconChecks, IconChevronDown } from '@tabler/icons';
-import { checkUsernameAction, toggleMessagerAction } from '../../redux/project/slice';
+import { checkUsernameAction, toggleInviteMemberModalAction, toggleMessagerAction } from '../../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { FormEvent, useEffect, useState } from 'react';
 import { checkUsername, sendMessage } from '../../redux/project/thunk';
@@ -18,7 +18,7 @@ export function Messager() {
 
     const [messageType, setMessageType] = useState<'invite' | 'message' | undefined>(undefined)
     const [text, setText] = useState<string>('');
-    const [project, setProject] = useState<number>(0);
+    const [project, setProject] = useState<number|undefined>(0);
     const [loading, setLoading] = useState(true)
     const [username, setUsername] = useState('')
 
@@ -58,19 +58,20 @@ export function Messager() {
     const onClose = () => {
         setText('')
         setUsername('')
+        setProject(undefined)
         clearTimeout(timer)
-        dispatch(toggleInviteMemberModal(false))
+        dispatch(toggleInviteMemberModalAction(false))
         dispatch(toggleMessagerAction(false))
         dispatch(checkUsernameAction(false))
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (messageType === 'invite'){
-            
+        if (messageType === 'invite'){ 
+            dispatch(sendMessage(name!, userId!, username, targetUser!, project+"", messageType))
 
         } else if (messageType ==='message' && text.trim().length > 0){
-            dispatch(sendMessage(name!, userId!, username, targetUser!, text))
+            dispatch(sendMessage(name!, userId!, username, targetUser!, text, messageType))
 
         } else {
             showNotification({
@@ -87,7 +88,7 @@ export function Messager() {
             <Modal
                 opened={opened || inviteMemberOpened}
                 onClose={onClose}
-                title="New Message"
+                title={inviteMemberOpened? "Invite Member": "New Message"}
             >
                 <form
                     onSubmit={(e)=>handleSubmit(e)}
@@ -123,6 +124,7 @@ export function Messager() {
                                 <Input.Wrapper label="Select Project" required >
                                     <Input value={project} component="select"
                                         onChange={(e) => setProject(parseInt(e.target.value))} rightSection={<IconChevronDown size={14} stroke={1.5} />}>
+                                        <option value={undefined}>Choose a Project</option>
                                         {projectList.filter(project=> project.creator_id===userId).map((project, index) => {
                                             return <option key={index} value={project.project_id}>{project.project_name}</option>
                                         })}
@@ -150,8 +152,4 @@ export function Messager() {
             </Modal>
         </>
     );
-}
-
-function toggleInviteMemberModal(arg0: boolean): any {
-    throw new Error('Function not implemented.');
 }

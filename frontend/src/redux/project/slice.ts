@@ -12,6 +12,7 @@ export type MessageState = {
     receiver: string | null
     receiver_id: number | null
     message: string
+    message_type: 'message'|'invite'
     status: boolean
     is_deleted: boolean
     is_deleted_receiver: boolean
@@ -97,6 +98,7 @@ const initialState: ActiveProjectState = {
         receiver: null,
         receiver_id: null,
         message: '',
+        message_type: 'message',
         status: false,
         is_deleted: false,
         is_deleted_receiver: false,

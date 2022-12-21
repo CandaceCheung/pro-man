@@ -21,6 +21,9 @@ import { ProfileService } from './services/ProfileService';
 import { ProfileController } from './controllers/profileControllers';
 import { profileRoutes } from './routes/profileRoutes';
 import { isLoggedIn } from './guard';
+import { MemberService } from './services/memberServices';
+import { MemberController } from './controllers/memberController';
+import { memberRoutes } from './routes/memberRoutes';
 
 
 dotenv.config();
@@ -49,15 +52,18 @@ export const notificationController = new NotificationController(notificationSer
 export const profileService = new ProfileService(knex);
 export const profileController = new ProfileController(profileService);
 
+export const memberService = new MemberService(knex);
+export const memberController = new MemberController(memberService);
 
 app.use(express.json(), cors());
 
 app.use('/auth', authRoutes());
 app.use('/table', tableRoutes());
 app.use('/kanban', isLoggedIn, kanbanRoutes());
-app.use('/invitation', invitationRoutes());
-app.use('/notification', notificationRoutes());
+app.use('/invitation', isLoggedIn, invitationRoutes());
+app.use('/notification', isLoggedIn, notificationRoutes());
 app.use('/profile', isLoggedIn, profileRoutes());
+app.use('/member', isLoggedIn, memberRoutes());
 
 const PORT = 8080;
 app.listen(PORT, () => {
