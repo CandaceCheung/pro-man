@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getProjectStatusList, getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
+import { addPerson, getProjectStatusList, getTable, removePerson, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -12,6 +12,8 @@ import { TableColumnTitle } from '../components/MainTableComponents/TableColumnT
 import { SmartPointerSensor } from '../pointerSensor';
 import produce from "immer";
 import { ScrollArea } from '@mantine/core';
+import { getMember } from '../redux/kanban/thunk';
+import { showNotification } from '@mantine/notifications';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -23,7 +25,6 @@ export interface itemCellsElement {
     item_dates_date?: TableState["item_dates_date"],
     item_money_cashflow?: TableState["item_money_cashflow"],
     item_money_date?: TableState["item_money_date"],
-    item_person_name?: Array<TableState["item_person_name"]>,
     item_person_user_id?: Array<TableState["item_person_user_id"]>,
     item_status_color?: TableState["item_status_color"],
     item_status_name?: TableState["item_status_name"],
@@ -37,10 +38,18 @@ export interface itemsGroupElement {
     item_group_name: TableState["item_group_name"]
 }
 
+export interface MembersFullName {
+    username: string,
+    firstName: string | null,
+    lastName: string | null
+}
+
 export function MainTable() {
     const userId = useAppSelector(state => state.auth.userId);
     const projectID = useAppSelector(state => state.project.project_id);
     const tableSummary = useAppSelector(state => state.table.summary);
+    const members = useAppSelector(state => state.kanban.memberList);
+
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [itemsOrdersState, setItemsOrdersState] = useState<Record<number, Array<number>>>({});
@@ -49,6 +58,7 @@ export function MainTable() {
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
+    const [membersFullName, setMembersFullName] = useState<Record<number, MembersFullName>>({});
     const [personsColors, setPersonsColors] = useState<Record<number, string>>({});
     const [moneySums, setMoneySums] = useState<Record<number, number>>({});
 
@@ -60,9 +70,22 @@ export function MainTable() {
     );
 
     useEffect(() => {
-        userId && projectID && dispatch(getTable(userId, projectID));
+        projectID && dispatch(getMember(projectID));
         projectID && dispatch(getProjectStatusList(projectID));
+        userId && projectID && dispatch(getTable(userId, projectID));
     }, [userId, projectID, dispatch]);
+
+    useEffect(() => {
+        const membersFullNameTemp: Record<number, MembersFullName> = {};
+        members.forEach(member => {
+            membersFullNameTemp[member.id] = {
+                username: member.username,
+                firstName: member.firstName,
+                lastName: member.lastName
+            }
+        });
+        setMembersFullName(membersFullNameTemp);
+    }, [members]);
 
     useEffect(() => {
         let itemCells: { [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } } = {};
@@ -129,10 +152,8 @@ export function MainTable() {
                     case "persons":
                         if (itemCells[itemGroupID][itemID][typeID]) {
                             itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(cell.item_person_user_id);
-                            itemCells[itemGroupID][itemID][typeID].item_person_name!.push(cell.item_person_name);
                         } else {
                             itemCell.item_person_user_id = [cell.item_person_user_id];
-                            itemCell.item_person_name = [cell.item_person_name];
                             itemCells[itemGroupID][itemID][typeID] = itemCell;
                         }
                         personsMembers.add(cell.item_person_user_id);
@@ -305,6 +326,31 @@ export function MainTable() {
         dispatch(updateState(itemId, stateId, userId!, projectID!));
     }
 
+    const onRemovePerson = (groupId: number, itemId: number, typeId: number, personId: number) => {
+        // dispatch
+        if (itemCellsState[groupId][itemId][typeId].item_person_user_id!.length <= 1) {
+            showNotification({
+				title: 'Delete person notification',
+				message: 'Failed to delete person! At least one person is required for items! 🤥'
+			});
+        } else {
+            const newItemCellsState = produce(itemCellsState, draftState => {
+                draftState[groupId][itemId][typeId].item_person_user_id = 
+                draftState[groupId][itemId][typeId].item_person_user_id?.filter(id => id !== personId);
+            });
+            setItemCellsState(newItemCellsState);
+            dispatch(removePerson(itemId, personId, userId!, projectID!));
+        }
+    }
+
+    const onAddPerson = (groupId: number, itemId: number, typeId: number, personId: number) => {
+        const newItemCellsState = produce(itemCellsState, draftState => {
+            draftState[groupId][itemId][typeId].item_person_user_id!.push(personId);
+        });
+        setItemCellsState(newItemCellsState);
+        dispatch(addPerson(itemId, personId, userId!, projectID!, typeId));
+    }
+
     return (
         <ScrollArea style={{ width: "calc(100vw - 140px)", height: "calc(100vh - 160px)" }} type="auto" >
             <div className="main-table">
@@ -424,9 +470,12 @@ export function MainTable() {
                                                                 lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                                 personsColors={personsColors}
                                                                 moneySums={moneySums}
+                                                                membersFullName={membersFullName}
                                                                 onItemRename={onItemRename}
                                                                 onTextChange={onTextChange}
                                                                 onStatusChange={onStatusChange}
+                                                                onRemovePerson={onRemovePerson}
+                                                                onAddPerson={onAddPerson}
                                                             />
                                                         )
                                                     }

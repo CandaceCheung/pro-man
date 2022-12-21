@@ -22,6 +22,8 @@ export interface Item {
 export interface Member {
     id: number, 
     username: string,
+    firstName: string | null,
+    lastName: string | null
 }
 
 export interface Group {

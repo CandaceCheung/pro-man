@@ -19,11 +19,13 @@ import { tableController } from "../app";
     tableRoutes.put('/newTypeName', tableController.renameType);
     tableRoutes.put('/newText', tableController.updateText);
     tableRoutes.put('/newProjectName', tableController.renameProject);
+    tableRoutes.put('/state', tableController.updateState);
     tableRoutes.post('/item', tableController.insertItem);
     tableRoutes.post('/itemGroup', tableController.insertItemGroup);
     tableRoutes.post('/newProject', tableController.insertNewProject);
     tableRoutes.post('/newState', tableController.addState);
-    tableRoutes.put('/state', tableController.updateState);
+    tableRoutes.post('/person', tableController.addPerson);
+    tableRoutes.delete('/person', tableController.removePerson);
 
     return tableRoutes;
  }

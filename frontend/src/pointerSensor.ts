@@ -20,10 +20,12 @@ function isInteractiveElement(element: Element | null) {
         "button",
         "input",
         "textarea",
-        "span"
+        "span",
+        "svg"
     ];
     const classNameElements = [
-        "mantine-Popover-dropdown"
+        "mantine-Popover-dropdown",
+        "icon-tabler"
     ];
     if (
         element?.tagName &&

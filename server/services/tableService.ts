@@ -251,6 +251,12 @@ export class TableService {
         }).where("id", projectId);
     }
 
+    async updateState(itemId: number, stateId: number) {
+        await this.knex("type_status").update({
+            state_id: stateId
+        }).where("item_id", itemId);
+    }
+
     async insertItem(projectId: number, userId: number) {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);
@@ -262,8 +268,8 @@ export class TableService {
             const types = await this.knex.select(
                 ("types.id as typesId")
             )
-            .distinctOn('typesId')
-            .from("items")
+                .distinctOn('typesId')
+                .from("items")
                 .join('type_persons', 'type_persons.item_id', '=', 'items.id')
                 .join('type_dates', 'type_dates.item_id', '=', 'items.id')
                 .join('type_times', 'type_times.item_id', '=', 'items.id')
@@ -544,16 +550,30 @@ export class TableService {
     }
 
     async addState(projectId: number, name: string, color: string) {
-        const [{status_order}] = await this.knex("states").select("status_order").where("project_id", projectId).orderBy("status_order", "desc").limit(1);
-        const [{id}] = await this.knex("states").insert({
+        const [{ status_order }] = await this.knex("states").select("status_order").where("project_id", projectId).orderBy("status_order", "desc").limit(1);
+        const [{ id }] = await this.knex("states").insert({
             name, color, project_id: projectId, status_order: status_order + 1
         }).returning("id");
         return id;
+
+    }
+    async addPerson(itemId: number, personId: number, typeId: number) {
+        const [{username}] = await this.knex("users").select("username").where("id", personId);
+        await this.knex("type_persons").insert({
+            name: username,
+            user_id: personId,
+            type_id: typeId,
+            item_id: itemId
+        });
+    }
+    async removePerson(itemId: number, personId: number) {
+        const ids = await this.knex("type_persons").where("item_id", itemId);
+        if (ids.length <= 1) { return false; }
+        await this.knex("type_persons").where({
+            item_id: itemId,
+            user_id: personId
+        }).del();
+        return true;
     }
 
-    async updateState(itemId: number, stateId: number) {
-        await this.knex("type_status").update({
-            state_id: stateId
-        }).where("item_id", itemId);
-    }
 }
