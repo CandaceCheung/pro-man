@@ -194,7 +194,7 @@ export function StatusColumn(props: StatusProps) {
                     <Group position="left" pt={10} pb={10} m={5}>
                         <IconGripVertical className="grip" size={20} {...listeners}/>
                         <Text weight={570} className="headerText">
-                            {props.name} / {props.name.length}
+                            {props.name} / {props.itemsList.length}
                         </Text>
                     </Group>
                 </div>
