@@ -9,8 +9,8 @@ export class ProfileService {
 			.select(
 				'users.id',
 				'users.username',
-				'users.first_name',
-				'users.last_name'
+				'users.first_name as firstName',
+				'users.last_name as lastName'
 			)
 			.from('users')
 			.where('id', user_Id);
@@ -28,23 +28,29 @@ export class ProfileService {
 		const txn = await this.knex.transaction();
 
 		try {
+			let update; 
 			let hashedPassword;
 			if (password) {
 				hashedPassword = bcrypt.hashSync(password, 10);
 			}
 			if (password || firstName || lastName) {
-				await txn
+				update = await txn
 					.update({
 						first_name: firstName,
 						last_name: lastName,
 						password: hashedPassword
 					})
 					.from('users')
-					.where('id', user_Id);
-			}
+					.where('id', user_Id)
+					.returning([
+						'first_name as firstName',
+						'last_name as lastName'
+					]);
 
-			await txn.commit();
-            
+				await txn.commit();
+			}
+			return update;
+			
 		} catch (e) {
 			await txn.rollback();
 			throw e;

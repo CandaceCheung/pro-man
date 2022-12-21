@@ -25,7 +25,7 @@ export function getProfile(userId: number) {
     };
 }
 
-export function putProfileInfo(firstName: string, lastName: string, password: string) {
+export function putProfileInfo( putInfo :{firstName?:string, lastName?: string, password?: string}) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem("token");
         const res = await fetch(
@@ -36,17 +36,15 @@ export function putProfileInfo(firstName: string, lastName: string, password: st
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    password
-                }),
+                body: JSON.stringify(
+                    putInfo
+                ),
             }
         );
-        const result = await res.json();
+        const data = await res.json();
         
-        if (result.success) {
-            dispatch(updateInfoAction(result));
+        if (data.success) {
+            dispatch(updateInfoAction(data.result));
         } else {
             console.log("Update Profile info fail");
         };

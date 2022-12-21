@@ -26,11 +26,11 @@ export class ProfileController {
         try {
 			const userId = req.user!.id;
 		
-            const { password, firstName, lastName } = req.body;
+            const { password, firstName, lastName} = req.body;
 
-			await this.profileService.updateProfile( userId, {password, firstName, lastName});
+			const result = await this.profileService.updateProfile( userId, {password, firstName, lastName});
 
-			res.json({success: true})
+			res.json({result: result?.[0], success: true})
 
         } catch (e) {
             console.error(e);
