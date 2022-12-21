@@ -335,13 +335,20 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     rowIcon: {
         ref: getRef('rowIcon'),
         position: "absolute",
-        left: 5,
+        left: 10,
         top: "50%",
         transform: "translate(0, -50%)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        visibility: "hidden"
+        visibility: "hidden",
+        color: "grey",
+        padding: 1,
+        borderRadius: 30,
+
+        "&:hover": {
+            backgroundColor: "#C4C4C4"
+        }
     },
     modalTitle: {
         fontSize: 20,

@@ -10,7 +10,7 @@ import { DateCell } from "./TableCellsComponents/Date";
 import { Money } from "./TableCellsComponents/Money";
 import { Item } from "./TableCellsComponents/Item";
 import { IconX } from "@tabler/icons";
-import { ActionIcon, Button, Modal } from "@mantine/core";
+import { Button, Modal } from "@mantine/core";
 import { useState } from "react";
 
 export interface TableRowProps {
@@ -196,13 +196,14 @@ export function TableRow({
                     </Button>
                 </span>
             </Modal>
-            <ActionIcon
+            
+            <span
                 className={classes.rowIcon}
-                variant="transparent"
                 onClick={() => setDeleteItemModelOpened(true)}
             >
                 <IconX size={16} />
-            </ActionIcon>
+            </span>
+
         </div>
     )
 }
