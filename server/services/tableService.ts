@@ -585,5 +585,16 @@ export class TableService {
         }).del();
         return true;
     }
-
+    async removeTransaction(itemId: number, transactionId: number) {
+        const ids = await this.knex.select(
+            "transactions.id"
+        ).from("type_money")
+        .join("transactions", "transactions.type_money_id", "=", "type_money.id")
+        .where("type_money.item_id", itemId);
+        if (ids.length <= 1) { return false; }
+        await this.knex("transactions").where({
+            id: transactionId
+        }).del();
+        return true;
+    }
 }

@@ -325,4 +325,15 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Delete Person" });
         }
     }
+    removeTransaction = async (req: Request, res: Response) => {
+        try {
+            const itemId = req.body.itemId;
+            const transactionId = req.body.transactionId;
+            const result = await this.tableService.removeTransaction(itemId, transactionId);
+            res.json({success: result});
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Delete Transaction" });
+        }
+    }
 }

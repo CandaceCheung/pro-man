@@ -461,7 +461,7 @@ export function addPerson(itemId: number, personId: number, userId: number, proj
 	}
 }
 
-export function addTransaction(itemId: number, date: string, cashFlow: number, userId: number, projectId: number, updateState: (transactionId: number) => void) {
+export function addTransaction(itemId: number, date: string, cashFlow: number, updateState: (transactionId: number) => void) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
@@ -498,6 +498,27 @@ export function removePerson(itemId: number, personId: number, userId: number, p
 			showNotification({
 				title: 'Delete person notification',
 				message: 'Failed to delete person! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+}
+
+export function removeTransaction(itemId: number, transactionId: number, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
+			method: "DELETE",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, transactionId })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Delete transaction notification',
+				message: 'Failed to delete transaction! 🤥'
 			});
 			dispatch(getTable(userId, projectId));
 		}

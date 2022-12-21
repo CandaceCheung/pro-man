@@ -11,7 +11,8 @@ interface MoneyProps {
     transactionIds: Array<number>,
     cashFlows: Array<number>,
     transactionDates: Array<string>,
-    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void
+    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void,
+    onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void
 }
 
 const useStyle = createStyles((theme, _params, getRef) => ({
@@ -42,21 +43,18 @@ const useStyle = createStyles((theme, _params, getRef) => ({
         top: "50%",
         transform: "translate(0, -50%)",
         visibility: "hidden",
-        content: "'x'",
         borderRadius: 100,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
 
         "&:hover": {
-            backgroundColor: "#E5F4FF"
+            backgroundColor: "#E5F4FF",
+            opacity: .7
         }
     }
 }));
 
 export function Money({
     groupId, itemId, typeId, moneySum, transactionIds, cashFlows, transactionDates,
-    onAddTransaction
+    onAddTransaction, onDeleteTransaction
 }: MoneyProps) {
     const [opened, setOpened] = useState(false);
     const [editStatus, setEditStatus] = useState(false);
@@ -135,9 +133,12 @@ export function Money({
                                                 }
                                             </td>
                                             <td>{cashFlows[index]}</td>
-                                            <span className={classes.deleteButton}>
-                                                <IconX size={14} />
-                                            </span>
+
+                                            <IconX
+                                                size={14}
+                                                className={classes.deleteButton}
+                                                onClick={() => onDeleteTransaction(groupId, itemId, typeId, transactionId)}
+                                            />
                                         </tr>
                                     ))}
                                 </tbody>

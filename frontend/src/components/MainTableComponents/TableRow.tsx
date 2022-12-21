@@ -25,13 +25,15 @@ export interface TableRowProps {
     onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void,
     onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void,
     onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void,
-    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void
+    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void,
+    onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void
 }
 
 export function TableRow({ 
     itemId, groupId, typeOrder, cellDetails, color, lastRow, 
     personsColors, moneySums, membersFullName,
-    onItemRename, onTextChange, onStatusChange, onRemovePerson, onAddPerson, onAddTransaction
+    onItemRename, onTextChange, onStatusChange, 
+    onRemovePerson, onAddPerson, onAddTransaction, onDeleteTransaction
 }: TableRowProps) {
     const {
         attributes,
@@ -92,6 +94,7 @@ export function TableRow({
                             cashFlows={cell.item_money_cashflow!}
                             transactionDates={cell.item_money_date!}
                             onAddTransaction={onAddTransaction}
+                            onDeleteTransaction={onDeleteTransaction}
                         />
                     </div>
                 )

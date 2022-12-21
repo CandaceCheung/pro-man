@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { addPerson, addTransaction, getProjectStatusList, getTable, removePerson, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
+import { addPerson, addTransaction, getProjectStatusList, getTable, removePerson, removeTransaction, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -340,7 +340,6 @@ export function MainTable() {
     }
 
     const onRemovePerson = (groupId: number, itemId: number, typeId: number, personId: number) => {
-        // dispatch
         if (itemCellsState[groupId][itemId][typeId].item_person_user_id!.length <= 1) {
             showNotification({
 				title: 'Delete person notification',
@@ -382,7 +381,27 @@ export function MainTable() {
             });
             setItemCellsState(newItemCellsState);
         }
-        dispatch(addTransaction(itemId, format(date, 'yyyy-MM-dd'), cashFlow, userId!, projectID!, updateState));
+        dispatch(addTransaction(itemId, format(date, 'yyyy-MM-dd'), cashFlow, updateState));
+    }
+
+    const onDeleteTransaction= (groupId: number, itemId: number, typeId: number, transactionId: number) => {
+        if (itemCellsState[groupId][itemId][typeId].transaction_id!.length <= 1) {
+            showNotification({
+				title: 'Delete transaction notification',
+				message: 'Failed to delete transaction! At least one transaction is required for items! 🤥'
+			});
+        } else {
+            const newItemCellsState = produce(itemCellsState, draftState => {
+                const deleteIndex = draftState[groupId][itemId][typeId].transaction_id!.indexOf(transactionId);
+                if (deleteIndex > -1) {
+                    draftState[groupId][itemId][typeId].transaction_id!.splice(deleteIndex, 1);
+                    draftState[groupId][itemId][typeId].item_money_cashflow!.splice(deleteIndex, 1);
+                    draftState[groupId][itemId][typeId].item_money_date!.splice(deleteIndex, 1);
+                  }
+            });
+            setItemCellsState(newItemCellsState);
+            dispatch(removeTransaction(itemId, transactionId, userId!, projectID!));
+        }
     }
 
     return (
@@ -511,6 +530,7 @@ export function MainTable() {
                                                                 onRemovePerson={onRemovePerson}
                                                                 onAddPerson={onAddPerson}
                                                                 onAddTransaction={onAddTransaction}
+                                                                onDeleteTransaction={onDeleteTransaction}
                                                             />
                                                         )
                                                     }
