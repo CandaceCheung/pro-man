@@ -84,7 +84,12 @@ export class InvitationController {
                         success: false,
                         msg: 'Join Failed: Invitation expired',
                     })
-                } else if (check.member) {
+                } else if(check.project.is_deleted) {
+                    res.json({
+                        success: false,
+                        msg: 'Join Failed: Target project no longer existed',
+                    })
+                }else if (check.member) {
                     res.json({
                         success: false,
                         msg: 'Join Failed: You are already a member',

@@ -101,9 +101,9 @@ export class InvitationService {
         try {
             const [member] = await this.knex('members').where("user_id", userId).where("project_id", projectId)
             const [invitation] = await this.knex('invitations').where('id', invitationId)
+            const [project] = await this.knex('projects').where('id', projectId)
 
-            
-            return { invitation, member }
+            return { invitation, member, project }
         } catch (e) {
            
             throw e;

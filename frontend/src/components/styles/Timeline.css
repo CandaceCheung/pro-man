@@ -1,5 +1,6 @@
 #timeline-container {
-  height: 80vh;
+  height: 76vh;
+  margin-top: 20px;
   overflow-x: hidden !important;
   overflow: auto !important;
   align-self: flex-start !important;
