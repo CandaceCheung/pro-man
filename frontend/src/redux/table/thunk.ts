@@ -197,7 +197,7 @@ export function getFavorite(userId: number) {
 	};
 }
 
-export function insertItem(projectId: number, userId: number) {
+export function insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/item`, {
@@ -207,7 +207,9 @@ export function insertItem(projectId: number, userId: number) {
 			},
 			body: JSON.stringify({
 				projectId,
-				userId
+				userId,
+				itemGroupId,
+				itemName
 			})
 		});
 		const result = await res.json();

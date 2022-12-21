@@ -258,14 +258,19 @@ export class TableService {
         }).where("item_id", itemId);
     }
 
-    async insertItem(projectId: number, userId: number) {
+    async insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
         const [{ username }] = await this.knex("users").select("username").where("id", userId);
         const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);
-        const [{ itemGroupId }] = await this.knex("item_groups").select("id as itemGroupId").where("project_id", projectId).orderBy("itemGroupId", "desc").limit(1);
+        let groupId = itemGroupId;
+        if (!groupId) {
+            const [{ oldGroupId }] = await this.knex("item_groups").select("id as oldGroupId").where("project_id", projectId).orderBy("oldGroupId", "desc").limit(1);
+            groupId = oldGroupId;
+        }
+        console.log(groupId, itemName)
         const txn = await this.knex.transaction();
 
         try {
-            const [{ previousItemId }] = await this.knex("items").select("id as previousItemId").where("item_group_id", itemGroupId).limit(1);
+            const [{ previousItemId }] = await this.knex("items").select("id as previousItemId").where("item_group_id", groupId).limit(1);
             const types = await this.knex.select(
                 ("types.id as typesId")
             )
@@ -295,14 +300,14 @@ export class TableService {
             const typesId_text = types[5].typesId;
 
             await txn("items")
-                .where("item_group_id", itemGroupId)
+                .where("item_group_id", groupId)
                 .increment('order', 1);
 
             const [{ itemId }] = await txn.insert({
-                name: "New Item",
+                name: itemName || "New Item",
                 creator_id: userId,
                 project_id: projectId,
-                item_group_id: itemGroupId,
+                item_group_id: groupId,
                 is_deleted: false,
                 order: 1
             }).into('items').returning('id as itemId');
