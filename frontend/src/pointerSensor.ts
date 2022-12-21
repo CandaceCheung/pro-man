@@ -25,7 +25,9 @@ function isInteractiveElement(element: Element | null) {
         "th",
         "tr",
         "td",
-        "line"
+        "line",
+        "circle",
+        "path"
     ];
     const classNameElements = [
         "mantine-Popover-dropdown"

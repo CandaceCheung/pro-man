@@ -601,4 +601,14 @@ export class TableService {
         }).del();
         return true;
     }
+    async deleteItem(itemId: number, groupId: number) {
+        const itemIds = await this.knex("items").select("id").where("item_group_id", groupId).andWhere("is_deleted", false);
+        if (itemIds.length <= 1) {
+            return false;
+        }
+        await this.knex("items").update({
+            is_deleted: true
+        }).where("id", itemId);
+        return true;
+    }
 }

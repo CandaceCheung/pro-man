@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { addPerson, addTransaction, getProjectStatusList, getTable, insertItem, removePerson, removeTransaction, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
+import { addPerson, addTransaction, deleteItem, getProjectStatusList, getTable, insertItem, removePerson, removeTransaction, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -427,7 +427,9 @@ export function MainTable() {
     }
 
     const deselectNewItemNameInput = (groupId: number) => {
-        projectID && userId && dispatch(insertItem(projectID, userId, groupId, newItemInputValue[groupId]));
+        if (newItemInputValue[groupId].length) {
+            projectID && userId && dispatch(insertItem(projectID, userId, groupId, newItemInputValue[groupId]));
+        }
         updateNewItemInputValue(groupId, "");
         toggleNewItemInputSelected(groupId);
     }
@@ -435,6 +437,17 @@ export function MainTable() {
     const handleNewItemNameInputKeyDown = (key: string, groupId: number) => {
         if (key === "Enter") {
             deselectNewItemNameInput(groupId);
+        }
+    }
+
+    const onDeleteItem = (groupId: number, itemId: number) => {
+        if (Object.keys(itemCellsState[groupId]).length <= 1) {
+            showNotification({
+				title: 'Item delete notification',
+				message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
+			});
+        } else {
+            userId && projectID && dispatch(deleteItem(groupId, itemId, userId, projectID));
         }
     }
 
@@ -565,6 +578,7 @@ export function MainTable() {
                                                                     onAddPerson={onAddPerson}
                                                                     onAddTransaction={onAddTransaction}
                                                                     onDeleteTransaction={onDeleteTransaction}
+                                                                    onDeleteItem={onDeleteItem}
                                                                 />
                                                             )
                                                         }

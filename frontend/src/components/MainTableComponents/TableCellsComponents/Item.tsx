@@ -15,7 +15,7 @@ const useStyle = createStyles((theme) => ({
         display: "flex",
         justifyContent: "flex-start",
         alignItems: "center",
-        padding: "0 10px"
+        padding: "0 20px"
     },
     itemName: {
         display: "flex",
