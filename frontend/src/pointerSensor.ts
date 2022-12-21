@@ -21,7 +21,10 @@ function isInteractiveElement(element: Element | null) {
         "input",
         "textarea",
         "span",
-        "svg"
+        "svg",
+        "th",
+        "tr",
+        "td"
     ];
     const classNameElements = [
         "mantine-Popover-dropdown",
