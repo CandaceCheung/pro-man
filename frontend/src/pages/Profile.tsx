@@ -6,8 +6,9 @@ import {
     PasswordInput,
     Text,
 } from "@mantine/core";
-import { IconKey, IconSignature, IconUserCircle } from "@tabler/icons";
+import { IconKey, IconUserCircle } from "@tabler/icons";
 import React, { useEffect, useState } from "react";
+import { ProfileText } from "../components/ProfileText";
 import { getProfile, putProfileInfo } from "../redux/profile/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
@@ -46,16 +47,16 @@ export function Profile() {
     const { classes } = useStyles();
     const userId = useAppSelector((state) => state.auth.userId);
     const username = useAppSelector((state) => state.profile.username);
+    const firstName = useAppSelector((state) => state.profile.firstName);
+    const lastName = useAppSelector((state) => state.profile.lastName);
 
     useEffect(() => {
         userId && dispatch(getProfile(userId));
     }, [userId, dispatch]);
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const updateInfo = () => {
-        dispatch(putProfileInfo(firstName, lastName, password));
+        dispatch(putProfileInfo({ password }));
     };
 
     return (
@@ -70,21 +71,23 @@ export function Profile() {
                 <div className="profileInfo">
                     <Group position="center" m={10}>
                         <Text className={classes.profileText}>First Name:</Text>
-                        <Input
-                            icon={<IconSignature size={16} />}
-                            onChange={(e) => {
-                                setFirstName(e.target.value);
+                        <ProfileText 
+                            text={firstName}
+                            onTextChange={(textInput) => {
+                                dispatch(
+                                    putProfileInfo({ firstName: textInput })
+                                );
                             }}
-                        ></Input>
+                        ></ProfileText>
                     </Group>
                     <Group position="center" m={10}>
                         <Text className={classes.profileText}> Last Name:</Text>
-                        <Input
-                            icon={<IconSignature size={16} />}
-                            onChange={(e) => {
-                                setLastName(e.target.value);
+                        <ProfileText
+                            text={lastName}
+                            onTextChange={(textInput) => {
+                                dispatch(putProfileInfo({ lastName:textInput }));
                             }}
-                        ></Input>
+                        ></ProfileText>
                     </Group>
                     <Group position="center" m={10}>
                         <Text className={classes.profileText}>
@@ -100,17 +103,17 @@ export function Profile() {
                                 setPassword(e.target.value);
                             }}
                         />
-                    </Group>
-                    <Group position="center">
                         <Button
                             color="cyan"
-                            mt={10}
-                            maw={120}
+                            mt={17}
+                            maw={180}
                             onClick={updateInfo}
                         >
-                            Update
+                            Update Password
                         </Button>
                     </Group>
+                    
+
                 </div>
             </div>
         </div>

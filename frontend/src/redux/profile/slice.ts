@@ -5,7 +5,6 @@ export interface ProfileState {
     username: string,
     firstName: string,
     lastName: string,
-    password: string
 };
 
 const initialState: ProfileState = {
@@ -13,7 +12,6 @@ const initialState: ProfileState = {
     username: '',
     firstName: '',
     lastName: '',
-    password: ''
 };
 
 const setInfo: CaseReducer<ProfileState, PayloadAction<{username:string, firstName: string, lastName: string}>> = 
@@ -22,9 +20,10 @@ const setInfo: CaseReducer<ProfileState, PayloadAction<{username:string, firstNa
         state.lastName = action.payload.lastName
         state.username = action.payload.username
     }
-const updateInfo: CaseReducer<ProfileState, PayloadAction<ProfileState>> = 
+const updateInfo: CaseReducer<ProfileState, PayloadAction<{firstName:string, lastName:string}>> = 
     (state, action) => {
-        state = action.payload
+        state.firstName = action.payload.firstName
+        state.lastName = action.payload.lastName
     }
 
 
