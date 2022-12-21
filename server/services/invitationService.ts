@@ -149,16 +149,14 @@ export class InvitationService {
 
     async checkValidity(invitationId: number, projectId: number, userId: number) {
 
-        const txn = await this.knex.transaction();
-
         try {
-            const [member] = await txn('members').where("user_id", userId).where("project_id", projectId)
-            const [invitation] = await txn('invitations').where('id', invitationId)
+            const [member] = await this.knex('members').where("user_id", userId).where("project_id", projectId)
+            const [invitation] = await this.knex('invitations').where('id', invitationId)
 
-            await txn.commit();
+            
             return { invitation, member }
         } catch (e) {
-            await txn.rollback();
+           
             throw e;
         }
     }
@@ -169,7 +167,6 @@ export class InvitationService {
 
         try {
             const [member] = await txn('members').where("user_id", userId).where("project_id", projectId)
-
 
             if (!member) {
                 await txn('members').insert({

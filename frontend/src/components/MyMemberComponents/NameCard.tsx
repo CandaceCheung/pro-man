@@ -1,5 +1,4 @@
 import { Badge, Button, Card, Group, Text, Image, Menu, Tooltip } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
 import { IconRefresh } from "@tabler/icons";
 import React, { useState } from "react";
 import image_1 from '../../images/MemberPhotos/1.jpg'
@@ -13,13 +12,18 @@ import { useAppDispatch, useAppSelector } from "../../store";
 
 export function NameCard(props: MyMemberState) {
     const dispatch = useAppDispatch()
-    const userId = useAppSelector(state=>state.auth.userId)
+    const userId = useAppSelector(state => state.auth.userId)
     const [opened, setOpened] = useState(false);
-    const avatar = [image_1, image_2, image_3, image_4, image_5] 
+    const avatar = [image_1, image_2, image_3, image_4, image_5]
     const isOwner = props.member_id === userId
-    function changeHandler (e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
-            setOpened(false)
-            dispatch(changeAvatar(props.membership_id!, parseInt(e.currentTarget.value)))
+
+    function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        dispatch(toggleInviteMemberModal(true))
+    }
+
+    function changeHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        setOpened(false)
+        dispatch(changeAvatar(props.membership_id!, parseInt(e.currentTarget.value)))
     }
 
     return (
@@ -35,7 +39,7 @@ export function NameCard(props: MyMemberState) {
 
                 <Menu shadow="md" width={20} opened={opened} onChange={setOpened}>
                     <Menu.Target >
-                        <Button style={{width:'10px', position: "absolute", top: '0px', left: '0px'}} variant='subtle' rightIcon={<IconRefresh />}></Button>
+                        <Button style={{ width: '10px', position: "absolute", top: '0px', left: '0px' }} variant='subtle' rightIcon={<IconRefresh />}></Button>
                     </Menu.Target>
 
                     <Menu.Dropdown >
@@ -59,17 +63,22 @@ export function NameCard(props: MyMemberState) {
             </Group>
             <Tooltip label="Joined Project" color="blue" position="top" withArrow>
                 <Card>
-                    {props.project_name.map((project, index)=>{
+                    {props.project_name.map((project, index) => {
                         return <Text key={index} size="sm" color="dimmed">{project}</Text>
                     })}
                 </Card>
             </Tooltip>
-            
-            {!isOwner && 
-                <Button variant="light" color="blue" fullWidth mt="md" radius="md">
+
+            {!isOwner &&
+
+                <Button onClick={e=>clickHandler(e)} variant="light" color="blue" fullWidth mt="md" radius="md">
                     Change Status
                 </Button>
             }
         </Card>
     )
+}
+
+function toggleInviteMemberModal(arg0: boolean): any {
+    throw new Error("Function not implemented.");
 }

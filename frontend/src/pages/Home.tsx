@@ -13,7 +13,7 @@ export function Home() {
     useEffect(()=>{
         token && dispatch(acceptInvitation(token, userId!))
         token && localStorage.removeItem('invitation')
-    })
+    },[])
 
     return (
         <div id='home-page'>
