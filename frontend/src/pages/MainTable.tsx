@@ -298,9 +298,7 @@ export function MainTable() {
             const oldIndex = typesOrdersState[item_group_id].indexOf(active.id);
             const newIndex = typesOrdersState[item_group_id].indexOf(over.id);
             const nextTypesOrdersState = produce(typesOrdersState, draftState => {
-                Object.keys(draftState).forEach((itemGroupId, _) => {
-                    draftState[parseInt(itemGroupId)] = arrayMove(draftState[parseInt(itemGroupId)], oldIndex, newIndex)
-                });
+                draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
             });
             setTypesOrdersState(nextTypesOrdersState);
             userId && dispatch(reorderTypes(nextTypesOrdersState[item_group_id], userId, projectID));
