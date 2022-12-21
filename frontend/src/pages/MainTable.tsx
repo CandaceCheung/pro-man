@@ -12,6 +12,7 @@ import { TableColumnTitle } from '../components/MainTableComponents/TableColumnT
 import { SmartPointerSensor } from '../pointerSensor';
 import produce from "immer";
 import { ScrollArea } from '@mantine/core';
+import { getMember } from '../redux/kanban/thunk';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -62,6 +63,7 @@ export function MainTable() {
     useEffect(() => {
         userId && projectID && dispatch(getTable(userId, projectID));
         projectID && dispatch(getProjectStatusList(projectID));
+        projectID && dispatch(getMember(projectID));
     }, [userId, projectID, dispatch]);
 
     useEffect(() => {

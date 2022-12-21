@@ -1,4 +1,5 @@
-import { createStyles } from '@mantine/core';
+import { Button, createStyles, Popover } from '@mantine/core';
+import { useState } from 'react';
 
 interface PersonsProps {
     itemPersonsNames: string[],
@@ -48,72 +49,97 @@ const useStyles = createStyles(() => ({
         zIndex: 2,
         fontSize: 11,
         fontWeight: "normal"
+    },
+    personsList: {
+        display: "flex",
+        flexWrap: "wrap",
+        width: "100%"
     }
 }));
 
-export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: PersonsProps) {    
+export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: PersonsProps) {
+    const [opened, setOpened] = useState(false);
     const { classes, cx } = useStyles();
 
-    switch (itemPersonsNames.length) {
-        case 0:
-            return <span className={classes.personsComponentsContainer}></span>
-        case 1:
-            return (
-                <span className={classes.personsComponentsContainer}>
-                    <span
-                        className={cx(classes.personsComponent, classes.personsSingleComponent)}
-                        style={{
-                            backgroundColor: personsColors[itemPersonsIds[0]]
-                        }}
-                    >
-                        {itemPersonsNames[0][0].toUpperCase()}
-                    </span>
-                </span>
-            )
-        case 2:
-            return (
-                <span className={classes.personsComponentsContainer}>
-                    {itemPersonsNames.map((name, index) => {
-                        const userId = itemPersonsIds[index];
-                        const initial = name[0].toUpperCase();
-                        return (
-                            <span
-                                key={"person_" + userId}
-                                className={
-                                    index
-                                        ?
-                                        cx(classes.personsComponent, classes.personsSecondComponent)
-                                        :
-                                        cx(classes.personsComponent, classes.personsFirstComponent)
-                                }
-                                style={{
-                                    backgroundColor: personsColors[itemPersonsIds[index]]
-                                }}
-                            >
-                                {initial}
-                            </span>
-                        )
-                    })}
-                </span>
-            )
-        default:
-            return (
-                <div className={classes.personsComponentsContainer}>
-                    <span
-                        key={"person_" + itemPersonsIds[0]}
-                        className={cx(classes.personsComponent, classes.personsFirstComponent)}
-                        style={{ backgroundColor: personsColors[itemPersonsIds[0]] }}
-                    >
-                        {itemPersonsNames[0][0].toUpperCase()}
-                    </span>
-                    <span
-                        key={"person_multiple"}
-                        className={cx(classes.personsComponent, classes.personsMultipleComponent)}
-                        style={{ backgroundColor: "#323232" }}
-                    >
-                        {`+${itemPersonsNames.length - 1}`}
-                    </span>
-                </div>
-            )
+    const innerPersonsComponents = (personsNumber: number) => {
+        switch (personsNumber) {
+            case 0:
+                return <></>
+            case 1:
+                return (
+                    <>
+                        <span
+                            className={cx(classes.personsComponent, classes.personsSingleComponent)}
+                            style={{
+                                backgroundColor: personsColors[itemPersonsIds[0]]
+                            }}
+                        >
+                            {itemPersonsNames[0][0].toUpperCase()}
+                        </span>
+                    </>
+                )
+            case 2:
+                return (
+                    <>
+                        {itemPersonsNames.map((name, index) => {
+                            const userId = itemPersonsIds[index];
+                            const initial = name[0].toUpperCase();
+                            return (
+                                <span
+                                    key={"person_" + userId}
+                                    className={
+                                        index
+                                            ?
+                                            cx(classes.personsComponent, classes.personsSecondComponent)
+                                            :
+                                            cx(classes.personsComponent, classes.personsFirstComponent)
+                                    }
+                                    style={{
+                                        backgroundColor: personsColors[itemPersonsIds[index]]
+                                    }}
+                                >
+                                    {initial}
+                                </span>
+                            )
+                        })}
+                    </>
+                )
+            default:
+                return (
+                    <>
+                        <span
+                            key={"person_" + itemPersonsIds[0]}
+                            className={cx(classes.personsComponent, classes.personsFirstComponent)}
+                            style={{ backgroundColor: personsColors[itemPersonsIds[0]] }}
+                        >
+                            {itemPersonsNames[0][0].toUpperCase()}
+                        </span>
+                        <span
+                            key={"person_multiple"}
+                            className={cx(classes.personsComponent, classes.personsMultipleComponent)}
+                            style={{ backgroundColor: "#323232" }}
+                        >
+                            {`+${itemPersonsNames.length - 1}`}
+                        </span>
+                    </>
+                )
+        }
     }
+
+    return (
+        <Popover width={200} position="bottom" withArrow shadow="md" opened={opened} onChange={setOpened}>
+            <Popover.Target>
+                <span
+                    className={classes.personsComponentsContainer}
+                    onClick={() => setOpened((o) => !o)}
+                >
+                    {innerPersonsComponents(itemPersonsIds.length)}
+                </span>
+            </Popover.Target>
+            <Popover.Dropdown>
+                <span className={classes.personsList}>
+                </span>
+            </Popover.Dropdown>
+        </Popover >
+    )
 }
