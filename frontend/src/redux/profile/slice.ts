@@ -16,9 +16,11 @@ const initialState: ProfileState = {
     password: ''
 };
 
-const setInfo: CaseReducer<ProfileState, PayloadAction<ProfileState>> = 
+const setInfo: CaseReducer<ProfileState, PayloadAction<{username:string, firstName: string, lastName: string}>> = 
     (state, action) => {
-        return state = action.payload
+        state.firstName = action.payload.firstName
+        state.lastName = action.payload.lastName
+        state.username = action.payload.username
     }
 const updateInfo: CaseReducer<ProfileState, PayloadAction<ProfileState>> = 
     (state, action) => {
@@ -31,14 +33,13 @@ const profileSlice = createSlice({
     initialState,
     reducers: {
         setInfo,
-        updateInfo
-
+        updateInfo,
     }
 });
 
 export const {
-    setInfo:setInfoAction,
-    updateInfo:updateInfoAction
+    setInfo: setInfoAction,
+    updateInfo: updateInfoAction
 
 } = profileSlice.actions
 

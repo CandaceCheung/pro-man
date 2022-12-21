@@ -14,14 +14,14 @@ export function getProfile(userId: number) {
             }
         );
 
-        const result: { userId: []; success: boolean } = await res.json();
+        const result = await res.json();
         console.log(result);
 
         if (result.success) {
-            dispatch(setInfoAction);
+            dispatch(setInfoAction(result.data));
         } else {
             console.log("Get profile info fail");
-        }
+        };
     };
 }
 
@@ -49,6 +49,6 @@ export function putProfileInfo(firstName: string, lastName: string, password: st
             dispatch(updateInfoAction(result));
         } else {
             console.log("Update Profile info fail");
-        }
+        };
     };
 }

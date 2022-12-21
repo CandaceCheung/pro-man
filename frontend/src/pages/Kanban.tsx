@@ -1,6 +1,6 @@
 import { DndContext, DragEndEvent, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
-import { Group } from "@mantine/core";
+import { Group, ScrollArea } from "@mantine/core";
 import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
 import { SmartPointerSensor } from "../pointerSensor";
 import { Status } from "../redux/kanban/state";
@@ -27,29 +27,37 @@ export function Kanban() {
             );
             if (oldIndex >= 0 && newIndex >= 0) {
                 const newArr = arrayMove(statusList, oldIndex, newIndex);
-                dispatch(putOrder(newArr))
+                dispatch(putOrder(newArr));
             }
         }
     }
 
     return (
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-            <SortableContext items={statusList.map((status) => status.id)}>
-                <div className="kanban-table">
-                    <Group position="left">
-                        {statusList.map((status) => (
-                            <StatusColumn
-                                key={status.id}
-                                id={status.id}
-                                name={status.name}
-                                color={status.color}
-                                order={status.order}
-                                itemsList={status.itemsList}
-                            />
-                        ))}
-                    </Group>
-                </div>
-            </SortableContext>
-        </DndContext>
+        <ScrollArea
+            style={{
+                width: "calc(150vw - 140px)",
+                height: "calc(100vh - 160px)",
+            }}
+            type="auto"
+        >
+            <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+                <SortableContext items={statusList.map((status) => status.id)}>
+                    <div className="kanban-table">
+                        <Group position="left">
+                            {statusList.map((status) => (
+                                <StatusColumn
+                                    key={status.id}
+                                    id={status.id}
+                                    name={status.name}
+                                    color={status.color}
+                                    order={status.order}
+                                    itemsList={status.itemsList}
+                                />
+                            ))}
+                        </Group>
+                    </div>
+                </SortableContext>
+            </DndContext>
+        </ScrollArea>
     );
 }

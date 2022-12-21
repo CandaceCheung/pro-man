@@ -14,7 +14,7 @@ export class ProfileController {
 
 			res.json({
 				success: true,
-				userId: result
+				data: result
 			});
 		} catch (e) {
 			console.error(e);
