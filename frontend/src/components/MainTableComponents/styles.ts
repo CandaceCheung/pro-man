@@ -211,11 +211,18 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
     tableRow: {
         ref: getRef("tableRow"),
         display: "flex",
+        position: "relative",
+
         [`& > .${getRef('tableCell')}`]: {
             "&:first-of-type": {
                 padding: 0,
                 width: 8,
                 border: "none"
+            }
+        },
+        "&:hover": {
+            [`& .${getRef('rowIcon')}`]: {
+                visibility: "visible"
             }
         }
     },
@@ -324,5 +331,42 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             height: 12,
             borderColor: theme.colors.itemInputBorderColor[0]
         }
+    },
+    rowIcon: {
+        ref: getRef('rowIcon'),
+        position: "absolute",
+        left: 10,
+        top: "50%",
+        transform: "translate(0, -50%)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        visibility: "hidden",
+        color: "grey",
+        padding: 1,
+        borderRadius: 30,
+
+        "&:hover": {
+            backgroundColor: "#C4C4C4"
+        }
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "left"
+    },
+    modalBody: {
+        fontSize: 15,
+        fontWeight: "normal",
+        textAlign: "left",
+        margin: "20px 0"
+    },
+    modalFooter: {
+        width: "100%",
+        display: "flex",
+        justifyContent: "flex-end",
+        alignItems: "center",
+        padding: "0 15px",
+        marginTop: 20
     }
 }));

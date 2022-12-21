@@ -28,6 +28,7 @@ import { tableController } from "../app";
     tableRoutes.post('/transaction', tableController.addTransaction);
     tableRoutes.delete('/person', tableController.removePerson);
     tableRoutes.delete('/transaction', tableController.removeTransaction);
+    tableRoutes.delete('/item', tableController.deleteItem);
 
     return tableRoutes;
  }

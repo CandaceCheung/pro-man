@@ -543,3 +543,29 @@ export function removeTransaction(itemId: number, transactionId: number, userId:
 		}
 	}
 }
+
+export function deleteItem(groupId: number, itemId: number, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/item`, {
+			method: "DELETE",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, groupId })
+		});
+		const result = await res.json();
+		if (result.success) {
+			dispatch(getTable(userId, projectId));
+			showNotification({
+				title: 'Delete item notification',
+				message: 'Successfully deleted item! 😎'
+			});
+		} else {
+			showNotification({
+				title: 'Delete item notification',
+				message: 'Failed to delete item! 🤥'
+			});
+		}
+	}
+}

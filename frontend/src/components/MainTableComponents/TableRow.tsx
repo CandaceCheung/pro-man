@@ -9,6 +9,9 @@ import { Times } from "./TableCellsComponents/Times";
 import { DateCell } from "./TableCellsComponents/Date";
 import { Money } from "./TableCellsComponents/Money";
 import { Item } from "./TableCellsComponents/Item";
+import { IconX } from "@tabler/icons";
+import { Button, Modal } from "@mantine/core";
+import { useState } from "react";
 
 export interface TableRowProps {
     itemId: number,
@@ -25,15 +28,19 @@ export interface TableRowProps {
     onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void,
     onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void,
     onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void,
-    onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void
+    onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void,
+    onDeleteItem: (groupId: number, itemId: number) => void
 }
 
-export function TableRow({ 
-    itemId, groupId, typeOrder, cellDetails, color, lastRow, 
+export function TableRow({
+    itemId, groupId, typeOrder, cellDetails, color, lastRow,
     personsColors, membersFullName,
-    onItemRename, onTextChange, onStatusChange, 
-    onRemovePerson, onAddPerson, onAddTransaction, onDeleteTransaction
+    onItemRename, onTextChange, onStatusChange,
+    onRemovePerson, onAddPerson, onAddTransaction, 
+    onDeleteTransaction, onDeleteItem
 }: TableRowProps) {
+    const [deleteItemModelOpened, setDeleteItemModelOpened] = useState(false);
+
     const {
         attributes,
         listeners,
@@ -84,7 +91,7 @@ export function TableRow({
                         className={cx(classes.tableCell, classes.money)}
                         key={"item" + itemId + "cell" + cellIndex}
                     >
-                        <Money 
+                        <Money
                             groupId={groupId}
                             itemId={itemId}
                             typeId={cell.type_id}
@@ -110,12 +117,12 @@ export function TableRow({
                     <div
                         className={cx(classes.tableCell, classes.status)}
                         key={"item" + itemId + "cell" + cellIndex}
-                    >   
-                        <Status 
+                    >
+                        <Status
                             groupId={groupId}
                             itemId={itemId}
                             typeId={cell.type_id}
-                            status={cell.item_status_name!} 
+                            status={cell.item_status_name!}
                             color={cell.item_status_color!}
                             onStatusChange={onStatusChange}
                         />
@@ -139,6 +146,11 @@ export function TableRow({
         }
     }
 
+    const handleDeleteItem = () => {
+        setDeleteItemModelOpened(false);
+        onDeleteItem(groupId, itemId);
+    }
+
     return (
         <div
             className={cx(classes.tableRow, { [classes.lastRow]: lastRow })}
@@ -156,6 +168,42 @@ export function TableRow({
                     return retrieveCellData(cellDetails[typeId], cellIndex)
                 })
             }
+            <Modal
+                opened={deleteItemModelOpened}
+                onClose={() => setDeleteItemModelOpened(false)}
+                title={
+                    <span
+                        className={classes.modalTitle}
+                    >
+                        {"Delete this item?"}
+                    </span>
+                }
+                centered
+            >
+                <span
+                    className={classes.modalBody}
+                >
+                    {"The action cannot be reversed! Think twice! 🤔"}
+                </span>
+                <span
+                    className={classes.modalFooter}
+                >
+                    <Button 
+                        color="red"
+                        onClick={handleDeleteItem}
+                    >
+                        Delete
+                    </Button>
+                </span>
+            </Modal>
+            
+            <span
+                className={classes.rowIcon}
+                onClick={() => setDeleteItemModelOpened(true)}
+            >
+                <IconX size={16} />
+            </span>
+
         </div>
     )
 }
