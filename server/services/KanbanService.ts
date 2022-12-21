@@ -49,7 +49,12 @@ export class KanbanService {
 
 	async getMemberList(project_Id: number) {
 		const membersList = await this.knex
-			.select('users.id', 'users.username')
+			.select(
+				'users.id', 
+				'users.username',
+				'users.first_name as firstName',
+				'users.last_name as lastName'
+			)
 			.from('users')
 			.join('members', 'members.user_id', '=', 'users.id')
 			.where('members.project_id', project_Id);

@@ -1,10 +1,17 @@
 import { Button, createStyles, Popover } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppSelector } from '../../../store';
 
 interface PersonsProps {
     itemPersonsNames: string[],
     itemPersonsIds: number[],
     personsColors: { [key in number]: string }
+}
+
+interface MembersFullName {
+    username: string,
+    firstName: string | null,
+    lastName: string | null
 }
 
 const useStyles = createStyles(() => ({
@@ -50,16 +57,46 @@ const useStyles = createStyles(() => ({
         fontSize: 11,
         fontWeight: "normal"
     },
+    personsPopUpContainer: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: 15
+    },
     personsList: {
         display: "flex",
         flexWrap: "wrap",
         width: "100%"
+    },
+    personsExisting: {
+        backgroundColor: "#E5F4FF",
+        borderRadius: 20,
+        fontSize: "inherit"
+    },
+    suggestionTitle: {
+        color: "grey",
+        fontSize: "inherit"
     }
 }));
 
 export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: PersonsProps) {
+    const members = useAppSelector(state => state.kanban.memberList);
+    const [membersFullName, setMembersFullName] = useState<Record<number, MembersFullName>>({});
     const [opened, setOpened] = useState(false);
     const { classes, cx } = useStyles();
+
+    useEffect(() => {
+        const membersFullNameTemp: Record<number, MembersFullName> = {};
+        members.forEach(member => {
+            membersFullNameTemp[member.id] = {
+                username: member.username,
+                firstName: member.firstName,
+                lastName: member.lastName
+            }
+        });
+        setMembersFullName(membersFullNameTemp);
+    }, [members]);
 
     const innerPersonsComponents = (personsNumber: number) => {
         switch (personsNumber) {
@@ -138,6 +175,10 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
             </Popover.Target>
             <Popover.Dropdown>
                 <span className={classes.personsList}>
+                    {"hi"}
+                </span>
+                <span className={classes.suggestionTitle}>
+                    Suggested People
                 </span>
             </Popover.Dropdown>
         </Popover >
