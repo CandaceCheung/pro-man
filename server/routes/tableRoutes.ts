@@ -25,6 +25,7 @@ import { tableController } from "../app";
     tableRoutes.post('/newProject', tableController.insertNewProject);
     tableRoutes.post('/newState', tableController.addState);
     tableRoutes.post('/person', tableController.addPerson);
+    tableRoutes.post('/transaction', tableController.addTransaction);
     tableRoutes.delete('/person', tableController.removePerson);
 
     return tableRoutes;

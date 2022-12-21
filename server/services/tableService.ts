@@ -75,7 +75,8 @@ export class TableService {
             .orderBy("item_group_id", 'desc')
             .orderBy("vertical_order", 'asc')
             .orderBy("horizontal_order", 'asc')
-            .orderBy("item_person_id", 'asc');
+            .orderBy("item_person_id", 'asc')
+            .orderBy("item_money_date", "asc");
 
         return projectsDetail
     }
@@ -565,6 +566,15 @@ export class TableService {
             type_id: typeId,
             item_id: itemId
         });
+    }
+    async addTransaction(date: string, cashFlow: number, itemId: number) {
+        const [{type_money_id}] = await this.knex("type_money").select("id as type_money_id").where("item_id", itemId);
+        const [{id}] = await this.knex("transactions").insert({
+            date,
+            cash_flow: cashFlow,
+            type_money_id
+        }).returning("id");
+        return id;
     }
     async removePerson(itemId: number, personId: number) {
         const ids = await this.knex("type_persons").where("item_id", itemId);

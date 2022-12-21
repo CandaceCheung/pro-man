@@ -299,6 +299,21 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Add Person" });
         }
     }
+    addTransaction = async (req: Request, res: Response) => {
+        try {
+            const date = req.body.date;
+            const cashFlow = req.body.cashFlow;
+            const itemId = req.body.itemId;
+            const transactionId = await this.tableService.addTransaction(date, cashFlow, itemId);
+            res.json({
+                success: true,
+                transactionId
+            });
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Add Transaction" });
+        }
+    }
     removePerson = async (req: Request, res: Response) => {
         try {
             const itemId = req.body.itemId;

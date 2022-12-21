@@ -24,13 +24,14 @@ export interface TableRowProps {
     onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void,
     onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void,
     onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void,
-    onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void
+    onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void,
+    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void
 }
 
 export function TableRow({ 
     itemId, groupId, typeOrder, cellDetails, color, lastRow, 
     personsColors, moneySums, membersFullName,
-    onItemRename, onTextChange, onStatusChange, onRemovePerson, onAddPerson
+    onItemRename, onTextChange, onStatusChange, onRemovePerson, onAddPerson, onAddTransaction
 }: TableRowProps) {
     const {
         attributes,
@@ -83,10 +84,14 @@ export function TableRow({
                         key={"item" + itemId + "cell" + cellIndex}
                     >
                         <Money 
+                            groupId={groupId}
+                            itemId={itemId}
+                            typeId={cell.type_id}
                             moneySum={moneySums[itemId]} 
                             transactionIds={cell.transaction_id!}
                             cashFlows={cell.item_money_cashflow!}
                             transactionDates={cell.item_money_date!}
+                            onAddTransaction={onAddTransaction}
                         />
                     </div>
                 )

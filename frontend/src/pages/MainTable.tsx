@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { addPerson, getProjectStatusList, getTable, removePerson, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
+import { addPerson, addTransaction, getProjectStatusList, getTable, removePerson, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -14,6 +14,7 @@ import produce from "immer";
 import { ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
+import { format } from 'date-fns';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -363,6 +364,27 @@ export function MainTable() {
         dispatch(addPerson(itemId, personId, userId!, projectID!, typeId));
     }
 
+    const onAddTransaction = (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => {
+        const updateState = (transactionId: number) => {
+            const newItemCellsState = produce(itemCellsState, draftState => {
+                for (const i in draftState[groupId][itemId][typeId].item_money_date!) {
+                    const each = draftState[groupId][itemId][typeId].item_money_date![i];
+                    if (new Date(each) >= date) {
+                        draftState[groupId][itemId][typeId].transaction_id!.splice(parseInt(i), 0, transactionId);
+                        draftState[groupId][itemId][typeId].item_money_cashflow!.splice(parseInt(i), 0, cashFlow);
+                        draftState[groupId][itemId][typeId].item_money_date!.splice(parseInt(i), 0, date.toISOString());
+                        return;
+                    }
+                }
+                draftState[groupId][itemId][typeId].transaction_id!.push(transactionId);
+                draftState[groupId][itemId][typeId].item_money_cashflow!.push(cashFlow);
+                draftState[groupId][itemId][typeId].item_money_date!.push(date.toISOString());
+            });
+            setItemCellsState(newItemCellsState);
+        }
+        dispatch(addTransaction(itemId, format(date, 'yyyy-MM-dd'), cashFlow, userId!, projectID!, updateState));
+    }
+
     return (
         <ScrollArea style={{ width: "calc(100vw - 140px)", height: "calc(100vh - 160px)" }} type="auto" >
             <div className="main-table">
@@ -488,6 +510,7 @@ export function MainTable() {
                                                                 onStatusChange={onStatusChange}
                                                                 onRemovePerson={onRemovePerson}
                                                                 onAddPerson={onAddPerson}
+                                                                onAddTransaction={onAddTransaction}
                                                             />
                                                         )
                                                     }

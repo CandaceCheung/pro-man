@@ -4,10 +4,14 @@ import { IconBrandCashapp } from '@tabler/icons';
 import { useState } from 'react';
 
 interface MoneyProps {
+    groupId: number,
+    itemId: number,
+    typeId: number,
     moneySum: number,
     transactionIds: Array<number>,
     cashFlows: Array<number>,
-    transactionDates: Array<string>
+    transactionDates: Array<string>,
+    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void
 }
 
 const useStyle = createStyles(() => ({
@@ -24,14 +28,27 @@ const useStyle = createStyles(() => ({
     }
 }));
 
-export function Money({ moneySum, transactionIds, cashFlows, transactionDates }: MoneyProps) {
+export function Money({ 
+    groupId, itemId, typeId, moneySum, transactionIds, cashFlows, transactionDates,
+    onAddTransaction 
+}: MoneyProps) {
     const [opened, setOpened] = useState(false);
     const [editStatus, setEditStatus] = useState(false);
     const [dateValue, setDateValue] = useState<Date | null>(new Date());
     const [inputValue, setInputValue] = useState<string>("");
 
-
     const { classes } = useStyle();
+
+    const handleKeyDown = (key: string) => {
+        if (key === "Enter") {
+            if (dateValue && parseInt(inputValue)) {
+                onAddTransaction(groupId, itemId, typeId, dateValue, parseInt(inputValue));
+                setInputValue("");
+                setDateValue(new Date());
+                setEditStatus(false);
+            }
+        }
+    }
 
     return (
         <Popover
@@ -64,8 +81,11 @@ export function Money({ moneySum, transactionIds, cashFlows, transactionDates }:
                                 <Input
                                     icon={<IconBrandCashapp />}
                                     placeholder="Input Amount"
+                                    type="number"
+                                    required
                                     value={inputValue}
                                     onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyDown={(e) => handleKeyDown(e.key)}
                                 />
                             </span>
                             :

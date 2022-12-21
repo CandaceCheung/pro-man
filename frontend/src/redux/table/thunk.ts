@@ -459,8 +459,30 @@ export function addPerson(itemId: number, personId: number, userId: number, proj
 			dispatch(getTable(userId, projectId));
 		}
 	}
-
 }
+
+export function addTransaction(itemId: number, date: string, cashFlow: number, userId: number, projectId: number, updateState: (transactionId: number) => void) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, date, cashFlow })
+		});
+		const result = await res.json();
+		if (result.success) {
+			updateState(result.transactionId);
+		} else {
+			showNotification({
+				title: 'Add transaction notification',
+				message: 'Failed to add transaction! 🤥'
+			});
+		}
+	}
+}
+
 export function removePerson(itemId: number, personId: number, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
