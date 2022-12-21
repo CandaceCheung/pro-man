@@ -159,7 +159,9 @@ export function MainTable() {
                         break;
                     case "persons":
                         if (itemCells[itemGroupID][itemID][typeID]) {
-                            itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(cell.item_person_user_id);
+                            if (!itemCells[itemGroupID][itemID][typeID].item_person_user_id!.includes(cell.item_person_user_id)) {
+                                itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(cell.item_person_user_id);
+                            }
                         } else {
                             itemCell.item_person_user_id = [cell.item_person_user_id];
                             itemCells[itemGroupID][itemID][typeID] = itemCell;
