@@ -38,14 +38,14 @@ export function sendInvitation(projectId: number, userId: number, value: string)
 
 export function acceptInvitation(token: string, userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem("token");
+        const localToken = localStorage.getItem("token");
 
         const res = await fetch(
             `${process.env.REACT_APP_API_SERVER}/invitation/response/`, {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${localToken}`,
             },
             body: JSON.stringify({
                 userId,

@@ -22,14 +22,22 @@ export type MessageState = {
 export type MessageStateArr = MessageState[]
 
 export type MyMemberState = {
-    membership_id: number | null
-    avatar: number | null
     member_id: number | null
     last_name: string,
     first_name: string,
     username: string
-    project_id: number[]
-    project_name: string[]
+    members: {
+        membership_id: number | null
+        project_id: number | null
+        member_user_id: number | null
+        avatar: number | null
+    }[],
+    projects: {
+        project_id: number | null
+        project_name: string
+        creator_id: number | null
+    }[]
+
 }
 export type MyMemberStateArr = MyMemberState[]
 
@@ -106,14 +114,21 @@ const initialState: ActiveProjectState = {
         updated_at: new Date(),
     }],
     member_list: [{
-        membership_id: null,
-        avatar: null,
         member_id: null,
         last_name: '',
         first_name: '',
         username: '',
-        project_id: [],
-        project_name: []
+        members: [{
+            membership_id: null,
+            project_id: null,
+            member_user_id:null,
+            avatar: null,
+        }],
+        projects: [{
+            project_name: '',
+            project_id: null,
+            creator_id: null
+        }]
     }]
 }
 
@@ -201,12 +216,15 @@ const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ noti
     }
 const getMemberList: CaseReducer<ActiveProjectState, PayloadAction<MyMemberStateArr>> =
     (state, action) => { state.member_list = action.payload }
-const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number, avatar: number }>> =
+const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number[], avatar: number }>> =
     (state, action) => {
         for (let message of state.member_list) {
-            if (message.membership_id === action.payload.membershipId) {
-                message.avatar = action.payload.avatar
-                return
+            for (let member of message.members){
+                for (let id of action.payload.membershipId){
+                    if (member.membership_id === id) {
+                        member.avatar = action.payload.avatar
+                    }
+                }
             }
         }
     }
