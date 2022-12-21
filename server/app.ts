@@ -61,5 +61,5 @@ app.use('/profile', isLoggedIn, profileRoutes());
 
 const PORT = 8080;
 app.listen(PORT, () => {
-	console.log(`Listening at http://localhost:${PORT}/`,process.env.EMAIL_LOGIN,process.env.EMAIL_PASSWORD);
+	console.log(`Listening at http://localhost:${PORT}/`);
 });
