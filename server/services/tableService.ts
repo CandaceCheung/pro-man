@@ -70,6 +70,7 @@ export class TableService {
             .where("users.id", userID)
             .andWhere("projects.id", projectID)
             .andWhere("items.is_deleted", false)
+            .andWhere("item_groups.is_deleted", false)
             .andWhere("projects.is_deleted", false)
             .orderBy("project_id", 'asc')
             .orderBy("item_group_id", 'desc')
@@ -263,7 +264,7 @@ export class TableService {
         const [{ stateId }] = await this.knex("states").select("id as stateId").where("project_id", projectId).orderBy("stateId").limit(1);
         let groupId = itemGroupId;
         if (!groupId) {
-            const [{ oldGroupId }] = await this.knex("item_groups").select("id as oldGroupId").where("project_id", projectId).orderBy("oldGroupId", "desc").limit(1);
+            const [{ oldGroupId }] = await this.knex("item_groups").select("id as oldGroupId").where("project_id", projectId).andWhere("is_deleted", false).orderBy("oldGroupId", "desc").limit(1);
             groupId = oldGroupId;
         }
         const txn = await this.knex.transaction();
