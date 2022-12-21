@@ -4,9 +4,13 @@ import { useState } from 'react';
 import { MembersFullName } from '../../../pages/MainTable';
 
 interface PersonsProps {
+    groupId: number,
+    itemId: number,
+    typeId: number,
     itemPersonsIds: number[],
     personsColors: { [key in number]: string },
-    membersFullName: Record<number, MembersFullName>
+    membersFullName: Record<number, MembersFullName>,
+    onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void
 }
 
 const useStyles = createStyles(() => ({
@@ -116,7 +120,10 @@ const useStyles = createStyles(() => ({
     }
 }));
 
-export function Persons({ itemPersonsIds, personsColors, membersFullName }: PersonsProps) {
+export function Persons({
+    groupId, itemId, typeId,        
+    itemPersonsIds, personsColors, membersFullName, onRemovePerson
+}: PersonsProps) {
     const [opened, setOpened] = useState(false);
     const { classes, cx } = useStyles();
 
@@ -133,10 +140,11 @@ export function Persons({ itemPersonsIds, personsColors, membersFullName }: Pers
                                 backgroundColor: personsColors[itemPersonsIds[0]]
                             }}
                         >
-                            {
-                                (membersFullName[itemPersonsIds[0]].firstName && membersFullName[itemPersonsIds[0]].lastName)
+                            {   
+                                membersFullName[itemPersonsIds[0]] &&
+                                ((membersFullName[itemPersonsIds[0]].firstName && membersFullName[itemPersonsIds[0]].lastName)
                                     ? membersFullName[itemPersonsIds[0]].firstName![0].toUpperCase() + membersFullName[itemPersonsIds[0]].lastName![0].toUpperCase()
-                                    : membersFullName[itemPersonsIds[0]].username[0].toUpperCase()
+                                    : membersFullName[itemPersonsIds[0]].username[0].toUpperCase())
                             }
                         </span>
                     </>
@@ -159,10 +167,11 @@ export function Persons({ itemPersonsIds, personsColors, membersFullName }: Pers
                                         backgroundColor: personsColors[itemPersonsIds[index]]
                                     }}
                                 >
-                                    {
-                                        (membersFullName[id].firstName && membersFullName[id].lastName)
+                                    {   
+                                        membersFullName[id] &&
+                                        ((membersFullName[id].firstName && membersFullName[id].lastName)
                                             ? membersFullName[id].firstName![0].toUpperCase() + membersFullName[id].lastName![0].toUpperCase()
-                                            : membersFullName[id].username[0].toUpperCase()
+                                            : membersFullName[id].username[0].toUpperCase())
                                     }
                                 </span>
                             )
@@ -178,11 +187,12 @@ export function Persons({ itemPersonsIds, personsColors, membersFullName }: Pers
                             style={{ backgroundColor: personsColors[itemPersonsIds[0]] }}
                         >
                             {
-                                (membersFullName[itemPersonsIds[0]].firstName && membersFullName[itemPersonsIds[0]].lastName)
+                                membersFullName[itemPersonsIds[0]] &&
+                                ((membersFullName[itemPersonsIds[0]].firstName && membersFullName[itemPersonsIds[0]].lastName)
                                     ?
                                     membersFullName[itemPersonsIds[0]].firstName![0].toUpperCase() + membersFullName[itemPersonsIds[0]].lastName![0].toUpperCase()
                                     :
-                                    membersFullName[itemPersonsIds[0]].username[0].toUpperCase()
+                                    membersFullName[itemPersonsIds[0]].username[0].toUpperCase())
                             }
                         </span>
                         <span
@@ -210,28 +220,40 @@ export function Persons({ itemPersonsIds, personsColors, membersFullName }: Pers
             <Popover.Dropdown>
                 <span className={classes.personsPopUpContainer}>
                     <span className={classes.personsList}>
-                        {itemPersonsIds.map(id => {
-                            const firstName = membersFullName[id].firstName;
-                            const lastName = membersFullName[id].lastName;
-                            const username = membersFullName[id].username;
-                            return (
-                                <span className={classes.personsExisting}>
-                                    <span className={classes.iconUser}>
-                                        <IconUserCircle />
-                                    </span>
-                                    {
-                                        (firstName && lastName)
-                                            ?
-                                            firstName + " " + lastName
-                                            :
-                                            username
-                                    }
-                                    <span className={classes.iconX}>
-                                        <IconX size={15} />
-                                    </span>
-                                </span>
-                            )
-                        })}
+                        {
+                            itemPersonsIds.map(id => {
+                                if (membersFullName[id]) {
+                                    const firstName = membersFullName[id].firstName;
+                                    const lastName = membersFullName[id].lastName;
+                                    const username = membersFullName[id].username;
+                                    return (
+                                        <span 
+                                            key={"person_" + id}
+                                            className={classes.personsExisting}
+                                        >
+                                            <span className={classes.iconUser}>
+                                                <IconUserCircle />
+                                            </span>
+                                            {
+                                                (firstName && lastName)
+                                                    ?
+                                                    firstName + " " + lastName
+                                                    :
+                                                    username
+                                            }
+                                            <span className={classes.iconX}>
+                                                <IconX
+                                                    size={15}
+                                                    onClick={() => onRemovePerson(
+                                                        groupId, itemId, typeId, id
+                                                    )}
+                                                />
+                                            </span>
+                                        </span>
+                                    )
+                                }
+                            })
+                        }
                     </span>
                     <span className={classes.suggestionTitle}>
                         Suggested People
@@ -240,12 +262,15 @@ export function Persons({ itemPersonsIds, personsColors, membersFullName }: Pers
                         {
                             Object.keys(membersFullName).map(key => {
                                 const memberId = parseInt(key);
-                                const firstName = membersFullName[memberId].firstName;
-                                const lastName = membersFullName[memberId].lastName;
-                                const username = membersFullName[memberId].username;
-                                if (!itemPersonsIds.includes(memberId)) {
+                                if (!itemPersonsIds.includes(memberId) && membersFullName[memberId]) {
+                                    const firstName = membersFullName[memberId].firstName;
+                                    const lastName = membersFullName[memberId].lastName;
+                                    const username = membersFullName[memberId].username;
                                     return (
-                                        <span className={classes.personsSuggestion}>
+                                        <span 
+                                            key={"person_" + key}
+                                            className={classes.personsSuggestion}
+                                        >
                                             <span className={classes.iconUser}>
                                                 <IconUserCircle />
                                             </span>

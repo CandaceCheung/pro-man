@@ -22,13 +22,14 @@ export interface TableRowProps {
     membersFullName: Record<number, MembersFullName>,
     onItemRename: (groupId: number, itemId: number, name: string) => void,
     onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void,
-    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void
+    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void,
+    onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void
 }
 
 export function TableRow({ 
     itemId, groupId, typeOrder, cellDetails, color, lastRow, 
     personsColors, moneySums, membersFullName,
-    onItemRename, onTextChange, onStatusChange
+    onItemRename, onTextChange, onStatusChange, onRemovePerson
 }: TableRowProps) {
     const {
         attributes,
@@ -54,9 +55,13 @@ export function TableRow({
                         key={"item" + itemId + "cell" + cellIndex}
                     >
                         <Persons
+                            groupId={groupId}
+                            itemId={itemId}
+                            typeId={cell.type_id}
                             itemPersonsIds={cell.item_person_user_id!}
                             personsColors={personsColors}
                             membersFullName={membersFullName}
+                            onRemovePerson={onRemovePerson}
                         />
                     </div>
                 )

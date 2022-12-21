@@ -439,3 +439,24 @@ export function updateState(itemId: number, stateId: number, userId: number, pro
 		}
 	}
 }
+
+export function removePerson(itemId: number, personId: number, userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/person`, {
+			method: "DELETE",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, personId })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Delete person notification',
+				message: 'Failed to delete person! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+}

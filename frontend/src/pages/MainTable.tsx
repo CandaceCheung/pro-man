@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getProjectStatusList, getTable, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
+import { getProjectStatusList, getTable, removePerson, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -13,6 +13,7 @@ import { SmartPointerSensor } from '../pointerSensor';
 import produce from "immer";
 import { ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
+import { showNotification } from '@mantine/notifications';
 
 export interface itemCellsElement {
     item_id: TableState["item_id"],
@@ -24,7 +25,6 @@ export interface itemCellsElement {
     item_dates_date?: TableState["item_dates_date"],
     item_money_cashflow?: TableState["item_money_cashflow"],
     item_money_date?: TableState["item_money_date"],
-    item_person_name?: Array<TableState["item_person_name"]>,
     item_person_user_id?: Array<TableState["item_person_user_id"]>,
     item_status_color?: TableState["item_status_color"],
     item_status_name?: TableState["item_status_name"],
@@ -152,10 +152,8 @@ export function MainTable() {
                     case "persons":
                         if (itemCells[itemGroupID][itemID][typeID]) {
                             itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(cell.item_person_user_id);
-                            itemCells[itemGroupID][itemID][typeID].item_person_name!.push(cell.item_person_name);
                         } else {
                             itemCell.item_person_user_id = [cell.item_person_user_id];
-                            itemCell.item_person_name = [cell.item_person_name];
                             itemCells[itemGroupID][itemID][typeID] = itemCell;
                         }
                         personsMembers.add(cell.item_person_user_id);
@@ -328,6 +326,23 @@ export function MainTable() {
         dispatch(updateState(itemId, stateId, userId!, projectID!));
     }
 
+    const onRemovePerson = (groupId: number, itemId: number, typeId: number, personId: number) => {
+        // dispatch
+        if (itemCellsState[groupId][itemId][typeId].item_person_user_id!.length <= 1) {
+            showNotification({
+				title: 'Delete person notification',
+				message: 'Failed to delete person! At least one person is required for items! 🤥'
+			});
+        } else {
+            const newItemCellsState = produce(itemCellsState, draftState => {
+                draftState[groupId][itemId][typeId].item_person_user_id = 
+                draftState[groupId][itemId][typeId].item_person_user_id?.filter(id => id !== personId);
+            });
+            setItemCellsState(newItemCellsState);
+            dispatch(removePerson(itemId, personId, userId!, projectID!));
+        }
+    }
+
     return (
         <ScrollArea style={{ width: "calc(100vw - 140px)", height: "calc(100vh - 160px)" }} type="auto" >
             <div className="main-table">
@@ -451,6 +466,7 @@ export function MainTable() {
                                                                 onItemRename={onItemRename}
                                                                 onTextChange={onTextChange}
                                                                 onStatusChange={onStatusChange}
+                                                                onRemovePerson={onRemovePerson}
                                                             />
                                                         )
                                                     }

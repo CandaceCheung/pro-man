@@ -208,6 +208,17 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Rename Project" });
         }
     }
+    updateState = async (req: Request, res: Response) => {
+        try {
+            const itemId = req.body.itemId;
+            const stateId = req.body.stateId;
+            await this.tableService.updateState(itemId, stateId);
+            res.json({success: true})
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Update State" });
+        }
+    }
     insertItem = async (req: Request, res: Response) => {
         try {
             const projectId = req.body.projectId;
@@ -270,21 +281,21 @@ export class TableController {
             res.json({
                 success: true,
                 id
-            })
+            });
         } catch(e) {
             console.error(e);
             res.status(500).json({ msg: "[TAB] Fail to Add State" });
         }
     }
-    updateState = async (req: Request, res: Response) => {
+    removePerson = async (req: Request, res: Response) => {
         try {
             const itemId = req.body.itemId;
-            const stateId = req.body.stateId;
-            await this.tableService.updateState(itemId, stateId);
-            res.json({success: true})
+            const personId = req.body.personId;
+            const result = await this.tableService.removePerson(itemId, personId);
+            res.json({success: result});
         } catch(e) {
             console.error(e);
-            res.status(500).json({ msg: "[TAB] Fail to Update State" });
+            res.status(500).json({ msg: "[TAB] Fail to Delete Person" });
         }
     }
 }
