@@ -15,7 +15,7 @@ const useStyle = createStyles(() => ({
     }
 }));
 
-export function Money({ moneySum }: MoneyProps) {
+export function Money({ moneySum, transactionIds, cashFlows, transactionDates }: MoneyProps) {
     const { classes } = useStyle();
     return (
         <div className={classes.moneyContainer}>
