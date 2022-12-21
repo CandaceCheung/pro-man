@@ -9,11 +9,11 @@ import {
 import {
     IconGauge,
     IconBell,
-    IconCalendarStats,
     IconUser,
     IconStar,
     IconLogout,
     TablerIcon,
+    IconUsers,
 } from "@tabler/icons";
 import { Logo, LogoProps } from "./Logo";
 import { useNavigate } from "react-router-dom";
@@ -85,7 +85,7 @@ const navButtons = [
     { icon: Logo, label: "Home", path: "/home" },
     { icon: IconGauge, label: "Dashboard", path: "/dashboard"},
     { icon: IconBell, label: "Notification", path: "/notification"},
-    { icon: IconCalendarStats, label: "My Work", path: "/my-work" },
+    { icon: IconUsers, label: "My Member", path: "/myMember" },
     { icon: IconStar, label: "Favorite", path: "favorite" }
 ];
 
