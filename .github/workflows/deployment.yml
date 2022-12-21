@@ -18,6 +18,10 @@ env:
   AWS_DEFAULT_REGION: us-east-1
   DOCKER_REPO_NAME: cmyip6/pro-man:latest
   CI: false
+  REACT_APP_API_SERVER: https://api.pro-man.co
+  REACT_APP_PUBLIC_HOSTNAME: https://api.pro-man.co
+  EMAIL_LOGIN: pro-man2217@outlook.com
+  EMAIL_PASSWORD: TeckyCanada2222
 
 jobs:
   build-react:
