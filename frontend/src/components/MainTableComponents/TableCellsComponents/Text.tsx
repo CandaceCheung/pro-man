@@ -16,7 +16,8 @@ const useStyle = createStyles((theme) => ({
         alignItems: "center",
         width: "100%",
         height: "100%",
-        padding: 3
+        padding: 3,
+        overflow: "hidden",
     },
     text: {
         position: "relative",
@@ -28,6 +29,9 @@ const useStyle = createStyles((theme) => ({
         cursor: "text",
         border: "1px solid transparent",
         zIndex: 1,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
 
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`

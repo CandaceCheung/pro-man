@@ -25,6 +25,9 @@ const useStyle = createStyles((theme) => ({
         border: "1px solid transparent",
         borderRadius: 5,
         padding: "0 5px",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
 
         "&:hover": {
             border: `1px solid ${theme.colors.borderColor[0]}`
