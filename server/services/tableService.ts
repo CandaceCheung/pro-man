@@ -266,7 +266,6 @@ export class TableService {
             const [{ oldGroupId }] = await this.knex("item_groups").select("id as oldGroupId").where("project_id", projectId).orderBy("oldGroupId", "desc").limit(1);
             groupId = oldGroupId;
         }
-        console.log(groupId, itemName)
         const txn = await this.knex.transaction();
 
         try {
