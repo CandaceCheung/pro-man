@@ -18,6 +18,7 @@ export function MyMember() {
 
     useEffect(() => {
         userId && dispatch(getMemberList(userId!));
+        console.log(memberList)
       }, [userId, dispatch]);
 
     console.log(memberList)
@@ -41,15 +42,13 @@ export function MyMember() {
                 {memberList.map(member => {
                     return <Grid.Col span={4}>
                         <NameCard
-                            key={member.membership_id}
+                            key={member.member_id}
                             member_id={member.member_id}
                             username={member.username}
                             last_name={member.last_name}
                             first_name={member.first_name}
-                            avatar={member.avatar}
-                            project_id={member.project_id}
-                            membership_id={member.membership_id}
-                            project_name={member.project_name}
+                            projects={member.projects}
+                            members={member.members}
                         />
                     </Grid.Col>
                 })}

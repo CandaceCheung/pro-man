@@ -39,21 +39,35 @@ export class MemberService {
         const txn = await this.knex.transaction();
 
         try {
-            const memberList = await txn.select(
-                'members.id as membership_id',
-                'members.avatar',
+            const memberList = await txn
+            .with('projects', (qb)=>{
+                qb.select(
+                    'projects.id as project_id',
+                    'projects.name as project_name',
+                    'projects.creator_id'
+                ).from('projects')
+                .where('creator_id', userId)
+            })
+            .with('members', (qb)=>{
+                qb.select(
+                    'members.id as membership_id',
+                    'members.project_id',
+                    'members.user_id as member_user_id',
+                    'members.avatar as avatar'
+                ).from('members')
+            })
+            .select(
                 'users.id as member_id',
                 'users.last_name',
                 'users.first_name',
                 'users.username',
-                txn.raw('array_agg(projects.name) as project_name'),
-                txn.raw('array_agg(projects.id) as project_id')
+                txn.raw('JSON_agg(members.*) as members'),
+                txn.raw('JSON_agg(projects.*) as projects')
             )
                 .from('projects')
-                .where("creator_id", userId)
-                .join('members', 'projects.id', 'members.project_id')
-                .join('users', 'members.user_id', 'users.id')
-                .groupBy('members.id')
+                .where("projects.creator_id", userId)
+                .join('members', 'members.project_id', 'projects.project_id')
+                .join('users', 'members.member_user_id', 'users.id')
                 .groupBy('users.id')
 
             await txn.commit();
@@ -66,20 +80,21 @@ export class MemberService {
     }
 
     
-    async changeAvatar(membershipId: number, avatar: number) {
+    async changeAvatar(membershipId: number[], avatar: number) {
 
         const txn = await this.knex.transaction();
 
         try {
-            const [member] = await txn('members')
-                .update({
-                    avatar
-                })
-                .where("id", membershipId).returning('*')
+            for (let id of membershipId){
+                await txn('members')
+                    .update({
+                        avatar
+                    })
+                    .where("id", id).returning('*')
+            }
 
             await txn.commit();
-            return member
-
+            return
         } catch (e) {
             await txn.rollback();
             throw e;

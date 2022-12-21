@@ -166,7 +166,7 @@ export function getMemberList(userId: number) {
     };
 }
 
-export function changeAvatar(membershipId: number, avatar: number) {
+export function changeAvatar(membershipId: number[], avatar: number) {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem("token");
         const res = await fetch(
@@ -184,7 +184,7 @@ export function changeAvatar(membershipId: number, avatar: number) {
         const result = await res.json();
 
         if (result.success) {
-            dispatch(changeAvatarAction({ membershipId: result.membershipId, avatar: result.avatar }))
+            dispatch(changeAvatarAction({membershipId, avatar}))
         } else {
             showNotification({
                 title: 'Member List Notification',

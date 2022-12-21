@@ -16,6 +16,10 @@ export function NameCard(props: MyMemberState) {
     const [opened, setOpened] = useState(false);
     const avatar = [image_1, image_2, image_3, image_4, image_5]
     const isOwner = props.member_id === userId
+    const idList: number[] = []
+    for (let item of props.members){
+        idList.push(item.membership_id!)
+    }
 
     function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         dispatch(toggleInviteMemberModalAction(true))
@@ -23,14 +27,14 @@ export function NameCard(props: MyMemberState) {
 
     function changeHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         setOpened(false)
-        dispatch(changeAvatar(props.membership_id!, parseInt(e.currentTarget.value)))
+        dispatch(changeAvatar(idList, parseInt(e.currentTarget.value)))
     }
 
     return (
         <Card shadow="sm" p="lg" radius="md" withBorder>
             <Card.Section>
                 <Image
-                    src={avatar[props.avatar!]}
+                    src={avatar[props.members[0].avatar!]}
                     height={160}
                     alt="Portrait"
                     fit='contain'
@@ -63,8 +67,8 @@ export function NameCard(props: MyMemberState) {
             </Group>
             <Tooltip label="Joined Project" color="blue" position="top" withArrow>
                 <Card>
-                    {props.project_name.map((project, index) => {
-                        return <Text key={index} size="sm" color="dimmed">{project}</Text>
+                    {props.projects.map((project, index) => {
+                        return <Text key={index} size="sm" color="dimmed">{project.project_name}</Text>
                     })}
                 </Card>
             </Tooltip>

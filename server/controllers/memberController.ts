@@ -18,7 +18,7 @@ export class MemberController {
                 })
             } else {
                 const member = await this.memberService.createMember(projectId, userId)
-                if (member){
+                if (member) {
                     const tableList = await tableService.getTableList(userId)
                     res.json({
                         success: true,
@@ -65,20 +65,13 @@ export class MemberController {
         try {
             const membershipId = req.body.membershipId
             const avatar = req.body.avatar
-            const member = await this.memberService.changeAvatar(membershipId, avatar)
-            if (member) {
-                res.json({
-                    success: true,
-                    msg: 'Avatar changed Successfully',
-                    membershipId: member.id,
-                    avatar: member.avatar
-                })
-            } else {
-                res.json({
-                    success: false,
-                    msg: 'Avatar change Failed',
-                })
-            }
+            await this.memberService.changeAvatar(membershipId, avatar)
+
+            res.json({
+                success: true,
+                msg: 'Avatar changed Successfully',
+
+            })
         } catch (e) {
             console.error(e);
             res.status(500).json({ msg: "Something Went wrong during reading Database" });
