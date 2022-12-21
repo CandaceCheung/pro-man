@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { addPerson, addTransaction, getProjectStatusList, getTable, removePerson, removeTransaction, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
+import { addPerson, addTransaction, getProjectStatusList, getTable, insertItem, removePerson, removeTransaction, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -63,6 +63,9 @@ export function MainTable() {
     const [membersFullName, setMembersFullName] = useState<Record<number, MembersFullName>>({});
     const [personsColors, setPersonsColors] = useState<Record<number, string>>({});
 
+    const [newItemInputSelected, setNewItemInputSelected] = useState<Record<number, boolean>>({});
+    const [newItemInputValue, setNewItemInputValue] = useState<Record<number, string>>({});
+
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
 
@@ -100,6 +103,9 @@ export function MainTable() {
 
         let personsColorsTemp: Record<number, string> = {};
         let personsMembers: Set<number> = new Set();
+
+        let newItemInputSelectedTemp: Record<number, boolean> = {};
+        let newItemInputValueTemp: Record<number, string> = {};
 
         for (const cell of tableSummary) {
             if (cell.project_id) {
@@ -186,6 +192,13 @@ export function MainTable() {
                 }
                 typesOrderSet.add(typeID);
                 typesOrders[itemGroupID] = Array.from(typesOrderSet);
+
+                if (!newItemInputSelectedTemp[itemGroupID]) {
+                    newItemInputSelectedTemp[itemGroupID] = false;
+                }
+                if (!newItemInputValueTemp[itemGroupID]) {
+                    newItemInputValueTemp[itemGroupID] = "";
+                }
             }
         }
 
@@ -203,6 +216,10 @@ export function MainTable() {
         setTypesOrdersState(typesOrders);
 
         setPersonsColors(personsColorsTemp);
+
+        setNewItemInputSelected(newItemInputSelectedTemp);
+        setNewItemInputValue(newItemInputValueTemp);
+
     }, [tableSummary, projectID, theme.colors.personsTypeComponentColor]);
 
     const toggleItemGroupCollapsed = (index: number) => {
@@ -395,6 +412,32 @@ export function MainTable() {
         }
     }
 
+    const toggleNewItemInputSelected = (groupId: number) => {
+        const newState = produce(newItemInputSelected, draftState => {
+            draftState[groupId] = !draftState[groupId];
+        });
+        setNewItemInputSelected(newState);
+    }
+
+    const updateNewItemInputValue = (groupId: number, value: string) => {
+        const newState = produce(newItemInputValue, draftState => {
+            draftState[groupId] = value;
+        });
+        setNewItemInputValue(newState);
+    }
+
+    const deselectNewItemNameInput = (groupId: number) => {
+        projectID && userId && dispatch(insertItem(projectID, userId, groupId, newItemInputValue[groupId]));
+        updateNewItemInputValue(groupId, "");
+        toggleNewItemInputSelected(groupId);
+    }
+
+    const handleNewItemNameInputKeyDown = (key: string, groupId: number) => {
+        if (key === "Enter") {
+            deselectNewItemNameInput(groupId);
+        }
+    }
+
     return (
         <ScrollArea style={{ width: "calc(100vw - 140px)", height: "calc(100vh - 160px)" }} type="auto" >
             <div className="main-table">
@@ -537,9 +580,28 @@ export function MainTable() {
                                                 }}
                                             ></div>
                                             <div className={cx(classes.tableCell, classes.item)}>
-                                                <div className={classes.typeName}>
-                                                    + Add Item
-                                                </div>
+                                                {
+                                                    newItemInputSelected[item_group_id]
+                                                        ?
+                                                        <input
+                                                            onBlur={() => deselectNewItemNameInput(item_group_id)}
+                                                            type="text"
+                                                            autoFocus
+                                                            className={classes.newItemNameInput}
+                                                            value={newItemInputValue[item_group_id]}
+                                                            onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, item_group_id)}
+                                                            onChange={(e) => updateNewItemInputValue(item_group_id, e.target.value)}
+                                                        >
+
+                                                        </input>
+                                                        :
+                                                        <div 
+                                                            className={classes.typeName}
+                                                            onClick={() => toggleNewItemInputSelected(item_group_id)}
+                                                        >
+                                                            + Add Item
+                                                        </div>
+                                                }
                                             </div>
                                         </div>
                                     </div>
