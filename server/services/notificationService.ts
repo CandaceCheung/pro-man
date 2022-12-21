@@ -82,7 +82,7 @@ export class NotificationService {
         }
     }
 
-    async sendMessage(sender: string, sender_id: number, receiver: string, receiver_id: number, text: string) {
+    async sendMessage(sender: string, sender_id: number, receiver: string, receiver_id: number, text: string, messageType: 'message'|'invite') {
 
         const txn = await this.knex.transaction();
 
@@ -93,7 +93,8 @@ export class NotificationService {
                     sender_id,
                     receiver,
                     receiver_id,
-                    message: text
+                    message: text,
+                    message_type: messageType,
                 }).returning('*')
 
             await txn.commit();
