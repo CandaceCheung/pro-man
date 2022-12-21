@@ -62,7 +62,6 @@ export function MainTable() {
 
     const [membersFullName, setMembersFullName] = useState<Record<number, MembersFullName>>({});
     const [personsColors, setPersonsColors] = useState<Record<number, string>>({});
-    const [moneySums, setMoneySums] = useState<Record<number, number>>({});
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -101,8 +100,6 @@ export function MainTable() {
 
         let personsColorsTemp: Record<number, string> = {};
         let personsMembers: Set<number> = new Set();
-
-        let moneySumsTemp: Record<number, number> = {};
 
         for (const cell of tableSummary) {
             if (cell.project_id) {
@@ -153,11 +150,6 @@ export function MainTable() {
                             itemCell["item_money_cashflow"] = [cell.item_money_cashflow];
                             itemCell["item_money_date"] = [cell.item_money_date];
                             itemCells[itemGroupID][itemID][typeID] = itemCell;
-                        }
-                        if (moneySumsTemp[cell.item_id]) {
-                            moneySumsTemp[cell.item_id] += cell.item_money_cashflow;
-                        } else {
-                            moneySumsTemp[cell.item_id] = cell.item_money_cashflow;
                         }
                         break;
                     case "persons":
@@ -211,7 +203,6 @@ export function MainTable() {
         setTypesOrdersState(typesOrders);
 
         setPersonsColors(personsColorsTemp);
-        setMoneySums(moneySumsTemp);
     }, [tableSummary, projectID, theme.colors.personsTypeComponentColor]);
 
     const toggleItemGroupCollapsed = (index: number) => {
@@ -522,7 +513,6 @@ export function MainTable() {
                                                                 color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
                                                                 lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                                 personsColors={personsColors}
-                                                                moneySums={moneySums}
                                                                 membersFullName={membersFullName}
                                                                 onItemRename={onItemRename}
                                                                 onTextChange={onTextChange}

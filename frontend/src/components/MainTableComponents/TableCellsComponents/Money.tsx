@@ -7,7 +7,6 @@ interface MoneyProps {
     groupId: number,
     itemId: number,
     typeId: number,
-    moneySum: number,
     transactionIds: Array<number>,
     cashFlows: Array<number>,
     transactionDates: Array<string>,
@@ -53,7 +52,7 @@ const useStyle = createStyles((theme, _params, getRef) => ({
 }));
 
 export function Money({
-    groupId, itemId, typeId, moneySum, transactionIds, cashFlows, transactionDates,
+    groupId, itemId, typeId, transactionIds, cashFlows, transactionDates,
     onAddTransaction, onDeleteTransaction
 }: MoneyProps) {
     const [opened, setOpened] = useState(false);
@@ -88,7 +87,11 @@ export function Money({
                     className={classes.moneyContainer}
                     onClick={() => setOpened((o) => !o)}
                 >
-                    {moneySum.toLocaleString()}
+                    {
+                        cashFlows.reduce((acc, val) => {
+                            return acc + val
+                        }, 0).toLocaleString()
+                    }
                 </span>
             </Popover.Target>
             <Popover.Dropdown>

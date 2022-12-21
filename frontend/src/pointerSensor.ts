@@ -24,11 +24,11 @@ function isInteractiveElement(element: Element | null) {
         "svg",
         "th",
         "tr",
-        "td"
+        "td",
+        "line"
     ];
     const classNameElements = [
-        "mantine-Popover-dropdown",
-        "icon-tabler"
+        "mantine-Popover-dropdown"
     ];
     if (
         element?.tagName &&
