@@ -7,12 +7,13 @@ import { setActiveProject } from "../project/thunk";
 
 export function likeProject (projectId: number, userId: number) {
 	return async (dispatch: Dispatch) => {
-
+        const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/favorite`, {
 			method: "PUT",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				projectId,
@@ -39,9 +40,14 @@ export function likeProject (projectId: number, userId: number) {
 
 export function getTable(userID: number, projectID: number) {
 	return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/${userID}&${projectID}`
+			`${process.env.REACT_APP_API_SERVER}/table/${userID}&${projectID}`,{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			}
 		);
 		const result = await res.json();
 
@@ -56,9 +62,14 @@ export function getTable(userID: number, projectID: number) {
 
 export function getTableList(userId: number) {
 	return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/list/${userId}`
+			`${process.env.REACT_APP_API_SERVER}/table/list/${userId}`,{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
 		);
 		const result = await res.json();
 
@@ -66,6 +77,72 @@ export function getTableList(userId: number) {
 			dispatch(getTableListAction(result.list))
 			dispatch(setActiveProjectAction(result.list[0].project_id));
 			dispatch(setProjectNameAction(result.list[0].project_name));
+		} else {
+			dispatch(getTableFailedAction())
+		}
+	};
+}
+
+
+export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
+	return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
+		
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/updateTimeline`, {
+				method: "PUT",
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({
+				typeTimeId: timelineID,
+				startTime,
+				endTime,
+				name,
+				color
+			})
+		});
+		const result = await res.json();
+		
+		if (result.success) {
+			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color, typeId: result.typeId }))
+			showNotification({
+				title: 'Data update notification',
+				message: result.msg
+			});
+		} else {
+			dispatch(getTableFailedAction())
+		}
+	};
+}
+
+export function updateDatelineItem(datelineID: number, date: number, name: string, color: string) {
+	return async (dispatch: Dispatch) => {
+		const token = localStorage.getItem("token");
+		
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/updateDateline`, {
+				method: "PUT",
+				headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({
+				typeDateId: datelineID,
+				date,
+				name,
+				color
+			})
+		});
+		const result = await res.json();
+
+		if (result.success) {
+			dispatch(updateDatelineItemAction({ datelineID, date, name, color, typeId: result.typeId }))
+			showNotification({
+				title: 'Data update notification',
+				message: result.msg
+			});
 		} else {
 			dispatch(getTableFailedAction())
 		}
@@ -91,67 +168,6 @@ export function getProjectStatusList(projectId: number) {
 	};
 }
 
-export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
-	return async (dispatch: Dispatch) => {
-
-		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/updateTimeline`, {
-			method: "PUT",
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				typeTimeId: timelineID,
-				startTime,
-				endTime,
-				name,
-				color
-			})
-		});
-		const result = await res.json();
-
-		if (result.success) {
-			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color, typeId: result.typeId }))
-			showNotification({
-				title: 'Data update notification',
-				message: result.msg
-			});
-		} else {
-			dispatch(getTableFailedAction())
-		}
-	};
-}
-
-export function updateDatelineItem(datelineID: number, date: number, name: string, color: string) {
-	return async (dispatch: Dispatch) => {
-
-		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/updateDateline`, {
-			method: "PUT",
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				typeDateId: datelineID,
-				date,
-				name,
-				color
-			})
-		});
-		const result = await res.json();
-
-		if (result.success) {
-			dispatch(updateDatelineItemAction({ datelineID, date, name, color, typeId: result.typeId }))
-			showNotification({
-				title: 'Data update notification',
-				message: result.msg
-			});
-		} else {
-			dispatch(getTableFailedAction())
-		}
-	};
-}
-
 export function updateItemGroupName(itemGroupId: number, itemGroupName: string, userId: number, projectID: number) {
 	return async (dispatch: AppDispatch) => {
 
@@ -159,7 +175,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
 			`${process.env.REACT_APP_API_SERVER}/table/itemGroupName`, {
 			method: "PUT",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
 				itemGroupId,
@@ -182,6 +198,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
 
 export function getFavorite(userId: number) {
 	return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
 
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/favorite/${userId}`
@@ -197,7 +214,7 @@ export function getFavorite(userId: number) {
 	};
 }
 
-export function insertItem(projectId: number, userId: number) {
+export function insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/item`, {
@@ -207,7 +224,9 @@ export function insertItem(projectId: number, userId: number) {
 			},
 			body: JSON.stringify({
 				projectId,
-				userId
+				userId,
+				itemGroupId,
+				itemName
 			})
 		});
 		const result = await res.json();

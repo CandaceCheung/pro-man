@@ -1,7 +1,8 @@
-import { Grid } from "@mantine/core";
+import { Button, Grid } from "@mantine/core";
 import { useEffect } from "react";
 import { NameCard } from "../components/MyMemberComponents/NameCard";
 import { Messager } from "../components/NotificationComponents/Messager";
+import { toggleInviteMemberModalAction } from "../redux/project/slice";
 import { getMemberList } from "../redux/project/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
@@ -11,6 +12,10 @@ export function MyMember() {
     const userId = useAppSelector(state=>state.auth.userId)
     const memberList = useAppSelector(state => state.project.member_list)
 
+    function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        dispatch(toggleInviteMemberModalAction(true))
+    }
+
     useEffect(() => {
         userId && dispatch(getMemberList(userId!));
       }, [userId, dispatch]);
@@ -19,6 +24,18 @@ export function MyMember() {
     return (
         <div>
             <h2>My Members</h2>
+            <div style={{paddingBottom: '20px'}}>
+                <Button 
+                    onClick={e=>clickHandler(e)} 
+                    variant="light" 
+                    color="green" 
+                    fullWidth mt="md" 
+                    radius="md"
+                    
+                    >
+                    Invite New Members
+                </Button>
+            </div>
             <Grid grow gutter={5} gutterXs="md" gutterMd="xl" gutterXl={50}>
 
                 {memberList.map(member => {

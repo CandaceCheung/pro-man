@@ -298,5 +298,31 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
                 boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`
             }
         }
+    },
+    newItemNameInput: {
+        width: "100%",
+        transition: "0.5s",
+        outline: "none",
+        border: "1px solid",
+        borderRadius: 5,
+        boxSizing: "border-box",
+        height: 12,
+        fontFamily: "Roboto",
+        fontSize: 12,
+        color: "grey",
+        borderColor: theme.colors.itemInputBorderColor[0],
+        padding: "0 5px",
+
+        "&:focus": {
+            width: "100%",
+            transition: "0.5s",
+            outline: "none",
+            border: "1px solid",
+            borderRadius: 5,
+            minHeight: 30,
+            boxSizing: "border-box",
+            height: 12,
+            borderColor: theme.colors.itemInputBorderColor[0]
+        }
     }
 }));

@@ -30,52 +30,6 @@ export class InvitationController {
         }
     }
 
-    getMemberList = async (req: Request, res: Response) => {
-        try {
-            const userId = req.params.userId
-            const memberList = await this.invitationService.getMemberList(parseInt(userId))
-            if (memberList.length > 0) {
-                res.json({
-                    success: true,
-                    msg: 'Member List Retrieved Successfully',
-                    memberList
-                })
-            } else {
-                res.json({
-                    success: false,
-                    msg: 'Member List Retrieval Failed',
-                })
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ msg: "Something Went wrong during reading Database" });
-        }
-    }
-
-    changeAvatar = async (req: Request, res: Response) => {
-        try {
-            const membershipId = req.body.membershipId
-            const avatar = req.body.avatar
-            const member = await this.invitationService.changeAvatar(membershipId, avatar)
-            if (member) {
-                res.json({
-                    success: true,
-                    msg: 'Avatar changed Successfully',
-                    membershipId: member.id,
-                    avatar: member.avatar
-                })
-            } else {
-                res.json({
-                    success: false,
-                    msg: 'Avatar change Failed',
-                })
-            }
-        } catch (e) {
-            console.error(e);
-            res.status(500).json({ msg: "Something Went wrong during reading Database" });
-        }
-    }
-
     deleteInvitation = async (req: Request, res: Response) => {
         try {
             const invitationId = req.params.invitationId
@@ -174,40 +128,41 @@ export class InvitationController {
                     })
                     return
                 }
-
+                
                 const token = jwtSimple.encode(invitation, jwt.jwtSecret);
-
-                const emailContent = `
-                    <p>Hello,</p>
-                    <p>You have been invited to join Pro-man</p>
-                    <p>Click the link below to accept invitation</p>
-                    ${process.env.REACT_APP_PUBLIC_HOSTNAME}/?token=${token}
-                `
-                //send email
-                let transporter = nodemailer.createTransport({
-                    host: "smtp.office365.com",
-                    port: 587,
-                    secure: false,
-                    auth: {
-                        user: `${process.env.EMAIL_LOGIN}`, // generated ethereal user
-                        pass: `${process.env.EMAIL_PASSWORD}`, // generated ethereal password
-                    },
-                });
-
-                // send mail with defined transport object
-                await transporter.sendMail({
-                    from: `"Pro-man Admin" <${process.env.EMAIL_LOGIN}>`, // sender address
-                    to: email, // list of receivers
-                    subject: "Hello, Someone Invited You to Join Pro-man!", // Subject line
-                    text: "Invitation", // plain text body
-                    html: emailContent, // html body
-                }, function (err, info) {
-                    if (err) {
-                        console.log(err)
-                        return
-                    }
-                    console.log(info.response)
-                });
+                if(email.length>0){
+    
+                    const emailContent = `
+                        <p>Hello,</p>
+                        <p>You have been invited to join Pro-man</p>
+                        <p>Click the link below to accept invitation</p>
+                        ${process.env.REACT_APP_PUBLIC_HOSTNAME}/?token=${token}
+                    `
+                    //send email
+                    let transporter = nodemailer.createTransport({
+                        host: "smtp.office365.com",
+                        port: 587,
+                        secure: false,
+                        auth: {
+                            user: `${process.env.EMAIL_LOGIN}`, 
+                            pass: `${process.env.EMAIL_PASSWORD}`, 
+                        },
+                    });
+    
+                    await transporter.sendMail({
+                        from: `"Pro-man Admin" <${process.env.EMAIL_LOGIN}>`, 
+                        to: email, 
+                        subject: "Hello, Someone Invited You to Join Pro-man!", 
+                        text: "Invitation", 
+                        html: emailContent, 
+                    }, function (err, info) {
+                        if (err) {
+                            console.log(err)
+                            return
+                        }
+                        console.log(info.response)
+                    });
+                }
             }
             res.json({
                 success: true,

@@ -6,7 +6,7 @@ import image_2 from '../../images/MemberPhotos/2.jpg'
 import image_3 from '../../images/MemberPhotos/3.jpg'
 import image_4 from '../../images/MemberPhotos/4.jpg'
 import image_5 from '../../images/MemberPhotos/5.jpg'
-import { MyMemberState } from "../../redux/project/slice";
+import { MyMemberState, toggleInviteMemberModalAction } from "../../redux/project/slice";
 import { changeAvatar } from "../../redux/project/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 
@@ -18,7 +18,7 @@ export function NameCard(props: MyMemberState) {
     const isOwner = props.member_id === userId
 
     function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        dispatch(toggleInviteMemberModal(true))
+        dispatch(toggleInviteMemberModalAction(true))
     }
 
     function changeHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -71,7 +71,7 @@ export function NameCard(props: MyMemberState) {
 
             {!isOwner &&
 
-                <Button onClick={e=>clickHandler(e)} variant="light" color="blue" fullWidth mt="md" radius="md">
+                <Button value={props.member_id!} onClick={e=>clickHandler(e)} variant="light" color="blue" fullWidth mt="md" radius="md">
                     Change Status
                 </Button>
             }
@@ -79,6 +79,3 @@ export function NameCard(props: MyMemberState) {
     )
 }
 
-function toggleInviteMemberModal(arg0: boolean): any {
-    throw new Error("Function not implemented.");
-}
