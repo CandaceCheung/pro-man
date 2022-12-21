@@ -7,7 +7,9 @@ import {
     Text,
 } from "@mantine/core";
 import { IconKey, IconSignature, IconUserCircle } from "@tabler/icons";
-import React from "react";
+import React, { useState } from "react";
+import { putProfileInfo } from "../redux/profile/thunk";
+import { useAppDispatch, useAppSelector } from "../store";
 
 const useStyles = createStyles((theme) => ({
     profileTable: {
@@ -40,7 +42,19 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export function Profile() {
+    const dispatch = useAppDispatch();
     const { classes } = useStyles();
+    const username = useAppSelector((state) => state.profile.username);
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [password, setPassword] = useState("");
+    const updateInfo = () => {
+        dispatch(putProfileInfo(
+            firstName,
+            lastName,
+            password
+        ));
+    };
 
     return (
         <div>
@@ -49,19 +63,29 @@ export function Profile() {
             </Group>
             <div className={classes.profileTable}>
                 <div className="username">
-                    <Text>User Name</Text>
+                    <Text>{username}</Text>
                 </div>
                 <div className="profileInfo">
                     <Group position="center" m={10}>
                         <Text className={classes.profileText}>First Name:</Text>
-                        <Input icon={<IconSignature size={16} />}></Input>
-                    </Group>
-                    <Group position="center" m={10} >
-                        <Text className={classes.profileText}> Last Name:</Text>
-                        <Input icon={<IconSignature size={16} />} ></Input>
+                        <Input
+                            icon={<IconSignature size={16} />}
+                            onChange={(e) => {
+                                setFirstName(e.target.value);
+                            }}
+                        ></Input>
                     </Group>
                     <Group position="center" m={10}>
-                    <Text className={classes.profileText}> Password:</Text>
+                        <Text className={classes.profileText}> Last Name:</Text>
+                        <Input
+                            icon={<IconSignature size={16} />}
+                            onChange={(e) => {
+                                setLastName(e.target.value);
+                            }}
+                        ></Input>
+                    </Group>
+                    <Group position="center" m={10}>
+                        <Text className={classes.profileText}> New Password:</Text>
                         <PasswordInput
                             placeholder="Password"
                             description="Password must include at least one letter, number and special character"
@@ -70,7 +94,12 @@ export function Profile() {
                         />
                     </Group>
                     <Group position="center">
-                        <Button color="cyan" mt={10} maw={120}>
+                        <Button
+                            color="cyan"
+                            mt={10}
+                            maw={120}
+                            onClick={updateInfo}
+                        >
                             Update
                         </Button>
                     </Group>
