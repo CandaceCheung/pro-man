@@ -1,6 +1,6 @@
 import { Button, createStyles, Input, Popover, Table } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
-import { IconBrandCashapp } from '@tabler/icons';
+import { IconBrandCashapp, IconX } from '@tabler/icons';
 import { useState } from 'react';
 
 interface MoneyProps {
@@ -14,7 +14,7 @@ interface MoneyProps {
     onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void
 }
 
-const useStyle = createStyles(() => ({
+const useStyle = createStyles((theme, _params, getRef) => ({
     moneyContainer: {
         display: "flex",
         justifyContent: "center",
@@ -25,12 +25,38 @@ const useStyle = createStyles(() => ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center"
+    },
+    tableRow: {
+        position: "relative",
+
+        "&:hover": {
+            [`& .${getRef('deleteButton')}`]: {
+                visibility: "visible"
+            }
+        }
+    },
+    deleteButton: {
+        ref: getRef('deleteButton'),
+        position: "absolute",
+        right: 10,
+        top: "50%",
+        transform: "translate(0, -50%)",
+        visibility: "hidden",
+        content: "'x'",
+        borderRadius: 100,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        "&:hover": {
+            backgroundColor: "#E5F4FF"
+        }
     }
 }));
 
-export function Money({ 
+export function Money({
     groupId, itemId, typeId, moneySum, transactionIds, cashFlows, transactionDates,
-    onAddTransaction 
+    onAddTransaction
 }: MoneyProps) {
     const [opened, setOpened] = useState(false);
     const [editStatus, setEditStatus] = useState(false);
@@ -101,6 +127,7 @@ export function Money({
                                         <tr
                                             key={"transaction_" + transactionId}
                                             style={{ textAlign: "left" }}
+                                            className={classes.tableRow}
                                         >
                                             <td>
                                                 {
@@ -108,6 +135,9 @@ export function Money({
                                                 }
                                             </td>
                                             <td>{cashFlows[index]}</td>
+                                            <span className={classes.deleteButton}>
+                                                <IconX size={14} />
+                                            </span>
                                         </tr>
                                     ))}
                                 </tbody>
