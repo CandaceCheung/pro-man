@@ -149,6 +149,7 @@ export function StatusColumn(props: StatusProps) {
             text: "Group",
             input: (
                 <Select
+                
                     data={groupList.map((group) => ({
                         value: group.id.toString(),
                         label: group.name,
