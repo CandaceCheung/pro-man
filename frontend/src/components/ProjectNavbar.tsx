@@ -1,6 +1,6 @@
 import './styles/ProjectNavbar.css'
 import { Tabs, Tooltip } from '@mantine/core';
-import { IconHome, IconTimelineEvent, IconBrandTrello, IconUsers, IconArticle } from '@tabler/icons'
+import { IconHome, IconTimelineEvent, IconBrandTrello, IconUsers } from '@tabler/icons'
 import { useEffect, useState } from 'react';
 import { Kanban } from '../pages/Kanban';
 import { MainTable } from '../pages/MainTable';
@@ -8,7 +8,6 @@ import { TimeFrame } from '../pages/Timeline';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar as faStarS } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarR } from '@fortawesome/free-regular-svg-icons'
-import LogsDrawer from './ProjectNavbarComponents/LogsDrawer';
 import InvitationDrawer from './ProjectNavbarComponents/InvitationDrawer';
 import { ButtonHub } from './ProjectNavbarComponents/ButtonHub';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -23,7 +22,6 @@ export default function ProjectNavbar() {
     const projectId = useAppSelector(state => state.project.project_id);
     const projectName = useAppSelector(state => state.project.project_name);
     const userId = useAppSelector(state => state.auth.userId);
-    const [logsOpen, setLogsOpen] = useState<boolean>(false);
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
     const [projectTitleInputSelected, setProjectTitleInputSelected] = useState(false);
     const [projectTitleInputValue, setProjectTitleInputValue] = useState("");
@@ -45,7 +43,6 @@ export default function ProjectNavbar() {
     }
 
     function onRemove() {
-        setLogsOpen(false)
         setInvitationOpen(false)
     }
 
@@ -114,23 +111,12 @@ export default function ProjectNavbar() {
                         withArrow
                         transition="fade"
                         transitionDuration={200}
-                        label="Open Logs"
-                    >
-                        <span ><IconArticle id="logs-button" size={20} onClick={() => setLogsOpen((open) => !open)} /></span>
-                    </Tooltip>
-                    <Tooltip
-                        multiline
-                        width={220}
-                        withArrow
-                        transition="fade"
-                        transitionDuration={200}
                         label="Invite Users"
                     >
-                        <span ><IconUsers id="add-users-button" size={20} onClick={invitationHandler} /></span>
+                        <span ><IconUsers id="add-users-button" size={30} onClick={invitationHandler} /></span>
                     </Tooltip>
                 </span>
             </div>
-            <LogsDrawer toggle={logsOpen} onRemove={onRemove} />
             <InvitationDrawer toggle={invitationOpen} onRemove={onRemove} />
 
             <Tabs defaultValue="mainTable" value={page} onTabChange={(value) => tabChangeHandler(value as ActivePageState)}>

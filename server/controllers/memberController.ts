@@ -11,10 +11,15 @@ export class MemberController {
             const projectId = req.body.projectId
 
             const check = await this.memberService.checkMember(projectId, userId)
-            if (check) {
+            if (check.member) {
                 res.json({
                     success: false,
                     msg: 'You are a member of this project already',
+                })
+            } else if (check.project.is_deleted){
+                res.json({
+                    success: false,
+                    msg: 'Target project no longer exist',
                 })
             } else {
                 const member = await this.memberService.createMember(projectId, userId)
