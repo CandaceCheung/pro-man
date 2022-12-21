@@ -483,7 +483,7 @@ export function MainTable() {
                                     <span
                                         onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
                                         className={classes.hovertext}
-                                        data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? "Expand group" : "Collapse Group"}
+                                        data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? "Expand" : "Collapse"}
                                         key={itemGroupArrayIndex}
                                     >
                                         {

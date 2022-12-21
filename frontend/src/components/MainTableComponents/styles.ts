@@ -10,6 +10,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        cursor: "pointer",
 
         "&:hover::before": {
             opacity: 1,
