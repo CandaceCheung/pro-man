@@ -18,7 +18,6 @@ export interface TableRowProps {
     color: string,
     lastRow: boolean,
     personsColors: { [key in number]: string },
-    moneySums: { [key in number]: number },
     membersFullName: Record<number, MembersFullName>,
     onItemRename: (groupId: number, itemId: number, name: string) => void,
     onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void,
@@ -31,7 +30,7 @@ export interface TableRowProps {
 
 export function TableRow({ 
     itemId, groupId, typeOrder, cellDetails, color, lastRow, 
-    personsColors, moneySums, membersFullName,
+    personsColors, membersFullName,
     onItemRename, onTextChange, onStatusChange, 
     onRemovePerson, onAddPerson, onAddTransaction, onDeleteTransaction
 }: TableRowProps) {
@@ -89,7 +88,6 @@ export function TableRow({
                             groupId={groupId}
                             itemId={itemId}
                             typeId={cell.type_id}
-                            moneySum={moneySums[itemId]} 
                             transactionIds={cell.transaction_id!}
                             cashFlows={cell.item_money_cashflow!}
                             transactionDates={cell.item_money_date!}
