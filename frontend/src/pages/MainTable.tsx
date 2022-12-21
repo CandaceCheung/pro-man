@@ -38,10 +38,18 @@ export interface itemsGroupElement {
     item_group_name: TableState["item_group_name"]
 }
 
+export interface MembersFullName {
+    username: string,
+    firstName: string | null,
+    lastName: string | null
+}
+
 export function MainTable() {
     const userId = useAppSelector(state => state.auth.userId);
     const projectID = useAppSelector(state => state.project.project_id);
     const tableSummary = useAppSelector(state => state.table.summary);
+    const members = useAppSelector(state => state.kanban.memberList);
+
     const [itemCellsState, setItemCellsState] = useState<{ [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } }>({});
     const [itemGroupsState, setItemGroupsState] = useState<itemsGroupElement[]>([]);
     const [itemsOrdersState, setItemsOrdersState] = useState<Record<number, Array<number>>>({});
@@ -50,6 +58,7 @@ export function MainTable() {
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
 
+    const [membersFullName, setMembersFullName] = useState<Record<number, MembersFullName>>({});
     const [personsColors, setPersonsColors] = useState<Record<number, string>>({});
     const [moneySums, setMoneySums] = useState<Record<number, number>>({});
 
@@ -61,10 +70,22 @@ export function MainTable() {
     );
 
     useEffect(() => {
-        userId && projectID && dispatch(getTable(userId, projectID));
-        projectID && dispatch(getProjectStatusList(projectID));
         projectID && dispatch(getMember(projectID));
+        projectID && dispatch(getProjectStatusList(projectID));
+        userId && projectID && dispatch(getTable(userId, projectID));
     }, [userId, projectID, dispatch]);
+
+    useEffect(() => {
+        const membersFullNameTemp: Record<number, MembersFullName> = {};
+        members.forEach(member => {
+            membersFullNameTemp[member.id] = {
+                username: member.username,
+                firstName: member.firstName,
+                lastName: member.lastName
+            }
+        });
+        setMembersFullName(membersFullNameTemp);
+    }, [members]);
 
     useEffect(() => {
         let itemCells: { [keys in number]: { [keys in number]: { [keys in number]: itemCellsElement } } } = {};
@@ -426,6 +447,7 @@ export function MainTable() {
                                                                 lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                                 personsColors={personsColors}
                                                                 moneySums={moneySums}
+                                                                membersFullName={membersFullName}
                                                                 onItemRename={onItemRename}
                                                                 onTextChange={onTextChange}
                                                                 onStatusChange={onStatusChange}

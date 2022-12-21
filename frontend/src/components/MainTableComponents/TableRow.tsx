@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from '@dnd-kit/utilities';
-import { itemCellsElement } from "../../pages/MainTable";
+import { itemCellsElement, MembersFullName } from "../../pages/MainTable";
 import { Persons } from "./TableCellsComponents/Persons";
 import { useStyles } from "./styles";
 import { TextCell } from "./TableCellsComponents/Text";
@@ -19,13 +19,15 @@ export interface TableRowProps {
     lastRow: boolean,
     personsColors: { [key in number]: string },
     moneySums: { [key in number]: number },
+    membersFullName: Record<number, MembersFullName>,
     onItemRename: (groupId: number, itemId: number, name: string) => void,
     onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void,
     onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void
 }
 
 export function TableRow({ 
-    itemId, groupId, typeOrder, cellDetails, color, lastRow, personsColors, moneySums, 
+    itemId, groupId, typeOrder, cellDetails, color, lastRow, 
+    personsColors, moneySums, membersFullName,
     onItemRename, onTextChange, onStatusChange
 }: TableRowProps) {
     const {
@@ -52,9 +54,9 @@ export function TableRow({
                         key={"item" + itemId + "cell" + cellIndex}
                     >
                         <Persons
-                            itemPersonsNames={cell.item_person_name!}
                             itemPersonsIds={cell.item_person_user_id!}
                             personsColors={personsColors}
+                            membersFullName={membersFullName}
                         />
                     </div>
                 )

@@ -1,17 +1,12 @@
-import { Button, createStyles, Popover } from '@mantine/core';
-import { useEffect, useState } from 'react';
-import { useAppSelector } from '../../../store';
+import { createStyles, Popover } from '@mantine/core';
+import { IconUserCircle, IconX } from '@tabler/icons';
+import { useState } from 'react';
+import { MembersFullName } from '../../../pages/MainTable';
 
 interface PersonsProps {
-    itemPersonsNames: string[],
     itemPersonsIds: number[],
-    personsColors: { [key in number]: string }
-}
-
-interface MembersFullName {
-    username: string,
-    firstName: string | null,
-    lastName: string | null
+    personsColors: { [key in number]: string },
+    membersFullName: Record<number, MembersFullName>
 }
 
 const useStyles = createStyles(() => ({
@@ -72,31 +67,33 @@ const useStyles = createStyles(() => ({
     personsExisting: {
         backgroundColor: "#E5F4FF",
         borderRadius: 20,
-        fontSize: "inherit"
+        fontSize: 12,
+        margin: 5,
+        padding: "0 2px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center"
     },
     suggestionTitle: {
         color: "grey",
-        fontSize: "inherit"
+        fontSize: "inherit",
+        margin: "5px 0"
+    },
+    iconX: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        "&:hover": {
+            backgroundColor: "#FFF",
+            borderRadius: 30
+        }
     }
 }));
 
-export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: PersonsProps) {
-    const members = useAppSelector(state => state.kanban.memberList);
-    const [membersFullName, setMembersFullName] = useState<Record<number, MembersFullName>>({});
+export function Persons({ itemPersonsIds, personsColors, membersFullName }: PersonsProps) {
     const [opened, setOpened] = useState(false);
     const { classes, cx } = useStyles();
-
-    useEffect(() => {
-        const membersFullNameTemp: Record<number, MembersFullName> = {};
-        members.forEach(member => {
-            membersFullNameTemp[member.id] = {
-                username: member.username,
-                firstName: member.firstName,
-                lastName: member.lastName
-            }
-        });
-        setMembersFullName(membersFullNameTemp);
-    }, [members]);
 
     const innerPersonsComponents = (personsNumber: number) => {
         switch (personsNumber) {
@@ -111,19 +108,21 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                                 backgroundColor: personsColors[itemPersonsIds[0]]
                             }}
                         >
-                            {itemPersonsNames[0][0].toUpperCase()}
+                            {
+                                (membersFullName[itemPersonsIds[0]].firstName && membersFullName[itemPersonsIds[0]].lastName)
+                                    ? membersFullName[itemPersonsIds[0]].firstName![0].toUpperCase() + membersFullName[itemPersonsIds[0]].lastName![0].toUpperCase()
+                                    : membersFullName[itemPersonsIds[0]].username[0].toUpperCase()
+                            }
                         </span>
                     </>
                 )
             case 2:
                 return (
                     <>
-                        {itemPersonsNames.map((name, index) => {
-                            const userId = itemPersonsIds[index];
-                            const initial = name[0].toUpperCase();
+                        {itemPersonsIds.map((id, index) => {
                             return (
                                 <span
-                                    key={"person_" + userId}
+                                    key={"person_" + id}
                                     className={
                                         index
                                             ?
@@ -135,7 +134,11 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                                         backgroundColor: personsColors[itemPersonsIds[index]]
                                     }}
                                 >
-                                    {initial}
+                                    {
+                                        (membersFullName[id].firstName && membersFullName[id].lastName)
+                                            ? membersFullName[id].firstName![0].toUpperCase() + membersFullName[id].lastName![0].toUpperCase()
+                                            : membersFullName[id].username[0].toUpperCase()
+                                    }
                                 </span>
                             )
                         })}
@@ -149,14 +152,20 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                             className={cx(classes.personsComponent, classes.personsFirstComponent)}
                             style={{ backgroundColor: personsColors[itemPersonsIds[0]] }}
                         >
-                            {itemPersonsNames[0][0].toUpperCase()}
+                            {
+                                (membersFullName[itemPersonsIds[0]].firstName && membersFullName[itemPersonsIds[0]].lastName)
+                                    ?
+                                    membersFullName[itemPersonsIds[0]].firstName![0].toUpperCase() + membersFullName[itemPersonsIds[0]].lastName![0].toUpperCase()
+                                    :
+                                    membersFullName[itemPersonsIds[0]].username[0].toUpperCase()
+                            }
                         </span>
                         <span
                             key={"person_multiple"}
                             className={cx(classes.personsComponent, classes.personsMultipleComponent)}
                             style={{ backgroundColor: "#323232" }}
                         >
-                            {`+${itemPersonsNames.length - 1}`}
+                            {`+${itemPersonsIds.length - 1}`}
                         </span>
                     </>
                 )
@@ -174,11 +183,32 @@ export function Persons({ itemPersonsNames, itemPersonsIds, personsColors }: Per
                 </span>
             </Popover.Target>
             <Popover.Dropdown>
-                <span className={classes.personsList}>
-                    {"hi"}
-                </span>
-                <span className={classes.suggestionTitle}>
-                    Suggested People
+                <span className={classes.personsPopUpContainer}>
+                    <span className={classes.personsList}>
+                        {itemPersonsIds.map(id => {
+                            const firstName = membersFullName[id].firstName;
+                            const lastName = membersFullName[id].lastName;
+                            const username = membersFullName[id].username;
+                            return (
+                                <span className={classes.personsExisting}>
+                                    <IconUserCircle />
+                                    {
+                                        (firstName && lastName)
+                                        ?
+                                        firstName + " " + lastName
+                                        :
+                                        username
+                                    }
+                                    <span className={classes.iconX}>
+                                        <IconX size={15} />
+                                    </span>
+                                </span>
+                            )
+                        })}
+                    </span>
+                    <span className={classes.suggestionTitle}>
+                        Suggested People
+                    </span>
                 </span>
             </Popover.Dropdown>
         </Popover >
