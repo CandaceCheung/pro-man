@@ -52,10 +52,10 @@ jobs:
       - name: build project
         working-directory: server
         env:
-            REACT_APP_API_SERVER: https://api.pro-man.co
-            REACT_APP_PUBLIC_HOSTNAME: https://api.pro-man.co
-            EMAIL_LOGIN: pro-man2217@outlook.com
-            EMAIL_PASSWORD: TeckyCanada2222
+          REACT_APP_API_SERVER: https://api.pro-man.co
+          REACT_APP_PUBLIC_HOSTNAME: https://api.pro-man.co
+          EMAIL_LOGIN: pro-man2217@outlook.com
+          EMAIL_PASSWORD: TeckyCanada2222
         run: |
           yarn build
       - name: archive built files
