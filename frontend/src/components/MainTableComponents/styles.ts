@@ -7,6 +7,10 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
     hovertext: {
         position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
 
         "&:hover::before": {
             opacity: 1,
@@ -47,7 +51,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             textAlign: "center",
             position: "absolute",
             zIndex: 1,
-            left: "110%",
+            left: "125%",
             top: "50%",
             transform: "translate(0, -50%)",
             fontSize: 15,
@@ -76,6 +80,16 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
                     justifyContent: "center",
                     alignItems: "center"
                 }
+            }
+        }
+    },
+
+    itemGroupBar: {
+        position: "relative",
+
+        "&:hover": {
+            [`& .${getRef('itemGroupIcon')}`]: {
+                visibility: "visible"
             }
         }
     },
@@ -336,6 +350,24 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         ref: getRef('rowIcon'),
         position: "absolute",
         left: 10,
+        top: "50%",
+        transform: "translate(0, -50%)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        visibility: "hidden",
+        color: "grey",
+        padding: 1,
+        borderRadius: 30,
+
+        "&:hover": {
+            backgroundColor: "#C4C4C4"
+        }
+    },
+    itemGroupIcon: {
+        ref: getRef('itemGroupIcon'),
+        position: "absolute",
+        left: 140,
         top: "50%",
         transform: "translate(0, -50%)",
         display: "flex",
