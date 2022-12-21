@@ -1,4 +1,5 @@
-import { createStyles } from '@mantine/core';
+import { createStyles, Popover, Table } from '@mantine/core';
+import { useState } from 'react';
 
 interface MoneyProps {
     moneySum: number,
@@ -16,10 +17,41 @@ const useStyle = createStyles(() => ({
 }));
 
 export function Money({ moneySum, transactionIds, cashFlows, transactionDates }: MoneyProps) {
+    const [opened, setOpened] = useState(false);
     const { classes } = useStyle();
+
     return (
-        <div className={classes.moneyContainer}>
-            {moneySum.toLocaleString()}
-        </div>
+        <Popover width={300} position="bottom" withArrow shadow="md" opened={opened} onChange={setOpened}>
+            <Popover.Target>
+                <span
+                    className={classes.moneyContainer}
+                    onClick={() => setOpened((o) => !o)}
+                >
+                    {moneySum.toLocaleString()}
+                </span>
+            </Popover.Target>
+            <Popover.Dropdown>
+                <span>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                transactionIds.map((transactionId, index) => (
+                                    <tr key={"transaction_" + transactionId}>
+                                        <td>{transactionDates[index]}</td>
+                                        <td>{cashFlows[index]}</td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </Table>
+                </span>
+            </Popover.Dropdown>
+        </Popover>
     )
 }

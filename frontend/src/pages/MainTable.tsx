@@ -142,9 +142,11 @@ export function MainTable() {
                         break;
                     case "money":
                         if (itemCells[itemGroupID][itemID][typeID]) {
-                            itemCells[itemGroupID][itemID][typeID]!.transaction_id!.push(cell.transaction_id);
-                            itemCells[itemGroupID][itemID][typeID]!.item_money_cashflow!.push(cell.item_money_cashflow);
-                            itemCells[itemGroupID][itemID][typeID]!.item_money_date!.push(cell.item_money_date);
+                            if (!itemCells[itemGroupID][itemID][typeID]!.transaction_id!.includes(cell.transaction_id)) {
+                                itemCells[itemGroupID][itemID][typeID]!.transaction_id!.push(cell.transaction_id);
+                                itemCells[itemGroupID][itemID][typeID]!.item_money_cashflow!.push(cell.item_money_cashflow);
+                                itemCells[itemGroupID][itemID][typeID]!.item_money_date!.push(cell.item_money_date);
+                            }
                         } else {
                             itemCell["transaction_id"] = [cell.transaction_id];
                             itemCell["item_money_cashflow"] = [cell.item_money_cashflow];
