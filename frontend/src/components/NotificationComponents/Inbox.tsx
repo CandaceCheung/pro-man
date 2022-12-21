@@ -1,6 +1,7 @@
 import { Button, Card, Center, Checkbox, Container, Input, Table } from "@mantine/core";
 import { IconArrowBackUp, IconEraser, IconPlus } from "@tabler/icons";
 import { ChangeEvent, MouseEvent, useState } from "react";
+import { acceptMemberInvitation } from "../../redux/invitation/thunk";
 import { checkUsernameAction, setMessageTargetAction, toggleIReplyModalAction, toggleMessagerAction } from "../../redux/project/slice";
 import { toggleDelete, toggleRead } from "../../redux/project/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -18,7 +19,7 @@ export function Inbox() {
 
 
     const rows = messages.map((message) => {
-        const inviteMessage = <div>Hello, {message.receiver}. I want to invite you to join my project. Please click the button to accept.  <Button variant="subtle" value={parseInt(message.message)} onClick={e=>onAcceptInvite(e)}>Here</Button></div>
+        const inviteMessage = <div>Hello, {message.receiver}. I want to invite you to join my project. Please click<Button variant="subtle" value={parseInt(message.message)} onClick={e=>onAcceptInvite(e)}>Here</Button>to accept.  </div>
         
         return <tr key={message.id} className={message.status ? "read-message" : 'unread-message'}>
             {message.message_type==="message"? <td>{message.message}</td> : <td>{inviteMessage}</td>}
@@ -31,6 +32,7 @@ export function Inbox() {
 });
 
     function onAcceptInvite(e: MouseEvent<HTMLButtonElement>){
+        dispatch(acceptMemberInvitation(parseInt(e.currentTarget.value), userId!))
         console.log(e.currentTarget.value)
     }
 

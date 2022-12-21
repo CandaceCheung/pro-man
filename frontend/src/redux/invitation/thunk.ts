@@ -75,8 +75,8 @@ export function acceptMemberInvitation(projectId: number, userId: number) {
         const token = localStorage.getItem("token");
 
         const res = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/invitation/members/`, {
-            method: "PUT",
+            `${process.env.REACT_APP_API_SERVER}/member/invitation`, {
+            method: "POST",
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
@@ -89,7 +89,6 @@ export function acceptMemberInvitation(projectId: number, userId: number) {
         const result = await res.json();
 
         if (result.success) {
-            dispatch(acceptInviteAction(result.invitation))
             dispatch(getTableListAction(result.tableList))
             showNotification({
                 title: 'Invitation notification',

@@ -3,6 +3,37 @@ import { Knex } from "knex";
 export class MemberService {
     constructor(private knex: Knex) { }
 
+    async checkMember(projectId: number, userId: number) {
+
+        try {
+            const [member] = await this.knex.select('*')
+                .from('members')
+                .where("user_id", userId)
+                .andWhere('project_id', projectId)
+
+            return member
+
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async createMember(projectId: number, userId: number) {
+
+        try {
+            const [member] = await this.knex('members')
+                .insert({
+                    user_id: userId,
+                    project_id: projectId
+                }).returning('*')
+
+            return member
+            
+        } catch (e) {
+            throw e;
+        }
+    }
+
     async getMemberList(userId: number) {
 
         const txn = await this.knex.transaction();
