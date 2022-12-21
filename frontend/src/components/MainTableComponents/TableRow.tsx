@@ -82,7 +82,12 @@ export function TableRow({
                         className={cx(classes.tableCell, classes.money)}
                         key={"item" + itemId + "cell" + cellIndex}
                     >
-                        <Money moneySum={moneySums[itemId]} />
+                        <Money 
+                            moneySum={moneySums[itemId]} 
+                            transactionIds={cell.transaction_id!}
+                            cashFlows={cell.item_money_cashflow!}
+                            transactionDates={cell.item_money_date!}
+                        />
                     </div>
                 )
             case "times":

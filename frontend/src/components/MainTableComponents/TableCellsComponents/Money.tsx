@@ -1,7 +1,10 @@
 import { createStyles } from '@mantine/core';
 
 interface MoneyProps {
-    moneySum: number
+    moneySum: number,
+    transactionIds: Array<number>,
+    cashFlows: Array<number>,
+    transactionDates: Array<string>
 }
 
 const useStyle = createStyles(() => ({
