@@ -4,8 +4,11 @@ services:
     server:
         depends_on:
             - db
-        env_file:
-            - .env
+        environment:
+          REACT_APP_API_SERVER: https://api.pro-man.co
+          REACT_APP_PUBLIC_HOSTNAME: https://api.pro-man.co
+          EMAIL_LOGIN: pro-man2217@outlook.com
+          EMAIL_PASSWORD: TeckyCanada2222
         image: cmyip6/pro-man:latest
         ports:
             - "8080:8080"
