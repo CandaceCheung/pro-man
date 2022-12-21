@@ -159,6 +159,7 @@ export async function seed(knex: Knex): Promise<void> {
         insertArray = []
         insertArray.push(
             { type_money_id: moneyID[0].id, date: format(new Date(Date.now() + Math.floor(Math.random() * 300000000) + 100000000), 'yyyy-MM-dd'), cash_flow: Math.random() > 0.5 ? 0 + Math.floor(Math.random() * 50000) : 0 - Math.floor(Math.random() * 50000) },
+            { type_money_id: moneyID[0].id, date: format(new Date(Date.now() + Math.floor(Math.random() * 300000000) + 100000000), 'yyyy-MM-dd'), cash_flow: Math.random() > 0.5 ? 0 + Math.floor(Math.random() * 50000) : 0 - Math.floor(Math.random() * 50000) },
         )
         await knex('transactions').insert(insertArray).returning('*')
 
