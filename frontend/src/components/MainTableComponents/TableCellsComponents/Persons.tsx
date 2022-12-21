@@ -79,14 +79,39 @@ const useStyles = createStyles(() => ({
         fontSize: "inherit",
         margin: "5px 0"
     },
+    iconUser: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 5
+    },
     iconX: {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        marginLeft: 5,
 
         "&:hover": {
             backgroundColor: "#FFF",
             borderRadius: 30
+        }
+    },
+    suggestionList: {
+        display: "flex",
+        flexDirection: "column",
+        width: "100%"
+    },
+    personsSuggestion: {
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        width: "100%",
+        padding: 5,
+        borderRadius: 10,
+        margin: 2,
+
+        "&:hover": {
+            backgroundColor: "#DCDFEC"
         }
     }
 }));
@@ -191,13 +216,15 @@ export function Persons({ itemPersonsIds, personsColors, membersFullName }: Pers
                             const username = membersFullName[id].username;
                             return (
                                 <span className={classes.personsExisting}>
-                                    <IconUserCircle />
+                                    <span className={classes.iconUser}>
+                                        <IconUserCircle />
+                                    </span>
                                     {
                                         (firstName && lastName)
-                                        ?
-                                        firstName + " " + lastName
-                                        :
-                                        username
+                                            ?
+                                            firstName + " " + lastName
+                                            :
+                                            username
                                     }
                                     <span className={classes.iconX}>
                                         <IconX size={15} />
@@ -208,6 +235,32 @@ export function Persons({ itemPersonsIds, personsColors, membersFullName }: Pers
                     </span>
                     <span className={classes.suggestionTitle}>
                         Suggested People
+                    </span>
+                    <span className={classes.suggestionList}>
+                        {
+                            Object.keys(membersFullName).map(key => {
+                                const memberId = parseInt(key);
+                                const firstName = membersFullName[memberId].firstName;
+                                const lastName = membersFullName[memberId].lastName;
+                                const username = membersFullName[memberId].username;
+                                if (!itemPersonsIds.includes(memberId)) {
+                                    return (
+                                        <span className={classes.personsSuggestion}>
+                                            <span className={classes.iconUser}>
+                                                <IconUserCircle />
+                                            </span>
+                                            {
+                                                (firstName && lastName)
+                                                    ?
+                                                    firstName + " " + lastName
+                                                    :
+                                                    username
+                                            }
+                                        </span>
+                                    )
+                                }
+                            })
+                        }
                     </span>
                 </span>
             </Popover.Dropdown>
