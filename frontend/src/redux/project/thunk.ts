@@ -1,7 +1,7 @@
 import { showNotification } from "@mantine/notifications";
 import { Dispatch } from "@reduxjs/toolkit";
 import { renameProjectInTableListAction } from "../table/slice";
-import { checkUsernameAction, clearActiveProjectAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleDeleteAction, toggleReadAction, toggleReceiverDeleteAction } from "./slice";
+import { changeAvatarAction, checkUsernameAction, clearActiveProjectAction, getMemberListAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleDeleteAction, toggleReadAction, toggleReceiverDeleteAction } from "./slice";
 
 export function setActiveProject (projectId: number, projectName: string) {
 	return async (dispatch: Dispatch) => {
@@ -125,6 +125,52 @@ export function getMessages(userId: number) {
         } else {
 			showNotification({
 				title: 'Message Box Notification',
+				message: result.msg
+			});
+        }
+    };
+}
+
+export function getMemberList(userId: number) {
+    return async (dispatch: Dispatch) => {
+
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/invitation/members/${userId}`, 
+        );
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(getMemberListAction(result.memberList))
+        } else {
+			showNotification({
+				title: 'Member List Notification',
+				message: result.msg
+			});
+        }
+    };
+}
+
+export function changeAvatar(membershipId: number, avatar: number) {
+    return async (dispatch: Dispatch) => {
+
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/invitation/members/`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    membershipId,
+                    avatar
+                })
+            });
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(changeAvatarAction({membershipId: result.membershipId, avatar: result.avatar}))
+        } else {
+			showNotification({
+				title: 'Member List Notification',
 				message: result.msg
 			});
         }

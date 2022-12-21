@@ -8,14 +8,14 @@ import { Dashboard } from "./pages/Dashboard";
 import { Profile } from "./pages/Profile";
 import { retriveLogin } from "./redux/auth/thunk";
 import { Notification } from "./pages/Notification";
-import { MyWork } from "./pages/MyWork";
+import { MyMember } from "./pages/MyMember";
 import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 import { getFavorite, getTableList } from "./redux/table/thunk";
 import { getGroup, getKanbanItems, getMember } from "./redux/kanban/thunk";
 import { showNotification } from "@mantine/notifications";
-import { getMessages } from "./redux/project/thunk";
+import { getMemberList, getMessages } from "./redux/project/thunk";
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
@@ -42,6 +42,7 @@ function App() {
         if (isLoggedIn) {
             dispatch(getFavorite(userId!));
             dispatch(getMessages(userId!));
+            dispatch(getMemberList(userId!));
             if (projectId) {
                 navigate('/');
             } else {
@@ -73,7 +74,7 @@ function App() {
                             <Route path="/home/*" element={<Home />} />
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/notification" element={<Notification />} />
-                            <Route path="/my-work" element={<MyWork />} />
+                            <Route path="/myMember" element={<MyMember />} />
                             <Route path="/favorite" element={<Favorite />} />
                             <Route path="/profile" element={<Profile />} />
                         </Routes>
