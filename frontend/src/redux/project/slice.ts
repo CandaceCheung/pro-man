@@ -46,6 +46,7 @@ export interface ActiveProjectState {
     time_line_start_anchor: Moment
     time_line_end_anchor: Moment
     toggle_messager: boolean
+    toggle_invite_member_modal: boolean
     warning_modal_opened: boolean
     time_line_stack_item: boolean
     update_time_line_modal_opened: boolean
@@ -76,6 +77,7 @@ const initialState: ActiveProjectState = {
     time_line_start_anchor: moment().startOf('minute').add(-0.5, 'weeks'),
     time_line_end_anchor: moment().startOf('minute').add(0.5, 'weeks'),
     toggle_messager: false,
+    toggle_invite_member_modal: false,
     warning_modal_opened: false,
     time_line_stack_item: true,
     update_time_line_modal_opened: false,
@@ -157,6 +159,8 @@ const toggleInvitationButton: CaseReducer<ActiveProjectState, PayloadAction<bool
     (state, action) => { state.toggle_invitation_button = action.payload }
 const toggleIReplyModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
     (state, action) => { state.toggle_reply_modal = action.payload }
+const toggleInviteMemberModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
+    (state, action) => { state.toggle_invite_member_modal = action.payload }
 const checkUsername: CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
     (state, action) => { state.check_username = action.payload }
 const setMessageTarget: CaseReducer<ActiveProjectState, PayloadAction<number>> =
@@ -231,6 +235,7 @@ const projectSlice = createSlice({
         setTimelineItemHeight,
         toggleInvitationButton,
         toggleIReplyModal,
+        toggleInviteMemberModal,
         checkUsername,
         setMessageTarget,
         sendMessage,
@@ -266,6 +271,7 @@ export const {
     setTimelineItemHeight: setTimelineItemHeightAction,
     toggleInvitationButton: toggleInvitationButtonAction,
     toggleIReplyModal: toggleIReplyModalAction,
+    toggleInviteMemberModal: toggleInviteMemberModalAction,
     checkUsername: checkUsernameAction,
     setMessageTarget: setMessageTargetAction,
     sendMessage: sendMessageAction,

@@ -6,7 +6,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { checkUsername, sendMessage } from '../../redux/project/thunk';
 import { showNotification } from '@mantine/notifications';
 
-export function Messager() {
+export function InviteMemberModal() {
     const dispatch = useAppDispatch()
     const opened = useAppSelector(state => state.project.toggle_messager)
     const inviteMemberOpened = useAppSelector(state => state.project.toggle_invite_member_modal)
@@ -59,7 +59,6 @@ export function Messager() {
         setText('')
         setUsername('')
         clearTimeout(timer)
-        dispatch(toggleInviteMemberModal(false))
         dispatch(toggleMessagerAction(false))
         dispatch(checkUsernameAction(false))
     }
@@ -150,8 +149,4 @@ export function Messager() {
             </Modal>
         </>
     );
-}
-
-function toggleInviteMemberModal(arg0: boolean): any {
-    throw new Error('Function not implemented.');
 }

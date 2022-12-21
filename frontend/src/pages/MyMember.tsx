@@ -1,6 +1,7 @@
 import { Grid } from "@mantine/core";
 import { useEffect } from "react";
 import { NameCard } from "../components/MyMemberComponents/NameCard";
+import { Messager } from "../components/NotificationComponents/Messager";
 import { getMemberList } from "../redux/project/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
@@ -36,6 +37,7 @@ export function MyMember() {
                     </Grid.Col>
                 })}
             </Grid>
+            <Messager />
         </div>
     )
 }
