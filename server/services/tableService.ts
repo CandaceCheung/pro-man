@@ -68,9 +68,9 @@ export class TableService {
                     .orOn('type_persons.type_id', '=', 'types.id')
             })
             .where("users.id", userID)
-            .where("projects.id", projectID)
-            .where("items.is_deleted", false)
-            .where("projects.is_deleted", false)
+            .andWhere("projects.id", projectID)
+            .andWhere("items.is_deleted", false)
+            .andWhere("projects.is_deleted", false)
             .orderBy("project_id", 'asc')
             .orderBy("item_group_id", 'desc')
             .orderBy("vertical_order", 'asc')
@@ -93,7 +93,7 @@ export class TableService {
             .join('users', 'members.user_id', '=', 'users.id')
             .join('projects', 'members.project_id', '=', 'projects.id')
             .where('members.user_id', '=', userId)
-            .where("projects.is_deleted", false)
+            .andWhere("projects.is_deleted", false)
             .orderBy("project_id", 'asc')
 
         return tableList
@@ -103,7 +103,7 @@ export class TableService {
         const [likeStatus] = await this.knex.select('*')
             .from('favorite')
             .where('favorite.user_id', userId)
-            .where('favorite.project_id', projectId)
+            .andWhere('favorite.project_id', projectId)
             .limit(1)
 
         return likeStatus
@@ -111,7 +111,7 @@ export class TableService {
     async deleteLike(userId: number, projectId: number) {
         await this.knex('favorite').del()
             .where('favorite.user_id', userId)
-            .where('favorite.project_id', projectId)
+            .andWhere('favorite.project_id', projectId)
 
         return
     }
