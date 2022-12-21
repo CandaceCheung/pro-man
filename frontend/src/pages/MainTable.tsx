@@ -23,8 +23,9 @@ export interface itemCellsElement {
     element_name: TableState["element_name"],
     item_dates_datetime?: TableState["item_dates_datetime"],
     item_dates_date?: TableState["item_dates_date"],
-    item_money_cashflow?: TableState["item_money_cashflow"],
-    item_money_date?: TableState["item_money_date"],
+    transaction_id?: Array<TableState["transaction_id"]>,
+    item_money_cashflow?: Array<TableState["item_money_cashflow"]>,
+    item_money_date?: Array<TableState["item_money_date"]>,
     item_person_user_id?: Array<TableState["item_person_user_id"]>,
     item_status_color?: TableState["item_status_color"],
     item_status_name?: TableState["item_status_name"],
@@ -140,9 +141,16 @@ export function MainTable() {
                         itemCells[itemGroupID][itemID][typeID] = itemCell;
                         break;
                     case "money":
-                        itemCell["item_money_cashflow"] = cell.item_money_cashflow;
-                        itemCell["item_money_date"] = cell.item_money_date;
-                        itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        if (itemCells[itemGroupID][itemID][typeID]) {
+                            itemCells[itemGroupID][itemID][typeID]!.transaction_id!.push(cell.transaction_id);
+                            itemCells[itemGroupID][itemID][typeID]!.item_money_cashflow!.push(cell.item_money_cashflow);
+                            itemCells[itemGroupID][itemID][typeID]!.item_money_date!.push(cell.item_money_date);
+                        } else {
+                            itemCell["transaction_id"] = [cell.transaction_id];
+                            itemCell["item_money_cashflow"] = [cell.item_money_cashflow];
+                            itemCell["item_money_date"] = [cell.item_money_date];
+                            itemCells[itemGroupID][itemID][typeID] = itemCell;
+                        }
                         if (moneySumsTemp[cell.item_id]) {
                             moneySumsTemp[cell.item_id] += cell.item_money_cashflow;
                         } else {
