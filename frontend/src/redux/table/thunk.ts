@@ -440,6 +440,27 @@ export function updateState(itemId: number, stateId: number, userId: number, pro
 	}
 }
 
+export function addPerson(itemId: number, personId: number, userId: number, projectId: number, typeId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/person`, {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ itemId, personId, typeId })
+		});
+		const result = await res.json();
+		if (!result.success) {
+			showNotification({
+				title: 'Add person notification',
+				message: 'Failed to add person! 🤥'
+			});
+			dispatch(getTable(userId, projectId));
+		}
+	}
+
+}
 export function removePerson(itemId: number, personId: number, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
 		const res = await fetch(

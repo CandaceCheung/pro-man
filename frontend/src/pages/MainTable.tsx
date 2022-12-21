@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { getProjectStatusList, getTable, removePerson, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
+import { addPerson, getProjectStatusList, getTable, removePerson, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -343,6 +343,14 @@ export function MainTable() {
         }
     }
 
+    const onAddPerson = (groupId: number, itemId: number, typeId: number, personId: number) => {
+        const newItemCellsState = produce(itemCellsState, draftState => {
+            draftState[groupId][itemId][typeId].item_person_user_id!.push(personId);
+        });
+        setItemCellsState(newItemCellsState);
+        dispatch(addPerson(itemId, personId, userId!, projectID!, typeId));
+    }
+
     return (
         <ScrollArea style={{ width: "calc(100vw - 140px)", height: "calc(100vh - 160px)" }} type="auto" >
             <div className="main-table">
@@ -467,6 +475,7 @@ export function MainTable() {
                                                                 onTextChange={onTextChange}
                                                                 onStatusChange={onStatusChange}
                                                                 onRemovePerson={onRemovePerson}
+                                                                onAddPerson={onAddPerson}
                                                             />
                                                         )
                                                     }

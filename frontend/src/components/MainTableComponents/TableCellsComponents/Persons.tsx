@@ -10,7 +10,8 @@ interface PersonsProps {
     itemPersonsIds: number[],
     personsColors: { [key in number]: string },
     membersFullName: Record<number, MembersFullName>,
-    onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void
+    onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void,
+    onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void
 }
 
 const useStyles = createStyles(() => ({
@@ -122,7 +123,8 @@ const useStyles = createStyles(() => ({
 
 export function Persons({
     groupId, itemId, typeId,        
-    itemPersonsIds, personsColors, membersFullName, onRemovePerson
+    itemPersonsIds, personsColors, membersFullName, 
+    onRemovePerson, onAddPerson
 }: PersonsProps) {
     const [opened, setOpened] = useState(false);
     const { classes, cx } = useStyles();
@@ -270,6 +272,9 @@ export function Persons({
                                         <span 
                                             key={"person_" + key}
                                             className={classes.personsSuggestion}
+                                            onClick={() => onAddPerson(
+                                                groupId, itemId, typeId, memberId
+                                            )}
                                         >
                                             <span className={classes.iconUser}>
                                                 <IconUserCircle />

@@ -557,6 +557,15 @@ export class TableService {
         return id;
 
     }
+    async addPerson(itemId: number, personId: number, typeId: number) {
+        const [{username}] = await this.knex("users").select("username").where("id", personId);
+        await this.knex("type_persons").insert({
+            name: username,
+            user_id: personId,
+            type_id: typeId,
+            item_id: itemId
+        });
+    }
     async removePerson(itemId: number, personId: number) {
         const ids = await this.knex("type_persons").where("item_id", itemId);
         if (ids.length <= 1) { return false; }

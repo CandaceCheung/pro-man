@@ -287,6 +287,18 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Add State" });
         }
     }
+    addPerson = async (req: Request, res: Response) => {
+        try {
+            const itemId = req.body.itemId;
+            const personId = req.body.personId;
+            const typeId = req.body.typeId;
+            await this.tableService.addPerson(itemId, personId, typeId);
+            res.json({success: true});
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Add Person" });
+        }
+    }
     removePerson = async (req: Request, res: Response) => {
         try {
             const itemId = req.body.itemId;

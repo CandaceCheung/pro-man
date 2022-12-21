@@ -23,13 +23,14 @@ export interface TableRowProps {
     onItemRename: (groupId: number, itemId: number, name: string) => void,
     onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void,
     onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void,
-    onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void
+    onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void,
+    onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void
 }
 
 export function TableRow({ 
     itemId, groupId, typeOrder, cellDetails, color, lastRow, 
     personsColors, moneySums, membersFullName,
-    onItemRename, onTextChange, onStatusChange, onRemovePerson
+    onItemRename, onTextChange, onStatusChange, onRemovePerson, onAddPerson
 }: TableRowProps) {
     const {
         attributes,
@@ -62,6 +63,7 @@ export function TableRow({
                             personsColors={personsColors}
                             membersFullName={membersFullName}
                             onRemovePerson={onRemovePerson}
+                            onAddPerson={onAddPerson}
                         />
                     </div>
                 )

@@ -24,6 +24,7 @@ import { tableController } from "../app";
     tableRoutes.post('/itemGroup', tableController.insertItemGroup);
     tableRoutes.post('/newProject', tableController.insertNewProject);
     tableRoutes.post('/newState', tableController.addState);
+    tableRoutes.post('/person', tableController.addPerson);
     tableRoutes.delete('/person', tableController.removePerson);
 
     return tableRoutes;
