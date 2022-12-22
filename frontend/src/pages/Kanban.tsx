@@ -6,7 +6,7 @@ import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
 import { SmartPointerSensor } from "../pointerSensor";
 import { Status } from "../redux/kanban/state";
 import { putOrder } from "../redux/kanban/thunk";
-import { getProjectStatusList } from "../redux/table/thunk";
+import { getTable } from "../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
 export type kanbanState = Status;
@@ -14,14 +14,16 @@ export type kanbanState = Status;
 
 export function Kanban() {
     const dispatch = useAppDispatch();
+    const userId = useAppSelector(state => state.auth.userId);
     const statusList = useAppSelector((state) => state.kanban.statusList);
     const projectId = useAppSelector((state) => state.project.project_id);
+    const sensors = useSensors(useSensor(SmartPointerSensor));
+    
 
     useEffect(() => {
-        projectId && dispatch(getProjectStatusList(projectId))
+        userId && projectId && dispatch(getTable(userId, projectId));
     },[projectId, dispatch]);
 
-    const sensors = useSensors(useSensor(SmartPointerSensor));
 
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
