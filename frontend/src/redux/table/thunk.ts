@@ -607,8 +607,7 @@ export function deleteProject(userId: number, projectId: number) {
 		});
 		const result = await res.json();
 		if (result.success) {
-			dispatch(getTable(userId, projectId));
-			// Not yet finished
+			dispatch(getTableList(userId));
 			showNotification({
 				title: 'Delete project notification',
 				message: 'Successfully deleted project! 😎'
