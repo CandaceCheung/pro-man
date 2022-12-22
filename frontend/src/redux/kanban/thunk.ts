@@ -85,6 +85,7 @@ export function getGroup(projectId: number) {
 export function postItem(
     projectId: number,
     stateId: number,
+    userId: number,
     itemName: string,
     memberName: string[],
     memberId: string[],
@@ -105,7 +106,9 @@ export function postItem(
                 body: JSON.stringify({
                     projectId,
                     stateId,
+                    userId,
                     itemName,
+                    memberName,
                     memberId,
                     date,
                     groupId,

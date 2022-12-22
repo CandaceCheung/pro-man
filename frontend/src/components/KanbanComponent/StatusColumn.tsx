@@ -72,6 +72,7 @@ export function StatusColumn(props: StatusProps) {
     const memberList = useAppSelector((state) => state.kanban.memberList);
     const groupList = useAppSelector((state) => state.kanban.groupList);
     const projectId = useAppSelector((state) => state.project.project_id)!;
+    const userId = useAppSelector((state) => state.auth.userId)!;
     const [itemName, setItemName] = useState("");
     const [memberId, setMemberId] = useState<string[]>([]);
     const [date, setDate] = useState<Date>();
@@ -87,6 +88,7 @@ export function StatusColumn(props: StatusProps) {
                 postItem(
                     projectId,
                     props.id,
+                    userId,
                     itemName,
                     nameList,
                     memberId,

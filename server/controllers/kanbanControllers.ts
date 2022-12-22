@@ -66,22 +66,22 @@ export class KanbanController {
 				projectId,
 				stateId,
 				userId,
-				username,
 				itemName,
-				typePersonId,
-				groupId,
-				date
+				memberName,
+				memberId,
+				date,
+				groupId
 			} = req.body;
-
+			console.log(req.body)
 			const itemId = await this.kanbanService.addKanbanitem(
 				projectId,
 				stateId,
 				userId,
-				username,
 				itemName,
-				typePersonId,
-				groupId,
-				date
+				memberName,
+				memberId,
+				date,
+				groupId
 			);
 
 			res.json({
