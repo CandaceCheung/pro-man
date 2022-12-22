@@ -284,6 +284,9 @@ export function toggleReceiverDelete(notificationId: number) {
         const res = await fetch(
             `${process.env.REACT_APP_API_SERVER}/notification/receiver/${notificationId}`, {
             method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
         });
         const result = await res.json();
 
