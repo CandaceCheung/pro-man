@@ -5,9 +5,9 @@ import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from "../../store";
 import { setActiveProject } from "../project/thunk";
 
-export function likeProject (projectId: number, userId: number) {
+export function likeProject(projectId: number, userId: number) {
 	return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem("token");
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/favorite`, {
 			method: "PUT",
@@ -40,14 +40,14 @@ export function likeProject (projectId: number, userId: number) {
 
 export function getTable(userID: number, projectID: number) {
 	return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem("token");
+		const token = localStorage.getItem("token");
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/${userID}&${projectID}`,{
+			`${process.env.REACT_APP_API_SERVER}/table/${userID}&${projectID}`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
-			}
+		}
 		);
 		const result = await res.json();
 
@@ -62,14 +62,14 @@ export function getTable(userID: number, projectID: number) {
 
 export function getTableList(userId: number) {
 	return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem("token");
+		const token = localStorage.getItem("token");
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/list/${userId}`,{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			}
+			`${process.env.REACT_APP_API_SERVER}/table/list/${userId}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		}
 		);
 		const result = await res.json();
 
@@ -86,11 +86,11 @@ export function getTableList(userId: number) {
 
 export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
 	return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem("token");
-		
+		const token = localStorage.getItem("token");
+
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/updateTimeline`, {
-				method: "PUT",
+			method: "PUT",
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${token}`,
@@ -104,7 +104,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 			})
 		});
 		const result = await res.json();
-		
+
 		if (result.success) {
 			dispatch(updateTimelineItemAction({ timelineID, startTime, endTime, name, color, typeId: result.typeId }))
 			showNotification({
@@ -120,11 +120,11 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
 export function updateDatelineItem(datelineID: number, date: number, name: string, color: string) {
 	return async (dispatch: Dispatch) => {
 		const token = localStorage.getItem("token");
-		
+
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/updateDateline`, {
-				method: "PUT",
-				headers: {
+			method: "PUT",
+			headers: {
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${token}`,
 			},
@@ -198,7 +198,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
 
 export function getFavorite(userId: number) {
 	return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem("token");
+		const token = localStorage.getItem("token");
 
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/favorite/${userId}`
@@ -591,6 +591,32 @@ export function deleteItemGroup(groupId: number, userId: number, projectId: numb
 			showNotification({
 				title: 'Delete item notification',
 				message: 'Failed to delete item group! 🤥'
+			});
+		}
+	}
+}
+export function deleteProject(userId: number, projectId: number) {
+	return async (dispatch: AppDispatch) => {
+		const res = await fetch(
+			`${process.env.REACT_APP_API_SERVER}/table/project`, {
+			method: "DELETE",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ projectId, userId })
+		});
+		const result = await res.json();
+		if (result.success) {
+			dispatch(getTable(userId, projectId));
+			// Not yet finished
+			showNotification({
+				title: 'Delete project notification',
+				message: 'Successfully deleted project! 😎'
+			});
+		} else {
+			showNotification({
+				title: 'Delete project notification',
+				message: 'Failed to delete project! 🤥'
 			});
 		}
 	}

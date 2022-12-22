@@ -30,6 +30,7 @@ import { tableController } from "../app";
     tableRoutes.delete('/transaction', tableController.removeTransaction);
     tableRoutes.delete('/item', tableController.deleteItem);
     tableRoutes.delete('/itemGroup', tableController.deleteItemGroup);
+    tableRoutes.delete('/project', tableController.deleteProject);
 
     return tableRoutes;
  }
