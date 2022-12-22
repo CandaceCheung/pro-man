@@ -47,8 +47,8 @@ export default function ProjectNavbar() {
     }
 
     function tabChangeHandler(value: ActivePageState | null) {
-        navigate(`/${value}`)
         dispatch(setActivePageAction(value))
+        navigate(`/${value}`)
     }
 
     function onLikeClick() {
@@ -119,7 +119,7 @@ export default function ProjectNavbar() {
             </div>
             <InvitationDrawer toggle={invitationOpen} onRemove={onRemove} />
 
-            <Tabs defaultValue="mainTable" value={page} onTabChange={(value) => tabChangeHandler(value as ActivePageState)}>
+            <Tabs defaultValue={page} value={page} onTabChange={(value) => tabChangeHandler(value as ActivePageState)}>
                 <Tabs.List>
                     <Tabs.Tab value="mainTable" icon={<IconHome size={14} />}>Main Table</Tabs.Tab>
                     <Tabs.Tab value="timeline" icon={<IconTimelineEvent size={14} />}>Timeline</Tabs.Tab>
@@ -132,9 +132,9 @@ export default function ProjectNavbar() {
             <div id="tab-content" className='container'>
                 <Routes>
                     <Route path="/" element={<MainTable />} />
-                    <Route path="/mainTable" element={<MainTable />} />
-                    <Route path="/timeline" element={<TimeFrame />} />
-                    <Route path="/kanban" element={<Kanban />} />   
+                    <Route path="mainTable" element={<MainTable />} />
+                    <Route path="timeline" element={<TimeFrame />} />
+                    <Route path="kanban" element={<Kanban />} />   
                 </Routes>
             </div>
         </div>

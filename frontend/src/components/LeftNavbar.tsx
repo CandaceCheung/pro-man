@@ -107,12 +107,12 @@ export function LeftNavbar() {
                 if (item.path === 'favorite'){
                     if (toggleSidePanel && !toggleFavorite){
                         setActive(index)
-                        navigate(`/${page}`)
+                        navigate(`/home/${page}`)
                         dispatch(toggleSidePanelAction(true))
                         dispatch(toggleFavoriteAction(true))
                     } else {
                         setActive(index)
-                        navigate(`/${page}`)
+                        navigate(`/home/${page}`)
                         dispatch(toggleFavoriteAction(!toggleFavorite))
                         dispatch(toggleSidePanelAction(!toggleSidePanel))
                     }

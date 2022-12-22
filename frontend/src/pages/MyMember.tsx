@@ -35,7 +35,7 @@ export function MyMember() {
                     Invite New Members
                 </Button>
             </div>
-            <Grid grow gutter={5} gutterXs="md" gutterMd="md" gutterXl={50} >
+            <Grid grow justify="space-between">
 
                 {memberList.map(member => {
                     return <Grid.Col span={4} key={member.member_id}>
