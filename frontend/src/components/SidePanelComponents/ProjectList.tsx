@@ -1,14 +1,17 @@
 import '../styles/ProjectList.css'
-import { Button, Divider } from "@mantine/core"
+import { Button, Divider, Modal } from "@mantine/core"
 import { useAppDispatch, useAppSelector } from "../../store"
 import { setActiveProject } from '../../redux/project/thunk'
 import { MyTableListState } from '../../redux/table/slice'
-import { IconPlus } from '@tabler/icons'
-import { insertNewProject } from '../../redux/table/thunk'
+import { IconPlus, IconX } from '@tabler/icons'
+import { deleteProject, insertNewProject } from '../../redux/table/thunk'
+import { useState } from 'react'
+import { showNotification } from '@mantine/notifications'
 
 export function ProjectList() {
     const projectSummary = useAppSelector(state => state.table.project_list)
     const userId = useAppSelector(state => state.auth.userId)
+    const [opened, setOpened] = useState(false);
     const dispatch = useAppDispatch()
 
     let projectIdList: [number?] = []
@@ -31,6 +34,20 @@ export function ProjectList() {
         userId && dispatch(insertNewProject(userId));
     }
 
+    const handleDeleteProject = (projectId: number) => {
+        setOpened(false);
+        if (userId) {
+            if (projectSummary.filter(each => each.creator_id === userId).length <= 1) {
+                showNotification({
+                    title: 'Delete project notification',
+                    message: 'Failed to delete project! You must have at least 1 project! 🤥'
+                });
+            } else {
+                dispatch(deleteProject(userId, projectId));
+            }
+        }
+    }
+
     return (
         <div>
             <h2>Project List</h2>
@@ -38,7 +55,44 @@ export function ProjectList() {
                 <Button variant='subtle' rightIcon={<IconPlus size={14} />} onClick={onAddProject}> New Project </Button>
                 <Divider labelPosition='center' my="md" label="Your Projects" color={'dark'} />
                 {projectList.map((content, index) => content?.creator_id === userId &&
-                    <div key={content.project_id}><Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].project_name))} value={content?.project_id} className='' variant='subtle' key={index}>{content?.project_name}</Button></div>
+                    <div key={content.project_id} className="my-project-container" >
+                        <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].project_name))} value={content?.project_id} className='' variant='subtle' key={index}>
+                            {content?.project_name}
+                        </Button>
+                        <IconX
+                            size={16}
+                            className="delete-icon"
+                            onClick={() => setOpened(true)}
+                        />
+                        <Modal
+                            centered
+                            opened={opened}
+                            onClose={() => setOpened(false)}
+                            title={
+                                <span
+                                    className="modal-title"
+                                >
+                                    {"Delete this project?"}
+                                </span>
+                            }
+                        >
+                            <span
+                                className="modal-body"
+                            >
+                                {"The action cannot be reversed! Think twice! 🤔"}
+                            </span>
+                            <span
+                                className="modal-footer"
+                            >
+                                <Button
+                                    color="red"
+                                    onClick={() => content.project_id && handleDeleteProject(content.project_id)}
+                                >
+                                    Delete
+                                </Button>
+                            </span>
+                        </Modal>
+                    </div>
                 )}
                 <Divider labelPosition='center' my="md" label="Joined Projects" color={'dark'} />
                 {projectList.map((content, index) => content?.creator_id !== userId &&

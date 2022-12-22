@@ -622,4 +622,14 @@ export class TableService {
         }).where("id", groupId);
         return true;
     }
+    async deleteProject(projectId: number, userId: number) {
+        const projectIds = await this.knex("projects").select("id").where("creator_id", userId).andWhere("is_deleted", false);
+        if (projectIds.length <= 1) {
+            return false;
+        }
+        await this.knex("projects").update({
+            is_deleted: true
+        }).where("id", projectId);
+        return true;
+    }
 }
