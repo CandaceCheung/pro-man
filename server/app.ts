@@ -58,7 +58,7 @@ export const memberController = new MemberController(memberService);
 app.use(express.json(), cors());
 
 app.use('/auth', authRoutes());
-app.use('/table', tableRoutes());
+app.use('/table', isLoggedIn, tableRoutes());
 app.use('/kanban', isLoggedIn, kanbanRoutes());
 app.use('/invitation', isLoggedIn, invitationRoutes());
 app.use('/notification', isLoggedIn, notificationRoutes());

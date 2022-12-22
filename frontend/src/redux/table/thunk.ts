@@ -151,9 +151,14 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
 
 export function getProjectStatusList(projectId: number) {
 	return async (dispatch: Dispatch) => {
-
+		const token = localStorage.getItem("token");
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/status/${projectId}`
+			`${process.env.REACT_APP_API_SERVER}/table/status/${projectId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
 		);
 		const result = await res.json();
 
@@ -170,12 +175,13 @@ export function getProjectStatusList(projectId: number) {
 
 export function updateItemGroupName(itemGroupId: number, itemGroupName: string, userId: number, projectID: number) {
 	return async (dispatch: AppDispatch) => {
-
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/itemGroupName`, {
 			method: "PUT",
 			headers: {
 				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				itemGroupId,
@@ -201,7 +207,12 @@ export function getFavorite(userId: number) {
 		const token = localStorage.getItem("token");
 
 		const res = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/table/favorite/${userId}`
+			`${process.env.REACT_APP_API_SERVER}/table/favorite/${userId}`,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
 		);
 		const result = await res.json();
 
@@ -216,11 +227,13 @@ export function getFavorite(userId: number) {
 
 export function insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/item`, {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				projectId,
@@ -244,11 +257,13 @@ export function insertItem(projectId: number, userId: number, itemGroupId?: numb
 
 export function insertItemGroup(projectId: number, userId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/itemGroup`, {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				projectId,
@@ -270,11 +285,13 @@ export function insertItemGroup(projectId: number, userId: number) {
 
 export function reorderItems(newOrder: number[], userId: number, projectID: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/itemsOrder`, {
 			method: "PUT",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				newOrder
@@ -294,11 +311,13 @@ export function reorderItems(newOrder: number[], userId: number, projectID: numb
 
 export function reorderTypes(newOrder: number[], userId: number, projectID: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/typesOrder`, {
 			method: "PUT",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				newOrder
@@ -318,11 +337,13 @@ export function reorderTypes(newOrder: number[], userId: number, projectID: numb
 
 export function insertNewProject(userId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/newProject`, {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ userId })
 		});
@@ -351,11 +372,13 @@ export function insertNewProject(userId: number) {
 
 export function renameItem(itemId: number, name: string, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/newItemName`, {
 			method: "PUT",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ itemId, name })
 		});
@@ -372,11 +395,13 @@ export function renameItem(itemId: number, name: string, userId: number, project
 
 export function renameType(typeId: number, name: string, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/newTypeName`, {
 			method: "PUT",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ typeId, name })
 		});
@@ -393,11 +418,13 @@ export function renameType(typeId: number, name: string, userId: number, project
 
 export function updateText(itemId: number, text: string, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/newText`, {
 			method: "PUT",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ itemId, text })
 		});
@@ -414,11 +441,13 @@ export function updateText(itemId: number, text: string, userId: number, project
 
 export function newState(projectId: number, name: string, color: string) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/newState`, {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ projectId, name, color })
 		});
@@ -440,11 +469,13 @@ export function newState(projectId: number, name: string, color: string) {
 
 export function updateState(itemId: number, stateId: number, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/state`, {
 			method: "PUT",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ itemId, stateId })
 		});
@@ -461,11 +492,13 @@ export function updateState(itemId: number, stateId: number, userId: number, pro
 
 export function addPerson(itemId: number, personId: number, userId: number, projectId: number, typeId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/person`, {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ itemId, personId, typeId })
 		});
@@ -482,11 +515,13 @@ export function addPerson(itemId: number, personId: number, userId: number, proj
 
 export function addTransaction(itemId: number, date: string, cashFlow: number, updateState: (transactionId: number) => void) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ itemId, date, cashFlow })
 		});
@@ -504,11 +539,13 @@ export function addTransaction(itemId: number, date: string, cashFlow: number, u
 
 export function removePerson(itemId: number, personId: number, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/person`, {
 			method: "DELETE",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ itemId, personId })
 		});
@@ -525,11 +562,13 @@ export function removePerson(itemId: number, personId: number, userId: number, p
 
 export function removeTransaction(itemId: number, transactionId: number, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
 			method: "DELETE",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ itemId, transactionId })
 		});
@@ -546,11 +585,13 @@ export function removeTransaction(itemId: number, transactionId: number, userId:
 
 export function deleteItem(groupId: number, itemId: number, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/item`, {
 			method: "DELETE",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ itemId, groupId })
 		});
@@ -572,11 +613,13 @@ export function deleteItem(groupId: number, itemId: number, userId: number, proj
 
 export function deleteItemGroup(groupId: number, userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/itemGroup`, {
 			method: "DELETE",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ groupId, projectId })
 		});
@@ -597,11 +640,13 @@ export function deleteItemGroup(groupId: number, userId: number, projectId: numb
 }
 export function deleteProject(userId: number, projectId: number) {
 	return async (dispatch: AppDispatch) => {
+		const token = localStorage.getItem("token");
 		const res = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/table/project`, {
 			method: "DELETE",
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({ projectId, userId })
 		});
