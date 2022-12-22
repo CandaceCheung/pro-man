@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { addPerson, addTransaction, deleteItem, getProjectStatusList, getTable, insertItem, removePerson, removeTransaction, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
+import { addPerson, addTransaction, deleteItem, deleteItemGroup, getProjectStatusList, getTable, insertItem, removePerson, removeTransaction, renameItem, renameType, reorderItems, reorderTypes, updateItemGroupName, updateState, updateText } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -11,7 +11,7 @@ import { useStyles } from '../components/MainTableComponents/styles';
 import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
 import { SmartPointerSensor } from '../pointerSensor';
 import produce from "immer";
-import { ScrollArea } from '@mantine/core';
+import { Button, Modal, ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
 import { format } from 'date-fns';
@@ -67,7 +67,7 @@ export function MainTable() {
     const [newItemInputSelected, setNewItemInputSelected] = useState<Record<number, boolean>>({});
     const [newItemInputValue, setNewItemInputValue] = useState<Record<number, string>>({});
 
-    const [deleteGroupModalOpened, setDeleteGroupModalOpened] = useState(false);
+    const [deleteGroupModalOpened, setDeleteGroupModalOpened] = useState<Record<number, boolean>>({});
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -109,6 +109,8 @@ export function MainTable() {
 
         let newItemInputSelectedTemp: Record<number, boolean> = {};
         let newItemInputValueTemp: Record<number, string> = {};
+
+        let deleteGroupModalOpenedTemp: Record<number, boolean> = {};
 
         for (const cell of tableSummary) {
             if (cell.project_id) {
@@ -202,6 +204,9 @@ export function MainTable() {
                 if (!newItemInputValueTemp[itemGroupID]) {
                     newItemInputValueTemp[itemGroupID] = "";
                 }
+                if (!deleteGroupModalOpenedTemp[itemGroupID]) {
+                    deleteGroupModalOpenedTemp[itemGroupID] = false;
+                }
             }
         }
 
@@ -222,6 +227,8 @@ export function MainTable() {
 
         setNewItemInputSelected(newItemInputSelectedTemp);
         setNewItemInputValue(newItemInputValueTemp);
+
+        setDeleteGroupModalOpened(deleteGroupModalOpenedTemp);
 
     }, [tableSummary, projectID, theme.colors.personsTypeComponentColor]);
 
@@ -298,9 +305,7 @@ export function MainTable() {
             const oldIndex = typesOrdersState[item_group_id].indexOf(active.id);
             const newIndex = typesOrdersState[item_group_id].indexOf(over.id);
             const nextTypesOrdersState = produce(typesOrdersState, draftState => {
-                Object.keys(draftState).forEach((itemGroupId, _) => {
-                    draftState[parseInt(itemGroupId)] = arrayMove(draftState[parseInt(itemGroupId)], oldIndex, newIndex)
-                });
+                draftState[item_group_id] = arrayMove(draftState[item_group_id], oldIndex, newIndex);
             });
             setTypesOrdersState(nextTypesOrdersState);
             userId && dispatch(reorderTypes(nextTypesOrdersState[item_group_id], userId, projectID));
@@ -443,6 +448,13 @@ export function MainTable() {
         }
     }
 
+    const toggleDeleteGroupModalSelected = (groupId: number) => {
+        const newState = produce(deleteGroupModalOpened, draftState => {
+            draftState[groupId] = !draftState[groupId];
+        });
+        setDeleteGroupModalOpened(newState);
+    }
+
     const onDeleteItem = (groupId: number, itemId: number) => {
         if (Object.keys(itemCellsState[groupId]).length <= 1) {
             showNotification({
@@ -451,6 +463,18 @@ export function MainTable() {
             });
         } else {
             userId && projectID && dispatch(deleteItem(groupId, itemId, userId, projectID));
+        }
+    }
+
+    const onDeleteGroup = (groupId: number) => {
+        toggleDeleteGroupModalSelected(groupId);
+        if (Object.keys(itemCellsState).length <= 1) {
+            showNotification({
+                title: 'Item delete notification',
+                message: 'Failed to delete group! Each project should have at least 1 item group! 🤥'
+            });
+        } else {
+            userId && projectID && dispatch(deleteItemGroup(groupId, userId, projectID));
         }
     }
 
@@ -476,10 +500,39 @@ export function MainTable() {
                                 >
                                     <span
                                         className={classes.itemGroupIcon}
-                                        onClick={() => setDeleteGroupModalOpened(true)}
+                                        onClick={() => toggleDeleteGroupModalSelected(item_group_id)}
                                     >
                                         <IconX size={16} />
                                     </span>
+                                    <Modal
+                                        opened={deleteGroupModalOpened[item_group_id]}
+                                        onClose={() => toggleDeleteGroupModalSelected(item_group_id)}
+                                        title={
+                                            <span
+                                                className={classes.modalTitle}
+                                            >
+                                                {"Delete this item group?"}
+                                            </span>
+                                        }
+                                        centered
+                                    >
+                                        <span
+                                            className={classes.modalBody}
+                                        >
+                                            {"The action cannot be reversed! Think twice! 🤔"}
+                                        </span>
+                                        <span
+                                            className={classes.modalFooter}
+                                        >
+                                            <Button
+                                                color="red"
+                                                onClick={() => onDeleteGroup(item_group_id)}
+                                            >
+                                                Delete
+                                            </Button>
+                                        </span>
+                                    </Modal>
+
                                     <span
                                         onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
                                         className={classes.hovertext}

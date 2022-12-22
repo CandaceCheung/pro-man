@@ -11,7 +11,7 @@ const useStyle = createStyles((theme) => ({
         // display: "flex",
         // justifyContent: "center",
         // alignItems: "center",
-        width: "400px",
+        width: "300px",
         height: "100%",
         padding: 3,
         overflow: "hidden",

@@ -1,19 +1,29 @@
 import { DndContext, DragEndEvent, useSensor, useSensors } from "@dnd-kit/core";
 import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { Group, ScrollArea } from "@mantine/core";
+import { useEffect } from "react";
 import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
 import { SmartPointerSensor } from "../pointerSensor";
 import { Status } from "../redux/kanban/state";
 import { putOrder } from "../redux/kanban/thunk";
+import { getTable } from "../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
 export type kanbanState = Status;
 
+
 export function Kanban() {
     const dispatch = useAppDispatch();
+    const userId = useAppSelector(state => state.auth.userId);
     const statusList = useAppSelector((state) => state.kanban.statusList);
-
+    const projectId = useAppSelector((state) => state.project.project_id);
     const sensors = useSensors(useSensor(SmartPointerSensor));
+    
+
+    useEffect(() => {
+        userId && projectId && dispatch(getTable(userId, projectId));
+    },[projectId, dispatch]);
+
 
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
@@ -35,7 +45,7 @@ export function Kanban() {
     return (
         <ScrollArea
             style={{
-                width: "calc(150vw - 140px)",
+                width: "calc(100vw - 140px)",
                 height: "calc(100vh - 160px)",
             }}
             type="auto"
@@ -43,7 +53,7 @@ export function Kanban() {
             <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                 <SortableContext items={statusList.map((status) => status.id)}>
                     <div className="kanban-table">
-                        <Group position="left">
+                        <Group noWrap position="left">
                             {statusList.map((status) => (
                                 <StatusColumn
                                     key={status.id}
