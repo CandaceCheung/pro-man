@@ -52,15 +52,6 @@ function App() {
         // eslint-disable-next-line
     }, [isLoggedIn, dispatch, userId, projectId]);
 
-    useEffect(() => {
-        if (projectId !== null) {
-            dispatch(getKanbanItems(projectId));
-            dispatch(getMember(projectId));
-            dispatch(getGroup(projectId));
-        }
-    }, [projectId, dispatch]);
-
-
     return (
         <div className="App">
             {

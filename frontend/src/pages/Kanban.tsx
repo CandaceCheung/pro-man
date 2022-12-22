@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { StatusColumn } from "../components/KanbanComponent/StatusColumn";
 import { SmartPointerSensor } from "../pointerSensor";
 import { Status } from "../redux/kanban/state";
-import { putOrder } from "../redux/kanban/thunk";
+import { getGroup, getKanbanItems, getMember, putOrder } from "../redux/kanban/thunk";
 import { getTable } from "../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../store";
 
@@ -19,6 +19,13 @@ export function Kanban() {
     const projectId = useAppSelector((state) => state.project.project_id);
     const sensors = useSensors(useSensor(SmartPointerSensor));
     
+    useEffect(() => {
+        if (projectId !== null) {
+            dispatch(getKanbanItems(projectId));
+            dispatch(getMember(projectId));
+            dispatch(getGroup(projectId));
+        }
+    }, [projectId, dispatch]);
 
     useEffect(() => {
         userId && projectId && dispatch(getTable(userId, projectId));
