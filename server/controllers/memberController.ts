@@ -44,6 +44,37 @@ export class MemberController {
         }
     }
 
+    deleteMember = async (req: Request, res: Response) => {
+        try {
+            const membershipId = req.params.membershipId
+            const member = await this.memberService.getMember(parseInt(membershipId))
+            if (member) {
+                const check = await this.memberService.checkLinkage(member.project_id, member.user_id)
+                if (check){
+                    res.json({
+                        success: false,
+                        msg: 'Unable to remove member, please make sure there is no tasks assigned to this member and try again',
+                    })
+                } else {
+                    await this.memberService.deleteMember(parseInt(membershipId))
+                    res.json({
+                        success: true,
+                        msg: 'Member deleted',
+                        projectId: member.project_id
+                    })
+                }
+            } else {
+                res.json({
+                    success: false,
+                    msg: 'Membership not existed',
+                })
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(500).json({ msg: "Something Went wrong during reading Database" });
+        }
+    }
+
     getMemberList = async (req: Request, res: Response) => {
         try {
             const userId = req.params.userId

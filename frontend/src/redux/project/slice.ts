@@ -12,7 +12,7 @@ export type MessageState = {
     receiver: string | null
     receiver_id: number | null
     message: string
-    message_type: 'message'|'invite'
+    message_type: 'message' | 'invite'
     status: boolean
     is_deleted: boolean
     is_deleted_receiver: boolean
@@ -121,7 +121,7 @@ const initialState: ActiveProjectState = {
         members: [{
             membership_id: null,
             project_id: null,
-            member_user_id:null,
+            member_user_id: null,
             avatar: null,
         }],
         projects: [{
@@ -183,7 +183,7 @@ const checkUsername: CaseReducer<ActiveProjectState, PayloadAction<boolean>> =
 const setMessageTarget: CaseReducer<ActiveProjectState, PayloadAction<number>> =
     (state, action) => { state.message_target = action.payload }
 const sendMessage: CaseReducer<ActiveProjectState, PayloadAction<MessageState>> =
-    (state, action) => { state.message_summary.push(action.payload) }
+    (state, action) => { state.message_summary.unshift(action.payload) }
 const getMessages: CaseReducer<ActiveProjectState, PayloadAction<MessageStateArr>> =
     (state, action) => { state.message_summary = action.payload }
 const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number, checked: boolean }>> =
@@ -219,14 +219,29 @@ const getMemberList: CaseReducer<ActiveProjectState, PayloadAction<MyMemberState
 const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number[], avatar: number }>> =
     (state, action) => {
         for (let message of state.member_list) {
-            for (let member of message.members){
-                for (let id of action.payload.membershipId){
+            for (let member of message.members) {
+                for (let id of action.payload.membershipId) {
                     if (member.membership_id === id) {
                         member.avatar = action.payload.avatar
                     }
                 }
             }
         }
+    }
+const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{membershipId: number, projectId: number}>> =
+    (state, action) => { 
+        for (let item of state.member_list){
+            for (let member of item.members){
+                if (member.membership_id === action.payload.membershipId){
+                    item.members.splice(item.members.indexOf(member), 1)
+                }
+            }
+            for (let project of item.projects){
+                if (project.project_id === action.payload.projectId){
+                    item.projects.splice(item.projects.indexOf(project), 1)
+                }
+            }
+        } 
     }
 
 const projectSlice = createSlice({
@@ -264,7 +279,8 @@ const projectSlice = createSlice({
         toggleDelete,
         toggleReceiverDelete,
         getMemberList,
-        changeAvatar
+        changeAvatar,
+        deleteMember
     },
 })
 
@@ -301,6 +317,7 @@ export const {
     toggleReceiverDelete: toggleReceiverDeleteAction,
     getMemberList: getMemberListAction,
     changeAvatar: changeAvatarAction,
+    deleteMember: deleteMemberAction
 } = projectSlice.actions
 
 export default projectSlice.reducer

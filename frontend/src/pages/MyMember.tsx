@@ -18,31 +18,28 @@ export function MyMember() {
 
     useEffect(() => {
         userId && dispatch(getMemberList(userId!));
-        console.log(memberList)
       }, [userId, dispatch]);
 
-    console.log(memberList)
     return (
-        <div>
-            <h2>My Members</h2>
-            <div style={{paddingBottom: '20px'}}>
+        <div >
+            <h2 >My Members</h2>
+            <div style={{marginBottom: '20px', position: 'sticky', top:'0px', zIndex:'99'}}>
                 <Button 
                     onClick={e=>clickHandler(e)} 
                     variant="light" 
                     color="green" 
-                    fullWidth mt="md" 
+                    fullWidth 
+                    mt="md" 
                     radius="md"
-                    
                     >
                     Invite New Members
                 </Button>
             </div>
-            <Grid grow gutter={5} gutterXs="md" gutterMd="xl" gutterXl={50}>
+            <Grid grow gutter={5} gutterXs="md" gutterMd="md" gutterXl={50} >
 
                 {memberList.map(member => {
-                    return <Grid.Col span={4}>
+                    return <Grid.Col span={4} key={member.member_id}>
                         <NameCard
-                            key={member.member_id}
                             member_id={member.member_id}
                             username={member.username}
                             last_name={member.last_name}
