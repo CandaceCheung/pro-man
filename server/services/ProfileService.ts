@@ -25,8 +25,8 @@ export class ProfileService {
 			lastName
 		}: { password?: string; firstName?: string; lastName?: string }
 	) {
+		
 		const txn = await this.knex.transaction();
-
 		try {
 			let update; 
 			let hashedPassword;
@@ -47,13 +47,13 @@ export class ProfileService {
 						'last_name as lastName'
 					]);
 
+				}
 				await txn.commit();
-			}
-			return update;
-			
-		} catch (e) {
-			await txn.rollback();
-			throw e;
+				return update;
+				
+			} catch (e) {
+				await txn.rollback();
+				throw e;
 		}
 	}
 }

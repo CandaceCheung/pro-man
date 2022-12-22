@@ -1,5 +1,9 @@
 describe('Kanban Services Unit Test', () => {
-    it('', () => {
+    beforeEach(() => {
 
+    });
+
+    it( 'should get group list array', () => {
+        
     })
 })
