@@ -59,7 +59,7 @@ app.use(express.json(), cors());
 
 app.use('/auth', authRoutes());
 app.use('/table', isLoggedIn, tableRoutes());
-app.use('/kanban', kanbanRoutes());
+app.use('/kanban', isLoggedIn, kanbanRoutes());
 app.use('/invitation', isLoggedIn, invitationRoutes());
 app.use('/notification', isLoggedIn, notificationRoutes());
 app.use('/profile', isLoggedIn, profileRoutes());
