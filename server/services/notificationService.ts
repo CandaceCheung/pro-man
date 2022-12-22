@@ -71,7 +71,7 @@ export class NotificationService {
                 .where('sender_id', userId)
                 .orWhere('receiver_id', userId)
                 .orderBy('status', 'asc')
-                .orderBy('created_at', 'asc')
+                .orderBy('created_at', 'desc')
 
             await txn.commit();
             return messages

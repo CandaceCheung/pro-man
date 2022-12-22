@@ -14,7 +14,7 @@ export class MemberService {
             const [project] = await this.knex.select('*')
                 .from('projects')
                 .where("id", projectId)
-                
+
             return { member, project }
 
         } catch (e) {
@@ -22,8 +22,47 @@ export class MemberService {
         }
     }
 
-    async createMember(projectId: number, userId: number) {
+    async checkLinkage(projectId: number, userId: number) {
 
+        try {
+            const [check] = await this.knex.select('*')
+                .from('projects')
+                .where("projects.id", projectId)
+                .where('type_persons.user_id', userId)
+                .join('items', 'items.project_id','projects.id')
+                .join('type_persons', 'type_persons.item_id', 'items.id')
+
+            return check
+
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async getMember(membershipId: number) {
+        try {
+            const [member] = await this.knex.select('*')
+                .from('members')
+                .where("id", membershipId)
+        
+            return member
+
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async deleteMember(membershipId: number) {
+        try {
+            await this.knex('members').delete()
+                .where("id", membershipId)
+            return
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    async createMember(projectId: number, userId: number) {
         try {
             const [member] = await this.knex('members')
                 .insert({

@@ -13,15 +13,18 @@ export function Sent() {
     let messages = messageSummary.filter((message)=> message.sender_id === userId && !message.is_deleted_receiver)
     messages = messages.filter(message=> message.receiver?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || new Date(message.created_at).toLocaleString('en-us')?.includes(search))
 
-    const rows = messages.map((message) => (
-        <tr key={message.id} className={message.status ? "read-message" : 'unread-message'}>
-            <td >{message.message}</td>
+    
+    const rows = messages.map((message) => {
+        const inviteMessage = <div>Hello, {message.receiver}. I want to invite you to join my project. Please click<Button variant="subtle">Here</Button>to accept.  </div>
+
+        return <tr key={message.id} className={message.status ? "read-message" : 'unread-message'}>
+            {message.message_type==="message"? <td>{message.message}</td> : <td>{inviteMessage}</td>}
             <td>{message.receiver}</td>
             <td>{new Date(message.created_at).toLocaleString('en-us')}</td>
             <td>{message.status? <IconChecks size={16} style={{color: 'green'}} /> : <IconCheck size={16} style={{color: 'grey'}}/>}</td>
             <td><Button onClick={(e)=>onDelete(e)} value={message.id!} variant="subtle" leftIcon={<IconEraser size={16} />}></Button></td>
         </tr>
-    ));
+});
 
     function onDelete(e : MouseEvent<HTMLButtonElement>){
         dispatch(toggleReceiverDelete(parseInt(e.currentTarget.value)))

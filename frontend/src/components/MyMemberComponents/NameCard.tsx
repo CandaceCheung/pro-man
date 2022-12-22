@@ -1,28 +1,43 @@
 import { Badge, Button, Card, Group, Text, Image, Menu, Tooltip } from "@mantine/core";
-import { IconRefresh } from "@tabler/icons";
+import { IconBackspace, IconRefresh } from "@tabler/icons";
 import React, { useState } from "react";
 import image_1 from '../../images/MemberPhotos/1.jpg'
 import image_2 from '../../images/MemberPhotos/2.jpg'
 import image_3 from '../../images/MemberPhotos/3.jpg'
 import image_4 from '../../images/MemberPhotos/4.jpg'
 import image_5 from '../../images/MemberPhotos/5.jpg'
-import { MyMemberState, toggleInviteMemberModalAction } from "../../redux/project/slice";
-import { changeAvatar } from "../../redux/project/thunk";
+import { MyMemberState } from "../../redux/project/slice";
+import { changeAvatar, deleteMember } from "../../redux/project/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
+import { ConfirmationHub } from "../ProjectNavbarComponents/ConfirmationHub";
 
 export function NameCard(props: MyMemberState) {
     const dispatch = useAppDispatch()
     const userId = useAppSelector(state => state.auth.userId)
+    const isCreator = props.member_id === userId
+    const [targetId, setTargetId] = useState<number|null>(null)
     const [opened, setOpened] = useState(false);
+    const [show, setShow] = useState(false);
     const avatar = [image_1, image_2, image_3, image_4, image_5]
-    const isOwner = props.member_id === userId
     const idList: number[] = []
-    for (let item of props.members){
+    for (let item of props.members) {
         idList.push(item.membership_id!)
     }
 
+
     function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        dispatch(toggleInviteMemberModalAction(true))
+        setTargetId(parseInt(e.currentTarget.value))
+        setShow(true)
+    }
+
+    function onDelete(){
+        dispatch(deleteMember(targetId!))
+        setShow(false)
+    }
+
+    function onClose(){
+        setTargetId(null)
+        setShow(false)
     }
 
     function changeHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -55,8 +70,6 @@ export function NameCard(props: MyMemberState) {
                     </Menu.Dropdown>
                 </Menu>
 
-
-
             </Card.Section>
 
             <Group position="apart" mt="md" mb="xs">
@@ -65,20 +78,18 @@ export function NameCard(props: MyMemberState) {
                     {props.member_id === userId ? 'Project Owner' : "Member"}
                 </Badge>
             </Group>
-            <Tooltip label="Joined Project" color="blue" position="top" withArrow>
-                <Card>
-                    {props.projects.map((project, index) => {
-                        return <Text key={index} size="sm" color="dimmed">{project.project_name}</Text>
-                    })}
-                </Card>
-            </Tooltip>
 
-            {!isOwner &&
-
-                <Button value={props.member_id!} onClick={e=>clickHandler(e)} variant="light" color="blue" fullWidth mt="md" radius="md">
-                    Change Status
-                </Button>
-            }
+            <Card style={{ maxHeight: '100px', overflow: 'auto' }}>
+                {props.projects.map((project, index) => {
+                    return <div key={index} style={{ display: "flex", justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Text size="sm" color="dimmed">{project.project_name}</Text>
+                        {!isCreator && <Tooltip label="Remove from project" color="red" position="right" withArrow>
+                            <Button value={props.members[index].membership_id!} onClick={e => clickHandler(e)} variant="subtle" style={{height: '20px'}}><IconBackspace size={20}/></Button> 
+                        </Tooltip>}
+                    </div>
+                })}
+            </Card>
+            <ConfirmationHub isShow={show} onClose={onClose} onDelete={onDelete}/>
         </Card>
     )
 }

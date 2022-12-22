@@ -1,7 +1,7 @@
 import { showNotification } from "@mantine/notifications";
 import { Dispatch } from "@reduxjs/toolkit";
 import { renameProjectInTableListAction } from "../table/slice";
-import { changeAvatarAction, checkUsernameAction, clearActiveProjectAction, getMemberListAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleDeleteAction, toggleReadAction, toggleReceiverDeleteAction } from "./slice";
+import { changeAvatarAction, checkUsernameAction, clearActiveProjectAction, deleteMemberAction, getMemberListAction, getMessagesAction, sendMessageAction, setActiveProjectAction, setMessageTargetAction, setProjectNameAction, toggleDeleteAction, toggleReadAction, toggleReceiverDeleteAction } from "./slice";
 
 export function setActiveProject(projectId: number, projectName: string) {
     return async (dispatch: Dispatch) => {
@@ -160,6 +160,34 @@ export function getMemberList(userId: number) {
         } else {
             showNotification({
                 title: 'Member List Notification',
+                message: result.msg
+            });
+        }
+    };
+}
+
+export function deleteMember(membershipId: number) {
+    return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/member/${membershipId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+
+        });
+        const result = await res.json();
+
+        if (result.success) {
+            dispatch(deleteMemberAction({ membershipId, projectId: result.projectId }))
+            showNotification({
+                title: 'Member Notification',
+                message: result.msg
+            });
+        } else {
+            showNotification({
+                title: 'Member Notification',
                 message: result.msg
             });
         }
