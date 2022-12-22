@@ -21,7 +21,8 @@ export class KanbanService {
 					.join('type_dates', 'type_dates.item_id', 'items.id')
 					.groupBy('items.id')
 					.groupBy('type_dates.datetime')
-					.where('items.project_id', project_Id);
+					.where('items.project_id', project_Id)
+					.where('items.is_deleted', false);
 			})
 			.select(
 				'states.id as id',
@@ -37,6 +38,13 @@ export class KanbanService {
 			.where('states.project_id', project_Id)
 			.groupBy('states.id')
 			.orderBy('states.status_order');
+
+			
+			// filter the deleted items (null)
+			for( const status of kanbanDetail ) {
+				status.itemsList = status.itemsList.filter((item:any) => item !== null)
+			}
+			
 
 		// for null status
 		kanbanDetail.forEach((state) => {
