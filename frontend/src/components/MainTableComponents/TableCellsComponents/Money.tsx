@@ -64,7 +64,7 @@ export function Money({
 
     const handleKeyDown = (key: string) => {
         if (key === "Enter") {
-            if (dateValue && parseInt(inputValue)) {
+            if (dateValue && !isNaN(parseInt(inputValue))) {
                 onAddTransaction(groupId, itemId, typeId, dateValue, parseInt(inputValue));
                 setInputValue("");
                 setDateValue(new Date());
