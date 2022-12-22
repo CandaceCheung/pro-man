@@ -349,4 +349,15 @@ export class TableController {
             res.status(500).json({ msg: "[TAB] Fail to Delete Item" });
         }
     }
+    deleteItemGroup = async (req: Request, res: Response) => {
+        try {
+            const groupId = req.body.groupId;
+            const projectId = req.body.projectId;
+            const result = await this.tableService.deleteItemGroup(groupId, projectId);
+            res.json({success: result});
+        } catch(e) {
+            console.error(e);
+            res.status(500).json({ msg: "[TAB] Fail to Delete Item Group" });
+        }
+    }
 }
