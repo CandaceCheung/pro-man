@@ -241,10 +241,7 @@ export function toggleRead(notificationId: number, checked: boolean) {
 
         if (result.success) {
             dispatch(toggleReadAction({ notificationId, checked: result.check }))
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
+            console.log(result.msg)
         } else {
             showNotification({
                 title: 'Message Notification',
