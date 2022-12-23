@@ -4,6 +4,10 @@ import { tableController } from "../app";
  export const tableRoutes = () => {
     const tableRoutes = express.Router();
 
+   // compatibility
+   //  V1 => {table: []}
+   //  V2 => {table: [], additioncal: ""}
+
     tableRoutes.get('/:userID&:projectID', tableController.getTable);
     tableRoutes.get('/favorite/:userID', tableController.getFavorite);
     tableRoutes.get('/list/:userID', tableController.getTableList);

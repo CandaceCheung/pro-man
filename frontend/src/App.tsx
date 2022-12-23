@@ -13,71 +13,78 @@ import { Favorite } from "./pages/Favorite";
 import { AppShell } from "@mantine/core";
 import { LeftNavbar } from "./components/LeftNavbar";
 import { getFavorite, getTableList } from "./redux/table/thunk";
-import { getGroup, getKanbanItems, getMember } from "./redux/kanban/thunk";
-import { showNotification } from "@mantine/notifications";
 import { getMemberList, getMessages } from "./redux/project/thunk";
+import { useToken } from "./hooks/useToken";
 
 function App() {
-    const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-    const userId = useAppSelector((state) => state.auth.userId);
-    const projectId = useAppSelector((state) => state.project.project_id); //active project state
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('token');
+	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+	const userId = useAppSelector((state) => state.auth.userId);
+	const projectId = useAppSelector((state) => state.project.project_id); //active project state
 
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        token && localStorage.setItem('invitation', token)
-        token && showNotification({
-            title: 'Invitation notification',
-            message: 'Invitation token detected'
-        })
-    // eslint-disable-next-line
-    }, [])
+	useToken();
 
+	// const params = new URLSearchParams(window.location.search);
+	// const token = params.get('token');
+	// useEffect(() => {
+	//     token && localStorage.setItem('invitation', token)
+	//     token && showNotification({
+	//         title: 'Invitation notification',
+	//         message: 'Invitation token detected'
+	//     })
+	// // eslint-disable-next-line
+	// }, [])
 
-    useEffect(() => {
-        isLoggedIn === null && dispatch(retriveLogin());
-        if (isLoggedIn) {
-            dispatch(getFavorite(userId!));
-            dispatch(getMessages(userId!));
-            dispatch(getMemberList(userId!));
-            if (projectId) {
-                navigate('/');
-            } else {
-                dispatch(getTableList(userId!));
-            }
-        }
-        // eslint-disable-next-line
-    }, [isLoggedIn, dispatch, userId, projectId]);
+	useEffect(() => {
+		isLoggedIn === null && dispatch(retriveLogin());
 
-    return (
-        <div className="App">
-            {
-                isLoggedIn && projectId &&
-                (
-                    <AppShell
-                        navbar={<LeftNavbar />}
-                    >
-                        <Routes>
-                            <Route path="/*" element={<Home />} />
-                            <Route path="/home/*" element={<Home />} />
-                            <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/notification" element={<Notification />} />
-                            <Route path="/myMember" element={<MyMember />} />
-                            <Route path="/favorite" element={<Favorite />} />
-                            <Route path="/profile" element={<Profile />} />
-                        </Routes>
-                    </AppShell>
-                )
-            }
-            {
-                isLoggedIn === false &&
-                <Auth />
-            }
-        </div>
-    );
+		if (isLoggedIn) {
+			dispatch(getFavorite(userId!));
+			dispatch(getMessages(userId!));
+			dispatch(getMemberList(userId!));
+			if (projectId) {
+				navigate("/");
+			} else {
+				dispatch(getTableList(userId!));
+			}
+		}
+		// eslint-disable-next-line
+	}, [isLoggedIn, dispatch, userId, projectId]);
+
+	// const routes = [
+	// 	{
+	// 		path: "/*",
+	// 		element: <Home />,
+	// 	},
+	// 	{
+	// 		path: "/some/page/*",
+	// 		element: <>Page</>,
+    //         visible: someFn.checkPermission()
+	// 	},
+	// ];
+
+	return (
+		<div className="App">
+			{isLoggedIn && projectId && (
+				<AppShell navbar={<LeftNavbar />}>
+
+					<Routes>
+                        {/* routes.filter(route => route.visible).map(route => <Route path={route.path} element={route.element} />) */}
+						<Route path="/*" element={<Home />} />
+						<Route path="/home/*" element={<Home />} />
+						<Route path="/dashboard" element={<Dashboard />} />
+						<Route path="/notification" element={<Notification />} />
+						<Route path="/myMember" element={<MyMember />} />
+						<Route path="/favorite" element={<Favorite />} />
+						<Route path="/profile" element={<Profile />} />
+					</Routes>
+				</AppShell>
+			)}
+			{isLoggedIn === false && <Auth />}
+		</div>
+	);
 }
 
 export default App;

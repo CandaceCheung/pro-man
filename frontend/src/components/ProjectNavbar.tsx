@@ -19,18 +19,19 @@ import { renameProject } from '../redux/project/thunk';
 
 export default function ProjectNavbar() {
     const dispatch = useAppDispatch()
-    const projectId = useAppSelector(state => state.project.project_id);
+    const projectId = useAppSelector(state => state.project.project_id)!;
     const projectName = useAppSelector(state => state.project.project_name);
-    const userId = useAppSelector(state => state.auth.userId);
+    const userId = useAppSelector(state => state.auth.userId)!;
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
     const [projectTitleInputSelected, setProjectTitleInputSelected] = useState(false);
     const [projectTitleInputValue, setProjectTitleInputValue] = useState("");
+    // should be handel by backend
     const like = useAppSelector(state => state.table.my_favorite_list).filter(project => project.project_id === projectId && project.user_id === userId)
     const page = useAppSelector(state=> state.project.active_page)
     const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(getTable(userId!, projectId!));
+        dispatch(getTable(userId, projectId));
     }, [projectId, dispatch, userId])
 
     useEffect(()=>{
@@ -38,7 +39,7 @@ export default function ProjectNavbar() {
     }, [projectName, setProjectTitleInputValue]);
 
     function invitationHandler() {
-        dispatch(getInvitationList(projectId!))
+        dispatch(getInvitationList(projectId))
         setInvitationOpen((open) => !open)
     }
 
@@ -102,7 +103,7 @@ export default function ProjectNavbar() {
                                 {projectName ? projectName : "Project"}
                             </span>
                     }
-                    <FontAwesomeIcon id="like-button" icon={like[0] ? faStarS : faStarR} onClick={onLikeClick} />
+                    <FontAwesomeIcon id="like-button" icon={like.length ? faStarS : faStarR} onClick={onLikeClick} />
                 </span>
                 <span className='icon-hub' >
                     <Tooltip

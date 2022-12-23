@@ -17,7 +17,7 @@ export function SidePanel() {
 
     return (
         <div id={toggle ? 'side-panel-open' : 'side-panel-close'}>
-            <div id={!toggle ? "project-list-container-close" : 'project-list-container-open'} >
+            <div id={toggle ? 'project-list-container-open': "project-list-container-close"} >
                 {toggle ? favorite ? <FavoriteProject /> : <ProjectList /> : null
                 }
             </div>

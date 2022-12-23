@@ -183,6 +183,7 @@ export function TimeFrame() {
   }
 
   function handleItemMove(itemId: number, newStartTime: number, index: number) {
+    // use T / D
     const id = parseInt(itemId.toString().slice(1))
     if (itemId.toString()[0] === '1') {
       const name = items.filter(x => x.id === itemId)[0].title

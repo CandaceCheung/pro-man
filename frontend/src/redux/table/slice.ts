@@ -140,8 +140,10 @@ const initialState: CombinedTableState = {
 
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> =
     (state, action) => { state.summary = action.payload }
+    // 怪怪的
 const getTableFailed: CaseReducer<CombinedTableState, PayloadAction> =
     (state, action) => { state = { ...state } }
+
 const updateTimelineItem: CaseReducer<CombinedTableState, PayloadAction<{ timelineID: number, startTime: number, endTime: number, name: string, color: string, typeId: number }>> =
     (state, action) => {
         for (let item of state.summary) {
@@ -178,12 +180,12 @@ const updateTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableStat
     (state, action) => { state.project_list.push(action.payload) }
 const renameProjectInTableList: CaseReducer<CombinedTableState, PayloadAction<{projectId: number, projectName: string}>> =
 (state, action) => { 
-    state.project_list.map(project => {
+    state.project_list.forEach(project => {
         if (project.project_id === action.payload.projectId) {
             project.project_name = action.payload.projectName;
         }
     });
-    state.my_favorite_list.map(project => {
+    state.my_favorite_list.forEach(project => {
         if (project.project_id === action.payload.projectId) {
             project.project_name = action.payload.projectName;
         }
