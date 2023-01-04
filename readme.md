@@ -61,3 +61,10 @@ REACT_APP_PUBLIC_HOSTNAME= http://localhost:3000
 EMAIL_LOGIN= # Email Address
 EMAIL_PASSWORD= # Email Account Password
 ```
+
+## CI/CD
+
+We have used CI/CD for our deployment. The deployment will be triggered on push to the production branch. So run the following command to push to production branch if you need deployment.
+```bash
+git push origin main:production
+```
