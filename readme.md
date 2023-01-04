@@ -4,7 +4,17 @@
 
 Welcome to Pro-man : the Work OS that provides you with all of the no-code building blocks so you can shape your workflows, your way. Here, you can run every aspect of your work by layering industry-specific products on top of the Work OS. Combine building blocks, like apps and integrations, to customize anything you need to improve the way your project runs.
 
-## Set Up (In server folder)
+## Set Up
+
+### Frontend
+
+To start the frontend application in development mode, simply run:
+
+```bash
+yarn start
+```
+
+### Server
 
 To set up the environment in development mode, you will need to migrate the database structure, and also seed the sample data for testing. Follow the commands below to set up.
 
