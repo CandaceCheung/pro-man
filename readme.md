@@ -42,6 +42,7 @@ REACT_APP_API_SERVER = http://localhost:8080
 ```
 
 ### Server
+- DB_HOST: The host name of database in production mode, in development mode, just leave it blank
 - POSTGRES_DB: The database name you created for the project
 - POSTGRES_USER: The user in the database
 - POSTGRES_PASSWORD: The password into the database
@@ -50,6 +51,7 @@ REACT_APP_API_SERVER = http://localhost:8080
 - EMAIL_PASSWORD: The password to that email account
 
 ```bash
+DB_HOST= # Leave it empty in development mode
 POSTGRES_DB = # Database Name
 POSTGRES_USER = # Database User Name
 POSTGRES_PASSWORD = # Database Password
