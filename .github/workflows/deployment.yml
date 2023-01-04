@@ -31,7 +31,7 @@ jobs:
       - name: build project
         working-directory: frontend
         env:
-          REACT_APP_API_SERVER: https://api.pro-man.co
+          REACT_APP_PUBLIC_HOSTNAME: https://pro-man.co
         run: yarn build
       - name: archive react built files
         uses: actions/upload-artifact@v3
@@ -51,7 +51,6 @@ jobs:
       - name: build project
         working-directory: server
         env:
-          REACT_APP_API_SERVER: https://api.pro-man.co
           REACT_APP_PUBLIC_HOSTNAME: https://api.pro-man.co
           EMAIL_LOGIN: pro-man2217@outlook.com
           EMAIL_PASSWORD: TeckyCanada2222

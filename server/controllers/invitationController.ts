@@ -141,7 +141,7 @@ export class InvitationController {
                         <p>Hello,</p>
                         <p>You have been invited to join Pro-man</p>
                         <p>Click the link below to accept invitation</p>
-                        ${process.env.REACT_APP_API_SERVER}/?token=${token}
+                        ${process.env.REACT_APP_PUBLIC_HOSTNAME}/?token=${token}
                     `
                     //send email
                     let transporter = nodemailer.createTransport({

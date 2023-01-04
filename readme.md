@@ -45,7 +45,7 @@ REACT_APP_API_SERVER = http://localhost:8080
 - POSTGRES_DB: The database name you created for the project
 - POSTGRES_USER: The user in the database
 - POSTGRES_PASSWORD: The password into the database
-- REACT_APP_API_SERVER: The URL of the frontend client, in development mode, the default URL is determined by React's yarn start, which is http://localhost:3000.
+- REACT_APP_PUBLIC_HOSTNAME: The URL of the frontend client, in development mode, the default URL is determined by React's yarn start, which is http://localhost:3000.
 EMAIL_LOGIN: The email address you plan to send email to users on invitation, try to avoid gmail accounts as this will bring you lots of troubles. Find out the link for more details. <https://nodemailer.com/usage/using-gmail/>
 - EMAIL_PASSWORD: The password to that email account
 
@@ -54,7 +54,7 @@ POSTGRES_DB = # Database Name
 POSTGRES_USER = # Database User Name
 POSTGRES_PASSWORD = # Database Password
 
-REACT_APP_API_SERVER= http://localhost:3000
+REACT_APP_PUBLIC_HOSTNAME= http://localhost:3000
 
 EMAIL_LOGIN= # Email Address
 EMAIL_PASSWORD= # Email Account Password
