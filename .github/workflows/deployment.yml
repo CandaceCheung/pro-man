@@ -31,7 +31,7 @@ jobs:
       - name: build project
         working-directory: frontend
         env:
-          REACT_APP_PUBLIC_HOSTNAME: https://pro-man.co
+          REACT_APP_API_SERVER: https://pro-man.co
         run: yarn build
       - name: archive react built files
         uses: actions/upload-artifact@v3
