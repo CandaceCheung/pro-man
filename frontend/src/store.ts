@@ -21,7 +21,7 @@ export interface IRootState {
     profile: ProfileState,
 }
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
     auth: authReducer,
     table: tableReducer,
     project: projectReducer,

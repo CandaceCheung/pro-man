@@ -212,9 +212,22 @@ jobs:
               sudo docker compose down
               sudo docker compose up -d && sudo docker image prune -f
 
+  test-react:
+    needs:
+      - build-react
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install yarn deps
+        working-directory: frontend
+        run: yarn install
+      - name: Run testing
+        working-directory: frontend
+        run: yarn test
+
   deploy-react:
     needs:
-        - build-react
+        - test-react
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
