@@ -7,7 +7,6 @@ import {
     Stack,
 } from "@mantine/core";
 import {
-    IconGauge,
     IconBell,
     IconUser,
     IconStar,
