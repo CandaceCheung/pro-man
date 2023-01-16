@@ -86,7 +86,7 @@ export class InvitationController {
 		try {
 			const invitationDetail = jwtSimple.decode(
 				req.body.token,
-				jwt.jwtSecret
+				jwt.jwtSecret!
 			);
 			const invitationId = invitationDetail.id;
 			const projectId = invitationDetail.project_id;
@@ -162,7 +162,7 @@ export class InvitationController {
 					return;
 				}
 
-				const token = jwtSimple.encode(invitation, jwt.jwtSecret);
+				const token = jwtSimple.encode(invitation, jwt.jwtSecret!);
 				if (email.length > 0) {
 					const emailContent = `
                         <p>Hello,</p>

@@ -27,7 +27,7 @@ export async function isLoggedIn(
 		if (!token) {
 			return res.status(401).json({ msg: 'Permission Denied' });
 		}
-		const payload = jwtSimple.decode(token, jwt.jwtSecret);
+		const payload = jwtSimple.decode(token, jwt.jwtSecret!);
 		// Querying Database is not compulsory
 		const user: User = await authService.getUser(payload.id);
 		if (user) {
