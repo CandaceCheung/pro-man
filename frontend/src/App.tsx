@@ -26,17 +26,6 @@ function App() {
 
 	useToken();
 
-	// const params = new URLSearchParams(window.location.search);
-	// const token = params.get('token');
-	// useEffect(() => {
-	//     token && localStorage.setItem('invitation', token)
-	//     token && showNotification({
-	//         title: 'Invitation notification',
-	//         message: 'Invitation token detected'
-	//     })
-	// // eslint-disable-next-line
-	// }, [])
-
 	useEffect(() => {
 		isLoggedIn === null && dispatch(retriveLogin());
 
@@ -53,32 +42,43 @@ function App() {
 		// eslint-disable-next-line
 	}, [isLoggedIn, dispatch, userId, projectId]);
 
-	// const routes = [
-	// 	{
-	// 		path: "/*",
-	// 		element: <Home />,
-	// 	},
-	// 	{
-	// 		path: "/some/page/*",
-	// 		element: <>Page</>,
-    //         visible: someFn.checkPermission()
-	// 	},
-	// ];
+	const routes = [
+		{
+			path: "/*",
+			element: <Home />,
+		},
+		{
+			path: "/home/*",
+			element: <Home/>,
+		},
+		{
+			path: "/dashboard/",
+			element: <Dashboard/>,
+		},
+		{
+			path: "/notification/",
+			element: <Notification/>,
+		},
+		{
+			path: "/myMember/",
+			element: <MyMember/>,
+		},
+		{
+			path: "/favorite/",
+			element: <Favorite/>,
+		},
+		{
+			path: "/profile/",
+			element: <Profile/>,
+		},
+	];
 
 	return (
 		<div className="App">
 			{isLoggedIn && projectId && (
 				<AppShell navbar={<LeftNavbar />}>
-
 					<Routes>
-                        {/* routes.filter(route => route.visible).map(route => <Route path={route.path} element={route.element} />) */}
-						<Route path="/*" element={<Home />} />
-						<Route path="/home/*" element={<Home />} />
-						<Route path="/dashboard" element={<Dashboard />} />
-						<Route path="/notification" element={<Notification />} />
-						<Route path="/myMember" element={<MyMember />} />
-						<Route path="/favorite" element={<Favorite />} />
-						<Route path="/profile" element={<Profile />} />
+                        {routes.map(route => <Route path={route.path} element={route.element} />)}
 					</Routes>
 				</AppShell>
 			)}
