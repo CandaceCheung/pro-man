@@ -10,8 +10,8 @@ export class SmartPointerSensor extends PointerSensor {
                     return false;
                 }
                 return true;
-            },
-        },
+            }
+        }
     ];
 }
 
@@ -27,7 +27,7 @@ function isInteractiveElement(element: Element | null) {
         'td',
         'line',
         'circle',
-        'path',
+        'path'
     ];
     const classNameElements = ['mantine-Popover-dropdown'];
     if (element?.tagName && interactiveElements.includes(element.tagName.toLowerCase())) {

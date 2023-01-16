@@ -18,7 +18,7 @@ const useStyles = createStyles(() => ({
     personsComponentsContainer: {
         position: 'relative',
         width: '100%',
-        height: '100%',
+        height: '100%'
     },
 
     personsComponent: {
@@ -34,40 +34,40 @@ const useStyles = createStyles(() => ({
         alignItems: 'center',
         fontSize: 12,
         fontWeight: 'bold',
-        border: '2px solid #fff',
+        border: '2px solid #fff'
     },
 
     personsSingleComponent: {
-        left: '50%',
+        left: '50%'
     },
 
     personsFirstComponent: {
         left: 'calc(50% - 10px)',
-        zIndex: 1,
+        zIndex: 1
     },
 
     personsSecondComponent: {
         left: 'calc(50% + 10px)',
-        zIndex: 2,
+        zIndex: 2
     },
 
     personsMultipleComponent: {
         left: 'calc(50% + 10px)',
         zIndex: 2,
         fontSize: 11,
-        fontWeight: 'normal',
+        fontWeight: 'normal'
     },
     personsPopUpContainer: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        fontSize: 15,
+        fontSize: 15
     },
     personsList: {
         display: 'flex',
         flexWrap: 'wrap',
-        width: '100%',
+        width: '100%'
     },
     personsExisting: {
         backgroundColor: '#E5F4FF',
@@ -77,18 +77,18 @@ const useStyles = createStyles(() => ({
         padding: '0 2px',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     suggestionTitle: {
         color: 'grey',
         fontSize: 'inherit',
-        margin: '5px 0',
+        margin: '5px 0'
     },
     iconUser: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 5,
+        marginRight: 5
     },
     iconX: {
         display: 'flex',
@@ -98,13 +98,13 @@ const useStyles = createStyles(() => ({
 
         '&:hover': {
             backgroundColor: '#FFF',
-            borderRadius: 30,
-        },
+            borderRadius: 30
+        }
     },
     suggestionList: {
         display: 'flex',
         flexDirection: 'column',
-        width: '100%',
+        width: '100%'
     },
     personsSuggestion: {
         display: 'flex',
@@ -116,9 +116,9 @@ const useStyles = createStyles(() => ({
         margin: 2,
 
         '&:hover': {
-            backgroundColor: '#DCDFEC',
-        },
-    },
+            backgroundColor: '#DCDFEC'
+        }
+    }
 }));
 
 export function Persons({
@@ -129,7 +129,7 @@ export function Persons({
     personsColors,
     membersFullName,
     onRemovePerson,
-    onAddPerson,
+    onAddPerson
 }: PersonsProps) {
     const [opened, setOpened] = useState(false);
     const { classes, cx } = useStyles();
@@ -144,7 +144,7 @@ export function Persons({
                         <span
                             className={cx(classes.personsComponent, classes.personsSingleComponent)}
                             style={{
-                                backgroundColor: personsColors[itemPersonsIds[0]],
+                                backgroundColor: personsColors[itemPersonsIds[0]]
                             }}
                         >
                             {membersFullName[itemPersonsIds[0]] &&
@@ -169,7 +169,7 @@ export function Persons({
                                             : cx(classes.personsComponent, classes.personsFirstComponent)
                                     }
                                     style={{
-                                        backgroundColor: personsColors[itemPersonsIds[index]],
+                                        backgroundColor: personsColors[itemPersonsIds[index]]
                                     }}
                                 >
                                     {membersFullName[id] &&
@@ -189,7 +189,7 @@ export function Persons({
                             key={'person_' + itemPersonsIds[0]}
                             className={cx(classes.personsComponent, classes.personsFirstComponent)}
                             style={{
-                                backgroundColor: personsColors[itemPersonsIds[0]],
+                                backgroundColor: personsColors[itemPersonsIds[0]]
                             }}
                         >
                             {membersFullName[itemPersonsIds[0]] &&

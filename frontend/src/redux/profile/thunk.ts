@@ -7,8 +7,8 @@ export function getProfile(userId: number) {
 
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/profile/${userId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
 
         const result = await res.json();
@@ -29,9 +29,9 @@ export function putProfileInfo(putInfo: { firstName?: string; lastName?: string;
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify(putInfo),
+            body: JSON.stringify(putInfo)
         });
         const data = await res.json();
 

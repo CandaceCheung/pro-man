@@ -2,7 +2,7 @@ import { createStyles } from '@mantine/core';
 
 export const useStyles = createStyles((theme, _params, getRef) => ({
     collapserButton: {
-        transform: 'rotate(90deg)',
+        transform: 'rotate(90deg)'
     },
 
     hovertext: {
@@ -14,7 +14,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
         '&:hover::before': {
             opacity: 1,
-            visibility: 'visible',
+            visibility: 'visible'
         },
         '&::before': {
             content: 'attr(data-hover)',
@@ -32,15 +32,15 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             left: '50%',
             top: '-110%',
             transform: 'translate(-50%, 0)',
-            fontSize: 10,
-        },
+            fontSize: 10
+        }
     },
 
     itemCount: {
         position: 'relative',
         '&:hover::after': {
             opacity: 1,
-            visibility: 'visible',
+            visibility: 'visible'
         },
         '&::after': {
             content: 'attr(item-count)',
@@ -55,8 +55,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             top: '50%',
             transform: 'translate(0, -50%)',
             fontSize: 15,
-            fontWeight: 'normal',
-        },
+            fontWeight: 'normal'
+        }
     },
 
     itemGroup: {
@@ -77,10 +77,10 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
                     cursor: 'pointer',
                     display: 'flex',
                     justifyContent: 'center',
-                    alignItems: 'center',
-                },
-            },
-        },
+                    alignItems: 'center'
+                }
+            }
+        }
     },
 
     itemGroupBar: {
@@ -88,9 +88,9 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
         '&:hover': {
             [`& .${getRef('itemGroupIcon')}`]: {
-                visibility: 'visible',
-            },
-        },
+                visibility: 'visible'
+            }
+        }
     },
 
     groupNameInput: {
@@ -115,8 +115,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             borderRadius: 5,
             minHeight: 30,
             boxSizing: 'border-box',
-            height: 12,
-        },
+            height: 12
+        }
     },
 
     groupName: {
@@ -125,8 +125,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         padding: '0 5px',
 
         '&:hover': {
-            border: `1px solid ${theme.colors.borderColor[0]}`,
-        },
+            border: `1px solid ${theme.colors.borderColor[0]}`
+        }
     },
 
     tableGroup: {
@@ -136,7 +136,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         fontSize: 12,
         display: 'flex',
         flexDirection: 'column',
-        width: 'max-content',
+        width: 'max-content'
     },
 
     tableCell: {
@@ -148,7 +148,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
-        overflow: 'hidden',
+        overflow: 'hidden'
     },
 
     typeNameContainer: {
@@ -157,7 +157,7 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         padding: '0 10px',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
 
     typeName: {
@@ -167,8 +167,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
 
         '&:hover': {
             border: `1px solid ${theme.colors.borderColor[0]}`,
-            cursor: 'text',
-        },
+            cursor: 'text'
+        }
     },
 
     typeNameInput: {
@@ -195,30 +195,30 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             minHeight: 30,
             boxSizing: 'border-box',
             height: 12,
-            borderColor: theme.colors.itemInputBorderColor[0],
-        },
+            borderColor: theme.colors.itemInputBorderColor[0]
+        }
     },
 
     item: {
-        width: 200,
+        width: 200
     },
     persons: {
-        width: 98,
+        width: 98
     },
     dates: {
-        width: 140,
+        width: 140
     },
     times: {
-        width: 188,
+        width: 188
     },
     money: {
-        width: 140,
+        width: 140
     },
     status: {
-        width: 140,
+        width: 140
     },
     text: {
-        width: 140,
+        width: 140
     },
 
     tableRow: {
@@ -230,14 +230,14 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             '&:first-of-type': {
                 padding: 0,
                 width: 8,
-                border: 'none',
-            },
+                border: 'none'
+            }
         },
         '&:hover': {
             [`& .${getRef('rowIcon')}`]: {
-                visibility: 'visible',
-            },
-        },
+                visibility: 'visible'
+            }
+        }
     },
 
     tableHead: {
@@ -248,9 +248,9 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             [`& > .${getRef('tableCell')}:first-of-type`]: {
                 borderTopLeftRadius: 10,
                 borderLeft: `1px solid ${theme.colors.borderColor[0]}`,
-                borderTop: `1px solid ${theme.colors.borderColor[0]}`,
-            },
-        },
+                borderTop: `1px solid ${theme.colors.borderColor[0]}`
+            }
+        }
     },
 
     tableBody: {
@@ -261,33 +261,33 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             '&:hover': {
                 cursor: 'pointer',
                 backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`,
-                boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`,
+                boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`
             },
             '&:active': {
-                cursor: 'grabbing',
-            },
-        },
+                cursor: 'grabbing'
+            }
+        }
     },
 
     lastRow: {
         borderBottomRightRadius: 10,
         [`& .${getRef('tableCell')}:last-of-type`]: {
-            borderBottomRightRadius: 10,
-        },
+            borderBottomRightRadius: 10
+        }
     },
 
     lastCell: {
-        borderTopRightRadius: 10,
+        borderTopRightRadius: 10
     },
 
     draggableTitleCell: {
         '&:hover': {
             cursor: 'grab',
-            backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`,
+            backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`
         },
         '&:active': {
-            cursor: 'grabbing',
-        },
+            cursor: 'grabbing'
+        }
     },
     addItemCell: {
         display: 'flex',
@@ -303,8 +303,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
                 padding: 0,
                 width: 8,
                 border: 'none',
-                opacity: 0.7,
-            },
+                opacity: 0.7
+            }
         },
         [`& .${getRef('tableCell')}:last-of-type`]: {
             cursor: 'text',
@@ -315,9 +315,9 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             padding: '0 10px',
             '&:hover': {
                 backgroundColor: `${theme.colors.boardContentBackgroundColor[0]}`,
-                boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`,
-            },
-        },
+                boxShadow: `0 5px 15px 1px ${theme.colors.borderColor[0]}`
+            }
+        }
     },
     newItemNameInput: {
         width: '100%',
@@ -342,8 +342,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
             minHeight: 30,
             boxSizing: 'border-box',
             height: 12,
-            borderColor: theme.colors.itemInputBorderColor[0],
-        },
+            borderColor: theme.colors.itemInputBorderColor[0]
+        }
     },
     rowIcon: {
         ref: getRef('rowIcon'),
@@ -360,8 +360,8 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         borderRadius: 30,
 
         '&:hover': {
-            backgroundColor: '#C4C4C4',
-        },
+            backgroundColor: '#C4C4C4'
+        }
     },
     itemGroupIcon: {
         ref: getRef('itemGroupIcon'),
@@ -378,19 +378,19 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         borderRadius: 30,
 
         '&:hover': {
-            backgroundColor: '#C4C4C4',
-        },
+            backgroundColor: '#C4C4C4'
+        }
     },
     modalTitle: {
         fontSize: 20,
         fontWeight: 'bold',
-        textAlign: 'left',
+        textAlign: 'left'
     },
     modalBody: {
         fontSize: 15,
         fontWeight: 'normal',
         textAlign: 'left',
-        margin: '20px 0',
+        margin: '20px 0'
     },
     modalFooter: {
         width: '100%',
@@ -398,6 +398,6 @@ export const useStyles = createStyles((theme, _params, getRef) => ({
         justifyContent: 'flex-end',
         alignItems: 'center',
         padding: '0 15px',
-        marginTop: 20,
-    },
+        marginTop: 20
+    }
 }));

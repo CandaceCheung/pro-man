@@ -10,13 +10,13 @@ export function sendInvitation(projectId: number, userId: number, value: string)
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 projectId,
                 userId,
-                email: value,
-            }),
+                email: value
+            })
         });
         const result = await res.json();
 
@@ -24,12 +24,12 @@ export function sendInvitation(projectId: number, userId: number, value: string)
             dispatch(sendInviteAction(result.invitation));
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -43,12 +43,12 @@ export function acceptInvitation(token: string, userId: number) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${localToken}`,
+                Authorization: `Bearer ${localToken}`
             },
             body: JSON.stringify({
                 userId,
-                token,
-            }),
+                token
+            })
         });
         const result = await res.json();
 
@@ -57,12 +57,12 @@ export function acceptInvitation(token: string, userId: number) {
             dispatch(getTableListAction(result.tableList));
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -76,12 +76,12 @@ export function acceptMemberInvitation(projectId: number, userId: number) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 userId,
-                projectId,
-            }),
+                projectId
+            })
         });
         const result = await res.json();
 
@@ -89,12 +89,12 @@ export function acceptMemberInvitation(projectId: number, userId: number) {
             dispatch(getTableListAction(result.tableList));
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -106,8 +106,8 @@ export function getInvitationList(projectId: number) {
 
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/invitation/${projectId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -117,7 +117,7 @@ export function getInvitationList(projectId: number) {
         } else {
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -130,8 +130,8 @@ export function deleteInvitation(invitationId: number, projectId: number) {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/invitation/${projectId}&${invitationId}`, {
             method: 'DELETE',
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -139,12 +139,12 @@ export function deleteInvitation(invitationId: number, projectId: number) {
             dispatch(deleteInvitationAction({ id: invitationId }));
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             showNotification({
                 title: 'Invitation notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };

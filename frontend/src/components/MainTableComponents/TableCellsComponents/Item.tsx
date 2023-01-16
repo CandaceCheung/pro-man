@@ -15,7 +15,7 @@ const useStyle = createStyles((theme) => ({
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        padding: '0 20px',
+        padding: '0 20px'
     },
     itemName: {
         display: 'flex',
@@ -30,8 +30,8 @@ const useStyle = createStyles((theme) => ({
         textOverflow: 'ellipsis',
 
         '&:hover': {
-            border: `1px solid ${theme.colors.borderColor[0]}`,
-        },
+            border: `1px solid ${theme.colors.borderColor[0]}`
+        }
     },
     itemNameInput: {
         width: '100%',
@@ -57,9 +57,9 @@ const useStyle = createStyles((theme) => ({
             minHeight: 30,
             boxSizing: 'border-box',
             height: 12,
-            borderColor: theme.colors.itemInputBorderColor[0],
-        },
-    },
+            borderColor: theme.colors.itemInputBorderColor[0]
+        }
+    }
 }));
 
 export function Item({ itemId, groupId, itemName, onItemRename }: ItemProps) {

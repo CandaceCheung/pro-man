@@ -15,7 +15,7 @@ interface StatusProps {
         stateId: number,
         typeId: number,
         name: string,
-        color: string,
+        color: string
     ) => void;
 }
 
@@ -39,20 +39,20 @@ const useStyle = createStyles((theme, _params) => ({
             borderWidth: 0,
             borderColor: '#fff #fff rgba(0,0,0,0.2) rgba(0,0,0,0.2)',
             borderRadius: '0 0 5px 0',
-            transition: 'border-width .2s',
+            transition: 'border-width .2s'
         },
 
         '&:hover::before': {
             transitionDelay: '.2s',
-            borderWidth: 5,
-        },
+            borderWidth: 5
+        }
     },
     statusList: {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     statusTag: {
         width: 160,
@@ -64,8 +64,8 @@ const useStyle = createStyles((theme, _params) => ({
         margin: '5px 0',
 
         '&:hover': {
-            opacity: 0.8,
-        },
+            opacity: 0.8
+        }
     },
     statusTagInputContainer: {
         width: 160,
@@ -74,7 +74,7 @@ const useStyle = createStyles((theme, _params) => ({
         justifyContent: 'center',
         alignItems: 'center',
         color: '#FFF',
-        margin: '5px 0',
+        margin: '5px 0'
     },
     statusTagInput: {
         width: '100%',
@@ -82,8 +82,8 @@ const useStyle = createStyles((theme, _params) => ({
         color: 'inherit',
         backgroundColor: 'inherit',
         outline: 'none',
-        boxSizing: 'border-box',
-    },
+        boxSizing: 'border-box'
+    }
 }));
 
 export function Status({ groupId, itemId, typeId, status, color, onStatusChange }: StatusProps) {
@@ -135,7 +135,7 @@ export function Status({ groupId, itemId, typeId, status, color, onStatusChange 
                         <span
                             className={classes.statusTagInputContainer}
                             style={{
-                                backgroundColor: theme.colors.statusLabelsColor[statusList.length],
+                                backgroundColor: theme.colors.statusLabelsColor[statusList.length]
                             }}
                         >
                             <input

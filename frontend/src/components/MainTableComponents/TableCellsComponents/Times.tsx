@@ -12,7 +12,7 @@ const useStyle = createStyles((theme) => ({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        height: '100%',
+        height: '100%'
     },
 
     dateBar: {
@@ -28,7 +28,7 @@ const useStyle = createStyles((theme) => ({
         borderRadius: 50,
         '&:hover::before': {
             opacity: 1,
-            visibility: 'visible',
+            visibility: 'visible'
         },
         '&::before': {
             position: 'absolute',
@@ -46,8 +46,8 @@ const useStyle = createStyles((theme) => ({
             opacity: 0,
             zIndex: 1,
             left: 0,
-            top: 0,
-        },
+            top: 0
+        }
     },
 
     emptyBar: {
@@ -63,7 +63,7 @@ const useStyle = createStyles((theme) => ({
         borderRadius: 50,
         '&:hover::before': {
             opacity: 1,
-            visibility: 'visible',
+            visibility: 'visible'
         },
         '&::before': {
             position: 'absolute',
@@ -81,9 +81,9 @@ const useStyle = createStyles((theme) => ({
             opacity: 0,
             zIndex: 1,
             left: 0,
-            top: 0,
-        },
-    },
+            top: 0
+        }
+    }
 }));
 
 export function Times({ startDate, endDate }: TimesProps) {
@@ -109,13 +109,13 @@ export function Times({ startDate, endDate }: TimesProps) {
                 <span
                     className={classes.dateBar}
                     style={{
-                        backgroundImage: `linear-gradient(to right, transparent ${barLeftPercentage}, ${theme.colors.dateBarColor[0]} ${barLeftPercentage})`,
+                        backgroundImage: `linear-gradient(to right, transparent ${barLeftPercentage}, ${theme.colors.dateBarColor[0]} ${barLeftPercentage})`
                     }}
                     data-hover={totalDays === 1 ? totalDays + ' day' : totalDays + ' days'}
                 >
                     {`${format(new Date(Number(startDate)), 'MMM dd, yyyy')} - ${format(
                         new Date(Number(endDate)),
-                        'MMM dd, yyyy',
+                        'MMM dd, yyyy'
                     )}`}
                 </span>
             ) : (

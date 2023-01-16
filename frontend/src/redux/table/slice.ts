@@ -116,8 +116,8 @@ const initialState: CombinedTableState = {
             transaction_id: 0,
             vertical_order: 0,
             type_name: 'persons',
-            element_name: '',
-        },
+            element_name: ''
+        }
     ],
     project_list: [
         {
@@ -125,8 +125,8 @@ const initialState: CombinedTableState = {
             project_id: undefined,
             member_table_id: undefined,
             username: '',
-            project_name: '',
-        },
+            project_name: ''
+        }
     ],
     my_favorite_list: [
         {
@@ -134,16 +134,16 @@ const initialState: CombinedTableState = {
             creator_id: undefined,
             project_id: undefined,
             favorite_id: undefined,
-            project_name: '',
-        },
+            project_name: ''
+        }
     ],
     status_list: [
         {
             id: undefined,
             name: undefined,
-            color: undefined,
-        },
-    ],
+            color: undefined
+        }
+    ]
 };
 
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> = (state, action) => {
@@ -241,7 +241,7 @@ const addStatus: CaseReducer<CombinedTableState, PayloadAction<StatusListState>>
     state.status_list.push({
         id: action.payload.id,
         name: action.payload.name,
-        color: action.payload.color,
+        color: action.payload.color
     });
 };
 
@@ -260,8 +260,8 @@ const tableSlice = createSlice({
         addProject,
         updateTableList,
         renameProjectInTableList,
-        addStatus,
-    },
+        addStatus
+    }
 });
 
 export const {
@@ -276,7 +276,7 @@ export const {
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
     renameProjectInTableList: renameProjectInTableListAction,
-    addStatus: addStatusAction,
+    addStatus: addStatusAction
 } = tableSlice.actions;
 
 export default tableSlice.reducer;

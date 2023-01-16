@@ -47,7 +47,7 @@ export function Kanban() {
         <ScrollArea
             style={{
                 width: 'calc(100vw - 140px)',
-                height: 'calc(100vh - 160px)',
+                height: 'calc(100vh - 160px)'
             }}
             type='auto'
         >

@@ -4,8 +4,8 @@ export class MakeRequest {
     get = async <R extends {}>(path: string): Promise<R> => {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
             headers: {
-                Authorization: `Bearer ${this.token}`,
-            },
+                Authorization: `Bearer ${this.token}`
+            }
         });
 
         return await res.json();
@@ -16,9 +16,9 @@ export class MakeRequest {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${this.token}`,
+                Authorization: `Bearer ${this.token}`
             },
-            body: JSON.stringify(reqestBody),
+            body: JSON.stringify(reqestBody)
         });
 
         return await res.json();

@@ -18,7 +18,7 @@ export function TableColumnTitle({
     cellColumnCustomName,
     index,
     lastCell,
-    onTypeRename,
+    onTypeRename
 }: TableColumnTitleProps) {
     const [typeNameInput, setTypeNameInput] = useState(cellColumnCustomName);
     const [typeNameInputSelected, setTypeNameInputSelected] = useState(false);
@@ -28,34 +28,34 @@ export function TableColumnTitle({
 
     const style = {
         transform: CSS.Translate.toString(transform),
-        transition,
+        transition
     };
 
     const retrieveCellData = (cellColumnType: string, index: number) => {
         switch (cellColumnType) {
             case 'persons':
                 return cx(classes.tableCell, classes.persons, classes.draggableTitleCell, {
-                    [classes.lastCell]: lastCell,
+                    [classes.lastCell]: lastCell
                 });
             case 'dates':
                 return cx(classes.tableCell, classes.dates, classes.draggableTitleCell, {
-                    [classes.lastCell]: lastCell,
+                    [classes.lastCell]: lastCell
                 });
             case 'money':
                 return cx(classes.tableCell, classes.money, classes.draggableTitleCell, {
-                    [classes.lastCell]: lastCell,
+                    [classes.lastCell]: lastCell
                 });
             case 'times':
                 return cx(classes.tableCell, classes.times, classes.draggableTitleCell, {
-                    [classes.lastCell]: lastCell,
+                    [classes.lastCell]: lastCell
                 });
             case 'status':
                 return cx(classes.tableCell, classes.status, classes.draggableTitleCell, {
-                    [classes.lastCell]: lastCell,
+                    [classes.lastCell]: lastCell
                 });
             case 'text':
                 return cx(classes.tableCell, classes.text, classes.draggableTitleCell, {
-                    [classes.lastCell]: lastCell,
+                    [classes.lastCell]: lastCell
                 });
             default:
                 return '';
@@ -88,7 +88,7 @@ export function TableColumnTitle({
             <div key={'cell_column' + index} className={retrieveCellData(cellColumnType, index)}>
                 <div
                     className={cx(classes.typeNameContainer, classes.draggableTitleCell, {
-                        [classes.lastCell]: lastCell,
+                        [classes.lastCell]: lastCell
                     })}
                 >
                     {typeNameInputSelected ? (

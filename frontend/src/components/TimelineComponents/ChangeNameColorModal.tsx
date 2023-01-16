@@ -17,10 +17,10 @@ export function ChangNameColorModal() {
     const id = useId();
     const projectSummary = useAppSelector((state) => state.table.summary);
     const dateItem = projectSummary.filter(
-        (project) => project.item_datetime_id === itemId && project.type_name === 'dates',
+        (project) => project.item_datetime_id === itemId && project.type_name === 'dates'
     )[0];
     const timeItem = projectSummary.filter(
-        (project) => project.item_times_id === itemId && project.type_name === 'times',
+        (project) => project.item_times_id === itemId && project.type_name === 'times'
     )[0];
     const [color, setColor] = useState('#FFFFFF');
     const [name, setName] = useState<string>('');
@@ -78,7 +78,7 @@ export function ChangNameColorModal() {
                                             size={18}
                                             style={{
                                                 display: 'block',
-                                                opacity: 0.5,
+                                                opacity: 0.5
                                             }}
                                         />
                                     </div>

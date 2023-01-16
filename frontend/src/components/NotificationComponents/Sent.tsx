@@ -14,7 +14,7 @@ export function Sent() {
         (message) =>
             message.receiver?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
             message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-            new Date(message.created_at).toLocaleString('en-us')?.includes(search),
+            new Date(message.created_at).toLocaleString('en-us')?.includes(search)
     );
 
     const rows = messages.map((message) => {

@@ -10,7 +10,7 @@ const useStyles = createStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     header: {
         width: '100%',
@@ -20,20 +20,20 @@ const useStyles = createStyles((theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        fontFamily: 'Lalezar',
+        fontFamily: 'Lalezar'
     },
     logo: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        fontSize: 40,
+        fontSize: 40
     },
     logoChild: {
         marginLeft: 10,
         marginRight: 10,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     toggle: {
         width: 250,
@@ -42,8 +42,8 @@ const useStyles = createStyles((theme) => ({
         margin: '20px 0',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
-    },
+        alignItems: 'center'
+    }
 }));
 
 export function Auth() {
@@ -54,13 +54,13 @@ export function Auth() {
         {
             label: 'Login',
             value: 'login',
-            selectedBackgroundColor: theme.white,
+            selectedBackgroundColor: theme.white
         },
         {
             label: 'Sign up',
             value: 'signup',
-            selectedBackgroundColor: theme.white,
-        },
+            selectedBackgroundColor: theme.white
+        }
     ];
 
     const onChange = (newValue: any) => {

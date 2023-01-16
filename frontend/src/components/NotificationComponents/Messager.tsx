@@ -46,7 +46,7 @@ export function Messager() {
             if (pattern.test(username) || username.length < 1) {
                 showNotification({
                     title: 'Username Format Incorrect',
-                    message: 'Input field is empty or contains invalid characters, please remove them and try again',
+                    message: 'Input field is empty or contains invalid characters, please remove them and try again'
                 });
                 setLoading(false);
             } else {
@@ -74,7 +74,7 @@ export function Messager() {
         } else {
             showNotification({
                 title: 'Message Type Missing',
-                message: 'Message Incomplete',
+                message: 'Message Incomplete'
             });
             return;
         }
@@ -107,7 +107,7 @@ export function Messager() {
                                             size={18}
                                             style={{
                                                 display: 'block',
-                                                opacity: 0.5,
+                                                opacity: 0.5
                                             }}
                                         />
                                     )}

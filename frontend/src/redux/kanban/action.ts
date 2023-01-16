@@ -3,21 +3,21 @@ import { Item, Status } from './state';
 export function setKanbanInfo(statusList: Status[]) {
     return {
         type: 'KANBAN/SET' as const,
-        statusList,
+        statusList
     };
 }
 
 export function setKanbanMember(memberList: []) {
     return {
         type: 'KANBAN/SET_MEMBER' as const,
-        memberList,
+        memberList
     };
 }
 
 export function setKanbanGroup(groupList: []) {
     return {
         type: 'KANBAN/SET_GROUP' as const,
-        groupList,
+        groupList
     };
 }
 
@@ -28,14 +28,14 @@ export function addKanbanItem(
     itemName: string,
     memberName: string[],
     date: Date,
-    groupId: number,
+    groupId: number
 ) {
     const dateString = date.toISOString();
     const item: Item = {
         id: itemId,
         name: itemName,
         date: dateString,
-        membersList: memberName,
+        membersList: memberName
     };
 
     return {
@@ -43,7 +43,7 @@ export function addKanbanItem(
         projectId,
         stateId,
         item,
-        groupId,
+        groupId
     };
 }
 
@@ -53,7 +53,7 @@ export function putKanbanOrder(order: number[]) {
 
 export function failKanbanAction() {
     return {
-        type: 'KANBAN/FETCH_FAIL' as const,
+        type: 'KANBAN/FETCH_FAIL' as const
     };
 }
 

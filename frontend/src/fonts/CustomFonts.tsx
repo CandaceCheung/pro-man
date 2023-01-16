@@ -19,17 +19,17 @@ export function CustomFonts() {
                         fontFamily: 'Lalezar',
                         src: `url('${lalezar}') format("woff2")`,
                         fontWeight: 700,
-                        fontStyle: 'normal',
-                    },
+                        fontStyle: 'normal'
+                    }
                 },
                 {
                     '@font-face': {
                         fontFamily: 'Roboto',
                         src: `url('${roboto}') format("ttf")`,
                         fontWeight: 700,
-                        fontStyle: 'normal',
-                    },
-                },
+                        fontStyle: 'normal'
+                    }
+                }
             ]}
         />
     );

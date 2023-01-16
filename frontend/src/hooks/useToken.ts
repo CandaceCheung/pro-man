@@ -9,7 +9,7 @@ export const useToken = () => {
         token &&
             showNotification({
                 title: 'Invitation notification',
-                message: 'Invitation token detected',
+                message: 'Invitation token detected'
             });
         // eslint-disable-next-line
     }, []);

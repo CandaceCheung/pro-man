@@ -21,10 +21,10 @@ export function ButtonHub() {
     const groupSummary = projectSummary.filter(
         (project, index, self) =>
             project.joined_project_id === projectId &&
-            index === self.findIndex((obj) => obj.item_group_id === project.item_group_id),
+            index === self.findIndex((obj) => obj.item_group_id === project.item_group_id)
     );
     const personsSummary = projectSummary.filter(
-        (project, index, self) => project.project_id === projectId && project.type_name === 'persons',
+        (project, index, self) => project.project_id === projectId && project.type_name === 'persons'
     );
     const personsSummaryArr = [];
     const checking: number[] = [];
@@ -33,7 +33,7 @@ export function ButtonHub() {
             checking.push(item.item_person_user_id);
             personsSummaryArr.push({
                 name: item.item_person_name,
-                userId: item.item_person_user_id,
+                userId: item.item_person_user_id
             });
         }
     }

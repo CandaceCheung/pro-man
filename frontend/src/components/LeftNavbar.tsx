@@ -23,11 +23,11 @@ const useStyles = createStyles((theme) => ({
             backgroundColor: theme.fn.lighten(
                 theme.fn.variant({
                     variant: 'filled',
-                    color: 'violet',
+                    color: 'violet'
                 }).background!,
-                0.1,
-            ),
-        },
+                0.1
+            )
+        }
     },
 
     active: {
@@ -36,12 +36,12 @@ const useStyles = createStyles((theme) => ({
             backgroundColor: theme.fn.lighten(
                 theme.fn.variant({
                     variant: 'filled',
-                    color: 'violet',
+                    color: 'violet'
                 }).background!,
-                0.15,
-            ),
-        },
-    },
+                0.15
+            )
+        }
+    }
 }));
 
 interface NavbarLinkProps {
@@ -67,7 +67,7 @@ const navButtons = [
     { icon: Logo, label: 'Home', path: '/home' },
     { icon: IconBell, label: 'Notification', path: '/notification' },
     { icon: IconUsers, label: 'My Member', path: '/myMember' },
-    { icon: IconStar, label: 'Favorite', path: 'favorite' },
+    { icon: IconStar, label: 'Favorite', path: 'favorite' }
 ];
 
 export function LeftNavbar() {
@@ -114,8 +114,8 @@ export function LeftNavbar() {
                 backgroundImage: theme.fn.gradient({
                     from: '#24285A',
                     to: ' #6871DB',
-                    deg: 45,
-                }),
+                    deg: 45
+                })
             })}
         >
             <Navbar.Section grow mt={50}>

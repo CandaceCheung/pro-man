@@ -27,7 +27,7 @@ export const rootReducer = combineReducers({
     project: projectReducer,
     kanban: kanbanReducer,
     invitation: invitationReducer,
-    profile: profileReducer,
+    profile: profileReducer
 });
 
 export type IRootAction = AuthAction;
@@ -35,7 +35,7 @@ export type IRootKanban = KanbanAction;
 
 export const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false })
 });
 
 export type AppDispatch = typeof store.dispatch;

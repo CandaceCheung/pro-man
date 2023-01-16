@@ -4,7 +4,7 @@ import Timeline, {
     DateHeader,
     SidebarHeader,
     TimelineHeaders,
-    TimelineMarkers,
+    TimelineMarkers
 } from 'react-calendar-timeline';
 import 'react-calendar-timeline/lib/Timeline.css';
 import { useAppDispatch, useAppSelector } from '../store';
@@ -17,7 +17,7 @@ import ClockLoader from 'react-spinners/ClockLoader';
 import {
     setTargetUpdateElementAction,
     toggleLoadingAction,
-    triggerUpdateTimelineModalAction,
+    triggerUpdateTimelineModalAction
 } from '../redux/project/slice';
 import { ChangNameColorModal } from '../components/TimelineComponents/ChangeNameColorModal';
 
@@ -30,7 +30,7 @@ const keys = {
     itemDivTitleKey: 'title',
     itemGroupKey: 'group',
     itemTimeStartKey: 'start_time',
-    itemTimeEndKey: 'end_time',
+    itemTimeEndKey: 'end_time'
 };
 
 export type GroupState = {
@@ -80,7 +80,7 @@ export function TimeFrame() {
                 project.project_id === targetProjectId &&
                 project.type_name === 'times' &&
                 !project.project_is_deleted &&
-                !project.item_is_deleted,
+                !project.item_is_deleted
         )
         .sort((a, b) => a.item_group_id - b.item_group_id);
     const unfilteredDatelineDetails = projectSummary
@@ -89,7 +89,7 @@ export function TimeFrame() {
                 project.project_id === targetProjectId &&
                 project.type_name === 'dates' &&
                 !project.project_is_deleted &&
-                !project.item_is_deleted,
+                !project.item_is_deleted
         )
         .sort((a, b) => a.item_group_id - b.item_group_id);
     const timelineDetail = unfilteredTimelineDetails
@@ -121,7 +121,7 @@ export function TimeFrame() {
                 id: item.item_id,
                 title: item.item_name,
                 groupId: item.item_group_id,
-                groupName: item.item_group_name,
+                groupName: item.item_group_name
             });
         }
     }
@@ -146,9 +146,9 @@ export function TimeFrame() {
                     style: {
                         background: item.item_times_color,
                         borderRadius: '5px',
-                        border: 'none',
-                    },
-                },
+                        border: 'none'
+                    }
+                }
             });
         }
     }
@@ -173,9 +173,9 @@ export function TimeFrame() {
                     className: 'date-block',
                     style: {
                         background: item.item_datetime_color,
-                        border: '4px solid darkgrey',
-                    },
-                },
+                        border: '4px solid darkgrey'
+                    }
+                }
             });
         }
     }
@@ -287,7 +287,7 @@ export function TimeFrame() {
                         hour: 12,
                         day: 1,
                         month: 1,
-                        year: 1,
+                        year: 1
                     }}
                 >
                     <TimelineHeaders>
@@ -315,7 +315,7 @@ export function TimeFrame() {
                                         const customStyles = {
                                             ...styles,
                                             background: 'darkgreen',
-                                            width: '4px',
+                                            width: '4px'
                                         };
                                         return (
                                             <div
@@ -329,7 +329,7 @@ export function TimeFrame() {
                                                     className='pin-label'
                                                     style={{
                                                         background: 'darkgreen',
-                                                        right: '10px',
+                                                        right: '10px'
                                                     }}
                                                 >
                                                     Start Date : {new Date(firstStartedTime).toDateString()}
@@ -348,7 +348,7 @@ export function TimeFrame() {
                                         const customStyles = {
                                             ...styles,
                                             background: 'deepskyblue',
-                                            width: '4px',
+                                            width: '4px'
                                         };
                                         return (
                                             <div
@@ -362,7 +362,7 @@ export function TimeFrame() {
                                                     className='pin-label'
                                                     style={{
                                                         background: 'deepskyblue',
-                                                        right: '10px',
+                                                        right: '10px'
                                                     }}
                                                 >
                                                     Today : {new Date(Date.now()).toDateString()}
@@ -381,7 +381,7 @@ export function TimeFrame() {
                                         const customStyles = {
                                             ...styles,
                                             background: 'deeppink',
-                                            width: '4px',
+                                            width: '4px'
                                         };
                                         return (
                                             <div
@@ -395,7 +395,7 @@ export function TimeFrame() {
                                                     className='pin-label'
                                                     style={{
                                                         background: 'deeppink',
-                                                        left: '10px',
+                                                        left: '10px'
                                                     }}
                                                 >
                                                     End Date : {new Date(lastEndedTime).toDateString()}

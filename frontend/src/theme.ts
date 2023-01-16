@@ -52,9 +52,9 @@ export const themeObject: MantineThemeOverride = {
             '#037F4C',
             '#579BFC',
             '#CAB641',
-            '#FFCB00',
+            '#FFCB00'
         ],
         dateBarColor: ['#333333', '#579BFC', '#257DFB', '#C4C4C4', '#ABABAB'],
-        itemInputBorderColor: ['#0073EA'],
-    },
+        itemInputBorderColor: ['#0073EA']
+    }
 };

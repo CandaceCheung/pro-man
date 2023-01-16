@@ -45,32 +45,32 @@ function App() {
     const routes = [
         {
             path: '/*',
-            element: <Home />,
+            element: <Home />
         },
         {
             path: '/home/*',
-            element: <Home />,
+            element: <Home />
         },
         {
             path: '/dashboard/',
-            element: <Dashboard />,
+            element: <Dashboard />
         },
         {
             path: '/notification/',
-            element: <Notification />,
+            element: <Notification />
         },
         {
             path: '/myMember/',
-            element: <MyMember />,
+            element: <MyMember />
         },
         {
             path: '/favorite/',
-            element: <Favorite />,
+            element: <Favorite />
         },
         {
             path: '/profile/',
-            element: <Profile />,
-        },
+            element: <Profile />
+        }
     ];
 
     return (

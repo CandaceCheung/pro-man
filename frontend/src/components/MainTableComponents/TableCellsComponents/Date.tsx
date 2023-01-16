@@ -8,8 +8,8 @@ const useStyle = createStyles(() => ({
     date: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
-    },
+        alignItems: 'center'
+    }
 }));
 
 export function DateCell({ date }: DateProps) {

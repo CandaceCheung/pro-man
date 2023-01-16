@@ -14,7 +14,7 @@ import {
     setProjectNameAction,
     toggleDeleteAction,
     toggleReadAction,
-    toggleReceiverDeleteAction,
+    toggleReceiverDeleteAction
 } from './slice';
 
 export function setActiveProject(projectId: number, projectName: string) {
@@ -39,12 +39,12 @@ export function renameProject(projectId: number, projectName: string) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 projectId,
-                projectName,
-            }),
+                projectName
+            })
         });
         const result = await res.json();
         if (result.success) {
@@ -52,13 +52,13 @@ export function renameProject(projectId: number, projectName: string) {
             dispatch(
                 renameProjectInTableListAction({
                     projectId,
-                    projectName,
-                }),
+                    projectName
+                })
             );
         } else {
             showNotification({
                 title: 'Rename Project notification',
-                message: 'Failed to rename project! 🤥',
+                message: 'Failed to rename project! 🤥'
             });
         }
     };
@@ -72,11 +72,11 @@ export function checkUsername(value: string) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
-                value,
-            }),
+                value
+            })
         });
         const result = await res.json();
 
@@ -85,13 +85,13 @@ export function checkUsername(value: string) {
             dispatch(setMessageTargetAction(result.username.id));
             showNotification({
                 title: 'Username Format Notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             dispatch(checkUsernameAction(false));
             showNotification({
                 title: 'Username Format Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -103,7 +103,7 @@ export function sendMessage(
     receiver: string,
     receiverId: number,
     text: string,
-    messageType: 'invite' | 'message',
+    messageType: 'invite' | 'message'
 ) {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem('token');
@@ -111,7 +111,7 @@ export function sendMessage(
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 sender,
@@ -119,8 +119,8 @@ export function sendMessage(
                 receiver,
                 receiverId,
                 text,
-                messageType,
-            }),
+                messageType
+            })
         });
         const result = await res.json();
 
@@ -128,12 +128,12 @@ export function sendMessage(
             dispatch(sendMessageAction(result.message));
             showNotification({
                 title: 'Message Notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             showNotification({
                 title: 'Message Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -144,8 +144,8 @@ export function getMessages(userId: number) {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/${userId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -154,7 +154,7 @@ export function getMessages(userId: number) {
         } else {
             showNotification({
                 title: 'Message Box Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -165,8 +165,8 @@ export function getMemberList(userId: number) {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/member/${userId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -175,7 +175,7 @@ export function getMemberList(userId: number) {
         } else {
             showNotification({
                 title: 'Member List Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -187,8 +187,8 @@ export function deleteMember(membershipId: number) {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/member/${membershipId}`, {
             method: 'DELETE',
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -196,17 +196,17 @@ export function deleteMember(membershipId: number) {
             dispatch(
                 deleteMemberAction({
                     membershipId,
-                    projectId: result.projectId,
-                }),
+                    projectId: result.projectId
+                })
             );
             showNotification({
                 title: 'Member Notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             showNotification({
                 title: 'Member Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -219,12 +219,12 @@ export function changeAvatar(membershipId: number[], avatar: number) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 membershipId,
-                avatar,
-            }),
+                avatar
+            })
         });
         const result = await res.json();
 
@@ -233,7 +233,7 @@ export function changeAvatar(membershipId: number[], avatar: number) {
         } else {
             showNotification({
                 title: 'Member List Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -246,12 +246,12 @@ export function toggleRead(notificationId: number, checked: boolean) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 notificationId,
-                checked,
-            }),
+                checked
+            })
         });
         const result = await res.json();
 
@@ -261,7 +261,7 @@ export function toggleRead(notificationId: number, checked: boolean) {
         } else {
             showNotification({
                 title: 'Message Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -273,8 +273,8 @@ export function toggleDelete(notificationId: number) {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/${notificationId}`, {
             method: 'DELETE',
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -282,17 +282,17 @@ export function toggleDelete(notificationId: number) {
             dispatch(
                 toggleDeleteAction({
                     notificationId,
-                    isDeleted: result.is_deleted,
-                }),
+                    isDeleted: result.is_deleted
+                })
             );
             showNotification({
                 title: 'Message Notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             showNotification({
                 title: 'Message Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -303,8 +303,8 @@ export function toggleReceiverDelete(notificationId: number) {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/receiver/${notificationId}`, {
             method: 'DELETE',
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -312,17 +312,17 @@ export function toggleReceiverDelete(notificationId: number) {
             dispatch(
                 toggleReceiverDeleteAction({
                     notificationId,
-                    isDeletedReceiver: result.is_deleted_receiver,
-                }),
+                    isDeletedReceiver: result.is_deleted_receiver
+                })
             );
             showNotification({
                 title: 'Message Notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             showNotification({
                 title: 'Message Notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };

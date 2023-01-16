@@ -8,7 +8,7 @@ test('test item card name', async () => {
     render(
         <Provider store={store}>
             <ItemCard id={1} name={'item'} date={'1.1.2023'} membersList={[]} />
-        </Provider>,
+        </Provider>
     );
     const nameInCard = screen.getByText(/item/);
     expect(nameInCard).toBeInTheDocument();

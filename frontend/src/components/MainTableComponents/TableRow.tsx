@@ -30,7 +30,7 @@ export interface TableRowProps {
         stateId: number,
         typeId: number,
         name: string,
-        color: string,
+        color: string
     ) => void;
     onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void;
     onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void;
@@ -55,7 +55,7 @@ export function TableRow({
     onAddPerson,
     onAddTransaction,
     onDeleteTransaction,
-    onDeleteItem,
+    onDeleteItem
 }: TableRowProps) {
     const [deleteItemModalOpened, setDeleteItemModalOpened] = useState(false);
 
@@ -65,7 +65,7 @@ export function TableRow({
 
     const style = {
         transform: CSS.Transform.toString(transform),
-        transition,
+        transition
     };
 
     const retrieveCellData = (cell: itemCellsElement, cellIndex: number): JSX.Element => {

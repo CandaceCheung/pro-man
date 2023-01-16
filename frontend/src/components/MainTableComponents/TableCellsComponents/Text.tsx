@@ -17,7 +17,7 @@ const useStyle = createStyles((theme) => ({
         width: '100%',
         height: '100%',
         padding: 3,
-        overflow: 'hidden',
+        overflow: 'hidden'
     },
     text: {
         position: 'relative',
@@ -34,8 +34,8 @@ const useStyle = createStyles((theme) => ({
         textOverflow: 'ellipsis',
 
         '&:hover': {
-            border: `1px solid ${theme.colors.borderColor[0]}`,
-        },
+            border: `1px solid ${theme.colors.borderColor[0]}`
+        }
     },
     textInput: {
         width: '100%',
@@ -59,9 +59,9 @@ const useStyle = createStyles((theme) => ({
             minHeight: 30,
             boxSizing: 'border-box',
             height: 12,
-            borderColor: theme.colors.itemInputBorderColor[0],
-        },
-    },
+            borderColor: theme.colors.itemInputBorderColor[0]
+        }
+    }
 }));
 
 export function TextCell({ groupId, itemId, typeId, text, onTextChange }: TextProps) {

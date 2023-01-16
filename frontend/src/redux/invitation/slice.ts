@@ -20,8 +20,8 @@ const initialState: InvitationState = [
         email: '',
         status: 'pending',
         updated_at: '',
-        created_at: '',
-    },
+        created_at: ''
+    }
 ];
 
 const sendInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> = (state, action) => {
@@ -60,15 +60,15 @@ const invitationSlice = createSlice({
         sendInvite,
         acceptInvite,
         getInvitationList,
-        deleteInvitation,
-    },
+        deleteInvitation
+    }
 });
 
 export const {
     sendInvite: sendInviteAction,
     acceptInvite: acceptInviteAction,
     getInvitationList: getInvitationListAction,
-    deleteInvitation: deleteInvitationAction,
+    deleteInvitation: deleteInvitationAction
 } = invitationSlice.actions;
 
 export default invitationSlice.reducer;

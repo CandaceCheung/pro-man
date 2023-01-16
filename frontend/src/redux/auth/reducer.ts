@@ -4,7 +4,7 @@ import { AuthState } from './state';
 const initState: AuthState = {
     userId: null,
     username: null,
-    isLoggedIn: null,
+    isLoggedIn: null
 };
 
 export const authReducer = (state: AuthState = initState, action: AuthAction): AuthState => {
@@ -14,14 +14,14 @@ export const authReducer = (state: AuthState = initState, action: AuthAction): A
                 ...state,
                 userId: action.userId,
                 username: action.username,
-                isLoggedIn: true,
+                isLoggedIn: true
             };
         case 'AUTH/LOGOUT':
             return {
                 ...state,
                 userId: null,
                 username: null,
-                isLoggedIn: false,
+                isLoggedIn: false
             };
         case 'AUTH/FAILED':
             console.error('Failed');

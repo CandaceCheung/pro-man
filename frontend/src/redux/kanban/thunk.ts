@@ -8,8 +8,8 @@ export function getKanbanItems(projectId: number) {
 
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/kanban/${projectId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result: { projectInfo: Status[]; success: boolean } = await res.json();
 
@@ -29,8 +29,8 @@ export function getMember(projectId: number) {
 
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/kanban/member/${projectId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
 
         const result: { memberList: []; success: boolean } = await res.json();
@@ -51,8 +51,8 @@ export function getGroup(projectId: number) {
 
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/kanban/group/${projectId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result: { groupList: []; success: boolean } = await res.json();
         console.log(result);
@@ -74,7 +74,7 @@ export function postItem(
     memberName: string[],
     memberId: string[],
     date: Date,
-    groupId: number,
+    groupId: number
 ) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
@@ -83,7 +83,7 @@ export function postItem(
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 projectId,
@@ -93,8 +93,8 @@ export function postItem(
                 memberName,
                 memberId,
                 date,
-                groupId,
-            }),
+                groupId
+            })
         });
         const result = await res.json();
 
@@ -115,11 +115,11 @@ export function putOrder(statusList: Status[]) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
-                order: statusList.map((status) => status.id),
-            }),
+                order: statusList.map((status) => status.id)
+            })
         });
         const result = await res.json();
 

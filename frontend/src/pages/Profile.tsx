@@ -16,23 +16,23 @@ const useStyles = createStyles((theme) => ({
             alignItems: 'center',
             fontSize: 25,
             color: 'statusLabelsColor',
-            margin: 15,
+            margin: 15
         },
 
         profileInfo: {
             Group: {
                 display: 'flex',
-                justifyContent: 'center',
-            },
-        },
+                justifyContent: 'center'
+            }
+        }
     },
 
     profileText: {
         minWidth: 80,
         fontSize: 'inherit',
         fontFamily: 'inherit',
-        fontWeight: 'inherit',
-    },
+        fontWeight: 'inherit'
+    }
 }));
 
 export function Profile() {

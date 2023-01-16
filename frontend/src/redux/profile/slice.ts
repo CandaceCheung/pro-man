@@ -11,12 +11,12 @@ const initialState: ProfileState = {
     id: 0,
     username: '',
     firstName: '',
-    lastName: '',
+    lastName: ''
 };
 
 const setInfo: CaseReducer<ProfileState, PayloadAction<{ username: string; firstName: string; lastName: string }>> = (
     state,
-    action,
+    action
 ) => {
     state.firstName = action.payload.firstName;
     state.lastName = action.payload.lastName;
@@ -24,7 +24,7 @@ const setInfo: CaseReducer<ProfileState, PayloadAction<{ username: string; first
 };
 const updateInfo: CaseReducer<ProfileState, PayloadAction<{ firstName: string; lastName: string }>> = (
     state,
-    action,
+    action
 ) => {
     state.firstName = action.payload.firstName;
     state.lastName = action.payload.lastName;
@@ -35,8 +35,8 @@ const profileSlice = createSlice({
     initialState,
     reducers: {
         setInfo,
-        updateInfo,
-    },
+        updateInfo
+    }
 });
 
 export const { setInfo: setInfoAction, updateInfo: updateInfoAction } = profileSlice.actions;

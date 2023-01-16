@@ -10,12 +10,12 @@ export function loginThunk(username: string, password: string) {
         const res = await fetch(`${REACT_APP_API_SERVER}/auth`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 username,
-                password,
-            }),
+                password
+            })
         });
         const result = await res.json();
         if (result.success) {
@@ -25,7 +25,7 @@ export function loginThunk(username: string, password: string) {
         } else {
             showNotification({
                 title: 'Login notification',
-                message: 'Failed to login! 🤥',
+                message: 'Failed to login! 🤥'
             });
             dispatch(failedLoginAction());
         }
@@ -37,25 +37,25 @@ export function signUpThunk(username: string, password: string, firstName: strin
         const res = await fetch(`${REACT_APP_API_SERVER}/auth/registration`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 username,
                 password,
                 firstName,
-                lastName,
-            }),
+                lastName
+            })
         });
         const result = await res.json();
         if (result.success) {
             showNotification({
                 title: 'Sign Up notification',
-                message: 'You have signed up successfully! 🥳',
+                message: 'You have signed up successfully! 🥳'
             });
         } else {
             showNotification({
                 title: 'Sign Up notification',
-                message: 'Failed to sign up! 🤥',
+                message: 'Failed to sign up! 🤥'
             });
         }
     };
@@ -75,8 +75,8 @@ export function retriveLogin() {
         if (token) {
             const res = await fetch(`${process.env.REACT_APP_API_SERVER}/auth/userRetrieval`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                    Authorization: `Bearer ${token}`
+                }
             });
             const data = await res.json();
             if (data.payload) {

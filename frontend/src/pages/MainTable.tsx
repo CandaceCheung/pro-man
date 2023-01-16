@@ -19,14 +19,14 @@ import {
     reorderTypes,
     updateItemGroupName,
     updateState,
-    updateText,
+    updateText
 } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import {
     arrayMove,
     SortableContext,
     verticalListSortingStrategy,
-    horizontalListSortingStrategy,
+    horizontalListSortingStrategy
 } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useStyles } from '../components/MainTableComponents/styles';
@@ -112,7 +112,7 @@ export function MainTable() {
             membersFullNameTemp[member.id] = {
                 username: member.username,
                 firstName: member.firstName,
-                lastName: member.lastName,
+                lastName: member.lastName
             };
         });
         setMembersFullName(membersFullNameTemp);
@@ -150,7 +150,7 @@ export function MainTable() {
                     item_name: cell.item_name,
                     type_id: cell.horizontal_order_id,
                     type_name: cell.type_name,
-                    element_name: cell.element_name,
+                    element_name: cell.element_name
                 };
 
                 if (itemCells[itemGroupID]) {
@@ -163,7 +163,7 @@ export function MainTable() {
                     itemCells[itemGroupID][itemID] = {};
                     itemGroups.push({
                         item_group_id: cell.item_group_id,
-                        item_group_name: cell.item_group_name,
+                        item_group_name: cell.item_group_name
                     });
                     itemGroupsCollapsed.push(false);
                     itemGroupsInputSelected.push(false);
@@ -184,7 +184,7 @@ export function MainTable() {
                             ) {
                                 itemCells[itemGroupID][itemID][typeID]!.transaction_id!.push(cell.transaction_id);
                                 itemCells[itemGroupID][itemID][typeID]!.item_money_cashflow!.push(
-                                    cell.item_money_cashflow,
+                                    cell.item_money_cashflow
                                 );
                                 itemCells[itemGroupID][itemID][typeID]!.item_money_date!.push(cell.item_money_date);
                             }
@@ -199,11 +199,11 @@ export function MainTable() {
                         if (itemCells[itemGroupID][itemID][typeID]) {
                             if (
                                 !itemCells[itemGroupID][itemID][typeID].item_person_user_id!.includes(
-                                    cell.item_person_user_id,
+                                    cell.item_person_user_id
                                 )
                             ) {
                                 itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(
-                                    cell.item_person_user_id,
+                                    cell.item_person_user_id
                                 );
                             }
                         } else {
@@ -314,8 +314,8 @@ export function MainTable() {
                             itemGroupsState[index].item_group_id,
                             itemGroupsInputValueState[index],
                             userId,
-                            projectID,
-                        ),
+                            projectID
+                        )
                     );
                 } else {
                     const newItemGroupsInputValueState = produce(itemGroupsInputValueState, (draftState) => {
@@ -399,7 +399,7 @@ export function MainTable() {
         stateId: number,
         typeId: number,
         name: string,
-        color: string,
+        color: string
     ) => {
         const newItemCellsState = produce(itemCellsState, (draftState) => {
             draftState[groupId][itemId][typeId].item_status_name = name;
@@ -413,7 +413,7 @@ export function MainTable() {
         if (itemCellsState[groupId][itemId][typeId].item_person_user_id!.length <= 1) {
             showNotification({
                 title: 'Delete person notification',
-                message: 'Failed to delete person! At least one person is required for items! 🤥',
+                message: 'Failed to delete person! At least one person is required for items! 🤥'
             });
         } else {
             const newItemCellsState = produce(itemCellsState, (draftState) => {
@@ -459,7 +459,7 @@ export function MainTable() {
         if (itemCellsState[groupId][itemId][typeId].transaction_id!.length <= 1) {
             showNotification({
                 title: 'Delete transaction notification',
-                message: 'Failed to delete transaction! At least one transaction is required for items! 🤥',
+                message: 'Failed to delete transaction! At least one transaction is required for items! 🤥'
             });
         } else {
             const newItemCellsState = produce(itemCellsState, (draftState) => {
@@ -514,7 +514,7 @@ export function MainTable() {
         if (Object.keys(itemCellsState[groupId]).length <= 1) {
             showNotification({
                 title: 'Item delete notification',
-                message: 'Failed to delete item! Each group should have at least 1 item! 🤥',
+                message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
             });
         } else {
             userId && projectID && dispatch(deleteItem(groupId, itemId, userId, projectID));
@@ -526,7 +526,7 @@ export function MainTable() {
         if (Object.keys(itemCellsState).length <= 1) {
             showNotification({
                 title: 'Item delete notification',
-                message: 'Failed to delete group! Each project should have at least 1 item group! 🤥',
+                message: 'Failed to delete group! Each project should have at least 1 item group! 🤥'
             });
         } else {
             userId && projectID && dispatch(deleteItemGroup(groupId, userId, projectID));
@@ -537,7 +537,7 @@ export function MainTable() {
         <ScrollArea
             style={{
                 width: 'calc(100vw - 140px)',
-                height: 'calc(100vh - 160px)',
+                height: 'calc(100vh - 160px)'
             }}
             type='auto'
         >
@@ -548,7 +548,7 @@ export function MainTable() {
                             <div
                                 className={classes.itemGroupBar}
                                 style={{
-                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length],
+                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                 }}
                             >
                                 <span
@@ -599,7 +599,7 @@ export function MainTable() {
                                             className={classes.groupNameInput}
                                             style={{
                                                 borderColor:
-                                                    theme.colors.groupTag[item_group_id % theme.colors.groupTag.length],
+                                                    theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                             }}
                                             value={itemGroupsInputValueState[itemGroupArrayIndex]}
                                             onChange={(e) =>
@@ -713,7 +713,7 @@ export function MainTable() {
                                             className={classes.tableCell}
                                             style={{
                                                 backgroundColor:
-                                                    theme.colors.groupTag[item_group_id % theme.colors.groupTag.length],
+                                                    theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                             }}
                                         ></div>
                                         <div className={cx(classes.tableCell, classes.item)}>

@@ -9,7 +9,7 @@ import {
     setTimeLineViewAction,
     TimeLineViewState,
     toggleLoadingAction,
-    toggleStackItemAction,
+    toggleStackItemAction
 } from '../../redux/project/slice';
 import { useAppDispatch, useAppSelector } from '../../store';
 
@@ -30,7 +30,7 @@ export function TimelineButton() {
         const payload = {
             value,
             start: startPointAnchor,
-            end: endPointAnchor,
+            end: endPointAnchor
         };
         dispatch(setTimeLineViewAction(payload));
         dispatch(toggleLoadingAction(true));
@@ -66,7 +66,7 @@ export function TimelineButton() {
                         marks={[
                             { value: 50, label: '20%' },
                             { value: 75, label: '50%' },
-                            { value: 100, label: '100%' },
+                            { value: 100, label: '100%' }
                         ]}
                     />
                 </Tooltip>
@@ -151,7 +151,7 @@ export function TimelineButton() {
                             { value: 'day', label: 'Days' },
                             { value: 'week', label: 'Weeks' },
                             { value: 'month', label: 'Months' },
-                            { value: 'year', label: 'Years' },
+                            { value: 'year', label: 'Years' }
                         ]}
                     />
                 </Tooltip>

@@ -11,7 +11,7 @@ import {
     Input,
     MultiSelect,
     Button,
-    Select,
+    Select
 } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import {
@@ -20,7 +20,7 @@ import {
     IconClipboardList,
     IconGripVertical,
     IconPlus,
-    IconUser,
+    IconUser
 } from '@tabler/icons';
 import { useState } from 'react';
 import { Status } from '../../redux/kanban/state';
@@ -41,28 +41,28 @@ const useStyles = createStyles((theme, color: string) => ({
         '&': {
             '.grip': {
                 opacity: 0,
-                transition: 'opacity',
-            },
+                transition: 'opacity'
+            }
         },
 
         '&:hover': {
             '.grip': {
-                opacity: 1,
-            },
+                opacity: 1
+            }
         },
 
         '.headerText': {
-            fontSize: 18,
-        },
+            fontSize: 18
+        }
     },
 
     modalRow: {
-        margin: 5,
+        margin: 5
     },
 
     modalText: {
-        minWidth: 60,
-    },
+        minWidth: 60
+    }
 }));
 
 export function StatusColumn(props: StatusProps) {
@@ -96,7 +96,7 @@ export function StatusColumn(props: StatusProps) {
                         setItemName(e.target.value);
                     }}
                 />
-            ),
+            )
         },
         {
             text: 'Member',
@@ -104,7 +104,7 @@ export function StatusColumn(props: StatusProps) {
                 <MultiSelect
                     data={memberList.map((member) => ({
                         value: member.id.toString(),
-                        label: member.username,
+                        label: member.username
                     }))}
                     placeholder='All options'
                     maxDropdownHeight={200}
@@ -114,7 +114,7 @@ export function StatusColumn(props: StatusProps) {
                         setMemberId(value);
                     }}
                 />
-            ),
+            )
         },
         {
             text: 'Date',
@@ -130,7 +130,7 @@ export function StatusColumn(props: StatusProps) {
                         }
                     }}
                 />
-            ),
+            )
         },
         {
             text: 'Group',
@@ -138,7 +138,7 @@ export function StatusColumn(props: StatusProps) {
                 <Select
                     data={groupList.map((group) => ({
                         value: group.id.toString(),
-                        label: group.name,
+                        label: group.name
                     }))}
                     variant='filled'
                     placeholder='All options'
@@ -151,15 +151,15 @@ export function StatusColumn(props: StatusProps) {
                         }
                     }}
                 />
-            ),
-        },
+            )
+        }
     ];
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
 
     const style = {
         transform: CSS.Transform.toString(transform),
-        transition,
+        transition
     };
 
     return (

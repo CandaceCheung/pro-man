@@ -6,7 +6,7 @@ import {
     checkUsernameAction,
     setMessageTargetAction,
     toggleIReplyModalAction,
-    toggleMessagerAction,
+    toggleMessagerAction
 } from '../../redux/project/slice';
 import { toggleDelete, toggleRead } from '../../redux/project/thunk';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -23,7 +23,7 @@ export function Inbox() {
         (message) =>
             message.sender?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
             message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-            new Date(message.created_at).toLocaleString('en-us')?.includes(search),
+            new Date(message.created_at).toLocaleString('en-us')?.includes(search)
     );
 
     const rows = messages.map((message) => {

@@ -11,7 +11,7 @@ import {
     addProjectAction,
     getStatusListAction,
     addStatusAction,
-    MyFavoriteListState,
+    MyFavoriteListState
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -25,12 +25,12 @@ export function likeProject(projectId: number, userId: number) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 projectId,
-                userId,
-            }),
+                userId
+            })
         });
         const result = await res.json();
 
@@ -38,13 +38,13 @@ export function likeProject(projectId: number, userId: number) {
             dispatch(getFavoriteAction(result.favorite));
             showNotification({
                 title: 'Like Project notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             dispatch(getTableFailedAction());
             showNotification({
                 title: 'Like Project notification',
-                message: result.msg,
+                message: result.msg
             });
         }
     };
@@ -56,8 +56,8 @@ export function getTable(userID: number, projectID: number) {
 
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/${userID}&${projectID}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -75,8 +75,8 @@ export function getTableList(userId: number) {
 
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/list/${userId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -95,7 +95,7 @@ export function updateTimelineItem(
     startTime: number,
     endTime: number,
     name: string,
-    color: string,
+    color: string
 ) {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem('token');
@@ -104,15 +104,15 @@ export function updateTimelineItem(
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 typeTimeId: timelineID,
                 startTime,
                 endTime,
                 name,
-                color,
-            }),
+                color
+            })
         });
         const result = await res.json();
 
@@ -124,12 +124,12 @@ export function updateTimelineItem(
                     endTime,
                     name,
                     color,
-                    typeId: result.typeId,
-                }),
+                    typeId: result.typeId
+                })
             );
             showNotification({
                 title: 'Data update notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             dispatch(getTableFailedAction());
@@ -145,14 +145,14 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 typeDateId: datelineID,
                 date,
                 name,
-                color,
-            }),
+                color
+            })
         });
         const result = await res.json();
 
@@ -163,12 +163,12 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
                     date,
                     name,
                     color,
-                    typeId: result.typeId,
-                }),
+                    typeId: result.typeId
+                })
             );
             showNotification({
                 title: 'Data update notification',
-                message: result.msg,
+                message: result.msg
             });
         } else {
             dispatch(getTableFailedAction());
@@ -181,8 +181,8 @@ export function getProjectStatusList(projectId: number) {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/status/${projectId}`, {
             headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                Authorization: `Bearer ${token}`
+            }
         });
         const result = await res.json();
 
@@ -191,7 +191,7 @@ export function getProjectStatusList(projectId: number) {
         } else {
             showNotification({
                 title: 'Data retrieve notification',
-                message: 'Failed to get status list! 🤥',
+                message: 'Failed to get status list! 🤥'
             });
         }
     };
@@ -204,12 +204,12 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 itemGroupId,
-                itemGroupName,
-            }),
+                itemGroupName
+            })
         });
         let result = await res.json();
 
@@ -218,7 +218,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
         } else {
             showNotification({
                 title: 'Data update notification',
-                message: 'Failed to update group item name! 🤥',
+                message: 'Failed to update group item name! 🤥'
             });
             dispatch(getTable(userId, projectID));
         }
@@ -262,14 +262,14 @@ export function insertItem(projectId: number, userId: number, itemGroupId?: numb
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 projectId,
                 userId,
                 itemGroupId,
-                itemName,
-            }),
+                itemName
+            })
         });
         const result = await res.json();
 
@@ -278,7 +278,7 @@ export function insertItem(projectId: number, userId: number, itemGroupId?: numb
         } else {
             showNotification({
                 title: 'Insert data notification',
-                message: 'Failed to add new item! 🤥',
+                message: 'Failed to add new item! 🤥'
             });
         }
     };
@@ -291,12 +291,12 @@ export function insertItemGroup(projectId: number, userId: number) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
                 projectId,
-                userId,
-            }),
+                userId
+            })
         });
         const result = await res.json();
 
@@ -305,7 +305,7 @@ export function insertItemGroup(projectId: number, userId: number) {
         } else {
             showNotification({
                 title: 'Insert data notification',
-                message: 'Failed to add new group item! 🤥',
+                message: 'Failed to add new group item! 🤥'
             });
         }
     };
@@ -318,18 +318,18 @@ export function reorderItems(newOrder: number[], userId: number, projectID: numb
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
-                newOrder,
-            }),
+                newOrder
+            })
         });
         let result = await res.json();
 
         if (!result.success) {
             showNotification({
                 title: 'Insert data notification',
-                message: 'Failed to reorder items! 🤥',
+                message: 'Failed to reorder items! 🤥'
             });
             dispatch(getTable(userId, projectID));
         }
@@ -343,18 +343,18 @@ export function reorderTypes(newOrder: number[], userId: number, projectID: numb
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
-                newOrder,
-            }),
+                newOrder
+            })
         });
         let result = await res.json();
 
         if (!result.success) {
             showNotification({
                 title: 'Insert data notification',
-                message: 'Failed to reorder types! 🤥',
+                message: 'Failed to reorder types! 🤥'
             });
             dispatch(getTable(userId, projectID));
         }
@@ -368,9 +368,9 @@ export function insertNewProject(userId: number) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ userId }),
+            body: JSON.stringify({ userId })
         });
         const result = await res.json();
         if (result.success) {
@@ -385,13 +385,13 @@ export function insertNewProject(userId: number) {
                     project_id: projectId,
                     member_table_id: memberTableId,
                     username: username,
-                    project_name: projectName,
-                }),
+                    project_name: projectName
+                })
             );
         } else {
             showNotification({
                 title: 'Insert data notification',
-                message: 'Failed to insert new project! 🤥',
+                message: 'Failed to insert new project! 🤥'
             });
         }
     };
@@ -404,15 +404,15 @@ export function renameItem(itemId: number, name: string, userId: number, project
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, name }),
+            body: JSON.stringify({ itemId, name })
         });
         const result = await res.json();
         if (!result.success) {
             showNotification({
                 title: 'Update data notification',
-                message: 'Failed to rename item! 🤥',
+                message: 'Failed to rename item! 🤥'
             });
             dispatch(getTable(userId, projectId));
         }
@@ -426,15 +426,15 @@ export function renameType(typeId: number, name: string, userId: number, project
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ typeId, name }),
+            body: JSON.stringify({ typeId, name })
         });
         const result = await res.json();
         if (!result.success) {
             showNotification({
                 title: 'Update data notification',
-                message: 'Failed to rename type! 🤥',
+                message: 'Failed to rename type! 🤥'
             });
             dispatch(getTable(userId, projectId));
         }
@@ -448,15 +448,15 @@ export function updateText(itemId: number, text: string, userId: number, project
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, text }),
+            body: JSON.stringify({ itemId, text })
         });
         const result = await res.json();
         if (!result.success) {
             showNotification({
                 title: 'Update data notification',
-                message: 'Failed to update text! 🤥',
+                message: 'Failed to update text! 🤥'
             });
             dispatch(getTable(userId, projectId));
         }
@@ -470,9 +470,9 @@ export function newState(projectId: number, name: string, color: string) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ projectId, name, color }),
+            body: JSON.stringify({ projectId, name, color })
         });
         const result = await res.json();
         if (result.success) {
@@ -480,13 +480,13 @@ export function newState(projectId: number, name: string, color: string) {
                 addStatusAction({
                     id: result.id,
                     name,
-                    color,
-                }),
+                    color
+                })
             );
         } else {
             showNotification({
                 title: 'Add state notification',
-                message: 'Failed to add state! 🤥',
+                message: 'Failed to add state! 🤥'
             });
         }
     };
@@ -499,15 +499,15 @@ export function updateState(itemId: number, stateId: number, userId: number, pro
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, stateId }),
+            body: JSON.stringify({ itemId, stateId })
         });
         const result = await res.json();
         if (!result.success) {
             showNotification({
                 title: 'Update state notification',
-                message: 'Failed to update state! 🤥',
+                message: 'Failed to update state! 🤥'
             });
             dispatch(getTable(userId, projectId));
         }
@@ -521,15 +521,15 @@ export function addPerson(itemId: number, personId: number, userId: number, proj
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, personId, typeId }),
+            body: JSON.stringify({ itemId, personId, typeId })
         });
         const result = await res.json();
         if (!result.success) {
             showNotification({
                 title: 'Add person notification',
-                message: 'Failed to add person! 🤥',
+                message: 'Failed to add person! 🤥'
             });
             dispatch(getTable(userId, projectId));
         }
@@ -540,7 +540,7 @@ export function addTransaction(
     itemId: number,
     date: string,
     cashFlow: number,
-    updateState: (transactionId: number) => void,
+    updateState: (transactionId: number) => void
 ) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
@@ -548,9 +548,9 @@ export function addTransaction(
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, date, cashFlow }),
+            body: JSON.stringify({ itemId, date, cashFlow })
         });
         const result = await res.json();
         if (result.success) {
@@ -558,7 +558,7 @@ export function addTransaction(
         } else {
             showNotification({
                 title: 'Add transaction notification',
-                message: 'Failed to add transaction! 🤥',
+                message: 'Failed to add transaction! 🤥'
             });
         }
     };
@@ -571,15 +571,15 @@ export function removePerson(itemId: number, personId: number, userId: number, p
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, personId }),
+            body: JSON.stringify({ itemId, personId })
         });
         const result = await res.json();
         if (!result.success) {
             showNotification({
                 title: 'Delete person notification',
-                message: 'Failed to delete person! 🤥',
+                message: 'Failed to delete person! 🤥'
             });
             dispatch(getTable(userId, projectId));
         }
@@ -593,15 +593,15 @@ export function removeTransaction(itemId: number, transactionId: number, userId:
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, transactionId }),
+            body: JSON.stringify({ itemId, transactionId })
         });
         const result = await res.json();
         if (!result.success) {
             showNotification({
                 title: 'Delete transaction notification',
-                message: 'Failed to delete transaction! 🤥',
+                message: 'Failed to delete transaction! 🤥'
             });
             dispatch(getTable(userId, projectId));
         }
@@ -615,21 +615,21 @@ export function deleteItem(groupId: number, itemId: number, userId: number, proj
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, groupId }),
+            body: JSON.stringify({ itemId, groupId })
         });
         const result = await res.json();
         if (result.success) {
             dispatch(getTable(userId, projectId));
             showNotification({
                 title: 'Delete item notification',
-                message: 'Successfully deleted item! 😎',
+                message: 'Successfully deleted item! 😎'
             });
         } else {
             showNotification({
                 title: 'Delete item notification',
-                message: 'Failed to delete item! 🤥',
+                message: 'Failed to delete item! 🤥'
             });
         }
     };
@@ -642,21 +642,21 @@ export function deleteItemGroup(groupId: number, userId: number, projectId: numb
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ groupId, projectId }),
+            body: JSON.stringify({ groupId, projectId })
         });
         const result = await res.json();
         if (result.success) {
             dispatch(getTable(userId, projectId));
             showNotification({
                 title: 'Delete item notification',
-                message: 'Successfully deleted item group! 😎',
+                message: 'Successfully deleted item group! 😎'
             });
         } else {
             showNotification({
                 title: 'Delete item notification',
-                message: 'Failed to delete item group! 🤥',
+                message: 'Failed to delete item group! 🤥'
             });
         }
     };
@@ -668,21 +668,21 @@ export function deleteProject(userId: number, projectId: number) {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ projectId, userId }),
+            body: JSON.stringify({ projectId, userId })
         });
         const result = await res.json();
         if (result.success) {
             dispatch(getTableList(userId));
             showNotification({
                 title: 'Delete project notification',
-                message: 'Successfully deleted project! 😎',
+                message: 'Successfully deleted project! 😎'
             });
         } else {
             showNotification({
                 title: 'Delete project notification',
-                message: 'Failed to delete project! 🤥',
+                message: 'Failed to delete project! 🤥'
             });
         }
     };

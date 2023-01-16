@@ -27,7 +27,7 @@ export function MyMember() {
                     marginBottom: '20px',
                     position: 'sticky',
                     top: '0px',
-                    zIndex: '99',
+                    zIndex: '99'
                 }}
             >
                 <Button onClick={(e) => clickHandler(e)} variant='light' color='green' fullWidth mt='md' radius='md'>

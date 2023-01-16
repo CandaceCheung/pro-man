@@ -24,7 +24,7 @@ export function ProjectList() {
                 username: item.username,
                 project_id: item.project_id,
                 creator_id: item.creator_id,
-                member_table_id: item.member_table_id,
+                member_table_id: item.member_table_id
             };
             projectList.push(obj);
         }
@@ -40,7 +40,7 @@ export function ProjectList() {
             if (projectSummary.filter((each) => each.creator_id === userId).length <= 1) {
                 showNotification({
                     title: 'Delete project notification',
-                    message: 'Failed to delete project! You must have at least 1 project! 🤥',
+                    message: 'Failed to delete project! You must have at least 1 project! 🤥'
                 });
             } else {
                 dispatch(deleteProject(userId, projectId));
@@ -66,8 +66,8 @@ export function ProjectList() {
                                         dispatch(
                                             setActiveProject(
                                                 parseInt(e.currentTarget.value),
-                                                projectList[index].project_name,
-                                            ),
+                                                projectList[index].project_name
+                                            )
                                         )
                                     }
                                     value={content?.project_id}
@@ -99,7 +99,7 @@ export function ProjectList() {
                                     </span>
                                 </Modal>
                             </div>
-                        ),
+                        )
                 )}
                 <Divider labelPosition='center' my='md' label='Joined Projects' color={'dark'} />
                 {projectList.map(
@@ -111,8 +111,8 @@ export function ProjectList() {
                                         dispatch(
                                             setActiveProject(
                                                 parseInt(e.currentTarget.value),
-                                                projectList[index].project_name,
-                                            ),
+                                                projectList[index].project_name
+                                            )
                                         )
                                     }
                                     value={content?.project_id}
@@ -123,7 +123,7 @@ export function ProjectList() {
                                     {content?.project_name}
                                 </Button>
                             </div>
-                        ),
+                        )
                 )}
             </div>
         </div>

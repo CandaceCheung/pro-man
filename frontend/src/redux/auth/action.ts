@@ -2,19 +2,19 @@ export function loginAction(userId: number, username: string) {
     return {
         type: 'AUTH/LOGIN' as const,
         userId,
-        username,
+        username
     };
 }
 
 export function logoutAction() {
     return {
-        type: 'AUTH/LOGOUT' as const,
+        type: 'AUTH/LOGOUT' as const
     };
 }
 
 export function failedLoginAction() {
     return {
-        type: 'AUTH/FAILED' as const,
+        type: 'AUTH/FAILED' as const
     };
 }
 

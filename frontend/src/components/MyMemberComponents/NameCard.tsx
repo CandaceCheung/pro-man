@@ -62,7 +62,7 @@ export function NameCard(props: MyMemberState) {
                                 width: '10px',
                                 position: 'absolute',
                                 top: '0px',
-                                left: '0px',
+                                left: '0px'
                             }}
                             variant='subtle'
                             rightIcon={<IconRefresh />}
@@ -106,7 +106,7 @@ export function NameCard(props: MyMemberState) {
                             style={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                alignItems: 'center',
+                                alignItems: 'center'
                             }}
                         >
                             <Text size='sm' color='dimmed'>

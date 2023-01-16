@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 
 const mockedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-    useNavigate: () => mockedNavigate,
+    useNavigate: () => mockedNavigate
 }));
 
 test('test Navbar', async () => {
@@ -17,7 +17,7 @@ test('test Navbar', async () => {
             <MantineProvider>
                 <LeftNavbar />
             </MantineProvider>
-        </Provider>,
+        </Provider>
     );
 
     const checkLogoButton = screen.getAllByRole('button')[0];

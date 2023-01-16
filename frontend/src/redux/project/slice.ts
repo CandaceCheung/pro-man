@@ -111,8 +111,8 @@ const initialState: ActiveProjectState = {
             is_deleted: false,
             is_deleted_receiver: false,
             created_at: new Date(),
-            updated_at: new Date(),
-        },
+            updated_at: new Date()
+        }
     ],
     member_list: [
         {
@@ -125,18 +125,18 @@ const initialState: ActiveProjectState = {
                     membership_id: null,
                     project_id: null,
                     member_user_id: null,
-                    avatar: null,
-                },
+                    avatar: null
+                }
             ],
             projects: [
                 {
                     project_name: '',
                     project_id: null,
-                    creator_id: null,
-                },
-            ],
-        },
-    ],
+                    creator_id: null
+                }
+            ]
+        }
+    ]
 };
 
 const setActiveProject: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
@@ -227,7 +227,7 @@ const getMessages: CaseReducer<ActiveProjectState, PayloadAction<MessageStateArr
 };
 const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; checked: boolean }>> = (
     state,
-    action,
+    action
 ) => {
     for (let message of state.message_summary) {
         if (message.id === action.payload.notificationId) {
@@ -238,7 +238,7 @@ const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId
 };
 const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeleted: boolean }>> = (
     state,
-    action,
+    action
 ) => {
     for (let message of state.message_summary) {
         if (message.id === action.payload.notificationId) {
@@ -264,7 +264,7 @@ const getMemberList: CaseReducer<ActiveProjectState, PayloadAction<MyMemberState
 };
 const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number[]; avatar: number }>> = (
     state,
-    action,
+    action
 ) => {
     for (let message of state.member_list) {
         for (let member of message.members) {
@@ -278,7 +278,7 @@ const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId
 };
 const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number; projectId: number }>> = (
     state,
-    action,
+    action
 ) => {
     for (let item of state.member_list) {
         for (let member of item.members) {
@@ -330,8 +330,8 @@ const projectSlice = createSlice({
         toggleReceiverDelete,
         getMemberList,
         changeAvatar,
-        deleteMember,
-    },
+        deleteMember
+    }
 });
 
 export const {
@@ -367,7 +367,7 @@ export const {
     toggleReceiverDelete: toggleReceiverDeleteAction,
     getMemberList: getMemberListAction,
     changeAvatar: changeAvatarAction,
-    deleteMember: deleteMemberAction,
+    deleteMember: deleteMemberAction
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

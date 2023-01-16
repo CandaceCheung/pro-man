@@ -23,7 +23,7 @@ export function Notification() {
                                         sx={{
                                             width: 16,
                                             height: 16,
-                                            pointerEvents: 'none',
+                                            pointerEvents: 'none'
                                         }}
                                         variant='filled'
                                         size='xs'

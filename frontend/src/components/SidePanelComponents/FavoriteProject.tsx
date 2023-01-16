@@ -30,7 +30,7 @@ export function FavoriteProject() {
                                             {content?.project_name}
                                         </Button>
                                     </div>
-                                ),
+                                )
                         )}
                         <Divider labelPosition='center' my='md' label='Other Projects' color={'dark'} />
                         {projectSummary.map(
@@ -42,8 +42,8 @@ export function FavoriteProject() {
                                                 dispatch(
                                                     setActiveProject(
                                                         parseInt(e.currentTarget.value),
-                                                        projectSummary[index].project_name,
-                                                    ),
+                                                        projectSummary[index].project_name
+                                                    )
                                                 )
                                             }
                                             value={content.project_id}
@@ -54,7 +54,7 @@ export function FavoriteProject() {
                                             {content?.project_name}
                                         </Button>
                                     </div>
-                                ),
+                                )
                         )}
                     </>
                 ) : (

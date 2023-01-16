@@ -18,22 +18,22 @@ const useStyle = createStyles((theme, _params, getRef) => ({
     moneyContainer: {
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     popUpContainer: {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     tableRow: {
         position: 'relative',
 
         '&:hover': {
             [`& .${getRef('deleteButton')}`]: {
-                visibility: 'visible',
-            },
-        },
+                visibility: 'visible'
+            }
+        }
     },
     deleteButton: {
         ref: getRef('deleteButton'),
@@ -46,9 +46,9 @@ const useStyle = createStyles((theme, _params, getRef) => ({
 
         '&:hover': {
             backgroundColor: '#E5F4FF',
-            opacity: 0.7,
-        },
-    },
+            opacity: 0.7
+        }
+    }
 }));
 
 export function Money({
@@ -59,7 +59,7 @@ export function Money({
     cashFlows,
     transactionDates,
     onAddTransaction,
-    onDeleteTransaction,
+    onDeleteTransaction
 }: MoneyProps) {
     const [opened, setOpened] = useState(false);
     const [editStatus, setEditStatus] = useState(false);

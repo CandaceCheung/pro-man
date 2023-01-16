@@ -9,7 +9,7 @@ describe('Auth Reducer', () => {
         initState = {
             userId: null,
             username: null,
-            isLoggedIn: null,
+            isLoggedIn: null
         };
     });
 
@@ -18,7 +18,7 @@ describe('Auth Reducer', () => {
         expect(finalState).toEqual({
             userId: 1,
             username: 'Testing',
-            isLoggedIn: true,
+            isLoggedIn: true
         });
     });
 });

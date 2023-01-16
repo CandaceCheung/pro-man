@@ -22,7 +22,7 @@ export function InvitationList() {
                 id: item.id,
                 email: item.email,
                 updated_at: new Date(item.updated_at).toLocaleString('en-us'),
-                status: item.status,
+                status: item.status
             };
             elements.push(obj);
         }
@@ -52,7 +52,7 @@ export function InvitationList() {
                     style={{
                         background: element.status === 'pending' ? '#FDAB3D' : '#00C875',
                         color: 'white',
-                        textAlign: 'center',
+                        textAlign: 'center'
                     }}
                 >
                     {element.status.toUpperCase()}

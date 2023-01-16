@@ -5,7 +5,7 @@ import produce from 'immer';
 const initState: KanbanState = {
     statusList: [],
     memberList: [],
-    groupList: [],
+    groupList: []
 };
 
 export const kanbanReducer = (state: KanbanState = initState, action: KanbanAction): KanbanState => {
@@ -13,19 +13,19 @@ export const kanbanReducer = (state: KanbanState = initState, action: KanbanActi
         case 'KANBAN/SET':
             return {
                 ...state,
-                statusList: action.statusList,
+                statusList: action.statusList
             };
 
         case 'KANBAN/SET_MEMBER':
             return {
                 ...state,
-                memberList: action.memberList,
+                memberList: action.memberList
             };
 
         case 'KANBAN/SET_GROUP':
             return {
                 ...state,
-                groupList: action.groupList,
+                groupList: action.groupList
             };
 
         case 'KANBAN/ADD':
