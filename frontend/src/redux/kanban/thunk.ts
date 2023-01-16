@@ -66,16 +66,7 @@ export function getGroup(projectId: number) {
     };
 }
 
-export function postItem(
-    projectId: number,
-    stateId: number,
-    userId: number,
-    itemName: string,
-    memberName: string[],
-    memberId: string[],
-    date: Date,
-    groupId: number
-) {
+export function postItem(projectId: number, stateId: number, userId: number, itemName: string, memberName: string[], memberId: string[], date: Date, groupId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
 

@@ -121,16 +121,7 @@ const useStyles = createStyles(() => ({
     }
 }));
 
-export function Persons({
-    groupId,
-    itemId,
-    typeId,
-    itemPersonsIds,
-    personsColors,
-    membersFullName,
-    onRemovePerson,
-    onAddPerson
-}: PersonsProps) {
+export function Persons({ groupId, itemId, typeId, itemPersonsIds, personsColors, membersFullName, onRemovePerson, onAddPerson }: PersonsProps) {
     const [opened, setOpened] = useState(false);
     const { classes, cx } = useStyles();
 
@@ -148,10 +139,8 @@ export function Persons({
                             }}
                         >
                             {membersFullName[itemPersonsIds[0]] &&
-                                (membersFullName[itemPersonsIds[0]].firstName &&
-                                membersFullName[itemPersonsIds[0]].lastName
-                                    ? membersFullName[itemPersonsIds[0]].firstName![0].toUpperCase() +
-                                      membersFullName[itemPersonsIds[0]].lastName![0].toUpperCase()
+                                (membersFullName[itemPersonsIds[0]].firstName && membersFullName[itemPersonsIds[0]].lastName
+                                    ? membersFullName[itemPersonsIds[0]].firstName![0].toUpperCase() + membersFullName[itemPersonsIds[0]].lastName![0].toUpperCase()
                                     : membersFullName[itemPersonsIds[0]].username[0].toUpperCase())}
                         </span>
                     </>
@@ -163,19 +152,14 @@ export function Persons({
                             return (
                                 <span
                                     key={'person_' + id}
-                                    className={
-                                        index
-                                            ? cx(classes.personsComponent, classes.personsSecondComponent)
-                                            : cx(classes.personsComponent, classes.personsFirstComponent)
-                                    }
+                                    className={index ? cx(classes.personsComponent, classes.personsSecondComponent) : cx(classes.personsComponent, classes.personsFirstComponent)}
                                     style={{
                                         backgroundColor: personsColors[itemPersonsIds[index]]
                                     }}
                                 >
                                     {membersFullName[id] &&
                                         (membersFullName[id].firstName && membersFullName[id].lastName
-                                            ? membersFullName[id].firstName![0].toUpperCase() +
-                                              membersFullName[id].lastName![0].toUpperCase()
+                                            ? membersFullName[id].firstName![0].toUpperCase() + membersFullName[id].lastName![0].toUpperCase()
                                             : membersFullName[id].username[0].toUpperCase())}
                                 </span>
                             );
@@ -193,17 +177,11 @@ export function Persons({
                             }}
                         >
                             {membersFullName[itemPersonsIds[0]] &&
-                                (membersFullName[itemPersonsIds[0]].firstName &&
-                                membersFullName[itemPersonsIds[0]].lastName
-                                    ? membersFullName[itemPersonsIds[0]].firstName![0].toUpperCase() +
-                                      membersFullName[itemPersonsIds[0]].lastName![0].toUpperCase()
+                                (membersFullName[itemPersonsIds[0]].firstName && membersFullName[itemPersonsIds[0]].lastName
+                                    ? membersFullName[itemPersonsIds[0]].firstName![0].toUpperCase() + membersFullName[itemPersonsIds[0]].lastName![0].toUpperCase()
                                     : membersFullName[itemPersonsIds[0]].username[0].toUpperCase())}
                         </span>
-                        <span
-                            key={'person_multiple'}
-                            className={cx(classes.personsComponent, classes.personsMultipleComponent)}
-                            style={{ backgroundColor: '#323232' }}
-                        >
+                        <span key={'person_multiple'} className={cx(classes.personsComponent, classes.personsMultipleComponent)} style={{ backgroundColor: '#323232' }}>
                             {`+${itemPersonsIds.length - 1}`}
                         </span>
                     </>
@@ -233,10 +211,7 @@ export function Persons({
                                         </span>
                                         {firstName && lastName ? firstName + ' ' + lastName : username}
                                         <span className={classes.iconX}>
-                                            <IconX
-                                                size={15}
-                                                onClick={() => onRemovePerson(groupId, itemId, typeId, id)}
-                                            />
+                                            <IconX size={15} onClick={() => onRemovePerson(groupId, itemId, typeId, id)} />
                                         </span>
                                     </span>
                                 );
@@ -252,11 +227,7 @@ export function Persons({
                                 const lastName = membersFullName[memberId].lastName;
                                 const username = membersFullName[memberId].username;
                                 return (
-                                    <span
-                                        key={'person_' + key}
-                                        className={classes.personsSuggestion}
-                                        onClick={() => onAddPerson(groupId, itemId, typeId, memberId)}
-                                    >
+                                    <span key={'person_' + key} className={classes.personsSuggestion} onClick={() => onAddPerson(groupId, itemId, typeId, memberId)}>
                                         <span className={classes.iconUser}>
                                             <IconUserCircle />
                                         </span>

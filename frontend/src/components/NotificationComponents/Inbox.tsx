@@ -2,12 +2,7 @@ import { Button, Card, Center, Checkbox, Container, Input, Table } from '@mantin
 import { IconArrowBackUp, IconEraser, IconPlus } from '@tabler/icons';
 import { ChangeEvent, MouseEvent, useState } from 'react';
 import { acceptMemberInvitation } from '../../redux/invitation/thunk';
-import {
-    checkUsernameAction,
-    setMessageTargetAction,
-    toggleIReplyModalAction,
-    toggleMessagerAction
-} from '../../redux/project/slice';
+import { checkUsernameAction, setMessageTargetAction, toggleIReplyModalAction, toggleMessagerAction } from '../../redux/project/slice';
 import { toggleDelete, toggleRead } from '../../redux/project/thunk';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { Messager } from './Messager';
@@ -20,10 +15,7 @@ export function Inbox() {
     const [search, setSearch] = useState('');
     let messages = messageSummary.filter((message) => message.receiver_id === userId && !message.is_deleted);
     messages = messages.filter(
-        (message) =>
-            message.sender?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-            message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-            new Date(message.created_at).toLocaleString('en-us')?.includes(search)
+        (message) => message.sender?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || new Date(message.created_at).toLocaleString('en-us')?.includes(search)
     );
 
     const rows = messages.map((message) => {
@@ -43,23 +35,13 @@ export function Inbox() {
                 <td>{message.sender}</td>
                 <td>{new Date(message.created_at).toLocaleString('en-us')}</td>
                 <td>
-                    <Button
-                        onClick={(e) => onReply(e)}
-                        value={message.sender_id!}
-                        variant='subtle'
-                        leftIcon={<IconArrowBackUp size={16} />}
-                    ></Button>
+                    <Button onClick={(e) => onReply(e)} value={message.sender_id!} variant='subtle' leftIcon={<IconArrowBackUp size={16} />}></Button>
                 </td>
                 <td>
                     <Checkbox value={message.id!} defaultChecked={message.status} onChange={(e) => onToggleRead(e)} />
                 </td>
                 <td>
-                    <Button
-                        onClick={(e) => onDelete(e)}
-                        value={message.id!}
-                        variant='subtle'
-                        leftIcon={<IconEraser size={16} />}
-                    ></Button>
+                    <Button onClick={(e) => onDelete(e)} value={message.id!} variant='subtle' leftIcon={<IconEraser size={16} />}></Button>
                 </td>
             </tr>
         );
@@ -94,19 +76,8 @@ export function Inbox() {
     return (
         <div style={{ paddingTop: '20px' }}>
             <Container fluid={true}>
-                <Input.Wrapper
-                    id='search'
-                    withAsterisk
-                    label='Search'
-                    error={search.length === 0 ? '' : messages.length === 0 ? 'Search not found' : undefined}
-                    className='row'
-                >
-                    <Input
-                        value={search}
-                        onChange={(e) => onSearch(e)}
-                        id='search'
-                        placeholder='Content/Name/Date Search'
-                    />
+                <Input.Wrapper id='search' withAsterisk label='Search' error={search.length === 0 ? '' : messages.length === 0 ? 'Search not found' : undefined} className='row'>
+                    <Input value={search} onChange={(e) => onSearch(e)} id='search' placeholder='Content/Name/Date Search' />
                 </Input.Wrapper>
                 <Container fluid={true} style={{ paddingTop: '20px' }}>
                     <Center style={{ padding: '20px' }}>

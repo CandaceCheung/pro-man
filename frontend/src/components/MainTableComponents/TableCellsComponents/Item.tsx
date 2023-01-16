@@ -92,15 +92,7 @@ export function Item({ itemId, groupId, itemName, onItemRename }: ItemProps) {
     return (
         <div className={classes.itemContainer}>
             {selectedItemNameInput ? (
-                <input
-                    onBlur={deselectItemNameInput}
-                    type='text'
-                    autoFocus
-                    className={classes.itemNameInput}
-                    value={itemNameInput}
-                    onKeyDown={(e) => handleItemNameInputKeyDown(e.key)}
-                    onChange={(e) => setItemNameInput(e.target.value)}
-                ></input>
+                <input onBlur={deselectItemNameInput} type='text' autoFocus className={classes.itemNameInput} value={itemNameInput} onKeyDown={(e) => handleItemNameInputKeyDown(e.key)} onChange={(e) => setItemNameInput(e.target.value)}></input>
             ) : (
                 <span className={classes.itemName} onClick={onSelectItemNameInput}>
                     {itemName}

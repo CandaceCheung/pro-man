@@ -1,11 +1,5 @@
 import '../components/styles/Timeline.css';
-import Timeline, {
-    CustomMarker,
-    DateHeader,
-    SidebarHeader,
-    TimelineHeaders,
-    TimelineMarkers
-} from 'react-calendar-timeline';
+import Timeline, { CustomMarker, DateHeader, SidebarHeader, TimelineHeaders, TimelineMarkers } from 'react-calendar-timeline';
 import 'react-calendar-timeline/lib/Timeline.css';
 import { useAppDispatch, useAppSelector } from '../store';
 import { IconArrowBadgeLeft, IconArrowBadgeRight, IconPinned } from '@tabler/icons';
@@ -14,11 +8,7 @@ import moment from 'moment';
 import { getTable, updateDatelineItem, updateTimelineItem } from '../redux/table/thunk';
 // import { AddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
 import ClockLoader from 'react-spinners/ClockLoader';
-import {
-    setTargetUpdateElementAction,
-    toggleLoadingAction,
-    triggerUpdateTimelineModalAction
-} from '../redux/project/slice';
+import { setTargetUpdateElementAction, toggleLoadingAction, triggerUpdateTimelineModalAction } from '../redux/project/slice';
 import { ChangNameColorModal } from '../components/TimelineComponents/ChangeNameColorModal';
 
 const keys = {
@@ -75,29 +65,13 @@ export function TimeFrame() {
     const itemHeight = useAppSelector((state) => state.project.set_timeline_item_height);
 
     const unfilteredTimelineDetails = projectSummary
-        .filter(
-            (project) =>
-                project.project_id === targetProjectId &&
-                project.type_name === 'times' &&
-                !project.project_is_deleted &&
-                !project.item_is_deleted
-        )
+        .filter((project) => project.project_id === targetProjectId && project.type_name === 'times' && !project.project_is_deleted && !project.item_is_deleted)
         .sort((a, b) => a.item_group_id - b.item_group_id);
     const unfilteredDatelineDetails = projectSummary
-        .filter(
-            (project) =>
-                project.project_id === targetProjectId &&
-                project.type_name === 'dates' &&
-                !project.project_is_deleted &&
-                !project.item_is_deleted
-        )
+        .filter((project) => project.project_id === targetProjectId && project.type_name === 'dates' && !project.project_is_deleted && !project.item_is_deleted)
         .sort((a, b) => a.item_group_id - b.item_group_id);
-    const timelineDetail = unfilteredTimelineDetails
-        .filter((project) => (sortByPersonId ? project.item_person_user_id === sortByPersonId : project))
-        .filter((project) => (sortByGroupId ? project.item_group_id === sortByGroupId : project));
-    const datelineDetail = unfilteredDatelineDetails
-        .filter((project) => (sortByPersonId ? project.item_person_user_id === sortByPersonId : project))
-        .filter((project) => (sortByGroupId ? project.item_group_id === sortByGroupId : project));
+    const timelineDetail = unfilteredTimelineDetails.filter((project) => (sortByPersonId ? project.item_person_user_id === sortByPersonId : project)).filter((project) => (sortByGroupId ? project.item_group_id === sortByGroupId : project));
+    const datelineDetail = unfilteredDatelineDetails.filter((project) => (sortByPersonId ? project.item_person_user_id === sortByPersonId : project)).filter((project) => (sortByGroupId ? project.item_group_id === sortByGroupId : project));
 
     const minZoom = 1 * 24 * 60 * 60 * 1000;
     const maxZoom = 31 * 24 * 60 * 60 * 1000;
@@ -245,24 +219,12 @@ export function TimeFrame() {
         <div id='timeline-container'>
             {loading ? (
                 <div id='loader-container'>
-                    <ClockLoader
-                        color={'#238BE6'}
-                        loading={loading}
-                        size={200}
-                        aria-label='Loading Spinner'
-                        data-testid='loader'
-                    />
+                    <ClockLoader color={'#238BE6'} loading={loading} size={200} aria-label='Loading Spinner' data-testid='loader' />
                 </div>
             ) : (
                 <Timeline
                     groups={groups}
-                    items={
-                        !setHideByType
-                            ? [...items, ...dateItems]
-                            : setHideByType === 'dates'
-                            ? [...items]
-                            : [...dateItems]
-                    }
+                    items={!setHideByType ? [...items, ...dateItems] : setHideByType === 'dates' ? [...items] : [...dateItems]}
                     defaultTimeStart={defaultTimeStart}
                     defaultTimeEnd={defaultTimeEnd}
                     visibleTimeStart={autofit ? firstStartedTime - 2.592e8 : now ? startPointAnchor : undefined}
@@ -296,11 +258,7 @@ export function TimeFrame() {
                                 return (
                                     <div id='left-bar' {...getRootProps()}>
                                         <span id='toggle-arrow' onClick={() => setToggle((state) => !state)}>
-                                            {toggle ? (
-                                                <IconArrowBadgeRight size={30} />
-                                            ) : (
-                                                <IconArrowBadgeLeft size={30} />
-                                            )}
+                                            {toggle ? <IconArrowBadgeRight size={30} /> : <IconArrowBadgeLeft size={30} />}
                                         </span>
                                     </div>
                                 );

@@ -90,15 +90,7 @@ export function TextCell({ groupId, itemId, typeId, text, onTextChange }: TextPr
     return (
         <div className={classes.textContainer}>
             {selectedTextInput ? (
-                <input
-                    onBlur={deselectTextInput}
-                    type='text'
-                    autoFocus
-                    className={classes.textInput}
-                    value={textInput}
-                    onKeyDown={(e) => handleTextInputKeyDown(e.key)}
-                    onChange={(e) => setTextInput(e.target.value)}
-                ></input>
+                <input onBlur={deselectTextInput} type='text' autoFocus className={classes.textInput} value={textInput} onKeyDown={(e) => handleTextInputKeyDown(e.key)} onChange={(e) => setTextInput(e.target.value)}></input>
             ) : (
                 <span className={classes.text} onClick={onSelectTextInput}>
                     {text}

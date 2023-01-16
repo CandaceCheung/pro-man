@@ -10,9 +10,7 @@ export function ReplyModal() {
     const userId = useAppSelector((state) => state.auth.userId);
     const sender = useAppSelector((state) => state.auth.username);
     const targetId = useAppSelector((state) => state.project.message_target);
-    const targetUser = useAppSelector((state) => state.project.message_summary).filter(
-        (message) => message.sender_id === targetId
-    )[0]?.sender;
+    const targetUser = useAppSelector((state) => state.project.message_summary).filter((message) => message.sender_id === targetId)[0]?.sender;
     const opened = useAppSelector((state) => state.project.toggle_reply_modal);
     const [text, setText] = useState<string>('');
 
@@ -42,15 +40,7 @@ export function ReplyModal() {
                     />
                 </Input.Wrapper>
 
-                <Textarea
-                    onChange={(event) => setText(event.currentTarget.value)}
-                    value={text}
-                    autosize
-                    placeholder='Input your message here'
-                    label='Your Message'
-                    withAsterisk
-                    minRows={4}
-                />
+                <Textarea onChange={(event) => setText(event.currentTarget.value)} value={text} autosize placeholder='Input your message here' label='Your Message' withAsterisk minRows={4} />
 
                 <Group position='center' mt='xl'>
                     <Button variant='outline' type='submit'>

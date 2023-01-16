@@ -18,7 +18,4 @@ export function failedLoginAction() {
     };
 }
 
-export type AuthAction =
-    | ReturnType<typeof loginAction>
-    | ReturnType<typeof logoutAction>
-    | ReturnType<typeof failedLoginAction>;
+export type AuthAction = ReturnType<typeof loginAction> | ReturnType<typeof logoutAction> | ReturnType<typeof failedLoginAction>;

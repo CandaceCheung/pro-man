@@ -113,10 +113,7 @@ export function Times({ startDate, endDate }: TimesProps) {
                     }}
                     data-hover={totalDays === 1 ? totalDays + ' day' : totalDays + ' days'}
                 >
-                    {`${format(new Date(Number(startDate)), 'MMM dd, yyyy')} - ${format(
-                        new Date(Number(endDate)),
-                        'MMM dd, yyyy'
-                    )}`}
+                    {`${format(new Date(Number(startDate)), 'MMM dd, yyyy')} - ${format(new Date(Number(endDate)), 'MMM dd, yyyy')}`}
                 </span>
             ) : (
                 <span className={classes.emptyBar}>-</span>

@@ -14,18 +14,12 @@ const initialState: ProfileState = {
     lastName: ''
 };
 
-const setInfo: CaseReducer<ProfileState, PayloadAction<{ username: string; firstName: string; lastName: string }>> = (
-    state,
-    action
-) => {
+const setInfo: CaseReducer<ProfileState, PayloadAction<{ username: string; firstName: string; lastName: string }>> = (state, action) => {
     state.firstName = action.payload.firstName;
     state.lastName = action.payload.lastName;
     state.username = action.payload.username;
 };
-const updateInfo: CaseReducer<ProfileState, PayloadAction<{ firstName: string; lastName: string }>> = (
-    state,
-    action
-) => {
+const updateInfo: CaseReducer<ProfileState, PayloadAction<{ firstName: string; lastName: string }>> = (state, action) => {
     state.firstName = action.payload.firstName;
     state.lastName = action.payload.lastName;
 };

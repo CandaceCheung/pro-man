@@ -18,15 +18,7 @@ export function FavoriteProject() {
                             (content, index) =>
                                 content?.creator_id === userId && (
                                     <div key={content.project_id}>
-                                        <Button
-                                            onClick={() =>
-                                                dispatch(setActiveProject(content.project_id!, content.project_name))
-                                            }
-                                            value={content.project_id}
-                                            className=''
-                                            variant='subtle'
-                                            key={index}
-                                        >
+                                        <Button onClick={() => dispatch(setActiveProject(content.project_id!, content.project_name))} value={content.project_id} className='' variant='subtle' key={index}>
                                             {content?.project_name}
                                         </Button>
                                     </div>
@@ -37,20 +29,7 @@ export function FavoriteProject() {
                             (content, index) =>
                                 content?.creator_id !== userId && (
                                     <div key={content.project_id}>
-                                        <Button
-                                            onClick={(e) =>
-                                                dispatch(
-                                                    setActiveProject(
-                                                        parseInt(e.currentTarget.value),
-                                                        projectSummary[index].project_name
-                                                    )
-                                                )
-                                            }
-                                            value={content.project_id}
-                                            className=''
-                                            variant='subtle'
-                                            key={index}
-                                        >
+                                        <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectSummary[index].project_name))} value={content.project_id} className='' variant='subtle' key={index}>
                                             {content?.project_name}
                                         </Button>
                                     </div>

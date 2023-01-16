@@ -61,39 +61,14 @@ export function ProjectList() {
                     (content, index) =>
                         content?.creator_id === userId && (
                             <div key={content.project_id} className='my-project-container'>
-                                <Button
-                                    onClick={(e) =>
-                                        dispatch(
-                                            setActiveProject(
-                                                parseInt(e.currentTarget.value),
-                                                projectList[index].project_name
-                                            )
-                                        )
-                                    }
-                                    value={content?.project_id}
-                                    className=''
-                                    variant='subtle'
-                                    key={index}
-                                >
+                                <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].project_name))} value={content?.project_id} className='' variant='subtle' key={index}>
                                     {content?.project_name}
                                 </Button>
                                 <IconX size={16} className='delete-icon' onClick={() => setOpened(true)} />
-                                <Modal
-                                    centered
-                                    opened={opened}
-                                    onClose={() => setOpened(false)}
-                                    title={<span className='modal-title'>{'Delete this project?'}</span>}
-                                >
-                                    <span className='modal-body'>
-                                        {'The action cannot be reversed! Think twice! 🤔'}
-                                    </span>
+                                <Modal centered opened={opened} onClose={() => setOpened(false)} title={<span className='modal-title'>{'Delete this project?'}</span>}>
+                                    <span className='modal-body'>{'The action cannot be reversed! Think twice! 🤔'}</span>
                                     <span className='modal-footer'>
-                                        <Button
-                                            color='red'
-                                            onClick={() =>
-                                                content.project_id && handleDeleteProject(content.project_id)
-                                            }
-                                        >
+                                        <Button color='red' onClick={() => content.project_id && handleDeleteProject(content.project_id)}>
                                             Delete
                                         </Button>
                                     </span>
@@ -106,20 +81,7 @@ export function ProjectList() {
                     (content, index) =>
                         content?.creator_id !== userId && (
                             <div key={content?.project_id}>
-                                <Button
-                                    onClick={(e) =>
-                                        dispatch(
-                                            setActiveProject(
-                                                parseInt(e.currentTarget.value),
-                                                projectList[index].project_name
-                                            )
-                                        )
-                                    }
-                                    value={content?.project_id}
-                                    className=''
-                                    variant='subtle'
-                                    key={index}
-                                >
+                                <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].project_name))} value={content?.project_id} className='' variant='subtle' key={index}>
                                     {content?.project_name}
                                 </Button>
                             </div>

@@ -16,19 +16,7 @@ export class SmartPointerSensor extends PointerSensor {
 }
 
 function isInteractiveElement(element: Element | null) {
-    const interactiveElements = [
-        'button',
-        'input',
-        'textarea',
-        'span',
-        'svg',
-        'th',
-        'tr',
-        'td',
-        'line',
-        'circle',
-        'path'
-    ];
+    const interactiveElements = ['button', 'input', 'textarea', 'span', 'svg', 'th', 'tr', 'td', 'line', 'circle', 'path'];
     const classNameElements = ['mantine-Popover-dropdown'];
     if (element?.tagName && interactiveElements.includes(element.tagName.toLowerCase())) {
         return true;

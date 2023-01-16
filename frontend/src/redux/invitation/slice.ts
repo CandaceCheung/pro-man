@@ -64,11 +64,6 @@ const invitationSlice = createSlice({
     }
 });
 
-export const {
-    sendInvite: sendInviteAction,
-    acceptInvite: acceptInviteAction,
-    getInvitationList: getInvitationListAction,
-    deleteInvitation: deleteInvitationAction
-} = invitationSlice.actions;
+export const { sendInvite: sendInviteAction, acceptInvite: acceptInviteAction, getInvitationList: getInvitationListAction, deleteInvitation: deleteInvitationAction } = invitationSlice.actions;
 
 export default invitationSlice.reducer;

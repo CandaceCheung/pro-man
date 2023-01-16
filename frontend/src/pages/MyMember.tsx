@@ -38,14 +38,7 @@ export function MyMember() {
                 {memberList.map((member) => {
                     return (
                         <Grid.Col span={4} key={member.member_id}>
-                            <NameCard
-                                member_id={member.member_id}
-                                username={member.username}
-                                last_name={member.last_name}
-                                first_name={member.first_name}
-                                projects={member.projects}
-                                members={member.members}
-                            />
+                            <NameCard member_id={member.member_id} username={member.username} last_name={member.last_name} first_name={member.first_name} projects={member.projects} members={member.members} />
                         </Grid.Col>
                     );
                 })}

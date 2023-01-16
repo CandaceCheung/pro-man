@@ -90,13 +90,7 @@ export function getTableList(userId: number) {
     };
 }
 
-export function updateTimelineItem(
-    timelineID: number,
-    startTime: number,
-    endTime: number,
-    name: string,
-    color: string
-) {
+export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem('token');
 
@@ -536,12 +530,7 @@ export function addPerson(itemId: number, personId: number, userId: number, proj
     };
 }
 
-export function addTransaction(
-    itemId: number,
-    date: string,
-    cashFlow: number,
-    updateState: (transactionId: number) => void
-) {
+export function addTransaction(itemId: number, date: string, cashFlow: number, updateState: (transactionId: number) => void) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/transaction`, {

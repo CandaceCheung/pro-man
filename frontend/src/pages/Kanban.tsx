@@ -56,14 +56,7 @@ export function Kanban() {
                     <div className='kanban-table'>
                         <Group noWrap position='left'>
                             {statusList.map((status) => (
-                                <StatusColumn
-                                    key={status.id}
-                                    id={status.id}
-                                    name={status.name}
-                                    color={status.color}
-                                    order={status.order}
-                                    itemsList={status.itemsList}
-                                />
+                                <StatusColumn key={status.id} id={status.id} name={status.name} color={status.color} order={status.order} itemsList={status.itemsList} />
                             ))}
                         </Group>
                     </div>

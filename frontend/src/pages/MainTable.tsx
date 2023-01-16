@@ -22,12 +22,7 @@ import {
     updateText
 } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
-import {
-    arrayMove,
-    SortableContext,
-    verticalListSortingStrategy,
-    horizontalListSortingStrategy
-} from '@dnd-kit/sortable';
+import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useStyles } from '../components/MainTableComponents/styles';
 import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
@@ -179,13 +174,9 @@ export function MainTable() {
                         break;
                     case 'money':
                         if (itemCells[itemGroupID][itemID][typeID]) {
-                            if (
-                                !itemCells[itemGroupID][itemID][typeID]!.transaction_id!.includes(cell.transaction_id)
-                            ) {
+                            if (!itemCells[itemGroupID][itemID][typeID]!.transaction_id!.includes(cell.transaction_id)) {
                                 itemCells[itemGroupID][itemID][typeID]!.transaction_id!.push(cell.transaction_id);
-                                itemCells[itemGroupID][itemID][typeID]!.item_money_cashflow!.push(
-                                    cell.item_money_cashflow
-                                );
+                                itemCells[itemGroupID][itemID][typeID]!.item_money_cashflow!.push(cell.item_money_cashflow);
                                 itemCells[itemGroupID][itemID][typeID]!.item_money_date!.push(cell.item_money_date);
                             }
                         } else {
@@ -197,14 +188,8 @@ export function MainTable() {
                         break;
                     case 'persons':
                         if (itemCells[itemGroupID][itemID][typeID]) {
-                            if (
-                                !itemCells[itemGroupID][itemID][typeID].item_person_user_id!.includes(
-                                    cell.item_person_user_id
-                                )
-                            ) {
-                                itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(
-                                    cell.item_person_user_id
-                                );
+                            if (!itemCells[itemGroupID][itemID][typeID].item_person_user_id!.includes(cell.item_person_user_id)) {
+                                itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(cell.item_person_user_id);
                             }
                         } else {
                             itemCell.item_person_user_id = [cell.item_person_user_id];
@@ -251,8 +236,7 @@ export function MainTable() {
         // Set type_persons members initials colors
         let personsMembersArray = Array.from(personsMembers).sort();
         personsMembersArray.forEach((id, index) => {
-            personsColorsTemp[id] =
-                theme.colors.personsTypeComponentColor[index % theme.colors.personsTypeComponentColor.length];
+            personsColorsTemp[id] = theme.colors.personsTypeComponentColor[index % theme.colors.personsTypeComponentColor.length];
         });
 
         setItemCellsState(itemCells);
@@ -309,14 +293,7 @@ export function MainTable() {
                     setItemGroupsState(nextNewItemGroupsState);
 
                     // Fetch to the server
-                    dispatch(
-                        updateItemGroupName(
-                            itemGroupsState[index].item_group_id,
-                            itemGroupsInputValueState[index],
-                            userId,
-                            projectID
-                        )
-                    );
+                    dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, itemGroupsInputValueState[index], userId, projectID));
                 } else {
                     const newItemGroupsInputValueState = produce(itemGroupsInputValueState, (draftState) => {
                         draftState[index] = itemGroupsState[index].item_group_name;
@@ -393,14 +370,7 @@ export function MainTable() {
         dispatch(updateText(itemId, text, userId!, projectID!));
     };
 
-    const onStatusChange = (
-        groupId: number,
-        itemId: number,
-        stateId: number,
-        typeId: number,
-        name: string,
-        color: string
-    ) => {
+    const onStatusChange = (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => {
         const newItemCellsState = produce(itemCellsState, (draftState) => {
             draftState[groupId][itemId][typeId].item_status_name = name;
             draftState[groupId][itemId][typeId].item_status_color = color;
@@ -417,9 +387,7 @@ export function MainTable() {
             });
         } else {
             const newItemCellsState = produce(itemCellsState, (draftState) => {
-                draftState[groupId][itemId][typeId].item_person_user_id = draftState[groupId][itemId][
-                    typeId
-                ].item_person_user_id?.filter((id) => id !== personId);
+                draftState[groupId][itemId][typeId].item_person_user_id = draftState[groupId][itemId][typeId].item_person_user_id?.filter((id) => id !== personId);
             });
             setItemCellsState(newItemCellsState);
             dispatch(removePerson(itemId, personId, userId!, projectID!));
@@ -551,21 +519,11 @@ export function MainTable() {
                                     color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                 }}
                             >
-                                <span
-                                    className={classes.itemGroupIcon}
-                                    onClick={() => toggleDeleteGroupModalSelected(item_group_id)}
-                                >
+                                <span className={classes.itemGroupIcon} onClick={() => toggleDeleteGroupModalSelected(item_group_id)}>
                                     <IconX size={16} />
                                 </span>
-                                <Modal
-                                    opened={deleteGroupModalOpened[item_group_id]}
-                                    onClose={() => toggleDeleteGroupModalSelected(item_group_id)}
-                                    title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>}
-                                    centered
-                                >
-                                    <span className={classes.modalBody}>
-                                        {'The action cannot be reversed! Think twice! 🤔'}
-                                    </span>
+                                <Modal opened={deleteGroupModalOpened[item_group_id]} onClose={() => toggleDeleteGroupModalSelected(item_group_id)} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
+                                    <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
                                     <span className={classes.modalFooter}>
                                         <Button color='red' onClick={() => onDeleteGroup(item_group_id)}>
                                             Delete
@@ -573,22 +531,8 @@ export function MainTable() {
                                     </span>
                                 </Modal>
 
-                                <span
-                                    onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)}
-                                    className={classes.hovertext}
-                                    data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? 'Expand' : 'Collapse'}
-                                    key={itemGroupArrayIndex}
-                                >
-                                    {
-                                        <ItemGroupCollapser
-                                            size={20}
-                                            className={
-                                                itemGroupsCollapsedState[itemGroupArrayIndex]
-                                                    ? ''
-                                                    : classes.collapserButton
-                                            }
-                                        />
-                                    }
+                                <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} className={classes.hovertext} data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? 'Expand' : 'Collapse'} key={itemGroupArrayIndex}>
+                                    {<ItemGroupCollapser size={20} className={itemGroupsCollapsedState[itemGroupArrayIndex] ? '' : classes.collapserButton} />}
                                 </span>
                                 <span className={classes.itemCount}>
                                     {itemGroupsInputSelectState[itemGroupArrayIndex] ? (
@@ -598,13 +542,10 @@ export function MainTable() {
                                             autoFocus
                                             className={classes.groupNameInput}
                                             style={{
-                                                borderColor:
-                                                    theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                             }}
                                             value={itemGroupsInputValueState[itemGroupArrayIndex]}
-                                            onChange={(e) =>
-                                                changeItemGroupInputValue(itemGroupArrayIndex, e.target.value)
-                                            }
+                                            onChange={(e) => changeItemGroupInputValue(itemGroupArrayIndex, e.target.value)}
                                             onKeyDown={(e) => handleItemGroupInputKeyDown(itemGroupArrayIndex, e.key)}
                                         ></input>
                                     ) : (
@@ -612,13 +553,7 @@ export function MainTable() {
                                             onClick={() => selectItemGroupInput(itemGroupArrayIndex)}
                                             className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
                                             data-hover='Click to edit'
-                                            item-count={
-                                                itemsOrdersState[item_group_id].length
-                                                    ? itemsOrdersState[item_group_id].length +
-                                                      ' item' +
-                                                      `${itemsOrdersState[item_group_id].length === 1 ? '' : 's'}`
-                                                    : 'No items'
-                                            }
+                                            item-count={itemsOrdersState[item_group_id].length ? itemsOrdersState[item_group_id].length + ' item' + `${itemsOrdersState[item_group_id].length === 1 ? '' : 's'}` : 'No items'}
                                         >
                                             {item_group_name}
                                         </span>
@@ -634,32 +569,16 @@ export function MainTable() {
                                                 <div className={cx(classes.tableCell, classes.item)}>
                                                     <span>Item</span>
                                                 </div>
-                                                <DndContext
-                                                    sensors={sensors}
-                                                    onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}
-                                                >
-                                                    <SortableContext
-                                                        items={typesOrdersState[item_group_id]}
-                                                        strategy={horizontalListSortingStrategy}
-                                                    >
+                                                <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
+                                                    <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
                                                         {typesOrdersState[item_group_id].map((typeId, index) => (
                                                             <TableColumnTitle
                                                                 key={typeId}
                                                                 id={typeId}
-                                                                cellColumnType={
-                                                                    itemCellsState[item_group_id][
-                                                                        itemsOrdersState[item_group_id][0]
-                                                                    ][typeId].type_name
-                                                                }
-                                                                cellColumnCustomName={
-                                                                    itemCellsState[item_group_id][
-                                                                        itemsOrdersState[item_group_id][0]
-                                                                    ][typeId].element_name
-                                                                }
+                                                                cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
+                                                                cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
                                                                 index={index}
-                                                                lastCell={
-                                                                    index === typesOrdersState[item_group_id].length - 1
-                                                                }
+                                                                lastCell={index === typesOrdersState[item_group_id].length - 1}
                                                                 onTypeRename={onTypeRename}
                                                             />
                                                         ))}
@@ -668,15 +587,8 @@ export function MainTable() {
                                             </div>
                                         </div>
                                         <div className={classes.tableBody}>
-                                            <DndContext
-                                                sensors={sensors}
-                                                collisionDetection={closestCenter}
-                                                onDragEnd={(event) => handleDragEndRow(event, item_group_id)}
-                                            >
-                                                <SortableContext
-                                                    items={itemsOrdersState[item_group_id]}
-                                                    strategy={verticalListSortingStrategy}
-                                                >
+                                            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
+                                                <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
                                                     {itemsOrdersState[item_group_id].map((itemId, itemIndex) => (
                                                         <TableRow
                                                             key={'group_' + itemGroupArrayIndex + '_item_' + itemId}
@@ -684,14 +596,8 @@ export function MainTable() {
                                                             groupId={item_group_id}
                                                             typeOrder={typesOrdersState[item_group_id]}
                                                             cellDetails={itemCellsState[item_group_id][itemId]}
-                                                            color={
-                                                                theme.colors.groupTag[
-                                                                    item_group_id % theme.colors.groupTag.length
-                                                                ]
-                                                            }
-                                                            lastRow={
-                                                                itemIndex === itemsOrdersState[item_group_id].length - 1
-                                                            }
+                                                            color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
+                                                            lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
                                                             personsColors={personsColors}
                                                             membersFullName={membersFullName}
                                                             onItemRename={onItemRename}
@@ -712,8 +618,7 @@ export function MainTable() {
                                         <div
                                             className={classes.tableCell}
                                             style={{
-                                                backgroundColor:
-                                                    theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                backgroundColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                             }}
                                         ></div>
                                         <div className={cx(classes.tableCell, classes.item)}>
@@ -724,18 +629,11 @@ export function MainTable() {
                                                     autoFocus
                                                     className={classes.newItemNameInput}
                                                     value={newItemInputValue[item_group_id]}
-                                                    onKeyDown={(e) =>
-                                                        handleNewItemNameInputKeyDown(e.key, item_group_id)
-                                                    }
-                                                    onChange={(e) =>
-                                                        updateNewItemInputValue(item_group_id, e.target.value)
-                                                    }
+                                                    onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, item_group_id)}
+                                                    onChange={(e) => updateNewItemInputValue(item_group_id, e.target.value)}
                                                 ></input>
                                             ) : (
-                                                <div
-                                                    className={classes.typeName}
-                                                    onClick={() => toggleNewItemInputSelected(item_group_id)}
-                                                >
+                                                <div className={classes.typeName} onClick={() => toggleNewItemInputSelected(item_group_id)}>
                                                     + Add Item
                                                 </div>
                                             )}

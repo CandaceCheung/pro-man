@@ -12,14 +12,7 @@ export interface TableColumnTitleProps {
     onTypeRename: (typeId: number, name: string) => void;
 }
 
-export function TableColumnTitle({
-    id,
-    cellColumnType,
-    cellColumnCustomName,
-    index,
-    lastCell,
-    onTypeRename
-}: TableColumnTitleProps) {
+export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, index, lastCell, onTypeRename }: TableColumnTitleProps) {
     const [typeNameInput, setTypeNameInput] = useState(cellColumnCustomName);
     const [typeNameInputSelected, setTypeNameInputSelected] = useState(false);
     const { classes, cx } = useStyles();

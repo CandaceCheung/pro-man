@@ -1,27 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
-import {
-    Card,
-    Group,
-    Modal,
-    ScrollArea,
-    Text,
-    ThemeIcon,
-    UnstyledButton,
-    createStyles,
-    Input,
-    MultiSelect,
-    Button,
-    Select
-} from '@mantine/core';
+import { Card, Group, Modal, ScrollArea, Text, ThemeIcon, UnstyledButton, createStyles, Input, MultiSelect, Button, Select } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
-import {
-    IconBrandAsana,
-    IconCalendarEvent,
-    IconClipboardList,
-    IconGripVertical,
-    IconPlus,
-    IconUser
-} from '@tabler/icons';
+import { IconBrandAsana, IconCalendarEvent, IconClipboardList, IconGripVertical, IconPlus, IconUser } from '@tabler/icons';
 import { useState } from 'react';
 import { Status } from '../../redux/kanban/state';
 import { postItem } from '../../redux/kanban/thunk';
@@ -177,13 +157,7 @@ export function StatusColumn(props: StatusProps) {
                 <ScrollArea style={{ height: 720 }} type='auto' scrollbarSize={6}>
                     <div>
                         {props.itemsList.map((item) => (
-                            <ItemCard
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                date={item.date}
-                                membersList={item.membersList}
-                            />
+                            <ItemCard key={item.id} id={item.id} name={item.name} date={item.date} membersList={item.membersList} />
                         ))}
                     </div>
                 </ScrollArea>

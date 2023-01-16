@@ -209,10 +209,7 @@ const getStatusList: CaseReducer<CombinedTableState, PayloadAction<StatusListSta
 const updateTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
     state.project_list.push(action.payload);
 };
-const renameProjectInTableList: CaseReducer<
-    CombinedTableState,
-    PayloadAction<{ projectId: number; projectName: string }>
-> = (state, action) => {
+const renameProjectInTableList: CaseReducer<CombinedTableState, PayloadAction<{ projectId: number; projectName: string }>> = (state, action) => {
     state.project_list.forEach((project) => {
         if (project.project_id === action.payload.projectId) {
             project.project_name = action.payload.projectName;
@@ -224,10 +221,7 @@ const renameProjectInTableList: CaseReducer<
         }
     });
 };
-const updateItemGroupName: CaseReducer<
-    CombinedTableState,
-    PayloadAction<{ itemGroupId: number; itemGroupName: string }>
-> = (state, action) => {
+const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemGroupId: number; itemGroupName: string }>> = (state, action) => {
     for (let item of state.summary) {
         if (item.item_group_id === action.payload.itemGroupId) {
             item.item_group_name = action.payload.itemGroupName;

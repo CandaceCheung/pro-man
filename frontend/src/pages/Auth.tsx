@@ -78,16 +78,7 @@ export function Auth() {
                 </div>
             </div>
             <div className={classes.toggle}>
-                <SwitchSelector
-                    onChange={onChange}
-                    options={toggleOptions}
-                    initialSelectedIndex={0}
-                    backgroundColor={theme.colors.normalViolet[0]}
-                    fontColor={theme.white}
-                    selectedFontColor={theme.black}
-                    fontSize={15}
-                    optionBorderRadius={20}
-                />
+                <SwitchSelector onChange={onChange} options={toggleOptions} initialSelectedIndex={0} backgroundColor={theme.colors.normalViolet[0]} fontColor={theme.white} selectedFontColor={theme.black} fontSize={15} optionBorderRadius={20} />
             </div>
             {value === 'signup' ? <Signup /> : <Login />}
         </div>

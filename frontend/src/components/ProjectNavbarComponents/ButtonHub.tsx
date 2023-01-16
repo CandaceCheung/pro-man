@@ -18,14 +18,8 @@ export function ButtonHub() {
     const typeColumn = ['dates', 'times'];
 
     // timeline logic
-    const groupSummary = projectSummary.filter(
-        (project, index, self) =>
-            project.joined_project_id === projectId &&
-            index === self.findIndex((obj) => obj.item_group_id === project.item_group_id)
-    );
-    const personsSummary = projectSummary.filter(
-        (project, index, self) => project.project_id === projectId && project.type_name === 'persons'
-    );
+    const groupSummary = projectSummary.filter((project, index, self) => project.joined_project_id === projectId && index === self.findIndex((obj) => obj.item_group_id === project.item_group_id));
+    const personsSummary = projectSummary.filter((project, index, self) => project.project_id === projectId && project.type_name === 'persons');
     const personsSummaryArr = [];
     const checking: number[] = [];
     for (let item of personsSummary) {
@@ -69,12 +63,7 @@ export function ButtonHub() {
                     <Menu transition='pop-top-left' transitionDuration={150}>
                         <Menu.Target>
                             {sortByPersonId ? (
-                                <Button
-                                    className='button-panel-group'
-                                    value={undefined}
-                                    variant='outline'
-                                    onClick={(e) => onSortByPersonsClick(e)}
-                                >
+                                <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSortByPersonsClick(e)}>
                                     <IconArrowBack size={14} /> Reset
                                 </Button>
                             ) : (
@@ -88,13 +77,7 @@ export function ButtonHub() {
                             {page === 'timeline' &&
                                 personsSummaryArr.map((person, index) => {
                                     return (
-                                        <Menu.Item
-                                            key={index}
-                                            disabled={!!sortByPersonId}
-                                            value={person.userId}
-                                            icon={<IconUser size={14} />}
-                                            onClick={(e) => onSortByPersonsClick(e)}
-                                        >
+                                        <Menu.Item key={index} disabled={!!sortByPersonId} value={person.userId} icon={<IconUser size={14} />} onClick={(e) => onSortByPersonsClick(e)}>
                                             {person.name}
                                         </Menu.Item>
                                     );
@@ -107,12 +90,7 @@ export function ButtonHub() {
                     <Menu transition='pop-top-right' transitionDuration={150}>
                         <Menu.Target>
                             {sortByGroupId ? (
-                                <Button
-                                    className='button-panel-group'
-                                    value={undefined}
-                                    variant='outline'
-                                    onClick={(e) => onSortByGroupClick(e)}
-                                >
+                                <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSortByGroupClick(e)}>
                                     <IconArrowBack size={14} /> Reset
                                 </Button>
                             ) : (
@@ -127,13 +105,7 @@ export function ButtonHub() {
                             {page === 'timeline' &&
                                 groupSummary.map((group, index) => {
                                     return (
-                                        <Menu.Item
-                                            key={index}
-                                            value={group.item_group_id}
-                                            icon={<IconColumns size={14} />}
-                                            disabled={!!sortByGroupId}
-                                            onClick={(e) => onSortByGroupClick(e)}
-                                        >
+                                        <Menu.Item key={index} value={group.item_group_id} icon={<IconColumns size={14} />} disabled={!!sortByGroupId} onClick={(e) => onSortByGroupClick(e)}>
                                             {group.item_group_name}
                                         </Menu.Item>
                                     );
@@ -145,12 +117,7 @@ export function ButtonHub() {
                     <Menu>
                         <Menu.Target>
                             {setHideByType ? (
-                                <Button
-                                    className='button-panel-group'
-                                    value={undefined}
-                                    variant='outline'
-                                    onClick={(e) => onSetHideByTypeClick(e)}
-                                >
+                                <Button className='button-panel-group' value={undefined} variant='outline' onClick={(e) => onSetHideByTypeClick(e)}>
                                     <IconArrowBack size={14} /> Reset
                                 </Button>
                             ) : (
@@ -164,13 +131,7 @@ export function ButtonHub() {
                             {page === 'timeline' &&
                                 typeColumn.map((column, index) => {
                                     return (
-                                        <Menu.Item
-                                            value={column}
-                                            key={index}
-                                            icon={<IconColumns size={14} />}
-                                            disabled={!!setHideByType}
-                                            onClick={(e) => onSetHideByTypeClick(e)}
-                                        >
+                                        <Menu.Item value={column} key={index} icon={<IconColumns size={14} />} disabled={!!setHideByType} onClick={(e) => onSetHideByTypeClick(e)}>
                                             {column.toUpperCase()}
                                         </Menu.Item>
                                     );

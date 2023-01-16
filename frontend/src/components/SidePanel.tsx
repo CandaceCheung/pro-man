@@ -17,9 +17,7 @@ export function SidePanel() {
 
     return (
         <div id={toggle ? 'side-panel-open' : 'side-panel-close'}>
-            <div id={toggle ? 'project-list-container-open' : 'project-list-container-close'}>
-                {toggle ? favorite ? <FavoriteProject /> : <ProjectList /> : null}
-            </div>
+            <div id={toggle ? 'project-list-container-open' : 'project-list-container-close'}>{toggle ? favorite ? <FavoriteProject /> : <ProjectList /> : null}</div>
             <span id={toggle ? 'side-panel-arrow-active' : 'side-panel-arrow-inactive'} onClick={clickHandler}>
                 {toggle ? <IconArrowBadgeLeft size={20} /> : <IconArrowBadgeRight size={20} />}
             </span>

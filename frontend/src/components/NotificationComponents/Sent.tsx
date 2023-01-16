@@ -11,10 +11,7 @@ export function Sent() {
     const [search, setSearch] = useState('');
     let messages = messageSummary.filter((message) => message.sender_id === userId && !message.is_deleted_receiver);
     messages = messages.filter(
-        (message) =>
-            message.receiver?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-            message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-            new Date(message.created_at).toLocaleString('en-us')?.includes(search)
+        (message) => message.receiver?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || new Date(message.created_at).toLocaleString('en-us')?.includes(search)
     );
 
     const rows = messages.map((message) => {
@@ -30,20 +27,9 @@ export function Sent() {
                 {message.message_type === 'message' ? <td>{message.message}</td> : <td>{inviteMessage}</td>}
                 <td>{message.receiver}</td>
                 <td>{new Date(message.created_at).toLocaleString('en-us')}</td>
+                <td>{message.status ? <IconChecks size={16} style={{ color: 'green' }} /> : <IconCheck size={16} style={{ color: 'grey' }} />}</td>
                 <td>
-                    {message.status ? (
-                        <IconChecks size={16} style={{ color: 'green' }} />
-                    ) : (
-                        <IconCheck size={16} style={{ color: 'grey' }} />
-                    )}
-                </td>
-                <td>
-                    <Button
-                        onClick={(e) => onDelete(e)}
-                        value={message.id!}
-                        variant='subtle'
-                        leftIcon={<IconEraser size={16} />}
-                    ></Button>
+                    <Button onClick={(e) => onDelete(e)} value={message.id!} variant='subtle' leftIcon={<IconEraser size={16} />}></Button>
                 </td>
             </tr>
         );
@@ -60,19 +46,8 @@ export function Sent() {
     return (
         <div style={{ paddingTop: '20px' }}>
             <Container fluid={true}>
-                <Input.Wrapper
-                    id='search'
-                    withAsterisk
-                    label='Search'
-                    error={search.length === 0 ? '' : messages.length === 0 ? 'Search not found' : undefined}
-                    className='row'
-                >
-                    <Input
-                        value={search}
-                        onChange={(e) => onSearch(e)}
-                        id='search'
-                        placeholder='Content/Name/Date Search'
-                    />
+                <Input.Wrapper id='search' withAsterisk label='Search' error={search.length === 0 ? '' : messages.length === 0 ? 'Search not found' : undefined} className='row'>
+                    <Input value={search} onChange={(e) => onSearch(e)} id='search' placeholder='Content/Name/Date Search' />
                 </Input.Wrapper>
                 <Container fluid={true} style={{ paddingTop: '20px' }}>
                     <Table horizontalSpacing='sm'>

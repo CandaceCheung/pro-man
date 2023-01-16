@@ -47,13 +47,7 @@ export function NameCard(props: MyMemberState) {
     return (
         <Card shadow='sm' p='lg' radius='md' withBorder>
             <Card.Section>
-                <Image
-                    src={avatar[props.members[0].avatar!]}
-                    height={160}
-                    alt='Portrait'
-                    fit='contain'
-                    withPlaceholder
-                />
+                <Image src={avatar[props.members[0].avatar!]} height={160} alt='Portrait' fit='contain' withPlaceholder />
 
                 <Menu shadow='md' width={20} opened={opened} onChange={setOpened}>
                     <Menu.Target>
@@ -114,12 +108,7 @@ export function NameCard(props: MyMemberState) {
                             </Text>
                             {!isCreator && (
                                 <Tooltip label='Remove from project' color='red' position='right' withArrow>
-                                    <Button
-                                        value={props.members[index].membership_id!}
-                                        onClick={(e) => clickHandler(e)}
-                                        variant='subtle'
-                                        style={{ height: '20px' }}
-                                    >
+                                    <Button value={props.members[index].membership_id!} onClick={(e) => clickHandler(e)} variant='subtle' style={{ height: '20px' }}>
                                         <IconBackspace size={20} />
                                     </Button>
                                 </Tooltip>

@@ -97,14 +97,7 @@ export function checkUsername(value: string) {
     };
 }
 
-export function sendMessage(
-    sender: string,
-    senderId: number,
-    receiver: string,
-    receiverId: number,
-    text: string,
-    messageType: 'invite' | 'message'
-) {
+export function sendMessage(sender: string, senderId: number, receiver: string, receiverId: number, text: string, messageType: 'invite' | 'message') {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/`, {

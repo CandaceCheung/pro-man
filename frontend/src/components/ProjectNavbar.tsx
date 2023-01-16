@@ -26,9 +26,7 @@ export default function ProjectNavbar() {
     const [projectTitleInputSelected, setProjectTitleInputSelected] = useState(false);
     const [projectTitleInputValue, setProjectTitleInputValue] = useState('');
     // should be handel by backend
-    const like = useAppSelector((state) => state.table.my_favorite_list).filter(
-        (project) => project.project_id === projectId && project.user_id === userId
-    );
+    const like = useAppSelector((state) => state.table.my_favorite_list).filter((project) => project.project_id === projectId && project.user_id === userId);
     const page = useAppSelector((state) => state.project.active_page);
     const navigate = useNavigate();
 
@@ -101,14 +99,7 @@ export default function ProjectNavbar() {
                     <FontAwesomeIcon id='like-button' icon={like.length ? faStarS : faStarR} onClick={onLikeClick} />
                 </span>
                 <span className='icon-hub'>
-                    <Tooltip
-                        multiline
-                        width={220}
-                        withArrow
-                        transition='fade'
-                        transitionDuration={200}
-                        label='Invite Users'
-                    >
+                    <Tooltip multiline width={220} withArrow transition='fade' transitionDuration={200} label='Invite Users'>
                         <span>
                             <IconUsers id='add-users-button' size={30} onClick={invitationHandler} />
                         </span>

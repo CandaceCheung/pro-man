@@ -83,11 +83,7 @@ export function Messager() {
 
     return (
         <>
-            <Modal
-                opened={opened || inviteMemberOpened}
-                onClose={onClose}
-                title={inviteMemberOpened ? 'Invite Member' : 'New Message'}
-            >
+            <Modal opened={opened || inviteMemberOpened} onClose={onClose} title={inviteMemberOpened ? 'Invite Member' : 'New Message'}>
                 <form onSubmit={(e) => handleSubmit(e)}>
                     <Input.Wrapper label='Receiver' required>
                         <Input
@@ -134,12 +130,7 @@ export function Messager() {
 
                             {messageType === 'invite' ? (
                                 <Input.Wrapper label='Select Project' required>
-                                    <Input
-                                        value={project}
-                                        component='select'
-                                        onChange={(e) => setProject(parseInt(e.target.value))}
-                                        rightSection={<IconChevronDown size={14} stroke={1.5} />}
-                                    >
+                                    <Input value={project} component='select' onChange={(e) => setProject(parseInt(e.target.value))} rightSection={<IconChevronDown size={14} stroke={1.5} />}>
                                         <option value={undefined}>Choose a Project</option>
                                         {projectList
                                             .filter((project) => project.creator_id === userId)
@@ -153,15 +144,7 @@ export function Messager() {
                                     </Input>
                                 </Input.Wrapper>
                             ) : messageType === 'message' ? (
-                                <Textarea
-                                    onChange={(event) => setText(event.currentTarget.value)}
-                                    value={text}
-                                    autosize
-                                    placeholder='Input your message here'
-                                    label='Your Message'
-                                    withAsterisk
-                                    minRows={4}
-                                />
+                                <Textarea onChange={(event) => setText(event.currentTarget.value)} value={text} autosize placeholder='Input your message here' label='Your Message' withAsterisk minRows={4} />
                             ) : null}
                             <Group position='center' mt='xl'>
                                 <Button variant='outline' type='submit'>

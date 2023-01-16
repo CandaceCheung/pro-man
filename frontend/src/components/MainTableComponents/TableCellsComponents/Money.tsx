@@ -51,16 +51,7 @@ const useStyle = createStyles((theme, _params, getRef) => ({
     }
 }));
 
-export function Money({
-    groupId,
-    itemId,
-    typeId,
-    transactionIds,
-    cashFlows,
-    transactionDates,
-    onAddTransaction,
-    onDeleteTransaction
-}: MoneyProps) {
+export function Money({ groupId, itemId, typeId, transactionIds, cashFlows, transactionDates, onAddTransaction, onDeleteTransaction }: MoneyProps) {
     const [opened, setOpened] = useState(false);
     const [editStatus, setEditStatus] = useState(false);
     const [dateValue, setDateValue] = useState<Date | null>(new Date());
@@ -95,15 +86,7 @@ export function Money({
                     {editStatus ? (
                         <span>
                             <Calendar size='xs' value={dateValue} onChange={setDateValue} />
-                            <Input
-                                icon={<IconBrandCashapp />}
-                                placeholder='Input Amount'
-                                type='number'
-                                required
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                                onKeyDown={(e) => handleKeyDown(e.key)}
-                            />
+                            <Input icon={<IconBrandCashapp />} placeholder='Input Amount' type='number' required value={inputValue} onChange={(e) => setInputValue(e.target.value)} onKeyDown={(e) => handleKeyDown(e.key)} />
                         </span>
                     ) : (
                         <Table>
@@ -115,19 +98,11 @@ export function Money({
                             </thead>
                             <tbody>
                                 {transactionIds.map((transactionId, index) => (
-                                    <tr
-                                        key={'transaction_' + transactionId}
-                                        style={{ textAlign: 'left' }}
-                                        className={classes.tableRow}
-                                    >
+                                    <tr key={'transaction_' + transactionId} style={{ textAlign: 'left' }} className={classes.tableRow}>
                                         <td>{new Date(transactionDates[index]).toDateString()}</td>
                                         <td>{cashFlows[index]}</td>
 
-                                        <IconX
-                                            size={14}
-                                            className={classes.deleteButton}
-                                            onClick={() => onDeleteTransaction(groupId, itemId, typeId, transactionId)}
-                                        />
+                                        <IconX size={14} className={classes.deleteButton} onClick={() => onDeleteTransaction(groupId, itemId, typeId, transactionId)} />
                                     </tr>
                                 ))}
                             </tbody>

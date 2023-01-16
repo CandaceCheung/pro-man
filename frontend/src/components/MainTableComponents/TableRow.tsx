@@ -24,14 +24,7 @@ export interface TableRowProps {
     membersFullName: Record<number, MembersFullName>;
     onItemRename: (groupId: number, itemId: number, name: string) => void;
     onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void;
-    onStatusChange: (
-        groupId: number,
-        itemId: number,
-        stateId: number,
-        typeId: number,
-        name: string,
-        color: string
-    ) => void;
+    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void;
     onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void;
     onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void;
     onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void;
@@ -115,26 +108,13 @@ export function TableRow({
             case 'status':
                 return (
                     <div className={cx(classes.tableCell, classes.status)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Status
-                            groupId={groupId}
-                            itemId={itemId}
-                            typeId={cell.type_id}
-                            status={cell.item_status_name!}
-                            color={cell.item_status_color!}
-                            onStatusChange={onStatusChange}
-                        />
+                        <Status groupId={groupId} itemId={itemId} typeId={cell.type_id} status={cell.item_status_name!} color={cell.item_status_color!} onStatusChange={onStatusChange} />
                     </div>
                 );
             case 'text':
                 return (
                     <div className={cx(classes.tableCell, classes.text)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <TextCell
-                            groupId={groupId}
-                            itemId={itemId}
-                            typeId={cell.type_id}
-                            text={cell.item_text_text!}
-                            onTextChange={onTextChange}
-                        />
+                        <TextCell groupId={groupId} itemId={itemId} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange} />
                     </div>
                 );
             default:
@@ -148,31 +128,15 @@ export function TableRow({
     };
 
     return (
-        <div
-            className={cx(classes.tableRow, { [classes.lastRow]: lastRow })}
-            ref={setNodeRef}
-            style={style}
-            {...listeners}
-            {...attributes}
-        >
+        <div className={cx(classes.tableRow, { [classes.lastRow]: lastRow })} ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div className={classes.tableCell} style={{ backgroundColor: color }}></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                <Item
-                    itemId={itemId}
-                    groupId={groupId}
-                    itemName={cellDetails[typeOrder[0]].item_name}
-                    onItemRename={onItemRename}
-                />
+                <Item itemId={itemId} groupId={groupId} itemName={cellDetails[typeOrder[0]].item_name} onItemRename={onItemRename} />
             </div>
             {typeOrder.map((typeId, cellIndex) => {
                 return retrieveCellData(cellDetails[typeId], cellIndex);
             })}
-            <Modal
-                opened={deleteItemModalOpened}
-                onClose={() => setDeleteItemModalOpened(false)}
-                title={<span className={classes.modalTitle}>{'Delete this item?'}</span>}
-                centered
-            >
+            <Modal opened={deleteItemModalOpened} onClose={() => setDeleteItemModalOpened(false)} title={<span className={classes.modalTitle}>{'Delete this item?'}</span>} centered>
                 <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
                 <span className={classes.modalFooter}>
                     <Button color='red' onClick={handleDeleteItem}>

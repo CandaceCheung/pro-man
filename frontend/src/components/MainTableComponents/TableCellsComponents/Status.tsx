@@ -9,14 +9,7 @@ interface StatusProps {
     typeId: number;
     status: string;
     color: string;
-    onStatusChange: (
-        groupId: number,
-        itemId: number,
-        stateId: number,
-        typeId: number,
-        name: string,
-        color: string
-    ) => void;
+    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void;
 }
 
 const useStyle = createStyles((theme, _params) => ({
@@ -98,8 +91,7 @@ export function Status({ groupId, itemId, typeId, status, color, onStatusChange 
 
     const handleNewStatusInputKeyDown = (key: string) => {
         if (key === 'Enter') {
-            projectId &&
-                dispatch(newState(projectId, newStatusInputValue, theme.colors.statusLabelsColor[statusList.length]));
+            projectId && dispatch(newState(projectId, newStatusInputValue, theme.colors.statusLabelsColor[statusList.length]));
             setEditStatus(false);
             setNewStatusInputValue('');
         }
@@ -108,11 +100,7 @@ export function Status({ groupId, itemId, typeId, status, color, onStatusChange 
     return (
         <Popover width={200} position='bottom' withArrow shadow='md' opened={opened} onChange={setOpened}>
             <Popover.Target>
-                <span
-                    className={classes.statusContainer}
-                    style={{ backgroundColor: color }}
-                    onClick={() => setOpened((o) => !o)}
-                >
+                <span className={classes.statusContainer} style={{ backgroundColor: color }} onClick={() => setOpened((o) => !o)}>
                     {status === 'Empty' ? '' : status}
                 </span>
             </Popover.Target>

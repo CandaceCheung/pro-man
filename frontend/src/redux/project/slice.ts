@@ -148,10 +148,7 @@ const setProjectName: CaseReducer<ActiveProjectState, PayloadAction<string>> = (
 const clearActiveProject: CaseReducer<ActiveProjectState, PayloadAction> = (state, action) => {
     state.project_id = null;
 };
-const setTimeLineView: CaseReducer<
-    ActiveProjectState,
-    PayloadAction<{ value: TimeLineViewState; start: Moment; end: Moment }>
-> = (state, action) => {
+const setTimeLineView: CaseReducer<ActiveProjectState, PayloadAction<{ value: TimeLineViewState; start: Moment; end: Moment }>> = (state, action) => {
     state.time_line_view = action.payload.value;
     state.time_line_start_anchor = action.payload.start;
     state.time_line_end_anchor = action.payload.end;
@@ -225,10 +222,7 @@ const sendMessage: CaseReducer<ActiveProjectState, PayloadAction<MessageState>> 
 const getMessages: CaseReducer<ActiveProjectState, PayloadAction<MessageStateArr>> = (state, action) => {
     state.message_summary = action.payload;
 };
-const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; checked: boolean }>> = (
-    state,
-    action
-) => {
+const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; checked: boolean }>> = (state, action) => {
     for (let message of state.message_summary) {
         if (message.id === action.payload.notificationId) {
             message.status = action.payload.checked;
@@ -236,10 +230,7 @@ const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId
         }
     }
 };
-const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeleted: boolean }>> = (
-    state,
-    action
-) => {
+const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeleted: boolean }>> = (state, action) => {
     for (let message of state.message_summary) {
         if (message.id === action.payload.notificationId) {
             message.status = true;
@@ -248,10 +239,7 @@ const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notification
         }
     }
 };
-const toggleReceiverDelete: CaseReducer<
-    ActiveProjectState,
-    PayloadAction<{ notificationId: number; isDeletedReceiver: boolean }>
-> = (state, action) => {
+const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeletedReceiver: boolean }>> = (state, action) => {
     for (let message of state.message_summary) {
         if (message.id === action.payload.notificationId) {
             message.is_deleted_receiver = action.payload.isDeletedReceiver;
@@ -262,10 +250,7 @@ const toggleReceiverDelete: CaseReducer<
 const getMemberList: CaseReducer<ActiveProjectState, PayloadAction<MyMemberStateArr>> = (state, action) => {
     state.member_list = action.payload;
 };
-const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number[]; avatar: number }>> = (
-    state,
-    action
-) => {
+const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number[]; avatar: number }>> = (state, action) => {
     for (let message of state.member_list) {
         for (let member of message.members) {
             for (let id of action.payload.membershipId) {
@@ -276,10 +261,7 @@ const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId
         }
     }
 };
-const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number; projectId: number }>> = (
-    state,
-    action
-) => {
+const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number; projectId: number }>> = (state, action) => {
     for (let item of state.member_list) {
         for (let member of item.members) {
             if (member.membership_id === action.payload.membershipId) {
