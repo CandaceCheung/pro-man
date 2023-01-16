@@ -1,81 +1,81 @@
 #timeline-container {
-  height: 76vh;
-  margin-top: 20px;
-  overflow-x: hidden !important;
-  overflow: auto !important;
-  align-self: flex-start !important;
+    height: 76vh;
+    margin-top: 20px;
+    overflow-x: hidden !important;
+    overflow: auto !important;
+    align-self: flex-start !important;
 }
 
 #left-bar {
-  position: relative;
+    position: relative;
 }
 
 .pin-label {
-  color: white;
-  font-size: calc(4px + 0.5vw);
-  height: max-content;
-  position: absolute;
-  top: 10px;
-  padding: 10px;
-  width: max-content;
-  border-radius: 3px;
-  z-index: 97;
+    color: white;
+    font-size: calc(4px + 0.5vw);
+    height: max-content;
+    position: absolute;
+    top: 10px;
+    padding: 10px;
+    width: max-content;
+    border-radius: 3px;
+    z-index: 97;
 }
 
 .pin-label:hover {
-  opacity: 1 !important;
+    opacity: 1 !important;
 }
 
 .pin {
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  transform: rotate(30deg);
-  z-index: inherit;
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    transform: rotate(30deg);
+    z-index: inherit;
 }
 
 .pin-container {
-  position: sticky;
-  top: 0px;
-  opacity: 0.6;
-  z-index: 97;
+    position: sticky;
+    top: 0px;
+    opacity: 0.6;
+    z-index: 97;
 }
 
 #toggle-arrow {
-  position: absolute;
-  display: flex;
-  border-radius: 100px;
-  border-style: solid;
-  border-color: white;
-  color: white;
-  right: 10px;
-  top: 10px;
+    position: absolute;
+    display: flex;
+    border-radius: 100px;
+    border-style: solid;
+    border-color: white;
+    color: white;
+    right: 10px;
+    top: 10px;
 }
 .pin-container:hover,
 #toggle-arrow:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 .react-calendar-timeline .rct-item:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 .react-calendar-timeline .rct-calendar-header div:first-child {
-  height: 50px !important;
+    height: 50px !important;
 }
 
 .react-calendar-timeline .rct-header-root {
-  background-color: #238be6 !important;
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0px;
-  z-index: 98;
+    background-color: #238be6 !important;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0px;
+    z-index: 98;
 }
 
 #loader-container {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }

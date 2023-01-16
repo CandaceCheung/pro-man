@@ -1,29 +1,26 @@
 export class MakeRequest {
-  constructor(private token: string) {}
+    constructor(private token: string) {}
 
-  get = async <R extends {}>(path: string): Promise<R> => {
-    const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-    });
+    get = async <R extends {}>(path: string): Promise<R> => {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
+            headers: {
+                Authorization: `Bearer ${this.token}`,
+            },
+        });
 
-    return await res.json();
-  };
+        return await res.json();
+    };
 
-  post = async <T extends {}, R extends {}>(
-    path: string,
-    reqestBody: T
-  ): Promise<R> => {
-    const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.token}`,
-      },
-      body: JSON.stringify(reqestBody),
-    });
+    post = async <T extends {}, R extends {}>(path: string, reqestBody: T): Promise<R> => {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify(reqestBody),
+        });
 
-    return await res.json();
-  };
+        return await res.json();
+    };
 }

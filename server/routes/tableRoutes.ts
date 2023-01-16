@@ -9,6 +9,7 @@ export const tableRoutes = () => {
 	//  V2 => {table: [], additioncal: ""}
 
 	tableRoutes.get('/:userID&:projectID', tableController.getTable);
+	tableRoutes.get('/v2/:userID&:projectID', tableController.getTableV2);
 	tableRoutes.get('/favorite/:userID', tableController.getFavorite);
 	tableRoutes.get('/list/:userID', tableController.getTableList);
 	tableRoutes.get('/names/:userID', tableController.retrieveUserName);

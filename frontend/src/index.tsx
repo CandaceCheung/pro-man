@@ -1,32 +1,30 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { Provider } from "react-redux";
-import { store } from "./store";
-import { MantineProvider } from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
-import { themeObject } from "./theme";
-import { BrowserRouter } from "react-router-dom";
-import { CustomFonts } from "./fonts/CustomFonts";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import { MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
+import { themeObject } from './theme';
+import { BrowserRouter } from 'react-router-dom';
+import { CustomFonts } from './fonts/CustomFonts';
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <MantineProvider withNormalizeCSS withGlobalStyles theme={themeObject}>
-        <NotificationsProvider>
-          <BrowserRouter>
-            <CustomFonts />
-            <App />
-          </BrowserRouter>
-        </NotificationsProvider>
-      </MantineProvider>
-    </Provider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <Provider store={store}>
+            <MantineProvider withNormalizeCSS withGlobalStyles theme={themeObject}>
+                <NotificationsProvider>
+                    <BrowserRouter>
+                        <CustomFonts />
+                        <App />
+                    </BrowserRouter>
+                </NotificationsProvider>
+            </MantineProvider>
+        </Provider>
+    </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
