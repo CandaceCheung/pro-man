@@ -35,7 +35,7 @@
 		"test": "jest",
 		"migrate": "knex migrate:latest",
 		"seed": "knex seed:run",
-		"format": "prettier --write ."
+		"prettier": "prettier --write ."
 	},
 	"name": "pro-man",
 	"version": "1.0.0",
