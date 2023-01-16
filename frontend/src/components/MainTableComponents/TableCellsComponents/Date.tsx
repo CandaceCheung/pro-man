@@ -1,23 +1,19 @@
-import { createStyles } from '@mantine/core';
+import { createStyles } from "@mantine/core";
 
 interface DateProps {
-    date: string
+  date: string;
 }
 
 const useStyle = createStyles(() => ({
-    date: {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    }
+  date: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 export function DateCell({ date }: DateProps) {
-    const { classes } = useStyle();
+  const { classes } = useStyle();
 
-    return (
-        <div className={classes.date}>
-            {date}
-        </div>
-    )
+  return <div className={classes.date}>{date}</div>;
 }

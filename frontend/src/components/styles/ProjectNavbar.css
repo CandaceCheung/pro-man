@@ -1,106 +1,103 @@
 #project-navbar {
-    width: 98%;
-    position: absolute;
-    top:0px;
-    right:-5px;
+  width: 98%;
+  position: absolute;
+  top: 0px;
+  right: -5px;
 }
 
 .navbar-header {
-    display: flex;
-    justify-content: space-between;
-    padding-right: calc(20px + 2vw);
-    min-height: 50px;
+  display: flex;
+  justify-content: space-between;
+  padding-right: calc(20px + 2vw);
+  min-height: 50px;
 }
 
 .icon-hub {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
 #navbar-project-title {
-    height: 45px;
-    font-size: calc(20px + 1vw);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: text;
-    border: 1px solid transparent;
-    border-radius: 5px;
-    padding: 0 5px;
+  height: 45px;
+  font-size: calc(20px + 1vw);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: text;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 0 5px;
 }
 
 #navbar-project-title:hover {
-    border: 1px solid #C4C4C4;
+  border: 1px solid #c4c4c4;
 }
 
 #navbar-project-title-input {
-    height: 45px;
-    font-size: calc(20px + 1vw);
-    padding: 0 5px;
-    transition: 0.5s;
-    outline: none;
-    border: 1px solid;
-    border-radius: 5px;
-    box-sizing: border-box;
-    border-color: #C4C4C4;
-    padding: 0 5px;
+  height: 45px;
+  font-size: calc(20px + 1vw);
+  padding: 0 5px;
+  transition: 0.5s;
+  outline: none;
+  border: 1px solid;
+  border-radius: 5px;
+  box-sizing: border-box;
+  border-color: #c4c4c4;
+  padding: 0 5px;
 }
 
 #navbar-project-title-input:focus {
-    height: 45px;
-    font-size: calc(20px + 1vw);
-    transition: 0.5s;
-    outline: "none";
-    border: "1px solid";
-    border-radius: 5px;
-    box-sizing: "border-box";
-    border-color: #C4C4C4;
-    padding: 0 5px;
+  height: 45px;
+  font-size: calc(20px + 1vw);
+  transition: 0.5s;
+  outline: "none";
+  border: "1px solid";
+  border-radius: 5px;
+  box-sizing: "border-box";
+  border-color: #c4c4c4;
+  padding: 0 5px;
 }
 
-
 #project-title-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #like-button {
-    position: absolute;
-    right: -30px;
-    top: 30%
+  position: absolute;
+  right: -30px;
+  top: 30%;
 }
 
 #add-users-button:hover,
 #logs-button:hover,
 #like-button:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #button-panel {
-    display: flex;
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    justify-content: space-between;
+  display: flex;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  justify-content: space-between;
 }
 
 #fixed-button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .button-panel-group {
-    font-size: 10px;
-    height: 30px;
+  font-size: 10px;
+  height: 30px;
 }
 
-
-
 .selection-box {
-    width: 100px;
+  width: 100px;
 }

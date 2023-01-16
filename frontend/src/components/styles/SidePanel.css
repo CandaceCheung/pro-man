@@ -1,89 +1,90 @@
 #side-panel-inactive {
-    position: relative;
-    height: 95vh;
-    width: 1px;
-    border-left-style: solid;
-    border-left-color: rgb(168, 167, 167);
-    background-color: white;
-    z-index: 99;
+  position: relative;
+  height: 95vh;
+  width: 1px;
+  border-left-style: solid;
+  border-left-color: rgb(168, 167, 167);
+  background-color: white;
+  z-index: 99;
 }
 
 #side-panel-close {
-    position: absolute;
-    top:0px;
-    left:5px;
-    height: 95vh;
-    width: 1px;
-    border-left-style: solid;
-    border-left-color: rgb(168, 167, 167);
-    background-color: white;
-    z-index: 99;
+  position: absolute;
+  top: 0px;
+  left: 5px;
+  height: 95vh;
+  width: 1px;
+  border-left-style: solid;
+  border-left-color: rgb(168, 167, 167);
+  background-color: white;
+  z-index: 99;
 }
 
 #side-panel-open {
-    position: absolute;
-    top:0px;
-    left:5px;
-    height: 95vh;
-    width: 25%;
-    border-right-style: solid;
-    border-right-color: rgb(168, 167, 167);
-    animation-name: open;
-    animation-duration: 0.5s;
-    background-color: white;
-    z-index: 99;
+  position: absolute;
+  top: 0px;
+  left: 5px;
+  height: 95vh;
+  width: 25%;
+  border-right-style: solid;
+  border-right-color: rgb(168, 167, 167);
+  animation-name: open;
+  animation-duration: 0.5s;
+  background-color: white;
+  z-index: 99;
 }
 @keyframes open {
-    0% {
-        width: 1px; color: white
-    }
-    100% {
-        width: 25%; color: black
-    }
+  0% {
+    width: 1px;
+    color: white;
+  }
+  100% {
+    width: 25%;
+    color: black;
+  }
 }
 
-#project-list-container-open{
-    animation-name: toggle;
-    animation-duration: 0.5s;
+#project-list-container-open {
+  animation-name: toggle;
+  animation-duration: 0.5s;
 }
 @keyframes toggle {
-    0% {
-        opacity: 0
-    }
-    70%{
-        opacity: 0
-    }
-    100% {
-        opacity: 1
-    }
+  0% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
-
 #side-panel-arrow-inactive {
-    position: absolute;
-    top: 25%;
-    right: -10px;
-    border-radius: 100px;
-    background-color: white;
-    display: flex;
-    cursor: pointer;
+  position: absolute;
+  top: 25%;
+  right: -10px;
+  border-radius: 100px;
+  background-color: white;
+  display: flex;
+  cursor: pointer;
 }
 
 #side-panel-arrow-active {
-    color: white;
-    background-color: #238BE6;
-    position: absolute;
-    top: 25%;
-    right: -15px;
-    border-radius: 100px;
-    border-style: solid;
-    border-color: white;
-    display: flex;
-    cursor: pointer;
+  color: white;
+  background-color: #238be6;
+  position: absolute;
+  top: 25%;
+  right: -15px;
+  border-radius: 100px;
+  border-style: solid;
+  border-color: white;
+  display: flex;
+  cursor: pointer;
 }
 
 #side-panel-arrow:hover {
-    color: white;
-    background-color: #238BE6;
-    transition: 200ms;
+  color: white;
+  background-color: #238be6;
+  transition: 200ms;
 }

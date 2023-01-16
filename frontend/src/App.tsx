@@ -17,74 +17,76 @@ import { getMemberList, getMessages } from "./redux/project/thunk";
 import { useToken } from "./hooks/useToken";
 
 function App() {
-	const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
-	const userId = useAppSelector((state) => state.auth.userId);
-	const projectId = useAppSelector((state) => state.project.project_id); //active project state
+  const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
+  const userId = useAppSelector((state) => state.auth.userId);
+  const projectId = useAppSelector((state) => state.project.project_id); //active project state
 
-	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-	useToken();
+  useToken();
 
-	useEffect(() => {
-		isLoggedIn === null && dispatch(retriveLogin());
+  useEffect(() => {
+    isLoggedIn === null && dispatch(retriveLogin());
 
-		if (isLoggedIn) {
-			dispatch(getFavorite(userId!));
-			dispatch(getMessages(userId!));
-			dispatch(getMemberList(userId!));
-			if (projectId) {
-				navigate("/");
-			} else {
-				dispatch(getTableList(userId!));
-			}
-		}
-		// eslint-disable-next-line
-	}, [isLoggedIn, dispatch, userId, projectId]);
+    if (isLoggedIn) {
+      dispatch(getFavorite(userId!));
+      dispatch(getMessages(userId!));
+      dispatch(getMemberList(userId!));
+      if (projectId) {
+        navigate("/");
+      } else {
+        dispatch(getTableList(userId!));
+      }
+    }
+    // eslint-disable-next-line
+  }, [isLoggedIn, dispatch, userId, projectId]);
 
-	const routes = [
-		{
-			path: "/*",
-			element: <Home />,
-		},
-		{
-			path: "/home/*",
-			element: <Home/>,
-		},
-		{
-			path: "/dashboard/",
-			element: <Dashboard/>,
-		},
-		{
-			path: "/notification/",
-			element: <Notification/>,
-		},
-		{
-			path: "/myMember/",
-			element: <MyMember/>,
-		},
-		{
-			path: "/favorite/",
-			element: <Favorite/>,
-		},
-		{
-			path: "/profile/",
-			element: <Profile/>,
-		},
-	];
+  const routes = [
+    {
+      path: "/*",
+      element: <Home />,
+    },
+    {
+      path: "/home/*",
+      element: <Home />,
+    },
+    {
+      path: "/dashboard/",
+      element: <Dashboard />,
+    },
+    {
+      path: "/notification/",
+      element: <Notification />,
+    },
+    {
+      path: "/myMember/",
+      element: <MyMember />,
+    },
+    {
+      path: "/favorite/",
+      element: <Favorite />,
+    },
+    {
+      path: "/profile/",
+      element: <Profile />,
+    },
+  ];
 
-	return (
-		<div className="App">
-			{isLoggedIn && projectId && (
-				<AppShell navbar={<LeftNavbar />}>
-					<Routes>
-                        {routes.map(route => <Route path={route.path} element={route.element} />)}
-					</Routes>
-				</AppShell>
-			)}
-			{isLoggedIn === false && <Auth />}
-		</div>
-	);
+  return (
+    <div className="App">
+      {isLoggedIn && projectId && (
+        <AppShell navbar={<LeftNavbar />}>
+          <Routes>
+            {routes.map((route) => (
+              <Route path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </AppShell>
+      )}
+      {isLoggedIn === false && <Auth />}
+    </div>
+  );
 }
 
 export default App;

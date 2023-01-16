@@ -1,9 +1,3 @@
-
-
-export function Cashflow(){
-    return(
-       <div>
-
-       </div>
-    );
-};
+export function Cashflow() {
+  return <div></div>;
+}

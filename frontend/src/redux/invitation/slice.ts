@@ -1,76 +1,89 @@
-import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CaseReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type Invitation = {
-    id: number | null
-    user_id: number | null
-    project_id: number | null
-    email: string
-    status: 'pending' | 'accepted'
-    updated_at: string
-    created_at: string
-}
+  id: number | null;
+  user_id: number | null;
+  project_id: number | null;
+  email: string;
+  status: "pending" | "accepted";
+  updated_at: string;
+  created_at: string;
+};
 
-export type InvitationState = Invitation[]
+export type InvitationState = Invitation[];
 
-const initialState: InvitationState = [{
+const initialState: InvitationState = [
+  {
     id: null,
     user_id: null,
     project_id: null,
     email: "",
-    status: 'pending',
+    status: "pending",
     updated_at: "",
-    created_at: ""
-}]
+    created_at: "",
+  },
+];
 
-const sendInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> =
-    (state, action) => {
-        for (let item of state) {
-            if (item.id === action.payload.id) {
-                item.updated_at = action.payload.updated_at
-                return
-            }
-        }
-        state.push(action.payload)
+const sendInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> = (
+  state,
+  action
+) => {
+  for (let item of state) {
+    if (item.id === action.payload.id) {
+      item.updated_at = action.payload.updated_at;
+      return;
     }
-const acceptInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> =
-    (state, action) => {
-        for (let invite of state) {
-            if (invite.email === action.payload.email && invite.project_id === action.payload.project_id) {
-                invite.status = action.payload.status
-                break
-            }
-        }
+  }
+  state.push(action.payload);
+};
+const acceptInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> = (
+  state,
+  action
+) => {
+  for (let invite of state) {
+    if (
+      invite.email === action.payload.email &&
+      invite.project_id === action.payload.project_id
+    ) {
+      invite.status = action.payload.status;
+      break;
     }
-const getInvitationList: CaseReducer<InvitationState, PayloadAction<InvitationState>> =
-    (state, action) => {
-        return state = action.payload  
+  }
+};
+const getInvitationList: CaseReducer<
+  InvitationState,
+  PayloadAction<InvitationState>
+> = (state, action) => {
+  return (state = action.payload);
+};
+const deleteInvitation: CaseReducer<
+  InvitationState,
+  PayloadAction<{ id: number }>
+> = (state, action) => {
+  for (let i = 0; i < state.length; i++) {
+    if (state[i].id === action.payload.id) {
+      state.splice(i, 1);
+      break;
     }
-const deleteInvitation: CaseReducer<InvitationState, PayloadAction<{ id: number }>> =
-    (state, action) => {
-        for (let i = 0; i < state.length; i++) {
-            if (state[i].id === action.payload.id) {
-                state.splice(i, 1)
-                break
-            }
-        }
-    }
+  }
+};
 
 const invitationSlice = createSlice({
-    name: 'invitation',
-    initialState,
-    reducers: {
-        sendInvite,
-        acceptInvite,
-        getInvitationList,
-        deleteInvitation,
-    },
-})
+  name: "invitation",
+  initialState,
+  reducers: {
+    sendInvite,
+    acceptInvite,
+    getInvitationList,
+    deleteInvitation,
+  },
+});
 
 export const {
-    sendInvite: sendInviteAction,
-    acceptInvite: acceptInviteAction,
-    getInvitationList: getInvitationListAction,
-    deleteInvitation: deleteInvitationAction
-} = invitationSlice.actions
+  sendInvite: sendInviteAction,
+  acceptInvite: acceptInviteAction,
+  getInvitationList: getInvitationListAction,
+  deleteInvitation: deleteInvitationAction,
+} = invitationSlice.actions;
 
-export default invitationSlice.reducer
+export default invitationSlice.reducer;

@@ -10,19 +10,19 @@
   position: relative;
 }
 
-.pin-label{
+.pin-label {
   color: white;
   font-size: calc(4px + 0.5vw);
   height: max-content;
   position: absolute;
-  top:10px;
+  top: 10px;
   padding: 10px;
   width: max-content;
   border-radius: 3px;
   z-index: 97;
 }
 
-.pin-label:hover{
+.pin-label:hover {
   opacity: 1 !important;
 }
 
@@ -31,14 +31,14 @@
   top: -5px;
   left: -5px;
   transform: rotate(30deg);
-  z-index:inherit;
+  z-index: inherit;
 }
 
-.pin-container{
+.pin-container {
   position: sticky;
   top: 0px;
   opacity: 0.6;
-  z-index:97;
+  z-index: 97;
 }
 
 #toggle-arrow {
@@ -57,23 +57,23 @@
 }
 
 .react-calendar-timeline .rct-item:hover {
-  opacity: 0.8; }
-
+  opacity: 0.8;
+}
 
 .react-calendar-timeline .rct-calendar-header div:first-child {
   height: 50px !important;
 }
 
 .react-calendar-timeline .rct-header-root {
-  background-color: #238BE6 !important;
+  background-color: #238be6 !important;
   position: sticky;
   position: -webkit-sticky;
-  top:0px;
+  top: 0px;
   z-index: 98;
 }
 
-#loader-container{
-  height:100%;
+#loader-container {
+  height: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
