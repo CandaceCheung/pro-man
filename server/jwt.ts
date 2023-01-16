@@ -1,5 +1,5 @@
 export default {
-    jwtSecret: "pD5qfVvKx4oDPObsu0ec0HS1cxvOQJ7sKgaya7Ny",
+    jwtSecret: process.env.JWT_SECRET,
     jwtSession: {
         session: false
     }
