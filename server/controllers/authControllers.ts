@@ -17,7 +17,7 @@ export class AuthController {
 				req.body.password
 			);
 			if (result) {
-				const token = jwtSimple.encode(result, jwt.jwtSecret);
+				const token = jwtSimple.encode(result, jwt.jwtSecret!);
 				res.json({
 					success: true,
 					data: result,
