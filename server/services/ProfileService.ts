@@ -25,10 +25,9 @@ export class ProfileService {
 			lastName
 		}: { password?: string; firstName?: string; lastName?: string }
 	) {
-		
 		const txn = await this.knex.transaction();
 		try {
-			let update; 
+			let update;
 			let hashedPassword;
 			if (password) {
 				hashedPassword = bcrypt.hashSync(password, 10);
@@ -46,14 +45,12 @@ export class ProfileService {
 						'first_name as firstName',
 						'last_name as lastName'
 					]);
-
-				}
-				await txn.commit();
-				return update;
-				
-			} catch (e) {
-				await txn.rollback();
-				throw e;
+			}
+			await txn.commit();
+			return update;
+		} catch (e) {
+			await txn.rollback();
+			throw e;
 		}
 	}
 }

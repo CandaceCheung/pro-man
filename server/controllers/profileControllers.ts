@@ -22,21 +22,22 @@ export class ProfileController {
 		}
 	};
 
-    putProfile = async (req: Request, res: Response) => {
-        try {
+	putProfile = async (req: Request, res: Response) => {
+		try {
 			const userId = req.user!.id;
-		
-            const { password, firstName, lastName} = req.body;
 
-			const result = await this.profileService.updateProfile( userId, {password, firstName, lastName});
+			const { password, firstName, lastName } = req.body;
 
-			res.json({result: result?.[0], success: true})
+			const result = await this.profileService.updateProfile(userId, {
+				password,
+				firstName,
+				lastName
+			});
 
-        } catch (e) {
-            console.error(e);
+			res.json({ result: result?.[0], success: true });
+		} catch (e) {
+			console.error(e);
 			res.status(500).json({ msg: '[PRO02] Fail to Put Data.' });
-        }
-    }
-
-
+		}
+	};
 }

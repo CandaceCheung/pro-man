@@ -8,14 +8,14 @@ services:
             - .env
         image: cmyip6/pro-man:latest
         ports:
-            - "8080:8080"
-    db: 
+            - '8080:8080'
+    db:
         image: postgres:latest
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: postgres
         ports:
-            - "5432:5432"
+            - '5432:5432'
         volumes:
             - ./pgdata:/var/lib/postgresql/data

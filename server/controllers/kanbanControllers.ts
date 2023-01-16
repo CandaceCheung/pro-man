@@ -56,7 +56,9 @@ export class KanbanController {
 			});
 		} catch (e) {
 			console.error(e);
-			res.status(500).json({ msg: '[KAN03] Fail to Get Group List Data.' });
+			res.status(500).json({
+				msg: '[KAN03] Fail to Get Group List Data.'
+			});
 		}
 	};
 
@@ -72,7 +74,7 @@ export class KanbanController {
 				date,
 				groupId
 			} = req.body;
-			console.log(req.body)
+			console.log(req.body);
 			const itemId = await this.kanbanService.addKanbanitem(
 				projectId,
 				stateId,
@@ -96,17 +98,14 @@ export class KanbanController {
 
 	putKanbanOrder = async (req: Request, res: Response) => {
 		try {
-			const {
-				order,
-			} = req.body; 
+			const { order } = req.body;
 
 			await this.kanbanService.reorderKanban(order);
 
-			res.json({success: true});
-
+			res.json({ success: true });
 		} catch (e) {
 			console.error(e);
-			res.status(500).json({ msg: '[KAN05] Fail to Put Order.' })
+			res.status(500).json({ msg: '[KAN05] Fail to Put Order.' });
 		}
 	};
 }

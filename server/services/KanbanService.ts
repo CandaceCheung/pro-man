@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { getRandomColor } from '../seeds/users-info';
 
 export class KanbanService {
-	constructor(private knex: Knex) { }
+	constructor(private knex: Knex) {}
 
 	async getKanbanInfo(project_Id: number) {
 		const kanbanDetail = await this.knex
@@ -19,13 +19,16 @@ export class KanbanService {
 					.from('items')
 					.join('type_persons', 'type_persons.item_id', 'items.id')
 					.join('type_dates', 'type_dates.item_id', 'items.id')
-					.join('item_groups', 'items.item_group_id', 'item_groups.id')
+					.join(
+						'item_groups',
+						'items.item_group_id',
+						'item_groups.id'
+					)
 					.groupBy('items.id')
 					.groupBy('type_dates.datetime')
 					.where('items.project_id', project_Id)
 					.where('items.is_deleted', false)
-					.where('item_groups.is_deleted', false)
-					
+					.where('item_groups.is_deleted', false);
 			})
 			.select(
 				'states.id as id',
@@ -42,12 +45,12 @@ export class KanbanService {
 			.groupBy('states.id')
 			.orderBy('states.status_order');
 
-			
-			// filter the deleted items (null)
-			for(const status of kanbanDetail) {
-				status.itemsList = status.itemsList.filter((item:any) => item !== null)
-			}
-
+		// filter the deleted items (null)
+		for (const status of kanbanDetail) {
+			status.itemsList = status.itemsList.filter(
+				(item: any) => item !== null
+			);
+		}
 
 		// for null status
 		kanbanDetail.forEach((state) => {
@@ -91,13 +94,15 @@ export class KanbanService {
 		date: Date,
 		groupId: number
 	) {
-		const [{ previousItemId }] = await this.knex("items").select("id as previousItemId").where("item_group_id", groupId).limit(1);
+		const [{ previousItemId }] = await this.knex('items')
+			.select('id as previousItemId')
+			.where('item_group_id', groupId)
+			.limit(1);
 
-		const types = await this.knex.select(
-			("types.id as typesId")
-		)
+		const types = await this.knex
+			.select('types.id as typesId')
 			.distinctOn('typesId')
-			.from("items")
+			.from('items')
 			.join('type_persons', 'type_persons.item_id', '=', 'items.id')
 			.join('type_dates', 'type_dates.item_id', '=', 'items.id')
 			.join('type_times', 'type_times.item_id', '=', 'items.id')
@@ -105,83 +110,102 @@ export class KanbanService {
 			.join('type_status', 'type_status.item_id', '=', 'items.id')
 			.join('type_text', 'type_text.item_id', '=', 'items.id')
 			.join('types', function () {
-				this
-					.on('type_text.type_id', '=', 'types.id')
+				this.on('type_text.type_id', '=', 'types.id')
 					.orOn('type_status.type_id', '=', 'types.id')
 					.orOn('type_money.type_id', '=', 'types.id')
 					.orOn('type_times.type_id', '=', 'types.id')
 					.orOn('type_dates.type_id', '=', 'types.id')
-					.orOn('type_persons.type_id', '=', 'types.id')
-			}).where("items.id", previousItemId)
-			.orderBy("types.id", "asc");
+					.orOn('type_persons.type_id', '=', 'types.id');
+			})
+			.where('items.id', previousItemId)
+			.orderBy('types.id', 'asc');
 
-			const typesId_persons = types[0].typesId;
-            const typesId_dates = types[1].typesId;
-            const typesId_times = types[2].typesId;
-            const typesId_money = types[3].typesId;
-            const typesId_status = types[4].typesId;
-            const typesId_text = types[5].typesId;
+		const typesId_persons = types[0].typesId;
+		const typesId_dates = types[1].typesId;
+		const typesId_times = types[2].typesId;
+		const typesId_money = types[3].typesId;
+		const typesId_status = types[4].typesId;
+		const typesId_text = types[5].typesId;
 
 		const txn = await this.knex.transaction();
 		try {
-			await txn("items")
-			.where("item_group_id", groupId)
-			.increment('order', 1);
+			await txn('items')
+				.where('item_group_id', groupId)
+				.increment('order', 1);
 
-            const [{ itemId }] = await txn.insert({
-                name: itemName,
-                creator_id: userId,
-                project_id: projectId,
-                item_group_id: groupId,
-                is_deleted: false,
-                order: 1
-            }).into('items').returning('id as itemId');
+			const [{ itemId }] = await txn
+				.insert({
+					name: itemName,
+					creator_id: userId,
+					project_id: projectId,
+					item_group_id: groupId,
+					is_deleted: false,
+					order: 1
+				})
+				.into('items')
+				.returning('id as itemId');
 
 			for (const id in memberId) {
 				const user_id = memberId[id];
 				const name = memberName[id];
-				await txn.insert({
-					name: name,
-					user_id: parseInt(user_id),
-					type_id: typesId_persons,
-					item_id: itemId
-				}).into("type_persons");
+				await txn
+					.insert({
+						name: name,
+						user_id: parseInt(user_id),
+						type_id: typesId_persons,
+						item_id: itemId
+					})
+					.into('type_persons');
 			}
 
-            await txn.insert({
-                datetime: format(new Date(date), 'yyyy-MM-dd'),
-                color: getRandomColor(),
-                type_id: typesId_dates,
-                item_id: itemId
-            }).into("type_dates");
-            await txn.insert({
-                start_date: new Date(new Date().toDateString()).getTime(),
-                end_date: new Date(new Date().toDateString()).getTime() + 86400000,
-                color: getRandomColor(),
-                type_id: typesId_times,
-                item_id: itemId
-            }).into("type_times");
-            const [{ typeMoneyId }] = await txn.insert({
-                type_id: typesId_money,
-                item_id: itemId
-            }).into("type_money")
-                .returning("id as typeMoneyId");
-            await txn.insert({
-                state_id: stateId,
-                type_id: typesId_status,
-                item_id: itemId
-            }).into("type_status");
-            await txn.insert({
-                text: "",
-                type_id: typesId_text,
-                item_id: itemId
-            }).into("type_text");
+			await txn
+				.insert({
+					datetime: format(new Date(date), 'yyyy-MM-dd'),
+					color: getRandomColor(),
+					type_id: typesId_dates,
+					item_id: itemId
+				})
+				.into('type_dates');
+			await txn
+				.insert({
+					start_date: new Date(new Date().toDateString()).getTime(),
+					end_date:
+						new Date(new Date().toDateString()).getTime() +
+						86400000,
+					color: getRandomColor(),
+					type_id: typesId_times,
+					item_id: itemId
+				})
+				.into('type_times');
+			const [{ typeMoneyId }] = await txn
+				.insert({
+					type_id: typesId_money,
+					item_id: itemId
+				})
+				.into('type_money')
+				.returning('id as typeMoneyId');
+			await txn
+				.insert({
+					state_id: stateId,
+					type_id: typesId_status,
+					item_id: itemId
+				})
+				.into('type_status');
+			await txn
+				.insert({
+					text: '',
+					type_id: typesId_text,
+					item_id: itemId
+				})
+				.into('type_text');
 
-            await txn.insert({
-                date: format(new Date(Date.now()), 'yyyy-MM-dd'),
-                cash_flow: 0,
-                type_money_id: typeMoneyId
-            }).into("transactions");
+			await txn
+				.insert({
+					date: format(new Date(Date.now()), 'yyyy-MM-dd'),
+					cash_flow: 0,
+					type_money_id: typeMoneyId
+				})
+				.into('transactions');
 
 			await txn.commit();
 
@@ -196,12 +220,13 @@ export class KanbanService {
 		const txn = await this.knex.transaction();
 		try {
 			for (let i in order) {
-				await txn.update({ status_order: parseInt(i) + 1 }).from('states').where('id', order[i]);
+				await txn
+					.update({ status_order: parseInt(i) + 1 })
+					.from('states')
+					.where('id', order[i]);
 			}
 
 			await txn.commit();
-
-
 		} catch (e) {
 			await txn.rollback();
 			throw e;

@@ -1,16 +1,13 @@
-import { Knex } from "knex";
-
+import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
-    await knex.schema.alterTable("type_dates", (table) => {
-        table.date('date');
-    });
+	await knex.schema.alterTable('type_dates', (table) => {
+		table.date('date');
+	});
 }
-
 
 export async function down(knex: Knex): Promise<void> {
-    await knex.schema.alterTable("type_dates", (table) => {
-        table.dropColumn('date');
-      });
+	await knex.schema.alterTable('type_dates', (table) => {
+		table.dropColumn('date');
+	});
 }
-

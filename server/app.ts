@@ -25,7 +25,6 @@ import { MemberService } from './services/memberServices';
 import { MemberController } from './controllers/memberController';
 import { memberRoutes } from './routes/memberRoutes';
 
-
 dotenv.config();
 
 const knexConfig = require('./knexfile');
@@ -47,7 +46,9 @@ export const invitationService = new InvitationService(knex);
 export const invitationController = new InvitationController(invitationService);
 
 export const notificationService = new NotificationService(knex);
-export const notificationController = new NotificationController(notificationService);
+export const notificationController = new NotificationController(
+	notificationService
+);
 
 export const profileService = new ProfileService(knex);
 export const profileController = new ProfileController(profileService);
