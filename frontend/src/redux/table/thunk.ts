@@ -1,7 +1,6 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import { setActiveProjectAction, setProjectNameAction } from '../project/slice';
 import {
-    getTableFailedAction,
     getTableAction,
     updateTimelineItemAction,
     updateDatelineItemAction,
@@ -41,7 +40,6 @@ export function likeProject(projectId: number, userId: number) {
                 message: result.msg
             });
         } else {
-            dispatch(getTableFailedAction());
             showNotification({
                 title: 'Like Project notification',
                 message: result.msg
@@ -64,7 +62,10 @@ export function getTable(userID: number, projectID: number) {
         if (result.success) {
             dispatch(getTableAction(result.table));
         } else {
-            dispatch(getTableFailedAction());
+            showNotification({
+                title: 'Project Table notification',
+                message: "Fail to obtain table information"
+            });
         }
     };
 }
@@ -85,7 +86,10 @@ export function getTableList(userId: number) {
             dispatch(setActiveProjectAction(result.list[0].project_id));
             dispatch(setProjectNameAction(result.list[0].project_name));
         } else {
-            dispatch(getTableFailedAction());
+            showNotification({
+                title: 'Project List notification',
+                message: "Fail to obtain projct list information"
+            });
         }
     };
 }
@@ -126,7 +130,10 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
                 message: result.msg
             });
         } else {
-            dispatch(getTableFailedAction());
+            showNotification({
+                title: 'Data update notification',
+                message: "Fail to update timeline information"
+            });
         }
     };
 }
@@ -165,7 +172,10 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
                 message: result.msg
             });
         } else {
-            dispatch(getTableFailedAction());
+            showNotification({
+                title: 'Data update notification',
+                message: "Fail to update dateline information"
+            });
         }
     };
 }
@@ -241,10 +251,12 @@ export function getFavorite(userId: number) {
         // const result = await res.json();
 
         if (result.success) {
-            console.log('Request Passed');
             dispatch(getFavoriteAction(result.favorite));
         } else {
-            dispatch(getTableFailedAction());
+            showNotification({
+                title: 'Favorite projects notification',
+                message: "Fail to obtain favorite project list"
+            });
         }
     };
 }

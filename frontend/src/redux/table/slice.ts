@@ -149,10 +149,6 @@ const initialState: CombinedTableState = {
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> = (state, action) => {
     state.summary = action.payload;
 };
-// 怪怪的
-const getTableFailed: CaseReducer<CombinedTableState, PayloadAction> = (state, action) => {
-    state = { ...state };
-};
 
 const updateTimelineItem: CaseReducer<
     CombinedTableState,
@@ -244,7 +240,6 @@ const tableSlice = createSlice({
     initialState,
     reducers: {
         getTable,
-        getTableFailed,
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
@@ -260,7 +255,6 @@ const tableSlice = createSlice({
 
 export const {
     getTable: getTableAction,
-    getTableFailed: getTableFailedAction,
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
