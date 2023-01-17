@@ -30,7 +30,7 @@ export interface TableState {
     project_creator_id: number;
     project_id: number;
     project_is_deleted: boolean;
-    my_favorite_list?: number;
+    myFavoriteList?: number;
     project_name: string;
     user_id: number;
     role: string;
@@ -39,6 +39,30 @@ export interface TableState {
     vertical_order: number;
     type_name: 'persons' | 'dates' | 'times' | 'money' | 'status' | 'text';
     element_name: string;
+}
+
+export interface itemCellsElement {
+    item_id: TableState['item_id'];
+    item_name: TableState['item_name'];
+    type_id: TableState['horizontal_order_id'];
+    type_name: TableState['type_name'];
+    element_name: TableState['element_name'];
+    item_dates_datetime?: TableState['item_dates_datetime'];
+    item_dates_date?: TableState['item_dates_date'];
+    transaction_id?: Array<TableState['transaction_id']>;
+    item_money_cashflow?: Array<TableState['item_money_cashflow']>;
+    item_money_date?: Array<TableState['item_money_date']>;
+    item_person_user_id?: Array<TableState['item_person_user_id']>;
+    item_status_color?: TableState['item_status_color'];
+    item_status_name?: TableState['item_status_name'];
+    item_text_text?: TableState['item_text_text'];
+    item_times_start_date?: TableState['item_times_start_date'];
+    item_times_end_date?: TableState['item_times_end_date'];
+}
+
+export interface itemsGroupElement {
+    item_group_id: TableState['item_group_id'];
+    item_group_name: TableState['item_group_name'];
 }
 
 export type MyFavoriteListState = {
@@ -67,13 +91,23 @@ export interface MyTableListState extends Array<MyTableState> {}
 
 export interface TableStateArray extends Array<TableState> {}
 
+export type itemCells = {
+    [keys in number]: {
+        [keys in number]: { [keys in number]: itemCellsElement };
+    };
+}
+
+export interface itemGroups extends Array<itemsGroupElement> {}
+
 export interface StatusListStateArray extends Array<StatusListState> {}
 
 export interface CombinedTableState {
     summary: TableStateArray;
-    my_favorite_list: MyFavoriteListState;
-    project_list: MyTableListState;
-    status_list: StatusListStateArray;
+    itemCells: itemCells;
+    itemGroups: itemGroups;
+    myFavoriteList: MyFavoriteListState;
+    projectList: MyTableListState;
+    statusList: StatusListStateArray;
 }
 
 const initialState: CombinedTableState = {
@@ -108,7 +142,7 @@ const initialState: CombinedTableState = {
             project_creator_id: 0,
             project_id: 0,
             project_is_deleted: false,
-            my_favorite_list: undefined,
+            myFavoriteList: undefined,
             project_name: '',
             user_id: 0,
             role: 'member',
@@ -119,7 +153,37 @@ const initialState: CombinedTableState = {
             element_name: ''
         }
     ],
-    project_list: [
+    itemCells: {
+        0:{
+            0:{
+                0:{
+                    item_id: 0,
+                    item_name: "",
+                    type_id: 0,
+                    type_name: "persons",
+                    element_name: "",
+                    item_dates_datetime: "",
+                    item_dates_date: "",
+                    transaction_id: [0],
+                    item_money_cashflow: [0],
+                    item_money_date: [""],
+                    item_person_user_id: [0],
+                    item_status_color: "",
+                    item_status_name: "",
+                    item_text_text: "",
+                    item_times_start_date: 0,
+                    item_times_end_date: 0,
+                }
+            }
+        }
+    },
+    itemGroups: [
+        {
+            item_group_id: 0,
+            item_group_name: ""
+        }
+    ],
+    projectList: [
         {
             creator_id: undefined,
             project_id: undefined,
@@ -128,7 +192,7 @@ const initialState: CombinedTableState = {
             project_name: ''
         }
     ],
-    my_favorite_list: [
+    myFavoriteList: [
         {
             user_id: undefined,
             creator_id: undefined,
@@ -137,7 +201,7 @@ const initialState: CombinedTableState = {
             project_name: ''
         }
     ],
-    status_list: [
+    statusList: [
         {
             id: undefined,
             name: undefined,
@@ -148,6 +212,14 @@ const initialState: CombinedTableState = {
 
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> = (state, action) => {
     state.summary = action.payload;
+};
+
+const setItemCells: CaseReducer<CombinedTableState, PayloadAction<itemCells>> = (state, action) => {
+    state.itemCells = action.payload;
+};
+
+const setItemGroups: CaseReducer<CombinedTableState, PayloadAction<itemGroups>> = (state, action) => {
+    state.itemGroups = action.payload;
 };
 
 const updateTimelineItem: CaseReducer<
@@ -194,24 +266,24 @@ const updateDatelineItem: CaseReducer<
 };
 
 const getFavorite: CaseReducer<CombinedTableState, PayloadAction<MyFavoriteListState>> = (state, action) => {
-    state.my_favorite_list = action.payload;
+    state.myFavoriteList = action.payload;
 };
 const getTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableListState>> = (state, action) => {
-    state.project_list = action.payload;
+    state.projectList = action.payload;
 };
 const getStatusList: CaseReducer<CombinedTableState, PayloadAction<StatusListStateArray>> = (state, action) => {
-    state.status_list = action.payload;
+    state.statusList = action.payload;
 };
 const updateTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
-    state.project_list.push(action.payload);
+    state.projectList.push(action.payload);
 };
 const renameProjectInTableList: CaseReducer<CombinedTableState, PayloadAction<{ projectId: number; projectName: string }>> = (state, action) => {
-    state.project_list.forEach((project) => {
+    state.projectList.forEach((project) => {
         if (project.project_id === action.payload.projectId) {
             project.project_name = action.payload.projectName;
         }
     });
-    state.my_favorite_list.forEach((project) => {
+    state.myFavoriteList.forEach((project) => {
         if (project.project_id === action.payload.projectId) {
             project.project_name = action.payload.projectName;
         }
@@ -225,10 +297,10 @@ const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemG
     }
 };
 const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
-    state.project_list.push(action.payload);
+    state.projectList.push(action.payload);
 };
 const addStatus: CaseReducer<CombinedTableState, PayloadAction<StatusListState>> = (state, action) => {
-    state.status_list.push({
+    state.statusList.push({
         id: action.payload.id,
         name: action.payload.name,
         color: action.payload.color
@@ -240,6 +312,8 @@ const tableSlice = createSlice({
     initialState,
     reducers: {
         getTable,
+        setItemCells,
+        setItemGroups,
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
@@ -255,6 +329,8 @@ const tableSlice = createSlice({
 
 export const {
     getTable: getTableAction,
+    setItemCells: setItemCellsAction,
+    setItemGroups: setItemGroupsAction,
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,

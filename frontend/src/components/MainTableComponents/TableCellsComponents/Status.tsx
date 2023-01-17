@@ -80,7 +80,7 @@ const useStyle = createStyles((theme, _params) => ({
 }));
 
 export function Status({ groupId, itemId, typeId, status, color, onStatusChange }: StatusProps) {
-    const statusList = useAppSelector((state) => state.table.status_list);
+    const statusList = useAppSelector((state) => state.table.statusList);
     const projectId = useAppSelector((state) => state.project.project_id);
     const [opened, setOpened] = useState(false);
     const [editStatus, setEditStatus] = useState(false);

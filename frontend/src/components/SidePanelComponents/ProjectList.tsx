@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { showNotification } from '@mantine/notifications';
 
 export function ProjectList() {
-    const projectSummary = useAppSelector((state) => state.table.project_list);
+    const projectSummary = useAppSelector((state) => state.table.projectList);
     const userId = useAppSelector((state) => state.auth.userId);
     const [opened, setOpened] = useState(false);
     const dispatch = useAppDispatch();

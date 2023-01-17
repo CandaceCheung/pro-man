@@ -1,6 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { itemCellsElement, MembersFullName } from '../../pages/MainTable';
+import { MembersFullName } from '../../pages/MainTable';
 import { Persons } from './TableCellsComponents/Persons';
 import { useStyles } from './styles';
 import { TextCell } from './TableCellsComponents/Text';
@@ -12,6 +12,7 @@ import { Item } from './TableCellsComponents/Item';
 import { IconX } from '@tabler/icons';
 import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
+import { itemCellsElement } from '../../redux/table/slice';
 
 export interface TableRowProps {
     itemId: number;

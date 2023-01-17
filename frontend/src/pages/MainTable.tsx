@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
-import { TableState } from '../redux/table/slice';
+import { itemCellsElement, itemsGroupElement, TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import {
     addPerson,
@@ -33,30 +33,6 @@ import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
 import { format } from 'date-fns';
 import { IconX } from '@tabler/icons';
-
-export interface itemCellsElement {
-    item_id: TableState['item_id'];
-    item_name: TableState['item_name'];
-    type_id: TableState['horizontal_order_id'];
-    type_name: TableState['type_name'];
-    element_name: TableState['element_name'];
-    item_dates_datetime?: TableState['item_dates_datetime'];
-    item_dates_date?: TableState['item_dates_date'];
-    transaction_id?: Array<TableState['transaction_id']>;
-    item_money_cashflow?: Array<TableState['item_money_cashflow']>;
-    item_money_date?: Array<TableState['item_money_date']>;
-    item_person_user_id?: Array<TableState['item_person_user_id']>;
-    item_status_color?: TableState['item_status_color'];
-    item_status_name?: TableState['item_status_name'];
-    item_text_text?: TableState['item_text_text'];
-    item_times_start_date?: TableState['item_times_start_date'];
-    item_times_end_date?: TableState['item_times_end_date'];
-}
-
-export interface itemsGroupElement {
-    item_group_id: TableState['item_group_id'];
-    item_group_name: TableState['item_group_name'];
-}
 
 export interface MembersFullName {
     username: string;

@@ -10,7 +10,9 @@ import {
     addProjectAction,
     getStatusListAction,
     addStatusAction,
-    MyFavoriteListState
+    MyFavoriteListState,
+    setItemCellsAction,
+    setItemGroupsAction
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -60,7 +62,9 @@ export function getTable(userID: number, projectID: number) {
         const result = await res.json();
 
         if (result.success) {
-            dispatch(getTableAction(result.table));
+            dispatch(getTableAction(result.table));     
+            dispatch(setItemCellsAction(result.itemCells));
+            dispatch(setItemGroupsAction(result.itemGroups));
         } else {
             showNotification({
                 title: 'Project Table notification',

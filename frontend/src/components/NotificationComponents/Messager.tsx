@@ -14,7 +14,7 @@ export function Messager() {
     const userId = useAppSelector((state) => state.auth.userId);
     const check = useAppSelector((state) => state.project.check_username);
     const targetUser = useAppSelector((state) => state.project.message_target);
-    const projectList = useAppSelector((state) => state.table.project_list);
+    const projectList = useAppSelector((state) => state.table.projectList);
 
     const [messageType, setMessageType] = useState<'invite' | 'message' | undefined>(undefined);
     const [text, setText] = useState<string>('');

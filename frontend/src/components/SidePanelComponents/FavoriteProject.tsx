@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { setActiveProject } from '../../redux/project/thunk';
 
 export function FavoriteProject() {
-    const projectSummary = useAppSelector((state) => state.table.my_favorite_list);
+    const projectSummary = useAppSelector((state) => state.table.myFavoriteList);
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
 
