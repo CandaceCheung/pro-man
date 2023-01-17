@@ -54,7 +54,7 @@ export function getTable(userID: number, projectID: number) {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem('token');
 
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/${userID}&${projectID}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/v2/${userID}&${projectID}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

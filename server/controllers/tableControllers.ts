@@ -1,5 +1,6 @@
 import { TableService } from '../services/tableService';
 import { Request, Response } from 'express';
+import { itemCellsElement, itemsGroupElement } from '../model';
 
 export class TableController {
 	constructor(private tableService: TableService) {}
@@ -8,10 +9,7 @@ export class TableController {
 		try {
 			const userId = req.body.userId;
 			const projectId = req.body.projectId;
-			const likeStatus = await this.tableService.getLikeStatus(
-				userId,
-				projectId
-			);
+			const likeStatus = await this.tableService.getLikeStatus(userId, projectId);
 
 			if (likeStatus) {
 				await this.tableService.deleteLike(userId, projectId);
@@ -39,10 +37,7 @@ export class TableController {
 		try {
 			const userID = req.params.userID;
 			const projectID = req.params.projectID;
-			const result = await this.tableService.getTableInfo(
-				parseInt(userID),
-				parseInt(projectID)
-			);
+			const result = await this.tableService.getTableInfo(parseInt(userID), parseInt(projectID));
 
 			res.json({
 				success: true,
@@ -58,14 +53,96 @@ export class TableController {
 		try {
 			const userID = req.params.userID;
 			const projectID = req.params.projectID;
-			const result = await this.tableService.getTableInfo(
-				parseInt(userID),
-				parseInt(projectID)
-			);
+			const result = await this.tableService.getTableInfo(parseInt(userID), parseInt(projectID));
+
+			let itemCells: {
+				[keys in number]: {
+					[keys in number]: { [keys in number]: itemCellsElement };
+				};
+			} = {};
+			let itemGroups: itemsGroupElement[] = [];
+
+			for (const cell of result) {
+				if (cell.project_id) {
+					const itemGroupID = cell.item_group_id;
+					const itemID = cell.item_id;
+					const typeID = cell.horizontal_order_id;
+					let itemCell: itemCellsElement = {
+						item_id: cell.item_id,
+						item_name: cell.item_name,
+						type_id: cell.horizontal_order_id,
+						type_name: cell.type_name,
+						element_name: cell.element_name
+					};
+
+					if (itemCells[itemGroupID]) {
+						if (!itemCells[itemGroupID][itemID]) {
+							itemCells[itemGroupID][itemID] = {};
+						}
+					} else {
+						itemCells[itemGroupID] = {};
+						itemCells[itemGroupID][itemID] = {};
+						itemGroups.push({
+							item_group_id: cell.item_group_id,
+							item_group_name: cell.item_group_name
+						});
+					}
+
+					switch (cell.type_name) {
+						case 'dates':
+							itemCell['item_dates_datetime'] = cell.item_dates_datetime;
+							itemCell['item_dates_date'] = cell.item_dates_date;
+							itemCells[itemGroupID][itemID][typeID] = itemCell;
+							break;
+						case 'money':
+							if (itemCells[itemGroupID][itemID][typeID]) {
+								if (!itemCells[itemGroupID][itemID][typeID]!.transaction_id!.includes(cell.transaction_id)) {
+									itemCells[itemGroupID][itemID][typeID]!.transaction_id!.push(cell.transaction_id);
+									itemCells[itemGroupID][itemID][typeID]!.item_money_cashflow!.push(cell.item_money_cashflow);
+									itemCells[itemGroupID][itemID][typeID]!.item_money_date!.push(cell.item_money_date);
+								}
+							} else {
+								itemCell['transaction_id'] = [cell.transaction_id];
+								itemCell['item_money_cashflow'] = [cell.item_money_cashflow];
+								itemCell['item_money_date'] = [cell.item_money_date];
+								itemCells[itemGroupID][itemID][typeID] = itemCell;
+							}
+							break;
+						case 'persons':
+							if (itemCells[itemGroupID][itemID][typeID]) {
+								if (!itemCells[itemGroupID][itemID][typeID].item_person_user_id!.includes(cell.item_person_user_id)) {
+									itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(cell.item_person_user_id);
+								}
+							} else {
+								itemCell.item_person_user_id = [cell.item_person_user_id];
+								itemCells[itemGroupID][itemID][typeID] = itemCell;
+							}
+							break;
+						case 'status':
+							itemCell['item_status_color'] = cell.item_status_color;
+							itemCell['item_status_name'] = cell.item_status_name;
+							itemCells[itemGroupID][itemID][typeID] = itemCell;
+							break;
+						case 'text':
+							itemCell['item_text_text'] = cell.item_text_text;
+							itemCells[itemGroupID][itemID][typeID] = itemCell;
+							break;
+						case 'times':
+							itemCell['item_times_start_date'] = cell.item_times_start_date;
+							itemCell['item_times_end_date'] = cell.item_times_end_date;
+							itemCells[itemGroupID][itemID][typeID] = itemCell;
+							break;
+						default:
+							break;
+					}
+				}
+			}
 
 			res.json({
 				success: true,
-				table: result
+				table: result,
+				itemCells,
+				itemGroups
 			});
 		} catch (e) {
 			console.error(e);
@@ -76,9 +153,7 @@ export class TableController {
 	getTableList = async (req: Request, res: Response) => {
 		try {
 			const userID = req.params.userID;
-			const result = await this.tableService.getTableList(
-				parseInt(userID)
-			);
+			const result = await this.tableService.getTableList(parseInt(userID));
 
 			res.json({
 				success: true,
@@ -93,9 +168,7 @@ export class TableController {
 	getFavorite = async (req: Request, res: Response) => {
 		try {
 			const userID = req.params.userID;
-			const result = await this.tableService.getFavorite(
-				parseInt(userID)
-			);
+			const result = await this.tableService.getFavorite(parseInt(userID));
 
 			res.json({
 				success: true,
@@ -110,9 +183,7 @@ export class TableController {
 	getProjectStatus = async (req: Request, res: Response) => {
 		try {
 			const projectId = req.params.projectID;
-			const result = await this.tableService.getProjectStatus(
-				parseInt(projectId)
-			);
+			const result = await this.tableService.getProjectStatus(parseInt(projectId));
 
 			res.json({
 				success: true,
@@ -132,14 +203,7 @@ export class TableController {
 			const newName = req.body?.name;
 			const newColor = req.body?.color;
 
-			const typeId: number =
-				await this.tableService.updateTimelineService(
-					typeTimeId,
-					newStartTime,
-					newEndTime,
-					newName,
-					newColor
-				);
+			const typeId: number = await this.tableService.updateTimelineService(typeTimeId, newStartTime, newEndTime, newName, newColor);
 
 			res.json({
 				success: true,
@@ -158,13 +222,7 @@ export class TableController {
 			const newName = req.body?.name;
 			const newColor = req.body?.color;
 
-			const typeId: number =
-				await this.tableService.updateDatelineService(
-					typeDateId,
-					newStartTime,
-					newName,
-					newColor
-				);
+			const typeId: number = await this.tableService.updateDatelineService(typeDateId, newStartTime, newName, newColor);
 
 			res.json({
 				success: true,
@@ -180,10 +238,7 @@ export class TableController {
 		try {
 			const itemGroupId = req.body.itemGroupId;
 			const itemGroupName = req.body.itemGroupName;
-			await this.tableService.updateItemGroupName(
-				itemGroupId,
-				itemGroupName
-			);
+			await this.tableService.updateItemGroupName(itemGroupId, itemGroupName);
 
 			res.json({ success: true });
 		} catch (e) {
@@ -274,12 +329,7 @@ export class TableController {
 			const userId = req.body.userId;
 			const itemGroupId = req.body.itemGroupId;
 			const itemName = req.body.itemName;
-			await this.tableService.insertItem(
-				projectId,
-				userId,
-				itemGroupId,
-				itemName
-			);
+			await this.tableService.insertItem(projectId, userId, itemGroupId, itemName);
 
 			res.json({ success: true });
 		} catch (e) {
@@ -302,8 +352,7 @@ export class TableController {
 	insertNewProject = async (req: Request, res: Response) => {
 		try {
 			const userId = req.body.userId;
-			const { project_id, project_name, member_table_id, username } =
-				await this.tableService.insertNewProject(userId);
+			const { project_id, project_name, member_table_id, username } = await this.tableService.insertNewProject(userId);
 			res.json({
 				success: true,
 				project_id,
@@ -361,11 +410,7 @@ export class TableController {
 			const date = req.body.date;
 			const cashFlow = req.body.cashFlow;
 			const itemId = req.body.itemId;
-			const transactionId = await this.tableService.addTransaction(
-				date,
-				cashFlow,
-				itemId
-			);
+			const transactionId = await this.tableService.addTransaction(date, cashFlow, itemId);
 			res.json({
 				success: true,
 				transactionId
@@ -379,10 +424,7 @@ export class TableController {
 		try {
 			const itemId = req.body.itemId;
 			const personId = req.body.personId;
-			const result = await this.tableService.removePerson(
-				itemId,
-				personId
-			);
+			const result = await this.tableService.removePerson(itemId, personId);
 			res.json({ success: result });
 		} catch (e) {
 			console.error(e);
@@ -393,10 +435,7 @@ export class TableController {
 		try {
 			const itemId = req.body.itemId;
 			const transactionId = req.body.transactionId;
-			const result = await this.tableService.removeTransaction(
-				itemId,
-				transactionId
-			);
+			const result = await this.tableService.removeTransaction(itemId, transactionId);
 			res.json({ success: result });
 		} catch (e) {
 			console.error(e);
@@ -418,10 +457,7 @@ export class TableController {
 		try {
 			const groupId = req.body.groupId;
 			const projectId = req.body.projectId;
-			const result = await this.tableService.deleteItemGroup(
-				groupId,
-				projectId
-			);
+			const result = await this.tableService.deleteItemGroup(groupId, projectId);
 			res.json({ success: result });
 		} catch (e) {
 			console.error(e);
@@ -432,10 +468,7 @@ export class TableController {
 		try {
 			const projectId = req.body.projectId;
 			const userId = req.body.userId;
-			const result = await this.tableService.deleteProject(
-				projectId,
-				userId
-			);
+			const result = await this.tableService.deleteProject(projectId, userId);
 			res.json({ success: result });
 		} catch (e) {
 			console.error(e);

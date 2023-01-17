@@ -45,11 +45,7 @@ export class TableService {
 				'types.type as type_name',
 				'types.id as horizontal_order_id'
 			)
-			.select(
-				this.knex.raw(
-					`to_char(type_dates.datetime, 'Mon DD, YYYY') as item_dates_date`
-				)
-			)
+			.select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD, YYYY') as item_dates_date`))
 			.from('members')
 			.join('users', 'members.user_id', '=', 'users.id')
 			.join('projects', 'members.project_id', '=', 'projects.id')
@@ -59,12 +55,7 @@ export class TableService {
 			.join('type_dates', 'type_dates.item_id', '=', 'items.id')
 			.join('type_times', 'type_times.item_id', '=', 'items.id')
 			.join('type_money', 'type_money.item_id', '=', 'items.id')
-			.join(
-				'transactions',
-				'transactions.type_money_id',
-				'=',
-				'type_money.id'
-			)
+			.join('transactions', 'transactions.type_money_id', '=', 'type_money.id')
 			.join('type_status', 'type_status.item_id', '=', 'items.id')
 			.join('states', 'type_status.state_id', '=', 'states.id')
 			.join('type_text', 'type_text.item_id', '=', 'items.id')
@@ -93,13 +84,7 @@ export class TableService {
 
 	async getTableList(userId: number) {
 		const tableList = await this.knex
-			.select(
-				'projects.creator_id as creator_id',
-				'projects.id as project_id',
-				'projects.name as project_name',
-				'members.id as member_table_id',
-				'users.username as username'
-			)
+			.select('projects.creator_id as creator_id', 'projects.id as project_id', 'projects.name as project_name', 'members.id as member_table_id', 'users.username as username')
 			.from('members')
 			.join('users', 'members.user_id', '=', 'users.id')
 			.join('projects', 'members.project_id', '=', 'projects.id')
@@ -111,20 +96,12 @@ export class TableService {
 	}
 
 	async getLikeStatus(userId: number, projectId: number) {
-		const [likeStatus] = await this.knex
-			.select('*')
-			.from('favorite')
-			.where('favorite.user_id', userId)
-			.andWhere('favorite.project_id', projectId)
-			.limit(1);
+		const [likeStatus] = await this.knex.select('*').from('favorite').where('favorite.user_id', userId).andWhere('favorite.project_id', projectId).limit(1);
 
 		return likeStatus;
 	}
 	async deleteLike(userId: number, projectId: number) {
-		await this.knex('favorite')
-			.del()
-			.where('favorite.user_id', userId)
-			.andWhere('favorite.project_id', projectId);
+		await this.knex('favorite').del().where('favorite.user_id', userId).andWhere('favorite.project_id', projectId);
 
 		return;
 	}
@@ -138,13 +115,7 @@ export class TableService {
 
 	async getFavorite(userId: number) {
 		const favoriteList = await this.knex
-			.select(
-				'projects.creator_id as creator_id',
-				'favorite.user_id as user_id',
-				'projects.id as project_id',
-				'projects.name as project_name',
-				'favorite.id as favorite_id'
-			)
+			.select('projects.creator_id as creator_id', 'favorite.user_id as user_id', 'projects.id as project_id', 'projects.name as project_name', 'favorite.id as favorite_id')
 			.from('favorite')
 			.join('projects', 'favorite.project_id', '=', 'projects.id')
 			.where('favorite.user_id', '=', userId);
@@ -153,20 +124,11 @@ export class TableService {
 	}
 
 	async getProjectStatus(projectId: number) {
-		const statusList = await this.knex('states')
-			.select('id', 'name', 'color')
-			.where('project_id', projectId)
-			.orderBy('id', 'asc');
+		const statusList = await this.knex('states').select('id', 'name', 'color').where('project_id', projectId).orderBy('id', 'asc');
 		return statusList;
 	}
 
-	async updateTimelineService(
-		id: number,
-		start: number,
-		end: number,
-		name: string,
-		color: string
-	) {
+	async updateTimelineService(id: number, start: number, end: number, name: string, color: string) {
 		const txn = await this.knex.transaction();
 		try {
 			const typeId = await txn('type_times')
@@ -192,12 +154,7 @@ export class TableService {
 		}
 	}
 
-	async updateDatelineService(
-		id: number,
-		date: number,
-		name: string,
-		color: string
-	) {
+	async updateDatelineService(id: number, date: number, name: string, color: string) {
 		const txn = await this.knex.transaction();
 		try {
 			const typeId = await txn('type_dates')
@@ -302,37 +259,18 @@ export class TableService {
 			.where('item_id', itemId);
 	}
 
-	async insertItem(
-		projectId: number,
-		userId: number,
-		itemGroupId?: number,
-		itemName?: string
-	) {
-		const [{ username }] = await this.knex('users')
-			.select('username')
-			.where('id', userId);
-		const [{ stateId }] = await this.knex('states')
-			.select('id as stateId')
-			.where('project_id', projectId)
-			.orderBy('stateId')
-			.limit(1);
+	async insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
+		const [{ username }] = await this.knex('users').select('username').where('id', userId);
+		const [{ stateId }] = await this.knex('states').select('id as stateId').where('project_id', projectId).orderBy('stateId').limit(1);
 		let groupId = itemGroupId;
 		if (!groupId) {
-			const [{ oldGroupId }] = await this.knex('item_groups')
-				.select('id as oldGroupId')
-				.where('project_id', projectId)
-				.andWhere('is_deleted', false)
-				.orderBy('oldGroupId', 'desc')
-				.limit(1);
+			const [{ oldGroupId }] = await this.knex('item_groups').select('id as oldGroupId').where('project_id', projectId).andWhere('is_deleted', false).orderBy('oldGroupId', 'desc').limit(1);
 			groupId = oldGroupId;
 		}
 		const txn = await this.knex.transaction();
 
 		try {
-			const [{ previousItemId }] = await this.knex('items')
-				.select('id as previousItemId')
-				.where('item_group_id', groupId)
-				.limit(1);
+			const [{ previousItemId }] = await this.knex('items').select('id as previousItemId').where('item_group_id', groupId).limit(1);
 			const types = await this.knex
 				.select('types.id as typesId')
 				.distinctOn('typesId')
@@ -360,9 +298,7 @@ export class TableService {
 			const typesId_status = types[4].typesId;
 			const typesId_text = types[5].typesId;
 
-			await txn('items')
-				.where('item_group_id', groupId)
-				.increment('order', 1);
+			await txn('items').where('item_group_id', groupId).increment('order', 1);
 
 			const [{ itemId }] = await txn
 				.insert({
@@ -395,9 +331,7 @@ export class TableService {
 			await txn
 				.insert({
 					start_date: new Date(new Date().toDateString()).getTime(),
-					end_date:
-						new Date(new Date().toDateString()).getTime() +
-						86400000,
+					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 					color: getRandomColor(),
 					type_id: typesId_times,
 					item_id: itemId
@@ -462,19 +396,10 @@ export class TableService {
 				])
 				.into('types');
 
-			const [{ username }] = await this.knex('users')
-				.select('username')
-				.where('id', userId);
-			const [{ stateId }] = await this.knex('states')
-				.select('id as stateId')
-				.where('project_id', projectId)
-				.orderBy('stateId', 'asc')
-				.limit(1);
+			const [{ username }] = await this.knex('users').select('username').where('id', userId);
+			const [{ stateId }] = await this.knex('states').select('id as stateId').where('project_id', projectId).orderBy('stateId', 'asc').limit(1);
 
-			const types = await this.knex('types')
-				.select('id')
-				.orderBy('id', 'desc')
-				.limit(6);
+			const types = await this.knex('types').select('id').orderBy('id', 'desc').limit(6);
 			const typesId_persons = types[5].id;
 			const typesId_dates = types[4].id;
 			const typesId_times = types[3].id;
@@ -513,9 +438,7 @@ export class TableService {
 			await txn
 				.insert({
 					start_date: new Date(new Date().toDateString()).getTime(),
-					end_date:
-						new Date(new Date().toDateString()).getTime() +
-						86400000,
+					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 					color: getRandomColor(),
 					type_id: typesId_times,
 					item_id: itemId
@@ -559,9 +482,7 @@ export class TableService {
 	}
 
 	async insertNewProject(userId: number) {
-		const [{ username }] = await this.knex('users')
-			.select('username')
-			.where('id', userId);
+		const [{ username }] = await this.knex('users').select('username').where('id', userId);
 		const txn = await this.knex.transaction();
 		try {
 			const [{ project_id, project_name }] = await txn('projects')
@@ -583,25 +504,8 @@ export class TableService {
 					name: 'New Group'
 				})
 				.returning('id as item_group_id');
-			const defaultStates = [
-				'Empty',
-				'Stuck',
-				'Done',
-				'Working on it',
-				'Checking'
-			];
-			const statusLabelsColor = [
-				'#C4C4C4',
-				'#FDAB3D',
-				'#E2445C',
-				'#00C875',
-				'#0086C0',
-				'#A25DDC',
-				'#037F4C',
-				'#579BFC',
-				'#CAB641',
-				'#FFCB00'
-			];
+			const defaultStates = ['Empty', 'Stuck', 'Done', 'Working on it', 'Checking'];
+			const statusLabelsColor = ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875', '#0086C0', '#A25DDC', '#037F4C', '#579BFC', '#CAB641', '#FFCB00'];
 			let state_id = null;
 			for (let j in defaultStates) {
 				if (j === '0') {
@@ -666,9 +570,7 @@ export class TableService {
 			await txn
 				.insert({
 					start_date: new Date(new Date().toDateString()).getTime(),
-					end_date:
-						new Date(new Date().toDateString()).getTime() +
-						86400000,
+					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 					color: getRandomColor(),
 					type_id: typesId_times,
 					item_id
@@ -712,18 +614,12 @@ export class TableService {
 	}
 
 	async retrieveUserName(userId: number) {
-		const [names] = await this.knex('users')
-			.select('first_name', 'last_name')
-			.where('id', userId);
+		const [names] = await this.knex('users').select('first_name', 'last_name').where('id', userId);
 		return names.first_name && names.last_name && names;
 	}
 
 	async addState(projectId: number, name: string, color: string) {
-		const [{ status_order }] = await this.knex('states')
-			.select('status_order')
-			.where('project_id', projectId)
-			.orderBy('status_order', 'desc')
-			.limit(1);
+		const [{ status_order }] = await this.knex('states').select('status_order').where('project_id', projectId).orderBy('status_order', 'desc').limit(1);
 		const [{ id }] = await this.knex('states')
 			.insert({
 				name,
@@ -735,9 +631,7 @@ export class TableService {
 		return id;
 	}
 	async addPerson(itemId: number, personId: number, typeId: number) {
-		const [{ username }] = await this.knex('users')
-			.select('username')
-			.where('id', personId);
+		const [{ username }] = await this.knex('users').select('username').where('id', personId);
 		await this.knex('type_persons').insert({
 			name: username,
 			user_id: personId,
@@ -746,9 +640,7 @@ export class TableService {
 		});
 	}
 	async addTransaction(date: string, cashFlow: number, itemId: number) {
-		const [{ type_money_id }] = await this.knex('type_money')
-			.select('id as type_money_id')
-			.where('item_id', itemId);
+		const [{ type_money_id }] = await this.knex('type_money').select('id as type_money_id').where('item_id', itemId);
 		const [{ id }] = await this.knex('transactions')
 			.insert({
 				date,
@@ -772,16 +664,7 @@ export class TableService {
 		return true;
 	}
 	async removeTransaction(itemId: number, transactionId: number) {
-		const ids = await this.knex
-			.select('transactions.id')
-			.from('type_money')
-			.join(
-				'transactions',
-				'transactions.type_money_id',
-				'=',
-				'type_money.id'
-			)
-			.where('type_money.item_id', itemId);
+		const ids = await this.knex.select('transactions.id').from('type_money').join('transactions', 'transactions.type_money_id', '=', 'type_money.id').where('type_money.item_id', itemId);
 		if (ids.length <= 1) {
 			return false;
 		}
@@ -793,10 +676,7 @@ export class TableService {
 		return true;
 	}
 	async deleteItem(itemId: number, groupId: number) {
-		const itemIds = await this.knex('items')
-			.select('id')
-			.where('item_group_id', groupId)
-			.andWhere('is_deleted', false);
+		const itemIds = await this.knex('items').select('id').where('item_group_id', groupId).andWhere('is_deleted', false);
 		if (itemIds.length <= 1) {
 			return false;
 		}
@@ -808,10 +688,7 @@ export class TableService {
 		return true;
 	}
 	async deleteItemGroup(groupId: number, projectId: number) {
-		const itemGroupIds = await this.knex('item_groups')
-			.select('id')
-			.where('project_id', projectId)
-			.andWhere('is_deleted', false);
+		const itemGroupIds = await this.knex('item_groups').select('id').where('project_id', projectId).andWhere('is_deleted', false);
 		if (itemGroupIds.length <= 1) {
 			return false;
 		}
@@ -823,10 +700,7 @@ export class TableService {
 		return true;
 	}
 	async deleteProject(projectId: number, userId: number) {
-		const projectIds = await this.knex('projects')
-			.select('id')
-			.where('creator_id', userId)
-			.andWhere('is_deleted', false);
+		const projectIds = await this.knex('projects').select('id').where('creator_id', userId).andWhere('is_deleted', false);
 		if (projectIds.length <= 1) {
 			return false;
 		}
