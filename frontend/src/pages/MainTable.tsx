@@ -3,14 +3,12 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import {
-    addPerson,
     addTransaction,
     deleteItem,
     deleteItemGroup,
     getProjectStatusList,
     getTable,
     insertItem,
-    removePerson,
     removeTransaction,
     renameItem,
     renameType,
