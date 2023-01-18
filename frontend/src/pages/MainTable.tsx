@@ -40,7 +40,6 @@ export function MainTable() {
     const itemGroupsState = useAppSelector((state) => state.table.itemGroups);
     const itemsOrdersState = useAppSelector((state) => state.table.itemsOrders);
     const typesOrdersState = useAppSelector((state) => state.table.typesOrders);
-    const members = useAppSelector((state) => state.table.memberList);
 
     const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
