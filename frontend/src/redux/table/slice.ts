@@ -406,6 +406,13 @@ const deleteItem: CaseReducer<CombinedTableState, PayloadAction<{ groupId: numbe
     const i = state.itemsOrders[groupId].indexOf(itemId);
     state.itemsOrders[groupId].splice(i, 1);
 };
+const deleteGroup: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number }>> = (state, action) => {
+    const groupId = action.payload.groupId;
+    delete state.itemCells[groupId];
+    state.itemGroups = state.itemGroups.filter((each) => each.item_group_id != groupId);
+    delete state.itemsOrders[groupId];
+    delete state.typesOrders[groupId];
+};
 const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
     state.projectList.push(action.payload);
 };
@@ -442,6 +449,7 @@ const tableSlice = createSlice({
         reorderItems,
         reorderTypes,
         deleteItem,
+        deleteGroup,
         getTableList,
         addProject,
         updateTableList,
@@ -472,6 +480,7 @@ export const {
     reorderItems: reorderItemsAction,
     reorderTypes: reorderTypesAction,
     deleteItem: deleteItemAction,
+    deleteGroup: deleteGroupAction,
     getTableList: getTableListAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,

@@ -378,11 +378,11 @@ export function MainTable() {
                 message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
             });
         } else {
-            userId && projectId && dispatch(deleteItem(groupId, itemId, userId, projectId));
+            dispatch(deleteItem(groupId, itemId));
         }
     };
 
-    const onDeleteGroup = (groupId: number) => {
+    const onDeleteGroup = (groupId: number, projectId: number) => {
         toggleDeleteGroupModalSelected(groupId);
         if (Object.keys(itemCellsState).length <= 1) {
             showNotification({
@@ -390,7 +390,7 @@ export function MainTable() {
                 message: 'Failed to delete group! Each project should have at least 1 item group! 🤥'
             });
         } else {
-            userId && projectId && dispatch(deleteItemGroup(groupId, userId, projectId));
+            dispatch(deleteItemGroup(groupId, projectId));
         }
     };
 
@@ -421,7 +421,7 @@ export function MainTable() {
                                         <Modal opened={deleteGroupModalOpened[item_group_id]} onClose={() => toggleDeleteGroupModalSelected(item_group_id)} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
                                             <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
                                             <span className={classes.modalFooter}>
-                                                <Button color='red' onClick={() => onDeleteGroup(item_group_id)}>
+                                                <Button color='red' onClick={() => onDeleteGroup(item_group_id, projectId!)}>
                                                     Delete
                                                 </Button>
                                             </span>
