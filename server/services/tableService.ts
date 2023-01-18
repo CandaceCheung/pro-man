@@ -252,11 +252,16 @@ export class TableService {
 	}
 
 	async updateState(itemId: number, stateId: number) {
+		const [state] = await this.knex('states').select('name', 'color').where('id', stateId);
 		await this.knex('type_status')
 			.update({
 				state_id: stateId
 			})
 			.where('item_id', itemId);
+		return {
+			name: state.name,
+			color: state.color
+		}
 	}
 
 	async insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {

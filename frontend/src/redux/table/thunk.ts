@@ -12,12 +12,25 @@ import {
     addStatusAction,
     MyFavoriteListState,
     setItemCellsAction,
-    setItemGroupsAction
+    setItemGroupsAction,
+    updateItemNameAction,
+    updateTypeNameAction,
+    updateTextAction,
+    updateStateAction,
+    removePersonAction,
+    addPersonAction,
+    addTransactionAction,
+    removeTransactionAction,
+    setItemsOrdersAction,
+    setTypesOrdersAction,
+    reorderItemsAction,
+    reorderTypesAction
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
 import { setActiveProject } from '../project/thunk';
 import { MakeRequest } from '../../utils';
+import { format } from 'date-fns';
 
 export function likeProject(projectId: number, userId: number) {
     return async (dispatch: Dispatch) => {
@@ -62,13 +75,15 @@ export function getTable(userID: number, projectID: number) {
         const result = await res.json();
 
         if (result.success) {
-            dispatch(getTableAction(result.table));     
+            dispatch(getTableAction(result.table));
             dispatch(setItemCellsAction(result.itemCells));
             dispatch(setItemGroupsAction(result.itemGroups));
+            dispatch(setItemsOrdersAction(result.itemsOrders));
+            dispatch(setTypesOrdersAction(result.typesOrders));
         } else {
             showNotification({
                 title: 'Project Table notification',
-                message: "Fail to obtain table information"
+                message: 'Fail to obtain table information'
             });
         }
     };
@@ -92,7 +107,7 @@ export function getTableList(userId: number) {
         } else {
             showNotification({
                 title: 'Project List notification',
-                message: "Fail to obtain projct list information"
+                message: 'Fail to obtain projct list information'
             });
         }
     };
@@ -136,7 +151,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
         } else {
             showNotification({
                 title: 'Data update notification',
-                message: "Fail to update timeline information"
+                message: 'Fail to update timeline information'
             });
         }
     };
@@ -178,7 +193,7 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
         } else {
             showNotification({
                 title: 'Data update notification',
-                message: "Fail to update dateline information"
+                message: 'Fail to update dateline information'
             });
         }
     };
@@ -259,7 +274,7 @@ export function getFavorite(userId: number) {
         } else {
             showNotification({
                 title: 'Favorite projects notification',
-                message: "Fail to obtain favorite project list"
+                message: 'Fail to obtain favorite project list'
             });
         }
     };
@@ -321,9 +336,12 @@ export function insertItemGroup(projectId: number, userId: number) {
     };
 }
 
-export function reorderItems(newOrder: number[], userId: number, projectID: number) {
+export function reorderItems(newOrder: number[], groupId: number, userId: number, projectID: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
+
+        dispatch(reorderItemsAction({ newOrder, groupId }));
+
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemsOrder`, {
             method: 'PUT',
             headers: {
@@ -346,9 +364,12 @@ export function reorderItems(newOrder: number[], userId: number, projectID: numb
     };
 }
 
-export function reorderTypes(newOrder: number[], userId: number, projectID: number) {
+export function reorderTypes(newOrder: number[], groupId: number, userId: number, projectID: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
+
+        dispatch(reorderTypesAction({ newOrder, groupId }));
+
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/typesOrder`, {
             method: 'PUT',
             headers: {
@@ -407,7 +428,7 @@ export function insertNewProject(userId: number) {
     };
 }
 
-export function renameItem(itemId: number, name: string, userId: number, projectId: number) {
+export function renameItem(groupId: number, itemId: number, name: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newItemName`, {
@@ -419,17 +440,18 @@ export function renameItem(itemId: number, name: string, userId: number, project
             body: JSON.stringify({ itemId, name })
         });
         const result = await res.json();
-        if (!result.success) {
+        if (result.success) {
+            dispatch(updateItemNameAction({ groupId, itemId, name }));
+        } else {
             showNotification({
                 title: 'Update data notification',
                 message: 'Failed to rename item! 🤥'
             });
-            dispatch(getTable(userId, projectId));
         }
     };
 }
 
-export function renameType(typeId: number, name: string, userId: number, projectId: number) {
+export function renameType(typeId: number, name: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newTypeName`, {
@@ -441,17 +463,18 @@ export function renameType(typeId: number, name: string, userId: number, project
             body: JSON.stringify({ typeId, name })
         });
         const result = await res.json();
-        if (!result.success) {
+        if (result.success) {
+            dispatch(updateTypeNameAction({ typeId, name }));
+        } else {
             showNotification({
                 title: 'Update data notification',
                 message: 'Failed to rename type! 🤥'
             });
-            dispatch(getTable(userId, projectId));
         }
     };
 }
 
-export function updateText(itemId: number, text: string, userId: number, projectId: number) {
+export function updateText(groupId: number, itemId: number, typeId: number, text: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newText`, {
@@ -463,12 +486,13 @@ export function updateText(itemId: number, text: string, userId: number, project
             body: JSON.stringify({ itemId, text })
         });
         const result = await res.json();
-        if (!result.success) {
+        if (result.success) {
+            dispatch(updateTextAction({ groupId, itemId, typeId, text }));
+        } else {
             showNotification({
                 title: 'Update data notification',
                 message: 'Failed to update text! 🤥'
             });
-            dispatch(getTable(userId, projectId));
         }
     };
 }
@@ -502,7 +526,7 @@ export function newState(projectId: number, name: string, color: string) {
     };
 }
 
-export function updateState(itemId: number, stateId: number, userId: number, projectId: number) {
+export function updateState(groupId: number, itemId: number, stateId: number, typeId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/state`, {
@@ -514,17 +538,20 @@ export function updateState(itemId: number, stateId: number, userId: number, pro
             body: JSON.stringify({ itemId, stateId })
         });
         const result = await res.json();
-        if (!result.success) {
+        if (result.success) {
+            const name = result.name;
+            const color = result.color;
+            dispatch(updateStateAction({ groupId, itemId, typeId, name, color }));
+        } else {
             showNotification({
                 title: 'Update state notification',
                 message: 'Failed to update state! 🤥'
             });
-            dispatch(getTable(userId, projectId));
         }
     };
 }
 
-export function addPerson(itemId: number, personId: number, userId: number, projectId: number, typeId: number) {
+export function addPerson(groupId: number, itemId: number, typeId: number, personId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/person`, {
@@ -536,17 +563,18 @@ export function addPerson(itemId: number, personId: number, userId: number, proj
             body: JSON.stringify({ itemId, personId, typeId })
         });
         const result = await res.json();
-        if (!result.success) {
+        if (result.success) {
+            dispatch(addPersonAction({ groupId, itemId, typeId, personId }));
+        } else {
             showNotification({
                 title: 'Add person notification',
                 message: 'Failed to add person! 🤥'
             });
-            dispatch(getTable(userId, projectId));
         }
     };
 }
 
-export function addTransaction(itemId: number, date: string, cashFlow: number, updateState: (transactionId: number) => void) {
+export function addTransaction(groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
@@ -555,11 +583,11 @@ export function addTransaction(itemId: number, date: string, cashFlow: number, u
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ itemId, date, cashFlow })
+            body: JSON.stringify({ itemId, date: format(date, 'yyyy-MM-dd'), cashFlow })
         });
         const result = await res.json();
         if (result.success) {
-            updateState(result.transactionId);
+            dispatch(addTransactionAction({ groupId, itemId, typeId, transactionId: result.transactionId, date, cashFlow }));
         } else {
             showNotification({
                 title: 'Add transaction notification',
@@ -569,7 +597,7 @@ export function addTransaction(itemId: number, date: string, cashFlow: number, u
     };
 }
 
-export function removePerson(itemId: number, personId: number, userId: number, projectId: number) {
+export function removePerson(groupId: number, itemId: number, typeId: number, personId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/person`, {
@@ -581,17 +609,18 @@ export function removePerson(itemId: number, personId: number, userId: number, p
             body: JSON.stringify({ itemId, personId })
         });
         const result = await res.json();
-        if (!result.success) {
+        if (result.success) {
+            dispatch(removePersonAction({ groupId, itemId, typeId, personId }));
+        } else {
             showNotification({
                 title: 'Delete person notification',
                 message: 'Failed to delete person! 🤥'
             });
-            dispatch(getTable(userId, projectId));
         }
     };
 }
 
-export function removeTransaction(itemId: number, transactionId: number, userId: number, projectId: number) {
+export function removeTransaction(groupId: number, itemId: number, typeId: number, transactionId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
@@ -603,12 +632,13 @@ export function removeTransaction(itemId: number, transactionId: number, userId:
             body: JSON.stringify({ itemId, transactionId })
         });
         const result = await res.json();
-        if (!result.success) {
+        if (result.success) {
+            dispatch(removeTransactionAction({ groupId, itemId, typeId, transactionId }));
+        } else {
             showNotification({
                 title: 'Delete transaction notification',
                 message: 'Failed to delete transaction! 🤥'
             });
-            dispatch(getTable(userId, projectId));
         }
     };
 }

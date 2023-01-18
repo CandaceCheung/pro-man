@@ -79,7 +79,7 @@ function App() {
                 <AppShell navbar={<LeftNavbar />}>
                     <Routes>
                         {routes.map((route) => (
-                            <Route path={route.path} element={route.element} />
+                            <Route path={route.path} element={route.element} key={route.path}/>
                         ))}
                     </Routes>
                 </AppShell>

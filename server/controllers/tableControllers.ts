@@ -35,9 +35,9 @@ export class TableController {
 
 	getTable = async (req: Request, res: Response) => {
 		try {
-			const userID = req.params.userID;
-			const projectID = req.params.projectID;
-			const result = await this.tableService.getTableInfo(parseInt(userID), parseInt(projectID));
+			const userId = req.params.userId;
+			const projectId = req.params.projectId;
+			const result = await this.tableService.getTableInfo(parseInt(userId), parseInt(projectId));
 
 			res.json({
 				success: true,
@@ -51,9 +51,9 @@ export class TableController {
 
 	getTableV2 = async (req: Request, res: Response) => {
 		try {
-			const userID = req.params.userID;
-			const projectID = req.params.projectID;
-			const result = await this.tableService.getTableInfo(parseInt(userID), parseInt(projectID));
+			const userId = req.params.userId;
+			const projectId = req.params.projectId;
+			const result = await this.tableService.getTableInfo(parseInt(userId), parseInt(projectId));
 
 			let itemCells: {
 				[keys in number]: {
@@ -62,11 +62,15 @@ export class TableController {
 			} = {};
 			let itemGroups: itemsGroupElement[] = [];
 
+			let itemsOrders: Record<number, Array<number>> = {};
+			let typesOrders: Record<number, Array<number>> = {};
+			let typesOrderSet: Set<number> = new Set();
+
 			for (const cell of result) {
 				if (cell.project_id) {
-					const itemGroupID = cell.item_group_id;
-					const itemID = cell.item_id;
-					const typeID = cell.horizontal_order_id;
+					const itemGroupId = cell.item_group_id;
+					const itemId = cell.item_id;
+					const typeId = cell.horizontal_order_id;
 					let itemCell: itemCellsElement = {
 						item_id: cell.item_id,
 						item_name: cell.item_name,
@@ -75,66 +79,74 @@ export class TableController {
 						element_name: cell.element_name
 					};
 
-					if (itemCells[itemGroupID]) {
-						if (!itemCells[itemGroupID][itemID]) {
-							itemCells[itemGroupID][itemID] = {};
+					if (itemCells[itemGroupId]) {
+						if (!itemCells[itemGroupId][itemId]) {
+							itemCells[itemGroupId][itemId] = {};
+							itemsOrders[itemGroupId].push(itemId);
 						}
 					} else {
-						itemCells[itemGroupID] = {};
-						itemCells[itemGroupID][itemID] = {};
+						itemCells[itemGroupId] = {};
+						itemCells[itemGroupId][itemId] = {};
 						itemGroups.push({
 							item_group_id: cell.item_group_id,
 							item_group_name: cell.item_group_name
 						});
+						itemsOrders[itemGroupId] = [itemId];
 					}
 
 					switch (cell.type_name) {
 						case 'dates':
 							itemCell['item_dates_datetime'] = cell.item_dates_datetime;
 							itemCell['item_dates_date'] = cell.item_dates_date;
-							itemCells[itemGroupID][itemID][typeID] = itemCell;
+							itemCells[itemGroupId][itemId][typeId] = itemCell;
 							break;
 						case 'money':
-							if (itemCells[itemGroupID][itemID][typeID]) {
-								if (!itemCells[itemGroupID][itemID][typeID]!.transaction_id!.includes(cell.transaction_id)) {
-									itemCells[itemGroupID][itemID][typeID]!.transaction_id!.push(cell.transaction_id);
-									itemCells[itemGroupID][itemID][typeID]!.item_money_cashflow!.push(cell.item_money_cashflow);
-									itemCells[itemGroupID][itemID][typeID]!.item_money_date!.push(cell.item_money_date);
+							if (itemCells[itemGroupId][itemId][typeId]) {
+								if (!itemCells[itemGroupId][itemId][typeId]!.transaction_id!.includes(cell.transaction_id)) {
+									itemCells[itemGroupId][itemId][typeId]!.transaction_id!.push(cell.transaction_id);
+									itemCells[itemGroupId][itemId][typeId]!.item_money_cashflow!.push(cell.item_money_cashflow);
+									itemCells[itemGroupId][itemId][typeId]!.item_money_date!.push(cell.item_money_date);
 								}
 							} else {
 								itemCell['transaction_id'] = [cell.transaction_id];
 								itemCell['item_money_cashflow'] = [cell.item_money_cashflow];
 								itemCell['item_money_date'] = [cell.item_money_date];
-								itemCells[itemGroupID][itemID][typeID] = itemCell;
+								itemCells[itemGroupId][itemId][typeId] = itemCell;
 							}
 							break;
 						case 'persons':
-							if (itemCells[itemGroupID][itemID][typeID]) {
-								if (!itemCells[itemGroupID][itemID][typeID].item_person_user_id!.includes(cell.item_person_user_id)) {
-									itemCells[itemGroupID][itemID][typeID].item_person_user_id!.push(cell.item_person_user_id);
+							if (itemCells[itemGroupId][itemId][typeId]) {
+								if (!itemCells[itemGroupId][itemId][typeId].item_person_user_id!.includes(cell.item_person_user_id)) {
+									itemCells[itemGroupId][itemId][typeId].item_person_user_id!.push(cell.item_person_user_id);
 								}
 							} else {
 								itemCell.item_person_user_id = [cell.item_person_user_id];
-								itemCells[itemGroupID][itemID][typeID] = itemCell;
+								itemCells[itemGroupId][itemId][typeId] = itemCell;
 							}
 							break;
 						case 'status':
 							itemCell['item_status_color'] = cell.item_status_color;
 							itemCell['item_status_name'] = cell.item_status_name;
-							itemCells[itemGroupID][itemID][typeID] = itemCell;
+							itemCells[itemGroupId][itemId][typeId] = itemCell;
 							break;
 						case 'text':
 							itemCell['item_text_text'] = cell.item_text_text;
-							itemCells[itemGroupID][itemID][typeID] = itemCell;
+							itemCells[itemGroupId][itemId][typeId] = itemCell;
 							break;
 						case 'times':
 							itemCell['item_times_start_date'] = cell.item_times_start_date;
 							itemCell['item_times_end_date'] = cell.item_times_end_date;
-							itemCells[itemGroupID][itemID][typeID] = itemCell;
+							itemCells[itemGroupId][itemId][typeId] = itemCell;
 							break;
 						default:
 							break;
 					}
+
+					if (!typesOrders[itemGroupId]) {
+						typesOrderSet = new Set();
+					}
+					typesOrderSet.add(typeId);
+					typesOrders[itemGroupId] = Array.from(typesOrderSet);
 				}
 			}
 
@@ -142,7 +154,9 @@ export class TableController {
 				success: true,
 				table: result,
 				itemCells,
-				itemGroups
+				itemGroups,
+				itemsOrders,
+				typesOrders
 			});
 		} catch (e) {
 			console.error(e);
@@ -152,8 +166,8 @@ export class TableController {
 
 	getTableList = async (req: Request, res: Response) => {
 		try {
-			const userID = req.params.userID;
-			const result = await this.tableService.getTableList(parseInt(userID));
+			const userId = req.params.userId;
+			const result = await this.tableService.getTableList(parseInt(userId));
 
 			res.json({
 				success: true,
@@ -167,8 +181,8 @@ export class TableController {
 
 	getFavorite = async (req: Request, res: Response) => {
 		try {
-			const userID = req.params.userID;
-			const result = await this.tableService.getFavorite(parseInt(userID));
+			const userId = req.params.userId;
+			const result = await this.tableService.getFavorite(parseInt(userId));
 
 			res.json({
 				success: true,
@@ -182,7 +196,7 @@ export class TableController {
 
 	getProjectStatus = async (req: Request, res: Response) => {
 		try {
-			const projectId = req.params.projectID;
+			const projectId = req.params.projectId;
 			const result = await this.tableService.getProjectStatus(parseInt(projectId));
 
 			res.json({
@@ -316,8 +330,12 @@ export class TableController {
 		try {
 			const itemId = req.body.itemId;
 			const stateId = req.body.stateId;
-			await this.tableService.updateState(itemId, stateId);
-			res.json({ success: true });
+			const result = await this.tableService.updateState(itemId, stateId);
+			res.json({ 
+				success: true,
+				name: result.name,
+				color: result.color
+			});
 		} catch (e) {
 			console.error(e);
 			res.status(500).json({ msg: '[TAB] Fail to Update State' });
@@ -367,7 +385,7 @@ export class TableController {
 	};
 	retrieveUserName = async (req: Request, res: Response) => {
 		try {
-			const userId = parseInt(req.params.userID);
+			const userId = parseInt(req.params.userId);
 			const result = await this.tableService.retrieveUserName(userId);
 			res.json({
 				success: !!result,

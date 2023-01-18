@@ -4,16 +4,12 @@ import { tableController } from '../app';
 export const tableRoutes = () => {
 	const tableRoutes = express.Router();
 
-	// compatibility
-	//  V1 => {table: []}
-	//  V2 => {table: [], additioncal: ""}
-
-	tableRoutes.get('/:userID&:projectID', tableController.getTable);
-	tableRoutes.get('/v2/:userID&:projectID', tableController.getTableV2);
-	tableRoutes.get('/favorite/:userID', tableController.getFavorite);
-	tableRoutes.get('/list/:userID', tableController.getTableList);
-	tableRoutes.get('/names/:userID', tableController.retrieveUserName);
-	tableRoutes.get('/status/:projectID', tableController.getProjectStatus);
+	tableRoutes.get('/:userId&:projectId', tableController.getTable);
+	tableRoutes.get('/v2/:userId&:projectId', tableController.getTableV2);
+	tableRoutes.get('/favorite/:userId', tableController.getFavorite);
+	tableRoutes.get('/list/:userId', tableController.getTableList);
+	tableRoutes.get('/names/:userId', tableController.retrieveUserName);
+	tableRoutes.get('/status/:projectId', tableController.getProjectStatus);
 	tableRoutes.put('/favorite', tableController.likeProject);
 	tableRoutes.put('/updateTimeline', tableController.updateTimeline);
 	tableRoutes.put('/updateDateline', tableController.updateDateline);
