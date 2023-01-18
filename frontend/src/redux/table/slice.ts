@@ -1,6 +1,34 @@
 import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { themeObject } from '../../theme';
 
+export type TableMembers = {
+    [keys in number]: TableMember;
+};
+
+export type MyFavoriteListState = {
+    user_id?: number;
+    creator_id?: number;
+    project_id?: number;
+    favorite_id?: number;
+    project_name: string;
+}[];
+
+export type MyTableState = {
+    creator_id?: number;
+    project_id?: number;
+    member_table_id?: number;
+    username: string;
+    project_name: string;
+};
+export interface MyTableListState extends Array<MyTableState> {}
+
+export type StatusListState = {
+    id?: number;
+    name?: string;
+    color?: string;
+};
+export interface StatusListStateArray extends Array<StatusListState> {}
+
 export interface TableState {
     horizontal_order: number | null;
     horizontal_order_id: number;
@@ -82,47 +110,49 @@ export interface TableMember {
     lastName: string | null;
     color?: string;
 }
-export type TableMembers = {
-    [keys in number]: TableMember
-}
-
-export type MyFavoriteListState = {
-    user_id?: number;
-    creator_id?: number;
-    project_id?: number;
-    favorite_id?: number;
-    project_name: string;
-}[];
-
-export type MyTableState = {
-    creator_id?: number;
-    project_id?: number;
-    member_table_id?: number;
-    username: string;
-    project_name: string;
-};
-export interface MyTableListState extends Array<MyTableState> {}
-
-export type StatusListState = {
-    id?: number;
-    name?: string;
-    color?: string;
-};
-export interface StatusListStateArray extends Array<StatusListState> {}
 
 export interface CombinedTableState {
+    memberList: TableMembers;
+    myFavoriteList: MyFavoriteListState;
+    projectList: MyTableListState;
+    statusList: StatusListStateArray;
     summary: TableStateArray;
     itemCells: ItemCells;
     itemGroups: ItemGroup[];
     itemsOrders: ItemsOrders;
     typesOrders: TypesOrders;
-    memberList: TableMembers;
-    myFavoriteList: MyFavoriteListState;
-    projectList: MyTableListState;
-    statusList: StatusListStateArray;
+    itemGroupsCollapsed: boolean[];
+    itemGroupsInputActive: boolean[];
+    itemGroupsInputValue: string[];
 }
 
 const initialState: CombinedTableState = {
+    memberList: [],
+    projectList: [
+        {
+            creator_id: undefined,
+            project_id: undefined,
+            member_table_id: undefined,
+            username: '',
+            project_name: ''
+        }
+    ],
+    myFavoriteList: [
+        {
+            user_id: undefined,
+            creator_id: undefined,
+            project_id: undefined,
+            favorite_id: undefined,
+            project_name: ''
+        }
+    ],
+    statusList: [
+        {
+            id: undefined,
+            name: undefined,
+            color: undefined
+        }
+    ],
     summary: [
         {
             horizontal_order: 0,
@@ -201,32 +231,9 @@ const initialState: CombinedTableState = {
     typesOrders: {
         0: []
     },
-    memberList: [],
-    projectList: [
-        {
-            creator_id: undefined,
-            project_id: undefined,
-            member_table_id: undefined,
-            username: '',
-            project_name: ''
-        }
-    ],
-    myFavoriteList: [
-        {
-            user_id: undefined,
-            creator_id: undefined,
-            project_id: undefined,
-            favorite_id: undefined,
-            project_name: ''
-        }
-    ],
-    statusList: [
-        {
-            id: undefined,
-            name: undefined,
-            color: undefined
-        }
-    ]
+    itemGroupsCollapsed: [],
+    itemGroupsInputActive: [],
+    itemGroupsInputValue: []
 };
 
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> = (state, action) => {
@@ -257,6 +264,22 @@ const setMemberList: CaseReducer<CombinedTableState, PayloadAction<TableMembers>
         i++;
     }
     state.memberList = action.payload;
+};
+
+const setItemGroupsCollapsed: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.itemGroupsCollapsed = Array(action.payload).fill(false);
+};
+
+const setItemGroupsInputActive: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.itemGroupsInputActive = Array(action.payload).fill(false);
+};
+
+const setItemGroupsInputValue: CaseReducer<CombinedTableState, PayloadAction<ItemGroup[]>> = (state, action) => {
+    let temp: string[] = [];
+    action.payload.forEach((each) => {
+        temp.push(each.item_group_name);
+    });
+    state.itemGroupsInputValue = temp;
 };
 
 const updateTimelineItem: CaseReducer<
@@ -365,7 +388,7 @@ const updateState: CaseReducer<CombinedTableState, PayloadAction<{ groupId: numb
     state.itemCells[groupId][itemId][typeId].item_status_name = name;
     state.itemCells[groupId][itemId][typeId].item_status_color = color;
 };
-const removePerson: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, itemId: number, typeId: number, personId: number }>> = (state, action) => {
+const removePerson: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; personId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
@@ -374,7 +397,7 @@ const removePerson: CaseReducer<CombinedTableState, PayloadAction<{ groupId: num
     const i = state.itemCells[groupId][itemId][typeId].item_person_user_id!.indexOf(personId);
     state.itemCells[groupId][itemId][typeId].item_person_user_id!.splice(i, 1);
 };
-const addPerson: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, itemId: number, typeId: number, personId: number }>> = (state, action) => {
+const addPerson: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; personId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
@@ -382,7 +405,7 @@ const addPerson: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number
 
     state.itemCells[groupId][itemId][typeId].item_person_user_id!.push(personId);
 };
-const addTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, itemId: number, typeId: number, transactionId: number, date: Date, cashFlow: number }>> = (state, action) => {
+const addTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; transactionId: number; date: Date; cashFlow: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
@@ -402,7 +425,7 @@ const addTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: n
         state.itemCells[groupId][itemId][typeId].item_money_date!.push(date.toISOString());
     });
 };
-const removeTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, itemId: number, typeId: number, transactionId: number }>> = (state, action) => {
+const removeTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; transactionId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
@@ -411,13 +434,13 @@ const removeTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId
     const i = state.itemCells[groupId][itemId][typeId].transaction_id!.indexOf(transactionId);
     state.itemCells[groupId][itemId][typeId].transaction_id!.splice(i, 1);
 };
-const reorderItems: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: number[], groupId: number }>> = (state, action) => {
+const reorderItems: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: number[]; groupId: number }>> = (state, action) => {
     state.itemsOrders[action.payload.groupId] = action.payload.newOrder;
 };
-const reorderTypes: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: number[], groupId: number }>> = (state, action) => {
+const reorderTypes: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: number[]; groupId: number }>> = (state, action) => {
     state.typesOrders[action.payload.groupId] = action.payload.newOrder;
 };
-const deleteItem: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, itemId: number }>> = (state, action) => {
+const deleteItem: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     delete state.itemCells[groupId][itemId];
@@ -430,6 +453,22 @@ const deleteGroup: CaseReducer<CombinedTableState, PayloadAction<{ groupId: numb
     state.itemGroups = state.itemGroups.filter((each) => each.item_group_id != groupId);
     delete state.itemsOrders[groupId];
     delete state.typesOrders[groupId];
+};
+const toggleItemGroupsCollapsed: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.itemGroupsCollapsed[action.payload] = !state.itemGroupsCollapsed[action.payload];
+};
+const selectItemGroupInput: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.itemGroupsInputActive[action.payload] = true;
+};
+const deselectItemGroupInput: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.itemGroupsInputActive[action.payload] = false;
+};
+const changeItemGroupInputValue: CaseReducer<CombinedTableState, PayloadAction<{ index: number; value: string }>> = (state, action) => {
+    state.itemGroupsInputValue[action.payload.index] = action.payload.value;
+};
+const resetItemGroupInputValue: CaseReducer<CombinedTableState, PayloadAction<{ index: number; originalValue: string }>> = (state, action) => {
+    state.itemGroupsInputValue[action.payload.index] = action.payload.originalValue;
+    state.itemGroups[action.payload.index].item_group_name = action.payload.originalValue;
 };
 const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
     state.projectList.push(action.payload);
@@ -452,9 +491,13 @@ const tableSlice = createSlice({
         setItemsOrders,
         setTypesOrders,
         setMemberList,
+        setItemGroupsCollapsed,
+        setItemGroupsInputActive,
+        setItemGroupsInputValue,
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
+        getTableList,
         getStatusList,
         updateItemGroupName,
         updateItemName,
@@ -469,7 +512,11 @@ const tableSlice = createSlice({
         reorderTypes,
         deleteItem,
         deleteGroup,
-        getTableList,
+        toggleItemGroupsCollapsed,
+        selectItemGroupInput,
+        deselectItemGroupInput,
+        changeItemGroupInputValue,
+        resetItemGroupInputValue,
         addProject,
         updateTableList,
         renameProjectInTableList,
@@ -484,9 +531,13 @@ export const {
     setItemsOrders: setItemsOrdersAction,
     setTypesOrders: setTypesOrdersAction,
     setMemberList: setMemberListAction,
+    setItemGroupsCollapsed: setItemGroupsCollapsedAction,
+    setItemGroupsInputActive: setItemGroupsInputActiveAction,
+    setItemGroupsInputValue: setItemGroupsInputValueAction,
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
+    getTableList: getTableListAction,
     getStatusList: getStatusListAction,
     updateItemGroupName: updateItemGroupNameAction,
     updateItemName: updateItemNameAction,
@@ -501,7 +552,11 @@ export const {
     reorderTypes: reorderTypesAction,
     deleteItem: deleteItemAction,
     deleteGroup: deleteGroupAction,
-    getTableList: getTableListAction,
+    toggleItemGroupsCollapsed: toggleItemGroupsCollapsedAction,
+    selectItemGroupInput: selectItemGroupInputAction,
+    deselectItemGroupInput: deselectItemGroupInputAction,
+    changeItemGroupInputValue: changeItemGroupInputValueAction,
+    resetItemGroupInputValue: resetItemGroupInputValueAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
     renameProjectInTableList: renameProjectInTableListAction,

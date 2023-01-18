@@ -27,7 +27,11 @@ import {
     reorderTypesAction,
     deleteItemAction,
     deleteGroupAction,
-    setMemberListAction
+    setMemberListAction,
+    setItemGroupsCollapsedAction,
+    setItemGroupsInputActiveAction,
+    setItemGroupsInputValueAction,
+    resetItemGroupInputValueAction
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -84,6 +88,9 @@ export function getTable(userID: number, projectID: number) {
             dispatch(setItemsOrdersAction(result.itemsOrders));
             dispatch(setTypesOrdersAction(result.typesOrders));
             dispatch(setMemberListAction(result.memberList));
+            dispatch(setItemGroupsCollapsedAction(result.itemGroups.length));
+            dispatch(setItemGroupsInputActiveAction(result.itemGroups.length));
+            dispatch(setItemGroupsInputValueAction(result.itemGroups));
         } else {
             showNotification({
                 title: 'Project Table notification',
@@ -224,9 +231,11 @@ export function getProjectStatusList(projectId: number) {
     };
 }
 
-export function updateItemGroupName(itemGroupId: number, itemGroupName: string, userId: number, projectID: number) {
+export function updateItemGroupName(itemGroupId: number, itemGroupName: string, index: number, originalValue: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
+        // Update frontend first to improve user experience
+        dispatch(updateItemGroupNameAction({ itemGroupId, itemGroupName }));
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemGroupName`, {
             method: 'PUT',
             headers: {
@@ -239,15 +248,13 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
             })
         });
         let result = await res.json();
-
-        if (result.success) {
-            dispatch(updateItemGroupNameAction({ itemGroupId, itemGroupName }));
-        } else {
+        // If not successful, revert the frontend
+        if (!result.success) {
             showNotification({
                 title: 'Data update notification',
                 message: 'Failed to update group item name! 🤥'
             });
-            dispatch(getTable(userId, projectID));
+            dispatch(resetItemGroupInputValueAction({index, originalValue}));
         }
     };
 }

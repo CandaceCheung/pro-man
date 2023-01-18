@@ -29,7 +29,7 @@ import { Button, Modal, ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
-import { ItemCell, ItemGroup } from '../redux/table/slice';
+import { changeItemGroupInputValueAction, deselectItemGroupInputAction, ItemCell, ItemGroup, resetItemGroupInputValueAction, selectItemGroupInputAction, toggleItemGroupsCollapsedAction } from '../redux/table/slice';
 
 export function MainTable() {
     const userId = useAppSelector((state) => state.auth.userId);
@@ -40,10 +40,9 @@ export function MainTable() {
     const itemGroupsState = useAppSelector((state) => state.table.itemGroups);
     const itemsOrdersState = useAppSelector((state) => state.table.itemsOrders);
     const typesOrdersState = useAppSelector((state) => state.table.typesOrders);
-
-    const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
-    const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
-    const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
+    const itemGroupsCollapsed = useAppSelector((state) => state.table.itemGroupsCollapsed);
+    const itemGroupsInputActive = useAppSelector((state) => state.table.itemGroupsInputActive);
+    const itemGroupsInputValue = useAppSelector((state) => state.table.itemGroupsInputValue);
 
     const [newItemInputSelected, setNewItemInputSelected] = useState<Record<number, boolean>>({});
     const [newItemInputValue, setNewItemInputValue] = useState<Record<number, string>>({});
@@ -56,9 +55,11 @@ export function MainTable() {
     const sensors = useSensors(useSensor(SmartPointerSensor));
 
     useEffect(() => {
-        projectId && dispatch(getMember(projectId));
-        projectId && dispatch(getProjectStatusList(projectId));
-        userId && projectId && dispatch(getTable(userId, projectId));
+        if (projectId) {
+            dispatch(getMember(projectId));
+            dispatch(getProjectStatusList(projectId));
+            dispatch(getTable(userId!, projectId));
+        }
     }, [userId, projectId, dispatch]);
 
     useEffect(() => {
@@ -187,56 +188,29 @@ export function MainTable() {
             personsColorsTemp[id] = theme.colors.personsTypeComponentColor[index % theme.colors.personsTypeComponentColor.length];
         });
 
-        setItemGroupCollapsedState(itemGroupsCollapsed);
-        setItemGroupsInputSelectState(itemGroupsInputSelected);
-        setItemGroupsInputValueState(itemGroupsInputValue);
-
         setNewItemInputSelected(newItemInputSelectedTemp);
         setNewItemInputValue(newItemInputValueTemp);
 
         setDeleteGroupModalOpened(deleteGroupModalOpenedTemp);
     }, [tableSummary, projectId, theme.colors.personsTypeComponentColor]);
 
-    const toggleItemGroupCollapsed = (index: number) => {
-        const newItemGroupsCollapsedState = produce(itemGroupsCollapsedState, (draftState) => {
-            draftState[index] = !draftState[index];
-        });
-        setItemGroupCollapsedState(newItemGroupsCollapsedState);
-    };
-
-    const selectItemGroupInput = (index: number) => {
-        const newItemGroupsInputSelectState = produce(itemGroupsInputSelectState, (draftState) => {
-            draftState[index] = true;
-        });
-        setItemGroupsInputSelectState(newItemGroupsInputSelectState);
-    };
-
     const changeItemGroupInputValue = (index: number, value: string) => {
-        const newItemGroupsInputValueState = produce(itemGroupsInputValueState, (draftState) => {
-            draftState[index] = value;
-        });
-        setItemGroupsInputValueState(newItemGroupsInputValueState);
+        dispatch(changeItemGroupInputValueAction({index, value}));
     };
 
     const deselectItemGroupInput = (index: number) => {
         if (userId && projectId) {
-            const newItemGroupsInputSelectState = produce(itemGroupsInputSelectState, (draftState) => {
-                draftState[index] = false;
-            });
-            setItemGroupsInputSelectState(newItemGroupsInputSelectState);
-
-            if (itemGroupsInputValueState[index] !== itemGroupsState[index].item_group_name) {
-                if (itemGroupsInputValueState[index].length) {
+            if (itemGroupsInputValue[index] !== itemGroupsState[index].item_group_name) {
+                const originalValue = itemGroupsState[index].item_group_name;
+                if (itemGroupsInputValue[index].length) {
                     // Fetch to the server
-                    dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, itemGroupsInputValueState[index], userId, projectId));
+                    dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, itemGroupsInputValue[index], index, originalValue));
                 } else {
-                    const newItemGroupsInputValueState = produce(itemGroupsInputValueState, (draftState) => {
-                        draftState[index] = itemGroupsState[index].item_group_name;
-                    });
-                    setItemGroupsInputValueState(newItemGroupsInputValueState);
+                    dispatch(resetItemGroupInputValueAction({index, originalValue}));
                 }
             }
         }
+        dispatch(deselectItemGroupInputAction(index));
     };
 
     const handleItemGroupInputKeyDown = (index: number, key: string) => {
@@ -385,11 +359,11 @@ export function MainTable() {
                                             </span>
                                         </Modal>
 
-                                        <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} className={classes.hovertext} data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? 'Expand' : 'Collapse'} key={itemGroupArrayIndex}>
-                                            {<ItemGroupCollapser size={20} className={itemGroupsCollapsedState[itemGroupArrayIndex] ? '' : classes.collapserButton} />}
+                                        <span onClick={() => dispatch(toggleItemGroupsCollapsedAction(itemGroupArrayIndex))} className={classes.hovertext} data-hover={itemGroupsCollapsed[itemGroupArrayIndex] ? 'Expand' : 'Collapse'} key={itemGroupArrayIndex}>
+                                            {<ItemGroupCollapser size={20} className={itemGroupsCollapsed[itemGroupArrayIndex] ? '' : classes.collapserButton} />}
                                         </span>
                                         <span className={classes.itemCount}>
-                                            {itemGroupsInputSelectState[itemGroupArrayIndex] ? (
+                                            {itemGroupsInputActive[itemGroupArrayIndex] ? (
                                                 <input
                                                     onBlur={() => deselectItemGroupInput(itemGroupArrayIndex)}
                                                     type='text'
@@ -398,13 +372,13 @@ export function MainTable() {
                                                     style={{
                                                         borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
                                                     }}
-                                                    value={itemGroupsInputValueState[itemGroupArrayIndex]}
+                                                    value={itemGroupsInputValue[itemGroupArrayIndex]}
                                                     onChange={(e) => changeItemGroupInputValue(itemGroupArrayIndex, e.target.value)}
                                                     onKeyDown={(e) => handleItemGroupInputKeyDown(itemGroupArrayIndex, e.key)}
                                                 ></input>
                                             ) : (
                                                 <span
-                                                    onClick={() => selectItemGroupInput(itemGroupArrayIndex)}
+                                                    onClick={() => dispatch(selectItemGroupInputAction(itemGroupArrayIndex))}
                                                     className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
                                                     data-hover='Click to edit'
                                                     item-count={itemsOrdersState[item_group_id].length ? itemsOrdersState[item_group_id].length + ' item' + `${itemsOrdersState[item_group_id].length === 1 ? '' : 's'}` : 'No items'}
@@ -414,7 +388,7 @@ export function MainTable() {
                                             )}
                                         </span>
                                     </div>
-                                    {!itemGroupsCollapsedState[itemGroupArrayIndex] && (
+                                    {!itemGroupsCollapsed[itemGroupArrayIndex] && (
                                         <div>
                                             <div id={`table_group_${item_group_id}`} className={classes.tableGroup}>
                                                 <div className={classes.tableHead}>
