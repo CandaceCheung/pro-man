@@ -1,9 +1,10 @@
 import { TableService } from '../services/tableService';
 import { Request, Response } from 'express';
 import { itemCellsElement, itemsGroupElement } from '../model';
+import { KanbanService } from '../services/KanbanService';
 
 export class TableController {
-	constructor(private tableService: TableService) {}
+	constructor(private tableService: TableService, private kanbanService: KanbanService) {}
 
 	likeProject = async (req: Request, res: Response) => {
 		try {
@@ -55,6 +56,8 @@ export class TableController {
 			const projectId = req.params.projectId;
 			const result = await this.tableService.getTableInfo(parseInt(userId), parseInt(projectId));
 
+			const memberResult = await this.kanbanService.getMemberList(parseInt(projectId));
+			
 			let itemCells: {
 				[keys in number]: {
 					[keys in number]: { [keys in number]: itemCellsElement };
@@ -156,7 +159,8 @@ export class TableController {
 				itemCells,
 				itemGroups,
 				itemsOrders,
-				typesOrders
+				typesOrders,
+				memberList: memberResult
 			});
 		} catch (e) {
 			console.error(e);

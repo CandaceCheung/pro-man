@@ -26,7 +26,8 @@ import {
     reorderItemsAction,
     reorderTypesAction,
     deleteItemAction,
-    deleteGroupAction
+    deleteGroupAction,
+    setMemberListAction
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -82,6 +83,7 @@ export function getTable(userID: number, projectID: number) {
             dispatch(setItemGroupsAction(result.itemGroups));
             dispatch(setItemsOrdersAction(result.itemsOrders));
             dispatch(setTypesOrdersAction(result.typesOrders));
+            dispatch(setMemberListAction(result.memberList));
         } else {
             showNotification({
                 title: 'Project Table notification',

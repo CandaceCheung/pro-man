@@ -34,26 +34,19 @@ export const knex = Knex(knexConfig[configMode]);
 const app = express();
 
 export const authService = new AuthService(knex);
-export const authController = new AuthController(authService);
-
 export const tableService = new TableService(knex);
-export const tableController = new TableController(tableService);
-
 export const kanbanService = new KanbanService(knex);
-export const kanbanController = new KanbanController(kanbanService);
-
 export const invitationService = new InvitationService(knex);
-export const invitationController = new InvitationController(invitationService);
-
 export const notificationService = new NotificationService(knex);
-export const notificationController = new NotificationController(
-	notificationService
-);
-
 export const profileService = new ProfileService(knex);
-export const profileController = new ProfileController(profileService);
-
 export const memberService = new MemberService(knex);
+
+export const authController = new AuthController(authService);
+export const tableController = new TableController(tableService, kanbanService);
+export const kanbanController = new KanbanController(kanbanService);
+export const invitationController = new InvitationController(invitationService);
+export const notificationController = new NotificationController(notificationService);
+export const profileController = new ProfileController(profileService);
 export const memberController = new MemberController(memberService);
 
 app.use(express.json(), cors());

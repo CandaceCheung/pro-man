@@ -1,7 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
-import { itemCellsElement, itemsGroupElement, TableState } from '../redux/table/slice';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import {
     addPerson,
@@ -32,6 +31,7 @@ import { Button, Modal, ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
+import { ItemCell, ItemGroup } from '../redux/table/slice';
 
 export interface MembersFullName {
     username: string;
@@ -89,10 +89,10 @@ export function MainTable() {
     useEffect(() => {
         let itemCells: {
             [keys in number]: {
-                [keys in number]: { [keys in number]: itemCellsElement };
+                [keys in number]: { [keys in number]: ItemCell };
             };
         } = {};
-        let itemGroups: itemsGroupElement[] = [];
+        let itemGroups: ItemGroup[] = [];
         let itemGroupsCollapsed: boolean[] = [];
         let itemGroupsInputSelected: boolean[] = [];
         let itemGroupsInputValue: string[] = [];
@@ -113,7 +113,7 @@ export function MainTable() {
                 const itemGroupId = cell.item_group_id;
                 const itemId = cell.item_id;
                 const typeId = cell.horizontal_order_id;
-                let itemCell: itemCellsElement = {
+                let itemCell: ItemCell = {
                     item_id: cell.item_id,
                     item_name: cell.item_name,
                     type_id: cell.horizontal_order_id,

@@ -12,13 +12,13 @@ import { Item } from './TableCellsComponents/Item';
 import { IconX } from '@tabler/icons';
 import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
-import { itemCellsElement } from '../../redux/table/slice';
+import { ItemCell } from '../../redux/table/slice';
 
 export interface TableRowProps {
     itemId: number;
     groupId: number;
     typeOrder: number[];
-    cellDetails: { [key in number]: itemCellsElement };
+    cellDetails: { [key in number]: ItemCell };
     color: string;
     lastRow: boolean;
     personsColors: { [key in number]: string };
@@ -62,7 +62,7 @@ export function TableRow({
         transition
     };
 
-    const retrieveCellData = (cell: itemCellsElement, cellIndex: number): JSX.Element => {
+    const retrieveCellData = (cell: ItemCell, cellIndex: number): JSX.Element => {
         switch (cell.type_name) {
             case 'persons':
                 return (

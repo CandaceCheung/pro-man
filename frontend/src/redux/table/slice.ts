@@ -1,4 +1,5 @@
 import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { themeObject } from '../../theme';
 
 export interface TableState {
     horizontal_order: number | null;
@@ -40,8 +41,9 @@ export interface TableState {
     type_name: 'persons' | 'dates' | 'times' | 'money' | 'status' | 'text';
     element_name: string;
 }
+export interface TableStateArray extends Array<TableState> {}
 
-export interface itemCellsElement {
+export interface ItemCell {
     item_id: TableState['item_id'];
     item_name: TableState['item_name'];
     type_id: TableState['horizontal_order_id'];
@@ -59,10 +61,27 @@ export interface itemCellsElement {
     item_times_start_date?: TableState['item_times_start_date'];
     item_times_end_date?: TableState['item_times_end_date'];
 }
+export type ItemCells = {
+    [keys in number]: {
+        [keys in number]: { [keys in number]: ItemCell };
+    };
+};
 
-export interface itemsGroupElement {
+export interface ItemGroup {
     item_group_id: TableState['item_group_id'];
     item_group_name: TableState['item_group_name'];
+}
+
+export type ItemsOrders = Record<number, Array<number>>;
+
+export type TypesOrders = Record<number, Array<number>>;
+
+export interface TableMember {
+    id: number;
+    username: string;
+    firstName: string | null;
+    lastName: string | null;
+    color?: string;
 }
 
 export type MyFavoriteListState = {
@@ -80,36 +99,22 @@ export type MyTableState = {
     username: string;
     project_name: string;
 };
+export interface MyTableListState extends Array<MyTableState> {}
 
 export type StatusListState = {
     id?: number;
     name?: string;
     color?: string;
 };
-
-export interface MyTableListState extends Array<MyTableState> {}
-
-export interface TableStateArray extends Array<TableState> {}
-
-export type itemCells = {
-    [keys in number]: {
-        [keys in number]: { [keys in number]: itemCellsElement };
-    };
-};
-
-export type itemsOrders = Record<number, Array<number>>;
-export type typesOrders = Record<number, Array<number>>;
-
-export interface itemGroups extends Array<itemsGroupElement> {}
-
 export interface StatusListStateArray extends Array<StatusListState> {}
 
 export interface CombinedTableState {
     summary: TableStateArray;
-    itemCells: itemCells;
-    itemGroups: itemGroups;
-    itemsOrders: itemsOrders;
-    typesOrders: typesOrders;
+    itemCells: ItemCells;
+    itemGroups: ItemGroup[];
+    itemsOrders: ItemsOrders;
+    typesOrders: TypesOrders;
+    memberList: TableMember[];
     myFavoriteList: MyFavoriteListState;
     projectList: MyTableListState;
     statusList: StatusListStateArray;
@@ -194,6 +199,7 @@ const initialState: CombinedTableState = {
     typesOrders: {
         0: []
     },
+    memberList: [],
     projectList: [
         {
             creator_id: undefined,
@@ -225,20 +231,28 @@ const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> 
     state.summary = action.payload;
 };
 
-const setItemCells: CaseReducer<CombinedTableState, PayloadAction<itemCells>> = (state, action) => {
+const setItemCells: CaseReducer<CombinedTableState, PayloadAction<ItemCells>> = (state, action) => {
     state.itemCells = action.payload;
 };
 
-const setItemGroups: CaseReducer<CombinedTableState, PayloadAction<itemGroups>> = (state, action) => {
+const setItemGroups: CaseReducer<CombinedTableState, PayloadAction<ItemGroup[]>> = (state, action) => {
     state.itemGroups = action.payload;
 };
 
-const setItemsOrders: CaseReducer<CombinedTableState, PayloadAction<itemsOrders>> = (state, action) => {
+const setItemsOrders: CaseReducer<CombinedTableState, PayloadAction<ItemsOrders>> = (state, action) => {
     state.itemsOrders = action.payload;
 };
 
-const setTypesOrders: CaseReducer<CombinedTableState, PayloadAction<typesOrders>> = (state, action) => {
+const setTypesOrders: CaseReducer<CombinedTableState, PayloadAction<TypesOrders>> = (state, action) => {
     state.typesOrders = action.payload;
+};
+
+const setMemberList: CaseReducer<CombinedTableState, PayloadAction<TableMember[]>> = (state, action) => {
+    const colors = themeObject.colors!.personsTypeComponentColor!;
+    for (let i in action.payload) {
+        action.payload[i].color = colors[parseInt(i) % colors.length];
+    }
+    state.memberList = action.payload;
 };
 
 const updateTimelineItem: CaseReducer<
@@ -433,6 +447,7 @@ const tableSlice = createSlice({
         setItemGroups,
         setItemsOrders,
         setTypesOrders,
+        setMemberList,
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
@@ -464,6 +479,7 @@ export const {
     setItemGroups: setItemGroupsAction,
     setItemsOrders: setItemsOrdersAction,
     setTypesOrders: setTypesOrdersAction,
+    setMemberList: setMemberListAction,
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
