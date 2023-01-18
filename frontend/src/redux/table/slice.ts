@@ -77,11 +77,13 @@ export type ItemsOrders = Record<number, Array<number>>;
 export type TypesOrders = Record<number, Array<number>>;
 
 export interface TableMember {
-    id: number;
     username: string;
     firstName: string | null;
     lastName: string | null;
     color?: string;
+}
+export type TableMembers = {
+    [keys in number]: TableMember
 }
 
 export type MyFavoriteListState = {
@@ -114,7 +116,7 @@ export interface CombinedTableState {
     itemGroups: ItemGroup[];
     itemsOrders: ItemsOrders;
     typesOrders: TypesOrders;
-    memberList: TableMember[];
+    memberList: TableMembers;
     myFavoriteList: MyFavoriteListState;
     projectList: MyTableListState;
     statusList: StatusListStateArray;
@@ -247,10 +249,12 @@ const setTypesOrders: CaseReducer<CombinedTableState, PayloadAction<TypesOrders>
     state.typesOrders = action.payload;
 };
 
-const setMemberList: CaseReducer<CombinedTableState, PayloadAction<TableMember[]>> = (state, action) => {
+const setMemberList: CaseReducer<CombinedTableState, PayloadAction<TableMembers>> = (state, action) => {
     const colors = themeObject.colors!.personsTypeComponentColor!;
-    for (let i in action.payload) {
-        action.payload[i].color = colors[parseInt(i) % colors.length];
+    let i = 0;
+    for (let id of Object.keys(action.payload)) {
+        action.payload[parseInt(id)].color = colors[i % colors.length];
+        i++;
     }
     state.memberList = action.payload;
 };

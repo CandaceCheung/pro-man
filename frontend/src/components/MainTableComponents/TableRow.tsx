@@ -1,6 +1,5 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { MembersFullName } from '../../pages/MainTable';
 import { Persons } from './TableCellsComponents/Persons';
 import { useStyles } from './styles';
 import { TextCell } from './TableCellsComponents/Text';
@@ -21,13 +20,9 @@ export interface TableRowProps {
     cellDetails: { [key in number]: ItemCell };
     color: string;
     lastRow: boolean;
-    personsColors: { [key in number]: string };
-    membersFullName: Record<number, MembersFullName>;
     onItemRename: (groupId: number, itemId: number, name: string) => void;
     onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void;
     onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void;
-    onRemovePerson: (groupId: number, itemId: number, typeId: number, personId: number) => void;
-    onAddPerson: (groupId: number, itemId: number, typeId: number, personId: number) => void;
     onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void;
     onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void;
     onDeleteItem: (groupId: number, itemId: number) => void;
@@ -40,13 +35,9 @@ export function TableRow({
     cellDetails,
     color,
     lastRow,
-    personsColors,
-    membersFullName,
     onItemRename,
     onTextChange,
     onStatusChange,
-    onRemovePerson,
-    onAddPerson,
     onAddTransaction,
     onDeleteTransaction,
     onDeleteItem
@@ -71,11 +62,6 @@ export function TableRow({
                             groupId={groupId}
                             itemId={itemId}
                             typeId={cell.type_id}
-                            itemPersonsIds={cell.item_person_user_id!}
-                            personsColors={personsColors}
-                            membersFullName={membersFullName}
-                            onRemovePerson={onRemovePerson}
-                            onAddPerson={onAddPerson}
                         />
                     </div>
                 );

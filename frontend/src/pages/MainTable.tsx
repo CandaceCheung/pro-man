@@ -33,12 +33,6 @@ import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
 import { ItemCell, ItemGroup } from '../redux/table/slice';
 
-export interface MembersFullName {
-    username: string;
-    firstName: string | null;
-    lastName: string | null;
-}
-
 export function MainTable() {
     const userId = useAppSelector((state) => state.auth.userId);
     const projectId = useAppSelector((state) => state.project.project_id);
@@ -48,15 +42,11 @@ export function MainTable() {
     const itemGroupsState = useAppSelector((state) => state.table.itemGroups);
     const itemsOrdersState = useAppSelector((state) => state.table.itemsOrders);
     const typesOrdersState = useAppSelector((state) => state.table.typesOrders);
-
-    const members = useAppSelector((state) => state.kanban.memberList);
+    const members = useAppSelector((state) => state.table.memberList);
 
     const [itemGroupsCollapsedState, setItemGroupCollapsedState] = useState<boolean[]>([]);
     const [itemGroupsInputSelectState, setItemGroupsInputSelectState] = useState<boolean[]>([]);
     const [itemGroupsInputValueState, setItemGroupsInputValueState] = useState<string[]>([]);
-
-    const [membersFullName, setMembersFullName] = useState<Record<number, MembersFullName>>({});
-    const [personsColors, setPersonsColors] = useState<Record<number, string>>({});
 
     const [newItemInputSelected, setNewItemInputSelected] = useState<Record<number, boolean>>({});
     const [newItemInputValue, setNewItemInputValue] = useState<Record<number, string>>({});
@@ -73,18 +63,6 @@ export function MainTable() {
         projectId && dispatch(getProjectStatusList(projectId));
         userId && projectId && dispatch(getTable(userId, projectId));
     }, [userId, projectId, dispatch]);
-
-    useEffect(() => {
-        const membersFullNameTemp: Record<number, MembersFullName> = {};
-        members.forEach((member) => {
-            membersFullNameTemp[member.id] = {
-                username: member.username,
-                firstName: member.firstName,
-                lastName: member.lastName
-            };
-        });
-        setMembersFullName(membersFullNameTemp);
-    }, [members]);
 
     useEffect(() => {
         let itemCells: {
@@ -216,8 +194,6 @@ export function MainTable() {
         setItemGroupsInputSelectState(itemGroupsInputSelected);
         setItemGroupsInputValueState(itemGroupsInputValue);
 
-        setPersonsColors(personsColorsTemp);
-
         setNewItemInputSelected(newItemInputSelectedTemp);
         setNewItemInputValue(newItemInputValueTemp);
 
@@ -304,21 +280,6 @@ export function MainTable() {
 
     const onStatusChange = (groupId: number, itemId: number, stateId: number, typeId: number) => {
         dispatch(updateState(groupId, itemId, stateId, typeId));
-    };
-
-    const onRemovePerson = (groupId: number, itemId: number, typeId: number, personId: number) => {
-        if (itemCellsState[groupId][itemId][typeId].item_person_user_id!.length <= 1) {
-            showNotification({
-                title: 'Delete person notification',
-                message: 'Failed to delete person! At least one person is required for items! 🤥'
-            });
-        } else {
-            dispatch(removePerson(groupId, itemId, typeId, personId));
-        }
-    };
-
-    const onAddPerson = (groupId: number, itemId: number, typeId: number, personId: number) => {
-        dispatch(addPerson(groupId, itemId, typeId, personId));
     };
 
     const onAddTransaction = (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => {
@@ -494,13 +455,9 @@ export function MainTable() {
                                                                     cellDetails={itemCellsState[item_group_id][itemId]}
                                                                     color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
                                                                     lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
-                                                                    personsColors={personsColors}
-                                                                    membersFullName={membersFullName}
                                                                     onItemRename={onItemRename}
                                                                     onTextChange={onTextChange}
                                                                     onStatusChange={onStatusChange}
-                                                                    onRemovePerson={onRemovePerson}
-                                                                    onAddPerson={onAddPerson}
                                                                     onAddTransaction={onAddTransaction}
                                                                     onDeleteTransaction={onDeleteTransaction}
                                                                     onDeleteItem={onDeleteItem}

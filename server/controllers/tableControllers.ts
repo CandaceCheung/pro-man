@@ -57,6 +57,14 @@ export class TableController {
 			const result = await this.tableService.getTableInfo(parseInt(userId), parseInt(projectId));
 
 			const memberResult = await this.kanbanService.getMemberList(parseInt(projectId));
+			let memberList = {};
+			memberResult.forEach((member) => {
+				memberList[member.id] = {
+					username: member.username,
+					firstName: member.firstName,
+					lastName: member.lastName
+				}
+			})
 			
 			let itemCells: {
 				[keys in number]: {
@@ -160,7 +168,7 @@ export class TableController {
 				itemGroups,
 				itemsOrders,
 				typesOrders,
-				memberList: memberResult
+				memberList
 			});
 		} catch (e) {
 			console.error(e);
