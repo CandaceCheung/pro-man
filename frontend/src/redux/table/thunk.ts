@@ -24,7 +24,8 @@ import {
     setItemsOrdersAction,
     setTypesOrdersAction,
     reorderItemsAction,
-    reorderTypesAction
+    reorderTypesAction,
+    deleteItemAction
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -339,7 +340,6 @@ export function insertItemGroup(projectId: number, userId: number) {
 export function reorderItems(newOrder: number[], groupId: number, userId: number, projectID: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-
         dispatch(reorderItemsAction({ newOrder, groupId }));
 
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemsOrder`, {
@@ -656,7 +656,7 @@ export function deleteItem(groupId: number, itemId: number, userId: number, proj
         });
         const result = await res.json();
         if (result.success) {
-            dispatch(getTable(userId, projectId));
+            dispatch(deleteItemAction({ groupId, itemId }));
             showNotification({
                 title: 'Delete item notification',
                 message: 'Successfully deleted item! 😎'

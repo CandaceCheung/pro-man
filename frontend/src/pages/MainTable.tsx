@@ -395,149 +395,154 @@ export function MainTable() {
     };
 
     return (
-        <ScrollArea
-            style={{
-                width: 'calc(100vw - 140px)',
-                height: 'calc(100vh - 160px)'
-            }}
-            type='auto'
-        >
-            <div className='main-table'>
-                {itemGroupsState.map(({ item_group_id, item_group_name }, itemGroupArrayIndex) => {
-                    return (
-                        <div className={classes.itemGroup} key={itemGroupArrayIndex}>
-                            <div
-                                className={classes.itemGroupBar}
-                                style={{
-                                    color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
-                                }}
-                            >
-                                <span className={classes.itemGroupIcon} onClick={() => toggleDeleteGroupModalSelected(item_group_id)}>
-                                    <IconX size={16} />
-                                </span>
-                                <Modal opened={deleteGroupModalOpened[item_group_id]} onClose={() => toggleDeleteGroupModalSelected(item_group_id)} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
-                                    <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
-                                    <span className={classes.modalFooter}>
-                                        <Button color='red' onClick={() => onDeleteGroup(item_group_id)}>
-                                            Delete
-                                        </Button>
-                                    </span>
-                                </Modal>
-
-                                <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} className={classes.hovertext} data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? 'Expand' : 'Collapse'} key={itemGroupArrayIndex}>
-                                    {<ItemGroupCollapser size={20} className={itemGroupsCollapsedState[itemGroupArrayIndex] ? '' : classes.collapserButton} />}
-                                </span>
-                                <span className={classes.itemCount}>
-                                    {itemGroupsInputSelectState[itemGroupArrayIndex] ? (
-                                        <input
-                                            onBlur={() => deselectItemGroupInput(itemGroupArrayIndex)}
-                                            type='text'
-                                            autoFocus
-                                            className={classes.groupNameInput}
-                                            style={{
-                                                borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
-                                            }}
-                                            value={itemGroupsInputValueState[itemGroupArrayIndex]}
-                                            onChange={(e) => changeItemGroupInputValue(itemGroupArrayIndex, e.target.value)}
-                                            onKeyDown={(e) => handleItemGroupInputKeyDown(itemGroupArrayIndex, e.key)}
-                                        ></input>
-                                    ) : (
-                                        <span
-                                            onClick={() => selectItemGroupInput(itemGroupArrayIndex)}
-                                            className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
-                                            data-hover='Click to edit'
-                                            item-count={itemsOrdersState[item_group_id].length ? itemsOrdersState[item_group_id].length + ' item' + `${itemsOrdersState[item_group_id].length === 1 ? '' : 's'}` : 'No items'}
-                                        >
-                                            {item_group_name}
+        <>
+            {
+                !itemCellsState[0] &&
+                <ScrollArea
+                    style={{
+                        width: 'calc(100vw - 140px)',
+                        height: 'calc(100vh - 160px)'
+                    }}
+                    type='auto'
+                >
+                    <div className='main-table'>
+                        {itemGroupsState.map(({ item_group_id, item_group_name }, itemGroupArrayIndex) => {
+                            return (
+                                <div className={classes.itemGroup} key={itemGroupArrayIndex}>
+                                    <div
+                                        className={classes.itemGroupBar}
+                                        style={{
+                                            color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                        }}
+                                    >
+                                        <span className={classes.itemGroupIcon} onClick={() => toggleDeleteGroupModalSelected(item_group_id)}>
+                                            <IconX size={16} />
                                         </span>
-                                    )}
-                                </span>
-                            </div>
-                            {!itemGroupsCollapsedState[itemGroupArrayIndex] && (
-                                <div>
-                                    <div id={`table_group_${item_group_id}`} className={classes.tableGroup}>
-                                        <div className={classes.tableHead}>
-                                            <div className={classes.tableRow}>
-                                                <div className={classes.tableCell}></div>
-                                                <div className={cx(classes.tableCell, classes.item)}>
-                                                    <span>Item</span>
-                                                </div>
-                                                <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
-                                                    <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
-                                                        {typesOrdersState[item_group_id].map((typeId, index) => (
-                                                            <TableColumnTitle
-                                                                key={typeId}
-                                                                id={typeId}
-                                                                cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
-                                                                cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
-                                                                index={index}
-                                                                lastCell={index === typesOrdersState[item_group_id].length - 1}
-                                                                onTypeRename={onTypeRename}
-                                                            />
-                                                        ))}
-                                                    </SortableContext>
-                                                </DndContext>
-                                            </div>
-                                        </div>
-                                        <div className={classes.tableBody}>
-                                            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
-                                                <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
-                                                    {itemsOrdersState[item_group_id].map((itemId, itemIndex) => (
-                                                        <TableRow
-                                                            key={'group_' + itemGroupArrayIndex + '_item_' + itemId}
-                                                            itemId={itemId}
-                                                            groupId={item_group_id}
-                                                            typeOrder={typesOrdersState[item_group_id]}
-                                                            cellDetails={itemCellsState[item_group_id][itemId]}
-                                                            color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
-                                                            lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
-                                                            personsColors={personsColors}
-                                                            membersFullName={membersFullName}
-                                                            onItemRename={onItemRename}
-                                                            onTextChange={onTextChange}
-                                                            onStatusChange={onStatusChange}
-                                                            onRemovePerson={onRemovePerson}
-                                                            onAddPerson={onAddPerson}
-                                                            onAddTransaction={onAddTransaction}
-                                                            onDeleteTransaction={onDeleteTransaction}
-                                                            onDeleteItem={onDeleteItem}
-                                                        />
-                                                    ))}
-                                                </SortableContext>
-                                            </DndContext>
-                                        </div>
-                                    </div>
-                                    <div className={classes.addItemCell}>
-                                        <div
-                                            className={classes.tableCell}
-                                            style={{
-                                                backgroundColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
-                                            }}
-                                        ></div>
-                                        <div className={cx(classes.tableCell, classes.item)}>
-                                            {newItemInputSelected[item_group_id] ? (
+                                        <Modal opened={deleteGroupModalOpened[item_group_id]} onClose={() => toggleDeleteGroupModalSelected(item_group_id)} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
+                                            <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
+                                            <span className={classes.modalFooter}>
+                                                <Button color='red' onClick={() => onDeleteGroup(item_group_id)}>
+                                                    Delete
+                                                </Button>
+                                            </span>
+                                        </Modal>
+
+                                        <span onClick={() => toggleItemGroupCollapsed(itemGroupArrayIndex)} className={classes.hovertext} data-hover={itemGroupsCollapsedState[itemGroupArrayIndex] ? 'Expand' : 'Collapse'} key={itemGroupArrayIndex}>
+                                            {<ItemGroupCollapser size={20} className={itemGroupsCollapsedState[itemGroupArrayIndex] ? '' : classes.collapserButton} />}
+                                        </span>
+                                        <span className={classes.itemCount}>
+                                            {itemGroupsInputSelectState[itemGroupArrayIndex] ? (
                                                 <input
-                                                    onBlur={() => deselectNewItemNameInput(item_group_id)}
+                                                    onBlur={() => deselectItemGroupInput(itemGroupArrayIndex)}
                                                     type='text'
                                                     autoFocus
-                                                    className={classes.newItemNameInput}
-                                                    value={newItemInputValue[item_group_id]}
-                                                    onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, item_group_id)}
-                                                    onChange={(e) => updateNewItemInputValue(item_group_id, e.target.value)}
+                                                    className={classes.groupNameInput}
+                                                    style={{
+                                                        borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                    }}
+                                                    value={itemGroupsInputValueState[itemGroupArrayIndex]}
+                                                    onChange={(e) => changeItemGroupInputValue(itemGroupArrayIndex, e.target.value)}
+                                                    onKeyDown={(e) => handleItemGroupInputKeyDown(itemGroupArrayIndex, e.key)}
                                                 ></input>
                                             ) : (
-                                                <div className={classes.typeName} onClick={() => toggleNewItemInputSelected(item_group_id)}>
-                                                    + Add Item
-                                                </div>
+                                                <span
+                                                    onClick={() => selectItemGroupInput(itemGroupArrayIndex)}
+                                                    className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
+                                                    data-hover='Click to edit'
+                                                    item-count={itemsOrdersState[item_group_id].length ? itemsOrdersState[item_group_id].length + ' item' + `${itemsOrdersState[item_group_id].length === 1 ? '' : 's'}` : 'No items'}
+                                                >
+                                                    {item_group_name}
+                                                </span>
                                             )}
-                                        </div>
+                                        </span>
                                     </div>
+                                    {!itemGroupsCollapsedState[itemGroupArrayIndex] && (
+                                        <div>
+                                            <div id={`table_group_${item_group_id}`} className={classes.tableGroup}>
+                                                <div className={classes.tableHead}>
+                                                    <div className={classes.tableRow}>
+                                                        <div className={classes.tableCell}></div>
+                                                        <div className={cx(classes.tableCell, classes.item)}>
+                                                            <span>Item</span>
+                                                        </div>
+                                                        <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
+                                                            <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
+                                                                {typesOrdersState[item_group_id].map((typeId, index) => (
+                                                                    <TableColumnTitle
+                                                                        key={typeId}
+                                                                        id={typeId}
+                                                                        cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
+                                                                        cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
+                                                                        index={index}
+                                                                        lastCell={index === typesOrdersState[item_group_id].length - 1}
+                                                                        onTypeRename={onTypeRename}
+                                                                    />
+                                                                ))}
+                                                            </SortableContext>
+                                                        </DndContext>
+                                                    </div>
+                                                </div>
+                                                <div className={classes.tableBody}>
+                                                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
+                                                        <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
+                                                            {itemsOrdersState[item_group_id].map((itemId, itemIndex) => (
+                                                                <TableRow
+                                                                    key={'group_' + itemGroupArrayIndex + '_item_' + itemId}
+                                                                    itemId={itemId}
+                                                                    groupId={item_group_id}
+                                                                    typeOrder={typesOrdersState[item_group_id]}
+                                                                    cellDetails={itemCellsState[item_group_id][itemId]}
+                                                                    color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
+                                                                    lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
+                                                                    personsColors={personsColors}
+                                                                    membersFullName={membersFullName}
+                                                                    onItemRename={onItemRename}
+                                                                    onTextChange={onTextChange}
+                                                                    onStatusChange={onStatusChange}
+                                                                    onRemovePerson={onRemovePerson}
+                                                                    onAddPerson={onAddPerson}
+                                                                    onAddTransaction={onAddTransaction}
+                                                                    onDeleteTransaction={onDeleteTransaction}
+                                                                    onDeleteItem={onDeleteItem}
+                                                                />
+                                                            ))}
+                                                        </SortableContext>
+                                                    </DndContext>
+                                                </div>
+                                            </div>
+                                            <div className={classes.addItemCell}>
+                                                <div
+                                                    className={classes.tableCell}
+                                                    style={{
+                                                        backgroundColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                    }}
+                                                ></div>
+                                                <div className={cx(classes.tableCell, classes.item)}>
+                                                    {newItemInputSelected[item_group_id] ? (
+                                                        <input
+                                                            onBlur={() => deselectNewItemNameInput(item_group_id)}
+                                                            type='text'
+                                                            autoFocus
+                                                            className={classes.newItemNameInput}
+                                                            value={newItemInputValue[item_group_id]}
+                                                            onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, item_group_id)}
+                                                            onChange={(e) => updateNewItemInputValue(item_group_id, e.target.value)}
+                                                        ></input>
+                                                    ) : (
+                                                        <div className={classes.typeName} onClick={() => toggleNewItemInputSelected(item_group_id)}>
+                                                            + Add Item
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
-        </ScrollArea>
+                            );
+                        })}
+                    </div>
+                </ScrollArea>
+            }
+        </>
     );
 }

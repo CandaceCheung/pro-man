@@ -399,6 +399,13 @@ const reorderItems: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: nu
 const reorderTypes: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: number[], groupId: number }>> = (state, action) => {
     state.typesOrders[action.payload.groupId] = action.payload.newOrder;
 };
+const deleteItem: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, itemId: number }>> = (state, action) => {
+    const groupId = action.payload.groupId;
+    const itemId = action.payload.itemId;
+    delete state.itemCells[groupId][itemId];
+    const i = state.itemsOrders[groupId].indexOf(itemId);
+    state.itemsOrders[groupId].splice(i, 1);
+};
 const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
     state.projectList.push(action.payload);
 };
@@ -434,6 +441,7 @@ const tableSlice = createSlice({
         removeTransaction,
         reorderItems,
         reorderTypes,
+        deleteItem,
         getTableList,
         addProject,
         updateTableList,
@@ -463,6 +471,7 @@ export const {
     removeTransaction: removeTransactionAction,
     reorderItems: reorderItemsAction,
     reorderTypes: reorderTypesAction,
+    deleteItem: deleteItemAction,
     getTableList: getTableListAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
