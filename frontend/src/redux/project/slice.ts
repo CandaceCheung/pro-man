@@ -262,17 +262,25 @@ const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId
     }
 };
 const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number; projectId: number }>> = (state, action) => {
-    for (let item of state.member_list) {
-        for (let member of item.members) {
+    let i: number | null = null;
+    state.member_list.forEach((person, index) => {
+        for (let member of person.members) {
             if (member.membership_id === action.payload.membershipId) {
-                item.members.splice(item.members.indexOf(member), 1);
+                if (person.members.length <= 1) {
+                    i = index;
+                } else {
+                    person.members.splice(person.members.indexOf(member), 1);
+                    for (let project of person.projects) {
+                        if (project.project_id === action.payload.projectId) {
+                            person.projects.splice(person.projects.indexOf(project), 1);
+                        }
+                    }
+                }
             }
         }
-        for (let project of item.projects) {
-            if (project.project_id === action.payload.projectId) {
-                item.projects.splice(item.projects.indexOf(project), 1);
-            }
-        }
+    });
+    if (i !== null) {
+        state.member_list.splice(i, 1);
     }
 };
 
