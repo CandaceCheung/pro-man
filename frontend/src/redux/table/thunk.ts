@@ -31,7 +31,10 @@ import {
     setItemGroupsCollapsedAction,
     setItemGroupsInputActiveAction,
     setItemGroupsInputValueAction,
-    resetItemGroupInputValueAction
+    resetItemGroupInputValueAction,
+    setNewItemsInputActiveAction,
+    setNewItemsInputValueAction,
+    insertItemAction
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -91,6 +94,8 @@ export function getTable(userID: number, projectID: number) {
             dispatch(setItemGroupsCollapsedAction(result.itemGroups.length));
             dispatch(setItemGroupsInputActiveAction(result.itemGroups.length));
             dispatch(setItemGroupsInputValueAction(result.itemGroups));
+            dispatch(setNewItemsInputActiveAction(result.itemGroups.length));
+            dispatch(setNewItemsInputValueAction(result.itemGroups.length));
         } else {
             showNotification({
                 title: 'Project Table notification',
@@ -270,16 +275,6 @@ export function getFavorite(userId: number) {
             favorite: MyFavoriteListState;
         }>(`/table/favorite/${userId}`);
 
-        // const res = await fetch(
-        // 	`${process.env.REACT_APP_API_SERVER}/table/favorite/${userId}`,
-        // 	{
-        // 		headers: {
-        // 			Authorization: `Bearer ${token}`,
-        // 		},
-        // 	}
-        // );
-        // const result = await res.json();
-
         if (result.success) {
             dispatch(getFavoriteAction(result.favorite));
         } else {
@@ -310,7 +305,7 @@ export function insertItem(projectId: number, userId: number, itemGroupId?: numb
         const result = await res.json();
 
         if (result.success) {
-            dispatch(getTable(userId, projectId));
+            dispatch(insertItemAction(result.itemCells));
         } else {
             showNotification({
                 title: 'Insert data notification',

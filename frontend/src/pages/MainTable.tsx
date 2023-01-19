@@ -29,7 +29,7 @@ import { Button, Modal, ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
-import { changeItemGroupInputValueAction, deselectItemGroupInputAction, ItemCell, ItemGroup, resetItemGroupInputValueAction, selectItemGroupInputAction, toggleItemGroupsCollapsedAction } from '../redux/table/slice';
+import { changeItemGroupInputValueAction, changeNewItemsInputValueAction, deselectItemGroupInputAction, ItemCell, ItemGroup, resetItemGroupInputValueAction, selectItemGroupInputAction, toggleItemGroupsCollapsedAction, toggleNewItemsInputActiveAction } from '../redux/table/slice';
 
 export function MainTable() {
     const userId = useAppSelector((state) => state.auth.userId);
@@ -43,9 +43,8 @@ export function MainTable() {
     const itemGroupsCollapsed = useAppSelector((state) => state.table.itemGroupsCollapsed);
     const itemGroupsInputActive = useAppSelector((state) => state.table.itemGroupsInputActive);
     const itemGroupsInputValue = useAppSelector((state) => state.table.itemGroupsInputValue);
-
-    const [newItemInputSelected, setNewItemInputSelected] = useState<Record<number, boolean>>({});
-    const [newItemInputValue, setNewItemInputValue] = useState<Record<number, string>>({});
+    const newItemsInputActive = useAppSelector((state) => state.table.newItemsInputActive);
+    const newItemsInputValue = useAppSelector((state) => state.table.newItemsInputValue);
 
     const [deleteGroupModalOpened, setDeleteGroupModalOpened] = useState<Record<number, boolean>>({});
 
@@ -188,9 +187,6 @@ export function MainTable() {
             personsColorsTemp[id] = theme.colors.personsTypeComponentColor[index % theme.colors.personsTypeComponentColor.length];
         });
 
-        setNewItemInputSelected(newItemInputSelectedTemp);
-        setNewItemInputValue(newItemInputValueTemp);
-
         setDeleteGroupModalOpened(deleteGroupModalOpenedTemp);
     }, [tableSummary, projectId, theme.colors.personsTypeComponentColor]);
 
@@ -268,31 +264,25 @@ export function MainTable() {
         }
     };
 
-    const toggleNewItemInputSelected = (groupId: number) => {
-        const newState = produce(newItemInputSelected, (draftState) => {
-            draftState[groupId] = !draftState[groupId];
-        });
-        setNewItemInputSelected(newState);
+    const toggleNewItemInputSelected = (index: number) => {
+        dispatch(toggleNewItemsInputActiveAction(index));
     };
 
-    const updateNewItemInputValue = (groupId: number, value: string) => {
-        const newState = produce(newItemInputValue, (draftState) => {
-            draftState[groupId] = value;
-        });
-        setNewItemInputValue(newState);
+    const updateNewItemInputValue = (index: number, value: string) => {
+        dispatch(changeNewItemsInputValueAction({index, value}));
     };
 
-    const deselectNewItemNameInput = (groupId: number) => {
-        if (newItemInputValue[groupId].length) {
-            projectId && userId && dispatch(insertItem(projectId, userId, groupId, newItemInputValue[groupId]));
+    const deselectNewItemNameInput = (index: number, groupId: number) => {
+        if (newItemsInputValue[index].length) {
+            dispatch(insertItem(projectId!, userId!, groupId, newItemsInputValue[index]));
         }
-        updateNewItemInputValue(groupId, '');
-        toggleNewItemInputSelected(groupId);
+        updateNewItemInputValue(index, '');
+        toggleNewItemInputSelected(index);
     };
 
-    const handleNewItemNameInputKeyDown = (key: string, groupId: number) => {
+    const handleNewItemNameInputKeyDown = (key: string, index: number, groupId: number) => {
         if (key === 'Enter') {
-            deselectNewItemNameInput(groupId);
+            deselectNewItemNameInput(index, groupId);
         }
     };
 
@@ -447,18 +437,18 @@ export function MainTable() {
                                                     }}
                                                 ></div>
                                                 <div className={cx(classes.tableCell, classes.item)}>
-                                                    {newItemInputSelected[item_group_id] ? (
+                                                    {newItemsInputActive[itemGroupArrayIndex] ? (
                                                         <input
-                                                            onBlur={() => deselectNewItemNameInput(item_group_id)}
+                                                            onBlur={() => deselectNewItemNameInput(itemGroupArrayIndex, item_group_id)}
                                                             type='text'
                                                             autoFocus
                                                             className={classes.newItemNameInput}
-                                                            value={newItemInputValue[item_group_id]}
-                                                            onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, item_group_id)}
-                                                            onChange={(e) => updateNewItemInputValue(item_group_id, e.target.value)}
+                                                            value={newItemsInputValue[itemGroupArrayIndex]}
+                                                            onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, itemGroupArrayIndex, item_group_id)}
+                                                            onChange={(e) => updateNewItemInputValue(itemGroupArrayIndex, e.target.value)}
                                                         ></input>
                                                     ) : (
-                                                        <div className={classes.typeName} onClick={() => toggleNewItemInputSelected(item_group_id)}>
+                                                        <div className={classes.typeName} onClick={() => toggleNewItemInputSelected(itemGroupArrayIndex)}>
                                                             + Add Item
                                                         </div>
                                                     )}

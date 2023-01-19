@@ -261,7 +261,7 @@ export class TableService {
 		return {
 			name: state.name,
 			color: state.color
-		}
+		};
 	}
 
 	async insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
@@ -277,7 +277,7 @@ export class TableService {
 		try {
 			const [{ previousItemId }] = await this.knex('items').select('id as previousItemId').where('item_group_id', groupId).limit(1);
 			const types = await this.knex
-				.select('types.id as typesId')
+				.select('types.id as typesId', 'types.type as typesName', 'types.name as elementName')
 				.distinctOn('typesId')
 				.from('items')
 				.join('type_persons', 'type_persons.item_id', '=', 'items.id')
@@ -296,12 +296,13 @@ export class TableService {
 				})
 				.where('items.id', previousItemId)
 				.orderBy('types.id', 'asc');
-			const typesId_persons = types[0].typesId;
-			const typesId_dates = types[1].typesId;
-			const typesId_times = types[2].typesId;
-			const typesId_money = types[3].typesId;
-			const typesId_status = types[4].typesId;
-			const typesId_text = types[5].typesId;
+
+			const typesIdPersons = types[0].typesId;
+			const typesIdDates = types[1].typesId;
+			const typesIdTimes = types[2].typesId;
+			const typesIdMoney = types[3].typesId;
+			const typesIdStatus = types[4].typesId;
+			const typesIdText = types[5].typesId;
 
 			await txn('items').where('item_group_id', groupId).increment('order', 1);
 
@@ -321,30 +322,37 @@ export class TableService {
 				.insert({
 					name: username,
 					user_id: userId,
-					type_id: typesId_persons,
+					type_id: typesIdPersons,
 					item_id: itemId
 				})
 				.into('type_persons');
-			await txn
+			const date = format(new Date(Date.now()), 'yyyy-MM-dd');
+			const [{ datetime }] = await txn
 				.insert({
-					datetime: format(new Date(Date.now()), 'yyyy-MM-dd'),
+					datetime: date,
 					color: getRandomColor(),
-					type_id: typesId_dates,
+					type_id: typesIdDates,
 					item_id: itemId
 				})
-				.into('type_dates');
-			await txn
+				.into('type_dates')
+				.returning('datetime');
+			const [times] = await txn
 				.insert({
 					start_date: new Date(new Date().toDateString()).getTime(),
 					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 					color: getRandomColor(),
-					type_id: typesId_times,
+					type_id: typesIdTimes,
 					item_id: itemId
 				})
-				.into('type_times');
+				.into('type_times')
+				.returning(
+					['start_date as startDate',
+					'end_date as endDate']
+				);
+				console.log(times)
 			const [{ typeMoneyId }] = await txn
 				.insert({
-					type_id: typesId_money,
+					type_id: typesIdMoney,
 					item_id: itemId
 				})
 				.into('type_money')
@@ -352,27 +360,79 @@ export class TableService {
 			await txn
 				.insert({
 					state_id: stateId,
-					type_id: typesId_status,
+					type_id: typesIdStatus,
 					item_id: itemId
 				})
 				.into('type_status');
-			await txn
+			const [{text}] = await txn
 				.insert({
 					text: '',
-					type_id: typesId_text,
+					type_id: typesIdText,
 					item_id: itemId
 				})
-				.into('type_text');
+				.into('type_text')
+				.returning('text');
 
-			await txn
+			const [transactions] = await txn
 				.insert({
 					date: format(new Date(Date.now()), 'yyyy-MM-dd'),
 					cash_flow: 0,
 					type_money_id: typeMoneyId
 				})
+				.returning([
+					'id', 'cash_flow as cashFlow', 'date'
+				])
 				.into('transactions');
 
+				const [{ stateColor, stateName }] = await this.knex.select(
+					'color as stateColor',
+					'name as stateName'
+				).from('states')
+				.where('id', stateId);
+	
+				let itemCells = {};
+				itemCells[groupId!] = {};
+				itemCells[groupId!][itemId] = {};
+				types.forEach((type) => {
+					const typeId = type.typesId;
+					itemCells[groupId!][itemId][typeId] = {
+						item_id: itemId,
+						item_name: itemName || 'New Item',
+						type_id: type.typesId,
+						type_name: type.typesName,
+						element_name: type.elementName
+					}
+					switch (type.typesName) {
+						case 'persons':
+							itemCells[groupId!][itemId][typeId]['item_person_user_id'] = [userId];
+							break;
+						case 'dates':
+							itemCells[groupId!][itemId][typeId]['item_dates_datetime'] = datetime;
+							itemCells[groupId!][itemId][typeId]['item_dates_date'] = date;
+							break;
+						case 'times':
+							itemCells[groupId!][itemId][typeId]['item_times_start_date'] = times.startDate;
+							itemCells[groupId!][itemId][typeId]['item_times_end_date'] = times.endDate;
+							break;
+						case "money":
+							itemCells[groupId!][itemId][typeId]['transaction_id'] = [transactions.id];
+							itemCells[groupId!][itemId][typeId]['item_money_cashflow'] = [transactions.cashFlow];
+							itemCells[groupId!][itemId][typeId]['item_money_date'] = transactions.date;
+							break;
+						case "status":
+							itemCells[groupId!][itemId][typeId]['item_status_color'] = stateColor;
+							itemCells[groupId!][itemId][typeId]['item_status_name'] = stateName;
+							break;
+						case "text":
+							itemCells[groupId!][itemId][typeId]['item_text_text'] = text;
+							break;
+						default:
+							break
+					}
+				});
+
 			await txn.commit();
+			return itemCells;
 		} catch (e) {
 			await txn.rollback();
 			throw e;

@@ -23,4 +23,30 @@ export class MakeRequest {
 
         return await res.json();
     };
+
+    put = async <T extends {}, R extends {}>(path: string, reqestBody: T): Promise<R> => {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`
+            },
+            body: JSON.stringify(reqestBody)
+        });
+
+        return await res.json();
+    };
+
+    delete = async <T extends {}, R extends {}>(path: string, reqestBody: T): Promise<R> => {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.token}`
+            },
+            body: JSON.stringify(reqestBody)
+        });
+
+        return await res.json();
+    };
 }

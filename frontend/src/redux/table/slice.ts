@@ -124,6 +124,8 @@ export interface CombinedTableState {
     itemGroupsCollapsed: boolean[];
     itemGroupsInputActive: boolean[];
     itemGroupsInputValue: string[];
+    newItemsInputActive: boolean[];
+    newItemsInputValue: string[];
 }
 
 const initialState: CombinedTableState = {
@@ -233,7 +235,9 @@ const initialState: CombinedTableState = {
     },
     itemGroupsCollapsed: [],
     itemGroupsInputActive: [],
-    itemGroupsInputValue: []
+    itemGroupsInputValue: [],
+    newItemsInputActive: [],
+    newItemsInputValue: []
 };
 
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> = (state, action) => {
@@ -280,6 +284,14 @@ const setItemGroupsInputValue: CaseReducer<CombinedTableState, PayloadAction<Ite
         temp.push(each.item_group_name);
     });
     state.itemGroupsInputValue = temp;
+};
+
+const setNewItemsInputActive: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.newItemsInputActive = Array(action.payload).fill(false);
+};
+
+const setNewItemsInputValue: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.newItemsInputValue = Array(action.payload).fill('');
 };
 
 const updateTimelineItem: CaseReducer<
@@ -469,6 +481,25 @@ const resetItemGroupInputValue: CaseReducer<CombinedTableState, PayloadAction<{ 
     state.itemGroupsInputValue[action.payload.index] = action.payload.originalValue;
     state.itemGroups[action.payload.index].item_group_name = action.payload.originalValue;
 };
+const toggleNewItemsInputActive: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.newItemsInputActive[action.payload] = !state.newItemsInputActive[action.payload];
+};
+const changeNewItemsInputValue: CaseReducer<CombinedTableState, PayloadAction<{index: number, value: string}>> = (state, action) => {
+    state.newItemsInputValue[action.payload.index] = action.payload.value;
+};
+const insertItem: CaseReducer<CombinedTableState, PayloadAction<ItemCells>> = (state, action) => {
+    const [groupIdString] = Object.keys(action.payload);
+    const groupId = parseInt(groupIdString);
+    const [itemIdString] = Object.keys(action.payload[groupId]);
+    const itemId = parseInt(itemIdString);
+    if (state.itemCells[groupId]) {
+        state.itemCells[groupId][itemId] = action.payload[groupId][itemId];
+        state.itemsOrders[groupId].push(itemId);
+    } else {
+        state.itemCells[groupId] = action.payload[groupId];
+        state.itemsOrders[groupId] = [itemId];
+    }
+};
 const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
     state.projectList.push(action.payload);
 };
@@ -493,6 +524,8 @@ const tableSlice = createSlice({
         setItemGroupsCollapsed,
         setItemGroupsInputActive,
         setItemGroupsInputValue,
+        setNewItemsInputActive,
+        setNewItemsInputValue,
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
@@ -516,6 +549,9 @@ const tableSlice = createSlice({
         deselectItemGroupInput,
         changeItemGroupInputValue,
         resetItemGroupInputValue,
+        toggleNewItemsInputActive,
+        changeNewItemsInputValue,
+        insertItem,
         addProject,
         updateTableList,
         renameProjectInTableList,
@@ -533,6 +569,8 @@ export const {
     setItemGroupsCollapsed: setItemGroupsCollapsedAction,
     setItemGroupsInputActive: setItemGroupsInputActiveAction,
     setItemGroupsInputValue: setItemGroupsInputValueAction,
+    setNewItemsInputActive: setNewItemsInputActiveAction,
+    setNewItemsInputValue: setNewItemsInputValueAction,
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
@@ -556,6 +594,9 @@ export const {
     deselectItemGroupInput: deselectItemGroupInputAction,
     changeItemGroupInputValue: changeItemGroupInputValueAction,
     resetItemGroupInputValue: resetItemGroupInputValueAction,
+    toggleNewItemsInputActive: toggleNewItemsInputActiveAction,
+    changeNewItemsInputValue: changeNewItemsInputValueAction,
+    insertItem: insertItemAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
     renameProjectInTableList: renameProjectInTableListAction,
