@@ -9,10 +9,11 @@ export interface TableColumnTitleProps {
     cellColumnCustomName: string;
     index: number;
     lastCell: boolean;
-    onTypeRename: (typeId: number, name: string) => void;
+    groupId: number;
+    onTypeRename: (groupId: number, typeId: number, name: string) => void;
 }
 
-export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, index, lastCell, onTypeRename }: TableColumnTitleProps) {
+export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, index, lastCell, groupId, onTypeRename }: TableColumnTitleProps) {
     const [typeNameInput, setTypeNameInput] = useState(cellColumnCustomName);
     const [typeNameInputSelected, setTypeNameInputSelected] = useState(false);
     const { classes, cx } = useStyles();
@@ -62,7 +63,7 @@ export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, ind
     const deselectTypeNameInput = () => {
         if (typeNameInput !== cellColumnCustomName) {
             if (typeNameInput) {
-                onTypeRename(id, typeNameInput);
+                onTypeRename(groupId, id, typeNameInput);
             } else {
                 setTypeNameInput(cellColumnCustomName);
             }

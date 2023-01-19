@@ -461,7 +461,7 @@ export function renameItem(groupId: number, itemId: number, name: string) {
     };
 }
 
-export function renameType(typeId: number, name: string) {
+export function renameType(groupId: number, typeId: number, name: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newTypeName`, {
@@ -474,7 +474,7 @@ export function renameType(typeId: number, name: string) {
         });
         const result = await res.json();
         if (result.success) {
-            dispatch(updateTypeNameAction({ typeId, name }));
+            dispatch(updateTypeNameAction({ groupId, typeId, name }));
         } else {
             showNotification({
                 title: 'Update data notification',

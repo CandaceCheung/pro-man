@@ -241,8 +241,8 @@ export function MainTable() {
         dispatch(renameItem(groupId, itemId, name));
     };
 
-    const onTypeRename = (typeId: number, name: string) => {
-        dispatch(renameType(typeId, name));
+    const onTypeRename = (groupId: number, typeId: number, name: string) => {
+        dispatch(renameType(groupId, typeId, name));
     };
 
     const onTextChange = (groupId: number, itemId: number, typeId: number, text: string) => {
@@ -407,6 +407,7 @@ export function MainTable() {
                                                                         cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
                                                                         index={index}
                                                                         lastCell={index === typesOrdersState[item_group_id].length - 1}
+                                                                        groupId={item_group_id}
                                                                         onTypeRename={onTypeRename}
                                                                     />
                                                                 ))}

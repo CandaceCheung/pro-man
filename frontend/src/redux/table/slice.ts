@@ -362,14 +362,13 @@ const updateItemName: CaseReducer<CombinedTableState, PayloadAction<{ groupId: n
         itemCells[parseInt(typeId)].item_name = action.payload.name;
     }
 };
-const updateTypeName: CaseReducer<CombinedTableState, PayloadAction<{ typeId: number; name: string }>> = (state, action) => {
-    const itemGroups = state.itemCells;
-    for (let itemGroupId of Object.keys(itemGroups)) {
-        const items = itemGroups[parseInt(itemGroupId)];
-        for (let itemId of Object.keys(items)) {
-            const types = items[parseInt(itemId)];
-            types[action.payload.typeId].element_name = action.payload.name;
-        }
+const updateTypeName: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, typeId: number; name: string }>> = (state, action) => {
+    const groupId = action.payload.groupId;
+    const typeId = action.payload.typeId;
+    const name = action.payload.name;
+
+    for (let itemId of Object.keys(state.itemCells[groupId])) {
+        state.itemCells[groupId][parseInt(itemId)][typeId].element_name = name;
     }
 };
 const updateText: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; text: string }>> = (state, action) => {
