@@ -374,9 +374,12 @@ export class TableController {
 		try {
 			const projectId = req.body.projectId;
 			const userId = req.body.userId;
-			await this.tableService.insertItemGroup(projectId, userId);
+			const itemCells = await this.tableService.insertItemGroup(projectId, userId);
 
-			res.json({ success: true });
+			res.json({ 
+				success: true,
+				itemCells
+			});
 		} catch (e) {
 			console.error(e);
 			res.status(500).json({ msg: '[TAB] Fail to Insert Item Group' });
