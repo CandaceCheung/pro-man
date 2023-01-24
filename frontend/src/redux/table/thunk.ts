@@ -35,7 +35,8 @@ import {
     setNewItemsInputActiveAction,
     setNewItemsInputValueAction,
     insertItemAction,
-    setDeleteGroupModalOpenedAction
+    setDeleteGroupModalOpenedAction,
+    insertItemGroupAction
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -334,7 +335,12 @@ export function insertItemGroup(projectId: number, userId: number) {
         const result = await res.json();
 
         if (result.success) {
-            dispatch(getTable(userId, projectId));
+            dispatch(insertItemGroupAction({
+                itemGroupId: result.itemGroupId, 
+                itemGroupName: result.itemGroupName, 
+                typeIds: result.typeIds
+            }));
+            dispatch(insertItemAction(result.itemCells));
         } else {
             showNotification({
                 title: 'Insert data notification',

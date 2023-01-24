@@ -444,19 +444,23 @@ export class TableService {
 	async insertItemGroup(projectId: number, userId: number) {
 		const txn = await this.knex.transaction();
 		let itemGroupId: number;
+		let itemGroupName: string;
 		let type: {
 			typesId: number,
 			typesName: string,
 			elementName: string
 		}[];
 		try {
-			[{ itemGroupId }] = await txn
+			[{itemGroupId, itemGroupName}] = await txn
 				.insert({
 					project_id: projectId,
 					name: 'New Group'
 				})
 				.into('item_groups')
-				.returning('id as itemGroupId');
+				.returning([
+					'id as itemGroupId',
+					'name as itemGroupName'
+				]);
 
 			type = await txn
 				.insert([
@@ -470,7 +474,8 @@ export class TableService {
 				.into('types')
 				.returning(
 					['id as typesId', 'type as typesName', 'name as elementName']
-				);
+				)
+				.orderBy('typesId');
 			await txn.commit();
 		} catch (e) {
 			await txn.rollback();
@@ -478,7 +483,13 @@ export class TableService {
 		}
 		try {
 			const itemCells = await this.insertItem(projectId, userId, itemGroupId, type);
-			return itemCells;
+			const typeIds = type.map((each) => each.typesId);
+			return {
+				itemCells,
+				itemGroupId,
+				itemGroupName,
+				typeIds
+			};
 		} catch(e) {
 			// Revert the previous inserts
 			for (let each of type) {

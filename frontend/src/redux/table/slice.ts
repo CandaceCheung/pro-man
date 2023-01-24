@@ -472,11 +472,19 @@ const deleteItem: CaseReducer<CombinedTableState, PayloadAction<{ groupId: numbe
 };
 const deleteGroup: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
+    const groupIds = state.itemGroups.map((each) => each.item_group_id);
+    const index = groupIds.indexOf(groupId);
     delete state.itemCells[groupId];
     state.itemGroups = state.itemGroups.filter((each) => each.item_group_id != groupId);
     delete state.itemsOrders[groupId];
     delete state.typesOrders[groupId];
     delete state.deleteGroupModalOpened[groupId];
+
+    state.itemGroupsCollapsed.splice(index, 1);
+    state.itemGroupsInputActive.splice(index, 1);
+    state.itemGroupsInputValue.splice(index, 1);
+    state.newItemsInputActive.splice(index, 1);
+    state.newItemsInputValue.splice(index, 1);
 };
 const toggleItemGroupsCollapsed: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
     state.itemGroupsCollapsed[action.payload] = !state.itemGroupsCollapsed[action.payload];
@@ -505,13 +513,26 @@ const insertItem: CaseReducer<CombinedTableState, PayloadAction<ItemCells>> = (s
     const groupId = parseInt(groupIdString);
     const [itemIdString] = Object.keys(action.payload[groupId]);
     const itemId = parseInt(itemIdString);
-    if (state.itemCells[groupId]) {
-        state.itemCells[groupId][itemId] = action.payload[groupId][itemId];
-        state.itemsOrders[groupId].push(itemId);
-    } else {
-        state.itemCells[groupId] = action.payload[groupId];
-        state.itemsOrders[groupId] = [itemId];
-    }
+    state.itemCells[groupId][itemId] = action.payload[groupId][itemId];
+    state.itemsOrders[groupId].push(itemId);
+};
+const insertItemGroup: CaseReducer<CombinedTableState, PayloadAction<{itemGroupId: number, itemGroupName: string, typeIds: number[]}>> = (state, action) => {
+    const itemGroupId = action.payload.itemGroupId;
+    const itemGroupName = action.payload.itemGroupName;
+    const typeIds = action.payload.typeIds;
+    state.itemCells[itemGroupId] = {};
+    state.itemGroups.unshift({
+        item_group_id: itemGroupId,
+        item_group_name: itemGroupName
+    });
+    state.itemGroupsCollapsed.unshift(false);
+    state.itemGroupsInputActive.unshift(false);
+    state.itemGroupsInputValue.unshift(itemGroupName);
+    state.itemsOrders[itemGroupId] = [];
+    state.typesOrders[itemGroupId] = typeIds;
+    state.newItemsInputActive.unshift(false);
+    state.newItemsInputValue.unshift("");
+    state.deleteGroupModalOpened[itemGroupId] = false;
 };
 const toggleDeleteGroupModal: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
     state.deleteGroupModalOpened[action.payload] = !state.deleteGroupModalOpened[action.payload];
@@ -569,6 +590,7 @@ const tableSlice = createSlice({
         toggleNewItemsInputActive,
         changeNewItemsInputValue,
         insertItem,
+        insertItemGroup,
         toggleDeleteGroupModal,
         addProject,
         updateTableList,
@@ -616,6 +638,7 @@ export const {
     toggleNewItemsInputActive: toggleNewItemsInputActiveAction,
     changeNewItemsInputValue: changeNewItemsInputValueAction,
     insertItem: insertItemAction,
+    insertItemGroup: insertItemGroupAction,
     toggleDeleteGroupModal: toggleDeleteGroupModalAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,

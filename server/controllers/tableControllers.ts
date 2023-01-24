@@ -374,11 +374,14 @@ export class TableController {
 		try {
 			const projectId = req.body.projectId;
 			const userId = req.body.userId;
-			const itemCells = await this.tableService.insertItemGroup(projectId, userId);
+			const result = await this.tableService.insertItemGroup(projectId, userId);
 
 			res.json({ 
 				success: true,
-				itemCells
+				itemCells: result.itemCells,
+				itemGroupId: result.itemGroupId,
+				itemGroupName: result.itemGroupName,
+				typeIds: result.typeIds
 			});
 		} catch (e) {
 			console.error(e);
