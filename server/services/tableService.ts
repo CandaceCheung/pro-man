@@ -265,6 +265,7 @@ export class TableService {
 	}
 
 	async insertItem(projectId: number, userId: number, itemGroupId?: number, typesInput?: Array<{typesId: number; typesName: string; elementName: string}>, itemName?: string) {
+		console.log(projectId, userId, itemGroupId, typesInput, itemName);
 		const [{ username }] = await this.knex('users').select('username').where('id', userId);
 		const [{ stateId }] = await this.knex('states').select('id as stateId').where('project_id', projectId).orderBy('stateId').limit(1);
 		let groupId = itemGroupId;
