@@ -34,7 +34,8 @@ import {
     resetItemGroupInputValueAction,
     setNewItemsInputActiveAction,
     setNewItemsInputValueAction,
-    insertItemAction
+    insertItemAction,
+    setDeleteGroupModalOpenedAction
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -96,6 +97,7 @@ export function getTable(userID: number, projectID: number) {
             dispatch(setItemGroupsInputValueAction(result.itemGroups));
             dispatch(setNewItemsInputActiveAction(result.itemGroups.length));
             dispatch(setNewItemsInputValueAction(result.itemGroups.length));
+            dispatch(setDeleteGroupModalOpenedAction(result.itemGroups));
         } else {
             showNotification({
                 title: 'Project Table notification',

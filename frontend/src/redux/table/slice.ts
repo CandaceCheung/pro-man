@@ -1,6 +1,13 @@
 import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { themeObject } from '../../theme';
 
+export interface TableMember {
+    username: string;
+    firstName: string | null;
+    lastName: string | null;
+    color?: string;
+}
+
 export type TableMembers = {
     [keys in number]: TableMember;
 };
@@ -104,12 +111,7 @@ export type ItemsOrders = Record<number, Array<number>>;
 
 export type TypesOrders = Record<number, Array<number>>;
 
-export interface TableMember {
-    username: string;
-    firstName: string | null;
-    lastName: string | null;
-    color?: string;
-}
+export type DeleteGroupModal = Record<number, boolean>;
 
 export interface CombinedTableState {
     memberList: TableMembers;
@@ -126,6 +128,7 @@ export interface CombinedTableState {
     itemGroupsInputValue: string[];
     newItemsInputActive: boolean[];
     newItemsInputValue: string[];
+    deleteGroupModalOpened: DeleteGroupModal;
 }
 
 const initialState: CombinedTableState = {
@@ -237,7 +240,8 @@ const initialState: CombinedTableState = {
     itemGroupsInputActive: [],
     itemGroupsInputValue: [],
     newItemsInputActive: [],
-    newItemsInputValue: []
+    newItemsInputValue: [],
+    deleteGroupModalOpened: {}
 };
 
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> = (state, action) => {
@@ -292,6 +296,14 @@ const setNewItemsInputActive: CaseReducer<CombinedTableState, PayloadAction<numb
 
 const setNewItemsInputValue: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
     state.newItemsInputValue = Array(action.payload).fill('');
+};
+
+const setDeleteGroupModalOpened: CaseReducer<CombinedTableState, PayloadAction<ItemGroup[]>> = (state, action) => {
+    let temp: DeleteGroupModal = {};
+    action.payload.forEach((each) => {
+        temp[each.item_group_id] = false;
+    });
+    state.deleteGroupModalOpened = temp;
 };
 
 const updateTimelineItem: CaseReducer<
@@ -464,6 +476,7 @@ const deleteGroup: CaseReducer<CombinedTableState, PayloadAction<{ groupId: numb
     state.itemGroups = state.itemGroups.filter((each) => each.item_group_id != groupId);
     delete state.itemsOrders[groupId];
     delete state.typesOrders[groupId];
+    delete state.deleteGroupModalOpened[groupId];
 };
 const toggleItemGroupsCollapsed: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
     state.itemGroupsCollapsed[action.payload] = !state.itemGroupsCollapsed[action.payload];
@@ -500,6 +513,9 @@ const insertItem: CaseReducer<CombinedTableState, PayloadAction<ItemCells>> = (s
         state.itemsOrders[groupId] = [itemId];
     }
 };
+const toggleDeleteGroupModal: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.deleteGroupModalOpened[action.payload] = !state.deleteGroupModalOpened[action.payload];
+};
 const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
     state.projectList.push(action.payload);
 };
@@ -526,6 +542,7 @@ const tableSlice = createSlice({
         setItemGroupsInputValue,
         setNewItemsInputActive,
         setNewItemsInputValue,
+        setDeleteGroupModalOpened,
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
@@ -552,6 +569,7 @@ const tableSlice = createSlice({
         toggleNewItemsInputActive,
         changeNewItemsInputValue,
         insertItem,
+        toggleDeleteGroupModal,
         addProject,
         updateTableList,
         renameProjectInTableList,
@@ -571,6 +589,7 @@ export const {
     setItemGroupsInputValue: setItemGroupsInputValueAction,
     setNewItemsInputActive: setNewItemsInputActiveAction,
     setNewItemsInputValue: setNewItemsInputValueAction,
+    setDeleteGroupModalOpened: setDeleteGroupModalOpenedAction,
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
@@ -597,6 +616,7 @@ export const {
     toggleNewItemsInputActive: toggleNewItemsInputActiveAction,
     changeNewItemsInputValue: changeNewItemsInputValueAction,
     insertItem: insertItemAction,
+    toggleDeleteGroupModal: toggleDeleteGroupModalAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
     renameProjectInTableList: renameProjectInTableListAction,
