@@ -133,11 +133,11 @@ export function Messager() {
                                     <Input value={project} component='select' onChange={(e) => setProject(parseInt(e.target.value))} rightSection={<IconChevronDown size={14} stroke={1.5} />}>
                                         <option value={undefined}>Choose a Project</option>
                                         {projectList
-                                            .filter((project) => project.creator_id === userId)
+                                            .filter((project) => project.creatorId === userId)
                                             .map((project, index) => {
                                                 return (
-                                                    <option key={index} value={project.project_id}>
-                                                        {project.project_name}
+                                                    <option key={index} value={project.projectId}>
+                                                        {project.projectName}
                                                     </option>
                                                 );
                                             })}

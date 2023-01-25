@@ -21,11 +21,11 @@ export type MyFavoriteListState = {
 }[];
 
 export type MyTableState = {
-    creator_id?: number;
-    project_id?: number;
-    member_table_id?: number;
+    creatorId?: number;
+    projectId?: number;
+    memberTableId?: number;
     username: string;
-    project_name: string;
+    projectName: string;
 };
 export interface MyTableListState extends Array<MyTableState> {}
 
@@ -176,11 +176,11 @@ const initialState: CombinedTableState = {
     memberList: [],
     projectList: [
         {
-            creator_id: undefined,
-            project_id: undefined,
-            member_table_id: undefined,
+            creatorId: undefined,
+            projectId: undefined,
+            memberTableId: undefined,
             username: '',
-            project_name: ''
+            projectName: ''
         }
     ],
     myFavoriteList: [
@@ -404,8 +404,8 @@ const updateTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableStat
 };
 const renameProjectInTableList: CaseReducer<CombinedTableState, PayloadAction<{ projectId: number; projectName: string }>> = (state, action) => {
     state.projectList.forEach((project) => {
-        if (project.project_id === action.payload.projectId) {
-            project.project_name = action.payload.projectName;
+        if (project.projectId === action.payload.projectId) {
+            project.projectName = action.payload.projectName;
         }
     });
     state.myFavoriteList.forEach((project) => {

@@ -143,8 +143,8 @@ export function getTableList(userId: number) {
 
         if (result.success) {
             dispatch(getTableListAction(result.list));
-            dispatch(setActiveProjectAction(result.list[0].project_id));
-            dispatch(setProjectNameAction(result.list[0].project_name));
+            dispatch(setActiveProjectAction(result.list[0].projectId));
+            dispatch(setProjectNameAction(result.list[0].projectName));
         } else {
             showNotification({
                 title: 'Project List notification',
@@ -447,11 +447,11 @@ export function insertNewProject(userId: number) {
             dispatch(setActiveProject(projectId, projectName));
             dispatch(
                 addProjectAction({
-                    creator_id: userId,
-                    project_id: projectId,
-                    member_table_id: memberTableId,
+                    creatorId: userId,
+                    projectId: projectId,
+                    memberTableId: memberTableId,
                     username: username,
-                    project_name: projectName
+                    projectName: projectName
                 })
             );
         } else {

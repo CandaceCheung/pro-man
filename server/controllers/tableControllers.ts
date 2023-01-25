@@ -183,7 +183,7 @@ export class TableController {
 
 			res.json({
 				success: true,
-				list: result
+				list: keysToCamel(result)
 			});
 		} catch (e) {
 			console.error(e);
