@@ -54,7 +54,7 @@ export class TableController {
 		try {
 			const userId = req.params.userId;
 			const projectId = req.params.projectId;
-			const result = await this.tableService.getTableInfo(parseInt(userId), parseInt(projectId));
+			const result = await this.tableService.getTableInfoV2(parseInt(userId), parseInt(projectId));
 
 			const memberResult = await this.kanbanService.getMemberList(parseInt(projectId));
 			let memberList = {};
@@ -78,16 +78,16 @@ export class TableController {
 			let typesOrderSet: Set<number> = new Set();
 
 			for (const cell of result) {
-				if (cell.project_id) {
-					const itemGroupId = cell.item_group_id;
-					const itemId = cell.item_id;
-					const typeId = cell.horizontal_order_id;
+				if (cell.projectId) {
+					const itemGroupId = cell.itemGroupId;
+					const itemId = cell.itemId;
+					const typeId = cell.horizontalOrderId;
 					let itemCell: itemCellsElement = {
-						item_id: cell.item_id,
-						item_name: cell.item_name,
-						type_id: cell.horizontal_order_id,
-						type_name: cell.type_name,
-						element_name: cell.element_name
+						itemId: cell.itemId,
+						itemName: cell.itemName,
+						typeId: cell.horizontalOrderId,
+						typeName: cell.typeName,
+						elementName: cell.elementName
 					};
 
 					if (itemCells[itemGroupId]) {
@@ -99,54 +99,54 @@ export class TableController {
 						itemCells[itemGroupId] = {};
 						itemCells[itemGroupId][itemId] = {};
 						itemGroups.push({
-							item_group_id: cell.item_group_id,
-							item_group_name: cell.item_group_name
+							itemGroupId: cell.itemGroupId,
+							itemGroupName: cell.itemGroupName
 						});
 						itemsOrders[itemGroupId] = [itemId];
 					}
 
-					switch (cell.type_name) {
+					switch (cell.typeName) {
 						case 'dates':
-							itemCell['item_dates_datetime'] = cell.item_dates_datetime;
-							itemCell['item_dates_date'] = cell.item_dates_date;
+							itemCell['itemDatesDatetime'] = cell.itemDatesDatetime;
+							itemCell['itemDatesDate'] = cell.itemDatesDate;
 							itemCells[itemGroupId][itemId][typeId] = itemCell;
 							break;
 						case 'money':
 							if (itemCells[itemGroupId][itemId][typeId]) {
-								if (!itemCells[itemGroupId][itemId][typeId]!.transaction_id!.includes(cell.transaction_id)) {
-									itemCells[itemGroupId][itemId][typeId]!.transaction_id!.push(cell.transaction_id);
-									itemCells[itemGroupId][itemId][typeId]!.item_money_cashflow!.push(cell.item_money_cashflow);
-									itemCells[itemGroupId][itemId][typeId]!.item_money_date!.push(cell.item_money_date);
+								if (!itemCells[itemGroupId][itemId][typeId]!.transactionId!.includes(cell.transactionId)) {
+									itemCells[itemGroupId][itemId][typeId]!.transactionId!.push(cell.transactionId);
+									itemCells[itemGroupId][itemId][typeId]!.itemMoneyCashflow!.push(cell.itemMoneyCashflow);
+									itemCells[itemGroupId][itemId][typeId]!.itemMoneyDate!.push(cell.itemMoneyDate);
 								}
 							} else {
-								itemCell['transaction_id'] = [cell.transaction_id];
-								itemCell['item_money_cashflow'] = [cell.item_money_cashflow];
-								itemCell['item_money_date'] = [cell.item_money_date];
+								itemCell['transactionId'] = [cell.transactionId];
+								itemCell['itemMoneyCashflow'] = [cell.itemMoneyCashflow];
+								itemCell['itemMoneyDate'] = [cell.itemMoneyDate];
 								itemCells[itemGroupId][itemId][typeId] = itemCell;
 							}
 							break;
 						case 'persons':
 							if (itemCells[itemGroupId][itemId][typeId]) {
-								if (!itemCells[itemGroupId][itemId][typeId].item_person_user_id!.includes(cell.item_person_user_id)) {
-									itemCells[itemGroupId][itemId][typeId].item_person_user_id!.push(cell.item_person_user_id);
+								if (!itemCells[itemGroupId][itemId][typeId].itemPersonUserId!.includes(cell.itemPersonUserId)) {
+									itemCells[itemGroupId][itemId][typeId].itemPersonUserId!.push(cell.itemPersonUserId);
 								}
 							} else {
-								itemCell.item_person_user_id = [cell.item_person_user_id];
+								itemCell.itemPersonUserId = [cell.itemPersonUserId];
 								itemCells[itemGroupId][itemId][typeId] = itemCell;
 							}
 							break;
 						case 'status':
-							itemCell['item_status_color'] = cell.item_status_color;
-							itemCell['item_status_name'] = cell.item_status_name;
+							itemCell['itemStatusColor'] = cell.itemStatusColor;
+							itemCell['itemStatusName'] = cell.itemStatusName;
 							itemCells[itemGroupId][itemId][typeId] = itemCell;
 							break;
 						case 'text':
-							itemCell['item_text_text'] = cell.item_text_text;
+							itemCell['itemTextText'] = cell.itemTextText;
 							itemCells[itemGroupId][itemId][typeId] = itemCell;
 							break;
 						case 'times':
-							itemCell['item_times_start_date'] = cell.item_times_start_date;
-							itemCell['item_times_end_date'] = cell.item_times_end_date;
+							itemCell['itemTimesStartDate'] = cell.itemTimesStartDate;
+							itemCell['itemTimesEndDate'] = cell.itemTimesEndDate;
 							itemCells[itemGroupId][itemId][typeId] = itemCell;
 							break;
 						default:

@@ -54,21 +54,21 @@ export function TableRow({
     };
 
     const retrieveCellData = (cell: ItemCell, cellIndex: number): JSX.Element => {
-        switch (cell.type_name) {
+        switch (cell.typeName) {
             case 'persons':
                 return (
                     <div className={cx(classes.tableCell, classes.persons)} key={'item' + itemId + 'cell' + cellIndex}>
                         <Persons
                             groupId={groupId}
                             itemId={itemId}
-                            typeId={cell.type_id}
+                            typeId={cell.typeId}
                         />
                     </div>
                 );
             case 'dates':
                 return (
                     <div className={cx(classes.tableCell, classes.dates)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <DateCell date={cell.item_dates_date!} />
+                        <DateCell date={cell.itemDatesDate!} />
                     </div>
                 );
             case 'money':
@@ -77,10 +77,10 @@ export function TableRow({
                         <Money
                             groupId={groupId}
                             itemId={itemId}
-                            typeId={cell.type_id}
-                            transactionIds={cell.transaction_id!}
-                            cashFlows={cell.item_money_cashflow!}
-                            transactionDates={cell.item_money_date!}
+                            typeId={cell.typeId}
+                            transactionIds={cell.transactionId!}
+                            cashFlows={cell.itemMoneyCashflow!}
+                            transactionDates={cell.itemMoneyDate!}
                             onAddTransaction={onAddTransaction}
                             onDeleteTransaction={onDeleteTransaction}
                         />
@@ -89,19 +89,19 @@ export function TableRow({
             case 'times':
                 return (
                     <div className={cx(classes.tableCell, classes.times)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Times startDate={cell.item_times_start_date} endDate={cell.item_times_end_date} />
+                        <Times startDate={cell.itemTimesStartDate} endDate={cell.itemTimesEndDate} />
                     </div>
                 );
             case 'status':
                 return (
                     <div className={cx(classes.tableCell, classes.status)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Status groupId={groupId} itemId={itemId} typeId={cell.type_id} status={cell.item_status_name!} color={cell.item_status_color!} onStatusChange={onStatusChange} />
+                        <Status groupId={groupId} itemId={itemId} typeId={cell.typeId} status={cell.itemStatusName!} color={cell.itemStatusColor!} onStatusChange={onStatusChange} />
                     </div>
                 );
             case 'text':
                 return (
                     <div className={cx(classes.tableCell, classes.text)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <TextCell groupId={groupId} itemId={itemId} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange} />
+                        <TextCell groupId={groupId} itemId={itemId} typeId={cell.typeId} text={cell.itemTextText!} onTextChange={onTextChange} />
                     </div>
                 );
             default:
@@ -118,7 +118,7 @@ export function TableRow({
         <div className={cx(classes.tableRow, { [classes.lastRow]: lastRow })} ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div className={classes.tableCell} style={{ backgroundColor: color }}></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                <Item itemId={itemId} groupId={groupId} itemName={cellDetails[typeOrder[0]].item_name} onItemRename={onItemRename} />
+                <Item itemId={itemId} groupId={groupId} itemName={cellDetails[typeOrder[0]].itemName} onItemRename={onItemRename} />
             </div>
             {typeOrder.map((typeId, cellIndex) => {
                 return retrieveCellData(cellDetails[typeId], cellIndex);

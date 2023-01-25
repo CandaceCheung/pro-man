@@ -82,6 +82,83 @@ export class TableService {
 		return projectsDetail;
 	}
 
+	async getTableInfoV2(userID: number, projectID: number) {
+		const projectsDetail = await this.knex
+			.select(
+				'projects.name as projectName',
+				'projects.id as projectId',
+				'projects.is_deleted as projectIsDeleted',
+				'users.id as userId',
+				'users.role',
+				'projects.creator_id as projectCreatorId',
+				'members.project_id as joinedProjectId',
+				'items.id as itemId',
+				'items.name as itemName',
+				'items.creator_id as itemCreatorId',
+				'items.is_deleted as itemIsDeleted',
+				'items.order as verticalOrder',
+				'items.item_group_id as itemGroupId',
+				'item_groups.name as itemGroupName',
+				'type_persons.name as itemPersonName',
+				'type_persons.id as itemPersonId',
+				'type_persons.user_id as itemPersonUserId',
+				'type_dates.datetime as itemDatesDatetime',
+				'type_dates.color as itemDatetimeColor',
+				'type_dates.id as itemDatetimeId',
+				'type_times.start_date as itemTimesStartDate',
+				'type_times.end_date as itemTimesEndDate',
+				'type_times.color as itemTimesColor',
+				'type_times.id as itemTimesId',
+				'transactions.date as itemMoneyDate',
+				'transactions.cash_flow as itemMoneyCashflow',
+				'transactions.id as transactionId',
+				'states.name as itemStatusName',
+				'states.color as itemStatusColor',
+				'states.id as stateId',
+				'type_text.id as itemTextId',
+				'type_text.text as itemTextText',
+				'types.order as horizontalOrder',
+				'types.name as elementName',
+				'types.type as typeName',
+				'types.id as horizontalOrderId'
+			)
+			.select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD, YYYY') as "itemDatesDate"`))
+			.from('members')
+			.join('users', 'members.user_id', '=', 'users.id')
+			.join('projects', 'members.project_id', '=', 'projects.id')
+			.join('items', 'items.project_id', '=', 'projects.id')
+			.join('item_groups', 'items.item_group_id', '=', 'item_groups.id')
+			.join('type_persons', 'type_persons.item_id', '=', 'items.id')
+			.join('type_dates', 'type_dates.item_id', '=', 'items.id')
+			.join('type_times', 'type_times.item_id', '=', 'items.id')
+			.join('type_money', 'type_money.item_id', '=', 'items.id')
+			.join('transactions', 'transactions.type_money_id', '=', 'type_money.id')
+			.join('type_status', 'type_status.item_id', '=', 'items.id')
+			.join('states', 'type_status.state_id', '=', 'states.id')
+			.join('type_text', 'type_text.item_id', '=', 'items.id')
+			.join('types', function () {
+				this.on('type_text.type_id', '=', 'types.id')
+					.orOn('type_status.type_id', '=', 'types.id')
+					.orOn('type_money.type_id', '=', 'types.id')
+					.orOn('type_times.type_id', '=', 'types.id')
+					.orOn('type_dates.type_id', '=', 'types.id')
+					.orOn('type_persons.type_id', '=', 'types.id');
+			})
+			.where('users.id', userID)
+			.andWhere('projects.id', projectID)
+			.andWhere('items.is_deleted', false)
+			.andWhere('item_groups.is_deleted', false)
+			.andWhere('projects.is_deleted', false)
+			.orderBy('projectId', 'asc')
+			.orderBy('itemGroupId', 'desc')
+			.orderBy('verticalOrder', 'asc')
+			.orderBy('horizontalOrder', 'asc')
+			.orderBy('itemPersonId', 'asc')
+			.orderBy('itemMoneyDate', 'asc');
+
+		return projectsDetail;
+	}
+
 	async getTableList(userId: number) {
 		const tableList = await this.knex
 			.select('projects.creator_id as creator_id', 'projects.id as project_id', 'projects.name as project_name', 'members.id as member_table_id', 'users.username as username')
@@ -399,35 +476,35 @@ export class TableService {
 				types.forEach((type) => {
 					const typeId = type.typesId;
 					itemCells[groupId!][itemId][typeId] = {
-						item_id: itemId,
-						item_name: itemName || 'New Item',
-						type_id: type.typesId,
-						type_name: type.typesName,
-						element_name: type.elementName
+						itemId: itemId,
+						itemName: itemName || 'New Item',
+						typeId: type.typesId,
+						typeName: type.typesName,
+						elementName: type.elementName
 					}
 					switch (type.typesName) {
 						case 'persons':
-							itemCells[groupId!][itemId][typeId]['item_person_user_id'] = [userId];
+							itemCells[groupId!][itemId][typeId]['itemPersonUserId'] = [userId];
 							break;
 						case 'dates':
-							itemCells[groupId!][itemId][typeId]['item_dates_datetime'] = datetime;
-							itemCells[groupId!][itemId][typeId]['item_dates_date'] = date;
+							itemCells[groupId!][itemId][typeId]['itemDatesDatetime'] = datetime;
+							itemCells[groupId!][itemId][typeId]['itemDatesDate'] = date;
 							break;
 						case 'times':
-							itemCells[groupId!][itemId][typeId]['item_times_start_date'] = times.startDate;
-							itemCells[groupId!][itemId][typeId]['item_times_end_date'] = times.endDate;
+							itemCells[groupId!][itemId][typeId]['itemTimesStartDate'] = times.startDate;
+							itemCells[groupId!][itemId][typeId]['itemTimesEndDate'] = times.endDate;
 							break;
 						case "money":
-							itemCells[groupId!][itemId][typeId]['transaction_id'] = [transactions.id];
-							itemCells[groupId!][itemId][typeId]['item_money_cashflow'] = [transactions.cashFlow];
-							itemCells[groupId!][itemId][typeId]['item_money_date'] = transactions.date;
+							itemCells[groupId!][itemId][typeId]['transactionId'] = [transactions.id];
+							itemCells[groupId!][itemId][typeId]['itemMoneyCashflow'] = [transactions.cashFlow];
+							itemCells[groupId!][itemId][typeId]['itemMoneyDate'] = transactions.date;
 							break;
 						case "status":
-							itemCells[groupId!][itemId][typeId]['item_status_color'] = stateColor;
-							itemCells[groupId!][itemId][typeId]['item_status_name'] = stateName;
+							itemCells[groupId!][itemId][typeId]['itemStatusColor'] = stateColor;
+							itemCells[groupId!][itemId][typeId]['itemStatusName'] = stateName;
 							break;
 						case "text":
-							itemCells[groupId!][itemId][typeId]['item_text_text'] = text;
+							itemCells[groupId!][itemId][typeId]['itemTextText'] = text;
 							break;
 						default:
 							break

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import {
@@ -63,11 +63,11 @@ export function MainTable() {
 
     const deselectItemGroupInput = (index: number) => {
         if (userId && projectId) {
-            if (itemGroupsInputValue[index] !== itemGroupsState[index].item_group_name) {
-                const originalValue = itemGroupsState[index].item_group_name;
+            if (itemGroupsInputValue[index] !== itemGroupsState[index].itemGroupName) {
+                const originalValue = itemGroupsState[index].itemGroupName;
                 if (itemGroupsInputValue[index].length) {
                     // Fetch to the server
-                    dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, itemGroupsInputValue[index], index, originalValue));
+                    dispatch(updateItemGroupName(itemGroupsState[index].itemGroupId, itemGroupsInputValue[index], index, originalValue));
                 } else {
                     dispatch(resetItemGroupInputValueAction({index, originalValue}));
                 }
@@ -121,7 +121,7 @@ export function MainTable() {
     };
 
     const onDeleteTransaction = (groupId: number, itemId: number, typeId: number, transactionId: number) => {
-        if (itemCellsState[groupId][itemId][typeId].transaction_id!.length <= 1) {
+        if (itemCellsState[groupId][itemId][typeId].transactionId!.length <= 1) {
             showNotification({
                 title: 'Delete transaction notification',
                 message: 'Failed to delete transaction! At least one transaction is required for items! 🤥'
@@ -188,22 +188,22 @@ export function MainTable() {
                     type='auto'
                 >
                     <div className='main-table'>
-                        {itemGroupsState.map(({ item_group_id, item_group_name }, itemGroupArrayIndex) => {
+                        {itemGroupsState.map(({ itemGroupId, itemGroupName }, itemGroupArrayIndex) => {
                             return (
                                 <div className={classes.itemGroup} key={itemGroupArrayIndex}>
                                     <div
                                         className={classes.itemGroupBar}
                                         style={{
-                                            color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                            color: theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]
                                         }}
                                     >
-                                        <span className={classes.itemGroupIcon} onClick={() => dispatch(toggleDeleteGroupModalAction(item_group_id))}>
+                                        <span className={classes.itemGroupIcon} onClick={() => dispatch(toggleDeleteGroupModalAction(itemGroupId))}>
                                             <IconX size={16} />
                                         </span>
-                                        <Modal opened={deleteGroupModalOpened[item_group_id]} onClose={() => dispatch(toggleDeleteGroupModalAction(item_group_id))} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
+                                        <Modal opened={deleteGroupModalOpened[itemGroupId]} onClose={() => dispatch(toggleDeleteGroupModalAction(itemGroupId))} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
                                             <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
                                             <span className={classes.modalFooter}>
-                                                <Button color='red' onClick={() => onDeleteGroup(item_group_id, projectId!)}>
+                                                <Button color='red' onClick={() => onDeleteGroup(itemGroupId, projectId!)}>
                                                     Delete
                                                 </Button>
                                             </span>
@@ -220,7 +220,7 @@ export function MainTable() {
                                                     autoFocus
                                                     className={classes.groupNameInput}
                                                     style={{
-                                                        borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                        borderColor: theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]
                                                     }}
                                                     value={itemGroupsInputValue[itemGroupArrayIndex]}
                                                     onChange={(e) => changeItemGroupInputValue(itemGroupArrayIndex, e.target.value)}
@@ -231,33 +231,33 @@ export function MainTable() {
                                                     onClick={() => dispatch(selectItemGroupInputAction(itemGroupArrayIndex))}
                                                     className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
                                                     data-hover='Click to edit'
-                                                    item-count={itemsOrdersState[item_group_id].length ? itemsOrdersState[item_group_id].length + ' item' + `${itemsOrdersState[item_group_id].length === 1 ? '' : 's'}` : 'No items'}
+                                                    item-count={itemsOrdersState[itemGroupId].length ? itemsOrdersState[itemGroupId].length + ' item' + `${itemsOrdersState[itemGroupId].length === 1 ? '' : 's'}` : 'No items'}
                                                 >
-                                                    {item_group_name}
+                                                    {itemGroupName}
                                                 </span>
                                             )}
                                         </span>
                                     </div>
                                     {!itemGroupsCollapsed[itemGroupArrayIndex] && (
                                         <div>
-                                            <div id={`table_group_${item_group_id}`} className={classes.tableGroup}>
+                                            <div id={`table_group_${itemGroupId}`} className={classes.tableGroup}>
                                                 <div className={classes.tableHead}>
                                                     <div className={classes.tableRow}>
                                                         <div className={classes.tableCell}></div>
                                                         <div className={cx(classes.tableCell, classes.item)}>
                                                             <span>Item</span>
                                                         </div>
-                                                        <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
-                                                            <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
-                                                                {typesOrdersState[item_group_id].map((typeId, index) => (
+                                                        <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, itemGroupId)}>
+                                                            <SortableContext items={typesOrdersState[itemGroupId]} strategy={horizontalListSortingStrategy}>
+                                                                {typesOrdersState[itemGroupId].map((typeId, index) => (
                                                                     <TableColumnTitle
                                                                         key={typeId}
                                                                         id={typeId}
-                                                                        cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
-                                                                        cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
+                                                                        cellColumnType={itemCellsState[itemGroupId][itemsOrdersState[itemGroupId][0]][typeId].typeName}
+                                                                        cellColumnCustomName={itemCellsState[itemGroupId][itemsOrdersState[itemGroupId][0]][typeId].elementName}
                                                                         index={index}
-                                                                        lastCell={index === typesOrdersState[item_group_id].length - 1}
-                                                                        groupId={item_group_id}
+                                                                        lastCell={index === typesOrdersState[itemGroupId].length - 1}
+                                                                        groupId={itemGroupId}
                                                                         onTypeRename={onTypeRename}
                                                                     />
                                                                 ))}
@@ -266,17 +266,17 @@ export function MainTable() {
                                                     </div>
                                                 </div>
                                                 <div className={classes.tableBody}>
-                                                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
-                                                        <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
-                                                            {itemsOrdersState[item_group_id].map((itemId, itemIndex) => (
+                                                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, itemGroupId)}>
+                                                        <SortableContext items={itemsOrdersState[itemGroupId]} strategy={verticalListSortingStrategy}>
+                                                            {itemsOrdersState[itemGroupId].map((itemId, itemIndex) => (
                                                                 <TableRow
                                                                     key={'group_' + itemGroupArrayIndex + '_item_' + itemId}
                                                                     itemId={itemId}
-                                                                    groupId={item_group_id}
-                                                                    typeOrder={typesOrdersState[item_group_id]}
-                                                                    cellDetails={itemCellsState[item_group_id][itemId]}
-                                                                    color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
-                                                                    lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
+                                                                    groupId={itemGroupId}
+                                                                    typeOrder={typesOrdersState[itemGroupId]}
+                                                                    cellDetails={itemCellsState[itemGroupId][itemId]}
+                                                                    color={theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]}
+                                                                    lastRow={itemIndex === itemsOrdersState[itemGroupId].length - 1}
                                                                     onItemRename={onItemRename}
                                                                     onTextChange={onTextChange}
                                                                     onStatusChange={onStatusChange}
@@ -293,18 +293,18 @@ export function MainTable() {
                                                 <div
                                                     className={classes.tableCell}
                                                     style={{
-                                                        backgroundColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                        backgroundColor: theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]
                                                     }}
                                                 ></div>
                                                 <div className={cx(classes.tableCell, classes.item)}>
                                                     {newItemsInputActive[itemGroupArrayIndex] ? (
                                                         <input
-                                                            onBlur={() => deselectNewItemNameInput(itemGroupArrayIndex, item_group_id)}
+                                                            onBlur={() => deselectNewItemNameInput(itemGroupArrayIndex, itemGroupId)}
                                                             type='text'
                                                             autoFocus
                                                             className={classes.newItemNameInput}
                                                             value={newItemsInputValue[itemGroupArrayIndex]}
-                                                            onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, itemGroupArrayIndex, item_group_id)}
+                                                            onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, itemGroupArrayIndex, itemGroupId)}
                                                             onChange={(e) => updateNewItemInputValue(itemGroupArrayIndex, e.target.value)}
                                                         ></input>
                                                     ) : (
