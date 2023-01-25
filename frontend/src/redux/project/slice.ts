@@ -22,9 +22,9 @@ export type MessageState = {
 export type MessageStateArr = MessageState[];
 
 export type MyMemberState = {
-    member_id: number | null;
-    last_name: string;
-    first_name: string;
+    memberId: number | null;
+    lastName: string;
+    firstName: string;
     username: string;
     members: {
         membership_id: number | null;
@@ -116,9 +116,9 @@ const initialState: ActiveProjectState = {
     ],
     memberList: [
         {
-            member_id: null,
-            last_name: '',
-            first_name: '',
+            memberId: null,
+            lastName: '',
+            firstName: '',
             username: '',
             members: [
                 {
