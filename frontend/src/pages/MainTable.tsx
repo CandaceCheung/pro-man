@@ -8,6 +8,7 @@ import {
     deleteItemGroup,
     getProjectStatusList,
     getTable,
+    getTableV2,
     insertItem,
     removeTransaction,
     renameItem,
@@ -54,6 +55,7 @@ export function MainTable() {
             dispatch(getMember(projectId));
             dispatch(getProjectStatusList(projectId));
             dispatch(getTable(userId!, projectId));
+            dispatch(getTableV2(userId!, projectId));
         }
     }, [userId, projectId, dispatch]);
 

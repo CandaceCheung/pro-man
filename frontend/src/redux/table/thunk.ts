@@ -75,11 +75,11 @@ export function likeProject(projectId: number, userId: number) {
     };
 }
 
-export function getTable(userID: number, projectID: number) {
+export function getTable(userId: number, projectId: number) {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem('token');
 
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/v2/${userID}&${projectID}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/${userId}&${projectId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -88,6 +88,28 @@ export function getTable(userID: number, projectID: number) {
 
         if (result.success) {
             dispatch(getTableAction(result.table));
+        } else {
+            showNotification({
+                title: 'Project Table notification',
+                message: 'Fail to obtain table information'
+            });
+        }
+    };
+
+}
+
+export function getTableV2(userId: number, projectId: number) {
+    return async (dispatch: Dispatch) => {
+        const token = localStorage.getItem('token');
+
+        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/v2/${userId}&${projectId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        const result = await res.json();
+
+        if (result.success) {
             dispatch(setItemCellsAction(result.itemCells));
             dispatch(setItemGroupsAction(result.itemGroups));
             dispatch(setItemsOrdersAction(result.itemsOrders));

@@ -163,7 +163,6 @@ export class TableController {
 
 			res.json({
 				success: true,
-				table: result,
 				itemCells,
 				itemGroups,
 				itemsOrders,
