@@ -161,7 +161,7 @@ export class TableService {
 
 	async getTableList(userId: number) {
 		const tableList = await this.knex
-			.select('projects.creator_id as creator_id', 'projects.id as project_id', 'projects.name as project_name', 'members.id as member_table_id', 'users.username as username')
+			.select('projects.creator_id as creatorId', 'projects.id as projectId', 'projects.name as projectName', 'members.id as memberTableId', 'users.username as username')
 			.from('members')
 			.join('users', 'members.user_id', '=', 'users.id')
 			.join('projects', 'members.project_id', '=', 'projects.id')
@@ -192,7 +192,7 @@ export class TableService {
 
 	async getFavorite(userId: number) {
 		const favoriteList = await this.knex
-			.select('projects.creator_id as creator_id', 'favorite.user_id as user_id', 'projects.id as project_id', 'projects.name as project_name', 'favorite.id as favorite_id')
+			.select('projects.creator_id as creatorId', 'favorite.user_id as userId', 'projects.id as projectId', 'projects.name as projectName', 'favorite.id as favoriteId')
 			.from('favorite')
 			.join('projects', 'favorite.project_id', '=', 'projects.id')
 			.where('favorite.user_id', '=', userId);

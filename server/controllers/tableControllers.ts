@@ -2,7 +2,6 @@ import { TableService } from '../services/tableService';
 import { Request, Response } from 'express';
 import { itemCellsElement, itemsGroupElement } from '../model';
 import { KanbanService } from '../services/KanbanService';
-import { keysToCamel } from '../utils/camelCase';
 
 export class TableController {
 	constructor(private tableService: TableService, private kanbanService: KanbanService) {}
@@ -183,7 +182,7 @@ export class TableController {
 
 			res.json({
 				success: true,
-				list: keysToCamel(result)
+				list: result
 			});
 		} catch (e) {
 			console.error(e);
@@ -198,7 +197,7 @@ export class TableController {
 
 			res.json({
 				success: true,
-				favorite: keysToCamel(result)
+				favorite: result
 			});
 		} catch (e) {
 			console.error(e);
