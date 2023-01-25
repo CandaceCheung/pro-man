@@ -2,6 +2,7 @@ import { TableService } from '../services/tableService';
 import { Request, Response } from 'express';
 import { itemCellsElement, itemsGroupElement } from '../model';
 import { KanbanService } from '../services/KanbanService';
+import { keysToCamel } from '../utils/camelCase';
 
 export class TableController {
 	constructor(private tableService: TableService, private kanbanService: KanbanService) {}
@@ -193,11 +194,11 @@ export class TableController {
 	getFavorite = async (req: Request, res: Response) => {
 		try {
 			const userId = req.params.userId;
-			const result = await this.tableService.getFavorite(parseInt(userId));
+			const result: Array<object> = await this.tableService.getFavorite(parseInt(userId));
 
 			res.json({
 				success: true,
-				favorite: result
+				favorite: keysToCamel(result)
 			});
 		} catch (e) {
 			console.error(e);

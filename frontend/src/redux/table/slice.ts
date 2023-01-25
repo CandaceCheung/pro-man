@@ -13,11 +13,11 @@ export type TableMembers = {
 };
 
 export type MyFavoriteListState = {
-    user_id?: number;
-    creator_id?: number;
-    project_id?: number;
-    favorite_id?: number;
-    project_name: string;
+    userId?: number;
+    creatorId?: number;
+    projectId?: number;
+    favoriteId?: number;
+    projectName: string;
 }[];
 
 export type MyTableState = {
@@ -185,11 +185,11 @@ const initialState: CombinedTableState = {
     ],
     myFavoriteList: [
         {
-            user_id: undefined,
-            creator_id: undefined,
-            project_id: undefined,
-            favorite_id: undefined,
-            project_name: ''
+            userId: undefined,
+            creatorId: undefined,
+            projectId: undefined,
+            favoriteId: undefined,
+            projectName: ''
         }
     ],
     statusList: [
@@ -409,8 +409,8 @@ const renameProjectInTableList: CaseReducer<CombinedTableState, PayloadAction<{ 
         }
     });
     state.myFavoriteList.forEach((project) => {
-        if (project.project_id === action.payload.projectId) {
-            project.project_name = action.payload.projectName;
+        if (project.projectId === action.payload.projectId) {
+            project.projectName = action.payload.projectName;
         }
     });
 };
