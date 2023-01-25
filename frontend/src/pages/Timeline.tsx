@@ -50,19 +50,19 @@ export function TimeFrame() {
     const targetProjectId = useAppSelector((state) => state.project.projectId);
     const projectSummary = useAppSelector((state) => state.table.summary);
     const [toggle, setToggle] = useState<boolean | null>(false);
-    const autofit = useAppSelector((state) => state.project.time_line_autofit);
-    const zoom = useAppSelector((state) => state.project.time_line_view);
-    const startPointAnchor = useAppSelector((state) => state.project.time_line_start_anchor);
-    const endPointAnchor = useAppSelector((state) => state.project.time_line_end_anchor);
-    const now = useAppSelector((state) => state.project.time_line_now);
-    const show = useAppSelector((state) => state.project.time_line_show_marker);
-    const loading = useAppSelector((state) => state.project.toggle_loading);
-    const toggleUpdateModal = useAppSelector((state) => state.project.update_time_line_modal_opened);
-    const stack = useAppSelector((state) => state.project.time_line_stack_item);
-    const sortByPersonId = useAppSelector((state) => state.project.sort_by_person_id);
-    const sortByGroupId = useAppSelector((state) => state.project.sort_by_group_id);
-    const setHideByType = useAppSelector((state) => state.project.set_hide_by_type);
-    const itemHeight = useAppSelector((state) => state.project.set_timeline_item_height);
+    const autofit = useAppSelector((state) => state.project.timeLineAutofit);
+    const zoom = useAppSelector((state) => state.project.timeLineView);
+    const startPointAnchor = useAppSelector((state) => state.project.timeLineStartAnchor);
+    const endPointAnchor = useAppSelector((state) => state.project.timeLineEndAnchor);
+    const now = useAppSelector((state) => state.project.timeLineNow);
+    const show = useAppSelector((state) => state.project.timeLineShowMarker);
+    const loading = useAppSelector((state) => state.project.toggleLoading);
+    const toggleUpdateModal = useAppSelector((state) => state.project.updateTimeLineModalOpened);
+    const stack = useAppSelector((state) => state.project.timeLineStackItem);
+    const sortByPersonId = useAppSelector((state) => state.project.sortByPersonId);
+    const sortByGroupId = useAppSelector((state) => state.project.sortByGroupId);
+    const setHideByType = useAppSelector((state) => state.project.setHideByType);
+    const itemHeight = useAppSelector((state) => state.project.setTimelineItemHeight);
 
     const unfilteredTimelineDetails = projectSummary
         .filter((project) => project.project_id === targetProjectId && project.type_name === 'times' && !project.project_is_deleted && !project.item_is_deleted)

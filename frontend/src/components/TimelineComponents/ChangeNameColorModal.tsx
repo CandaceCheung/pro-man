@@ -8,11 +8,11 @@ import { updateDatelineItem, updateTimelineItem } from '../../redux/table/thunk'
 
 export function ChangNameColorModal() {
     const dispatch = useAppDispatch();
-    const opened = useAppSelector((state) => state.project.update_time_line_modal_opened);
-    const targetElementId = useAppSelector((state) => state.project.target_element_id);
+    const opened = useAppSelector((state) => state.project.updateTimeLineModalOpened);
+    const targetElementId = useAppSelector((state) => state.project.targetElementId);
     const itemType = targetElementId.toString()[0] === '0' ? null : targetElementId.toString()[0] === '1' ? 'times' : 'dates';
     const itemId = parseInt(targetElementId.toString().slice(1));
-    const page = useAppSelector((state) => state.project.active_page);
+    const page = useAppSelector((state) => state.project.activePage);
     const id = useId();
     const projectSummary = useAppSelector((state) => state.table.summary);
     const dateItem = projectSummary.filter((project) => project.item_datetime_id === itemId && project.type_name === 'dates')[0];

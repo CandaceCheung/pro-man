@@ -74,9 +74,9 @@ export function LeftNavbar() {
     const [active, setActive] = useState(0);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const toggleSidePanel = useAppSelector((state) => state.project.toggle_side_panel);
-    const toggleFavorite = useAppSelector((state) => state.project.toggle_favorite);
-    const page = useAppSelector((state) => state.project.active_page);
+    const toggleSidePanel = useAppSelector((state) => state.project.toggleSidePanel);
+    const toggleFavorite = useAppSelector((state) => state.project.toggleFavorite);
+    const page = useAppSelector((state) => state.project.activePage);
 
     const iconLinks = navButtons.map((item, index) => (
         <NavbarLink

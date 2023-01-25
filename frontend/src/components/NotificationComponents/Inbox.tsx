@@ -11,7 +11,7 @@ import { ReplyModal } from './ReplyModal';
 export function Inbox() {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
-    const messageSummary = useAppSelector((state) => state.project.message_summary);
+    const messageSummary = useAppSelector((state) => state.project.messageSummary);
     const [search, setSearch] = useState('');
     let messages = messageSummary.filter((message) => message.receiver_id === userId && !message.is_deleted);
     messages = messages.filter(

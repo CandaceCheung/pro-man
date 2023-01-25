@@ -12,7 +12,7 @@ export function InvitationList() {
     const userID = useAppSelector((state) => state.auth.userId);
     const projectId = useAppSelector((state) => state.project.projectId);
     const [toggle, setToggle] = useState(false);
-    const loading = useAppSelector((state) => state.project.toggle_invitation_button);
+    const loading = useAppSelector((state) => state.project.toggleInvitationButton);
     const [targetInvitationId, setTargetInvitationId] = useState(0);
 
     const elements = [];

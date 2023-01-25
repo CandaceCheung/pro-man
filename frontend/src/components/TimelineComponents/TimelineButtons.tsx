@@ -6,12 +6,12 @@ import { useAppDispatch, useAppSelector } from '../../store';
 
 export function TimelineButton() {
     const dispatch = useAppDispatch();
-    const defaultView = useAppSelector((state) => state.project.time_line_view);
-    const autofit = useAppSelector((state) => state.project.time_line_autofit);
-    const now = useAppSelector((state) => state.project.time_line_now);
-    const show = useAppSelector((state) => state.project.time_line_show_marker);
-    const stack = useAppSelector((state) => state.project.time_line_stack_item);
-    const itemHeight = useAppSelector((state) => state.project.set_timeline_item_height);
+    const defaultView = useAppSelector((state) => state.project.timeLineView);
+    const autofit = useAppSelector((state) => state.project.timeLineAutofit);
+    const now = useAppSelector((state) => state.project.timeLineNow);
+    const show = useAppSelector((state) => state.project.timeLineShowMarker);
+    const stack = useAppSelector((state) => state.project.timeLineStackItem);
+    const itemHeight = useAppSelector((state) => state.project.setTimelineItemHeight);
 
     function changeTimeLineView(value: TimeLineViewState) {
         dispatch(setAutofitAction(false));

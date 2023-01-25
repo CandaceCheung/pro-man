@@ -11,10 +11,10 @@ export function ButtonHub() {
     const projectSummary = useAppSelector((state) => state.table.summary);
     const projectId = useAppSelector((state) => state.project.projectId);
     const userId = useAppSelector((state) => state.auth.userId);
-    const page = useAppSelector((state) => state.project.active_page);
-    const sortByPersonId = useAppSelector((state) => state.project.sort_by_person_id);
-    const sortByGroupId = useAppSelector((state) => state.project.sort_by_group_id);
-    const setHideByType = useAppSelector((state) => state.project.set_hide_by_type);
+    const page = useAppSelector((state) => state.project.activePage);
+    const sortByPersonId = useAppSelector((state) => state.project.sortByPersonId);
+    const sortByGroupId = useAppSelector((state) => state.project.sortByGroupId);
+    const setHideByType = useAppSelector((state) => state.project.setHideByType);
     const typeColumn = ['dates', 'times'];
 
     // timeline logic

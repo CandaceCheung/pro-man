@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../store';
 export function MyMember() {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
-    const memberList = useAppSelector((state) => state.project.member_list);
+    const memberList = useAppSelector((state) => state.project.memberList);
 
     function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         dispatch(toggleInviteMemberModalAction(true));

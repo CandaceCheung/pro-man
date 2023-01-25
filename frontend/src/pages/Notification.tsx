@@ -6,7 +6,7 @@ import { useAppSelector } from '../store';
 
 export function Notification() {
     const userId = useAppSelector((state) => state.auth.userId);
-    const messageSummary = useAppSelector((state) => state.project.message_summary);
+    const messageSummary = useAppSelector((state) => state.project.messageSummary);
     const messages = messageSummary.filter((message) => message.receiver_id === userId);
     const count = messages.filter((message) => message.status === false).length;
 

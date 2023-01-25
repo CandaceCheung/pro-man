@@ -27,7 +27,7 @@ export default function ProjectNavbar() {
     const [projectTitleInputValue, setProjectTitleInputValue] = useState('');
     // should be handel by backend
     const like = useAppSelector((state) => state.table.myFavoriteList).filter((project) => project.project_id === projectId && project.user_id === userId);
-    const page = useAppSelector((state) => state.project.active_page);
+    const page = useAppSelector((state) => state.project.activePage);
     const navigate = useNavigate();
 
     useEffect(() => {

@@ -43,62 +43,62 @@ export type MyMemberStateArr = MyMemberState[];
 export interface ActiveProjectState {
     projectId: number | null;
     projectName: string | null;
-    active_page: ActivePageState | null;
-    toggle_side_panel: boolean;
-    toggle_favorite: boolean;
-    toggle_loading: boolean;
-    time_line_view: TimeLineViewState;
-    time_line_autofit: boolean;
-    time_line_now: boolean;
-    time_line_show_marker: boolean;
-    time_line_start_anchor: Moment;
-    time_line_end_anchor: Moment;
-    toggle_messager: boolean;
-    toggle_invite_member_modal: boolean;
-    warning_modal_opened: boolean;
-    time_line_stack_item: boolean;
-    update_time_line_modal_opened: boolean;
-    target_element_id: number;
-    sort_by_person_id: number | undefined;
-    sort_by_group_id: number | undefined;
-    set_hide_by_type: string | undefined;
-    set_timeline_item_height: number;
-    toggle_invitation_button: boolean;
-    toggle_reply_modal: boolean;
-    check_username: boolean | null;
-    message_target: number | null;
-    message_summary: MessageStateArr;
-    member_list: MyMemberStateArr;
+    activePage: ActivePageState | null;
+    toggleSidePanel: boolean;
+    toggleFavorite: boolean;
+    toggleLoading: boolean;
+    timeLineView: TimeLineViewState;
+    timeLineAutofit: boolean;
+    timeLineNow: boolean;
+    timeLineShowMarker: boolean;
+    timeLineStartAnchor: Moment;
+    timeLineEndAnchor: Moment;
+    toggleMessager: boolean;
+    toggleInviteMemberModal: boolean;
+    warningModalOpened: boolean;
+    timeLineStackItem: boolean;
+    updateTimeLineModalOpened: boolean;
+    targetElementId: number;
+    sortByPersonId: number | undefined;
+    sortByGroupId: number | undefined;
+    setHideByType: string | undefined;
+    setTimelineItemHeight: number;
+    toggleInvitationButton: boolean;
+    toggleReplyModal: boolean;
+    checkUsername: boolean | null;
+    messageTarget: number | null;
+    messageSummary: MessageStateArr;
+    memberList: MyMemberStateArr;
 }
 
 const initialState: ActiveProjectState = {
     projectId: null,
     projectName: null,
-    active_page: 'mainTable',
-    toggle_side_panel: false,
-    toggle_favorite: false,
-    toggle_loading: false,
-    time_line_view: 'weeks',
-    time_line_autofit: false,
-    time_line_now: false,
-    time_line_show_marker: true,
-    time_line_start_anchor: moment().startOf('minute').add(-0.5, 'weeks'),
-    time_line_end_anchor: moment().startOf('minute').add(0.5, 'weeks'),
-    toggle_messager: false,
-    toggle_invite_member_modal: false,
-    warning_modal_opened: false,
-    time_line_stack_item: true,
-    update_time_line_modal_opened: false,
-    target_element_id: 0,
-    sort_by_person_id: undefined,
-    sort_by_group_id: undefined,
-    set_hide_by_type: undefined,
-    set_timeline_item_height: 50,
-    toggle_invitation_button: false,
-    toggle_reply_modal: false,
-    check_username: null,
-    message_target: null,
-    message_summary: [
+    activePage: 'mainTable',
+    toggleSidePanel: false,
+    toggleFavorite: false,
+    toggleLoading: false,
+    timeLineView: 'weeks',
+    timeLineAutofit: false,
+    timeLineNow: false,
+    timeLineShowMarker: true,
+    timeLineStartAnchor: moment().startOf('minute').add(-0.5, 'weeks'),
+    timeLineEndAnchor: moment().startOf('minute').add(0.5, 'weeks'),
+    toggleMessager: false,
+    toggleInviteMemberModal: false,
+    warningModalOpened: false,
+    timeLineStackItem: true,
+    updateTimeLineModalOpened: false,
+    targetElementId: 0,
+    sortByPersonId: undefined,
+    sortByGroupId: undefined,
+    setHideByType: undefined,
+    setTimelineItemHeight: 50,
+    toggleInvitationButton: false,
+    toggleReplyModal: false,
+    checkUsername: null,
+    messageTarget: null,
+    messageSummary: [
         {
             id: null,
             sender: null,
@@ -114,7 +114,7 @@ const initialState: ActiveProjectState = {
             updated_at: new Date()
         }
     ],
-    member_list: [
+    memberList: [
         {
             member_id: null,
             last_name: '',
@@ -149,81 +149,81 @@ const clearActiveProject: CaseReducer<ActiveProjectState, PayloadAction> = (stat
     state.projectId = null;
 };
 const setTimeLineView: CaseReducer<ActiveProjectState, PayloadAction<{ value: TimeLineViewState; start: Moment; end: Moment }>> = (state, action) => {
-    state.time_line_view = action.payload.value;
-    state.time_line_start_anchor = action.payload.start;
-    state.time_line_end_anchor = action.payload.end;
+    state.timeLineView = action.payload.value;
+    state.timeLineStartAnchor = action.payload.start;
+    state.timeLineEndAnchor = action.payload.end;
 };
 const setAutofit: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.time_line_autofit = action.payload;
+    state.timeLineAutofit = action.payload;
 };
 const setTimelineNow: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.time_line_now = action.payload;
+    state.timeLineNow = action.payload;
 };
 const setShowMarker: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.time_line_show_marker = action.payload;
+    state.timeLineShowMarker = action.payload;
 };
 const triggerWarningModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.warning_modal_opened = action.payload;
+    state.warningModalOpened = action.payload;
 };
 const toggleMessager: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.toggle_messager = action.payload;
+    state.toggleMessager = action.payload;
 };
 const setActivePage: CaseReducer<ActiveProjectState, PayloadAction<ActivePageState | null>> = (state, action) => {
-    state.active_page = action.payload;
+    state.activePage = action.payload;
 };
 const toggleSidePanel: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.toggle_side_panel = action.payload;
+    state.toggleSidePanel = action.payload;
 };
 const toggleFavorite: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.toggle_favorite = action.payload;
+    state.toggleFavorite = action.payload;
 };
 const triggerUpdateTimelineModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.update_time_line_modal_opened = action.payload;
+    state.updateTimeLineModalOpened = action.payload;
 };
 const setTargetUpdateElement: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
-    state.target_element_id = action.payload;
+    state.targetElementId = action.payload;
 };
 const toggleLoading: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.toggle_loading = action.payload;
+    state.toggleLoading = action.payload;
 };
 const toggleStackItem: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.time_line_stack_item = action.payload;
+    state.timeLineStackItem = action.payload;
 };
 const setSortByPersonId: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
-    state.sort_by_person_id = action.payload;
+    state.sortByPersonId = action.payload;
 };
 const setSortByGroupId: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
-    state.sort_by_group_id = action.payload;
+    state.sortByGroupId = action.payload;
 };
 const setHideByType: CaseReducer<ActiveProjectState, PayloadAction<string>> = (state, action) => {
-    state.set_hide_by_type = action.payload;
+    state.setHideByType = action.payload;
 };
 const setTimelineItemHeight: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
-    state.set_timeline_item_height = action.payload;
+    state.setTimelineItemHeight = action.payload;
 };
 const toggleInvitationButton: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.toggle_invitation_button = action.payload;
+    state.toggleInvitationButton = action.payload;
 };
 const toggleIReplyModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.toggle_reply_modal = action.payload;
+    state.toggleReplyModal = action.payload;
 };
 const toggleInviteMemberModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.toggle_invite_member_modal = action.payload;
+    state.toggleInviteMemberModal = action.payload;
 };
 const checkUsername: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
-    state.check_username = action.payload;
+    state.checkUsername = action.payload;
 };
 const setMessageTarget: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
-    state.message_target = action.payload;
+    state.messageTarget = action.payload;
 };
 const sendMessage: CaseReducer<ActiveProjectState, PayloadAction<MessageState>> = (state, action) => {
-    state.message_summary.unshift(action.payload);
+    state.messageSummary.unshift(action.payload);
 };
 const getMessages: CaseReducer<ActiveProjectState, PayloadAction<MessageStateArr>> = (state, action) => {
-    state.message_summary = action.payload;
+    state.messageSummary = action.payload;
 };
 const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; checked: boolean }>> = (state, action) => {
-    for (let message of state.message_summary) {
+    for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
             message.status = action.payload.checked;
             return;
@@ -231,7 +231,7 @@ const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId
     }
 };
 const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeleted: boolean }>> = (state, action) => {
-    for (let message of state.message_summary) {
+    for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
             message.status = true;
             message.is_deleted = action.payload.isDeleted;
@@ -240,7 +240,7 @@ const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notification
     }
 };
 const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeletedReceiver: boolean }>> = (state, action) => {
-    for (let message of state.message_summary) {
+    for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
             message.is_deleted_receiver = action.payload.isDeletedReceiver;
             return;
@@ -248,10 +248,10 @@ const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ noti
     }
 };
 const getMemberList: CaseReducer<ActiveProjectState, PayloadAction<MyMemberStateArr>> = (state, action) => {
-    state.member_list = action.payload;
+    state.memberList = action.payload;
 };
 const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number[]; avatar: number }>> = (state, action) => {
-    for (let message of state.member_list) {
+    for (let message of state.memberList) {
         for (let member of message.members) {
             for (let id of action.payload.membershipId) {
                 if (member.membership_id === id) {
@@ -263,7 +263,7 @@ const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId
 };
 const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number; projectId: number }>> = (state, action) => {
     let i: number | null = null;
-    state.member_list.forEach((person, index) => {
+    state.memberList.forEach((person, index) => {
         for (let member of person.members) {
             if (member.membership_id === action.payload.membershipId) {
                 if (person.members.length <= 1) {
@@ -280,7 +280,7 @@ const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId
         }
     });
     if (i !== null) {
-        state.member_list.splice(i, 1);
+        state.memberList.splice(i, 1);
     }
 };
 

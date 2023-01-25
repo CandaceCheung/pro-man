@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../store';
 export function Sent() {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
-    const messageSummary = useAppSelector((state) => state.project.message_summary);
+    const messageSummary = useAppSelector((state) => state.project.messageSummary);
     const [search, setSearch] = useState('');
     let messages = messageSummary.filter((message) => message.sender_id === userId && !message.is_deleted_receiver);
     messages = messages.filter(
