@@ -54,7 +54,6 @@ export function MainTable() {
         if (projectId) {
             dispatch(getMember(projectId));
             dispatch(getProjectStatusList(projectId));
-            dispatch(getTable(userId!, projectId));
             dispatch(getTableV2(userId!, projectId));
         }
     }, [userId, projectId, dispatch]);
