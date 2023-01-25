@@ -27,15 +27,15 @@ export type MyMemberState = {
     firstName: string;
     username: string;
     members: {
-        membership_id: number | null;
-        project_id: number | null;
-        member_user_id: number | null;
+        membershipId: number | null;
+        projectId: number | null;
+        memberUserId: number | null;
         avatar: number | null;
     }[];
     projects: {
-        project_id: number | null;
-        project_name: string;
-        creator_id: number | null;
+        projectId: number | null;
+        projectName: string;
+        creatorId: number | null;
     }[];
 };
 export type MyMemberStateArr = MyMemberState[];
@@ -122,17 +122,17 @@ const initialState: ActiveProjectState = {
             username: '',
             members: [
                 {
-                    membership_id: null,
-                    project_id: null,
-                    member_user_id: null,
+                    membershipId: null,
+                    projectId: null,
+                    memberUserId: null,
                     avatar: null
                 }
             ],
             projects: [
                 {
-                    project_name: '',
-                    project_id: null,
-                    creator_id: null
+                    projectName: '',
+                    projectId: null,
+                    creatorId: null
                 }
             ]
         }
@@ -254,7 +254,7 @@ const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId
     for (let message of state.memberList) {
         for (let member of message.members) {
             for (let id of action.payload.membershipId) {
-                if (member.membership_id === id) {
+                if (member.membershipId === id) {
                     member.avatar = action.payload.avatar;
                 }
             }
@@ -265,13 +265,13 @@ const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId
     let i: number | null = null;
     state.memberList.forEach((person, index) => {
         for (let member of person.members) {
-            if (member.membership_id === action.payload.membershipId) {
+            if (member.membershipId === action.payload.membershipId) {
                 if (person.members.length <= 1) {
                     i = index;
                 } else {
                     person.members.splice(person.members.indexOf(member), 1);
                     for (let project of person.projects) {
-                        if (project.project_id === action.payload.projectId) {
+                        if (project.projectId === action.payload.projectId) {
                             person.projects.splice(person.projects.indexOf(project), 1);
                         }
                     }

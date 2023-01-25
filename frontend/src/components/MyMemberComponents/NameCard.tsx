@@ -21,7 +21,7 @@ export function NameCard(props: MyMemberState) {
     const avatar = [image_1, image_2, image_3, image_4, image_5];
     const idList: number[] = [];
     for (let item of props.members) {
-        idList.push(item.membership_id!);
+        idList.push(item.membershipId!);
     }
 
     function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -104,11 +104,11 @@ export function NameCard(props: MyMemberState) {
                             }}
                         >
                             <Text size='sm' color='dimmed'>
-                                {project.project_name}
+                                {project.projectName}
                             </Text>
                             {!isCreator && (
                                 <Tooltip label='Remove from project' color='red' position='right' withArrow>
-                                    <Button value={props.members[index].membership_id!} onClick={(e) => clickHandler(e)} variant='subtle' style={{ height: '20px' }}>
+                                    <Button value={props.members[index].membershipId!} onClick={(e) => clickHandler(e)} variant='subtle' style={{ height: '20px' }}>
                                         <IconBackspace size={20} />
                                     </Button>
                                 </Tooltip>

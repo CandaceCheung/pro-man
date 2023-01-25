@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { tableService } from '../app';
 import { MemberService } from '../services/memberServices';
+import { keysToCamel } from '../utils/camelCase';
 
 export class MemberController {
 	constructor(private memberService: MemberService) {}
@@ -102,7 +103,7 @@ export class MemberController {
 				res.json({
 					success: true,
 					msg: 'Member List Retrieved Successfully',
-					memberList
+					memberList: keysToCamel(memberList)
 				});
 			} else {
 				res.json({
