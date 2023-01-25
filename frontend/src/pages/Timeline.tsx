@@ -47,7 +47,7 @@ type ItemState = {
 export function TimeFrame() {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
-    const targetProjectId = useAppSelector((state) => state.project.project_id);
+    const targetProjectId = useAppSelector((state) => state.project.projectId);
     const projectSummary = useAppSelector((state) => state.table.summary);
     const [toggle, setToggle] = useState<boolean | null>(false);
     const autofit = useAppSelector((state) => state.project.time_line_autofit);

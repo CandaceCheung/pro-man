@@ -33,7 +33,7 @@ import { changeItemGroupInputValueAction, changeNewItemsInputValueAction, desele
 
 export function MainTable() {
     const userId = useAppSelector((state) => state.auth.userId);
-    const projectId = useAppSelector((state) => state.project.project_id);
+    const projectId = useAppSelector((state) => state.project.projectId);
     const itemCellsState = useAppSelector((state) => state.table.itemCells);
     const itemGroupsState = useAppSelector((state) => state.table.itemGroups);
     const itemsOrdersState = useAppSelector((state) => state.table.itemsOrders);

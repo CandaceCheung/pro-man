@@ -19,7 +19,7 @@ import { useToken } from './hooks/useToken';
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const userId = useAppSelector((state) => state.auth.userId);
-    const projectId = useAppSelector((state) => state.project.project_id); //active project state
+    const projectId = useAppSelector((state) => state.project.projectId); //active project state
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();

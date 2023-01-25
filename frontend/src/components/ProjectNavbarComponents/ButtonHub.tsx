@@ -9,7 +9,7 @@ import { TimelineButton } from '../TimelineComponents/TimelineButtons';
 export function ButtonHub() {
     const dispatch = useAppDispatch();
     const projectSummary = useAppSelector((state) => state.table.summary);
-    const projectId = useAppSelector((state) => state.project.project_id);
+    const projectId = useAppSelector((state) => state.project.projectId);
     const userId = useAppSelector((state) => state.auth.userId);
     const page = useAppSelector((state) => state.project.active_page);
     const sortByPersonId = useAppSelector((state) => state.project.sort_by_person_id);

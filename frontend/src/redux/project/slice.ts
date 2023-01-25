@@ -41,8 +41,8 @@ export type MyMemberState = {
 export type MyMemberStateArr = MyMemberState[];
 
 export interface ActiveProjectState {
-    project_id: number | null;
-    project_name: string | null;
+    projectId: number | null;
+    projectName: string | null;
     active_page: ActivePageState | null;
     toggle_side_panel: boolean;
     toggle_favorite: boolean;
@@ -72,8 +72,8 @@ export interface ActiveProjectState {
 }
 
 const initialState: ActiveProjectState = {
-    project_id: null,
-    project_name: null,
+    projectId: null,
+    projectName: null,
     active_page: 'mainTable',
     toggle_side_panel: false,
     toggle_favorite: false,
@@ -140,13 +140,13 @@ const initialState: ActiveProjectState = {
 };
 
 const setActiveProject: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
-    state.project_id = action.payload;
+    state.projectId = action.payload;
 };
 const setProjectName: CaseReducer<ActiveProjectState, PayloadAction<string>> = (state, action) => {
-    state.project_name = action.payload;
+    state.projectName = action.payload;
 };
 const clearActiveProject: CaseReducer<ActiveProjectState, PayloadAction> = (state, action) => {
-    state.project_id = null;
+    state.projectId = null;
 };
 const setTimeLineView: CaseReducer<ActiveProjectState, PayloadAction<{ value: TimeLineViewState; start: Moment; end: Moment }>> = (state, action) => {
     state.time_line_view = action.payload.value;

@@ -19,8 +19,8 @@ import { renameProject } from '../redux/project/thunk';
 
 export default function ProjectNavbar() {
     const dispatch = useAppDispatch();
-    const projectId = useAppSelector((state) => state.project.project_id)!;
-    const projectName = useAppSelector((state) => state.project.project_name);
+    const projectId = useAppSelector((state) => state.project.projectId)!;
+    const projectName = useAppSelector((state) => state.project.projectName);
     const userId = useAppSelector((state) => state.auth.userId)!;
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
     const [projectTitleInputSelected, setProjectTitleInputSelected] = useState(false);

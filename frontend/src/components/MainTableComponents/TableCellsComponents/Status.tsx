@@ -81,7 +81,7 @@ const useStyle = createStyles((theme, _params) => ({
 
 export function Status({ groupId, itemId, typeId, status, color, onStatusChange }: StatusProps) {
     const statusList = useAppSelector((state) => state.table.statusList);
-    const projectId = useAppSelector((state) => state.project.project_id);
+    const projectId = useAppSelector((state) => state.project.projectId);
     const [opened, setOpened] = useState(false);
     const [editStatus, setEditStatus] = useState(false);
     const [newStatusInputValue, setNewStatusInputValue] = useState('');
