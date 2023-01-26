@@ -10,14 +10,13 @@ export const toSnake = (s: string): string => {
 	return s.split(split).join(separator).toLowerCase();
   }
 
-export const keysToCamel = function (o: object | Array<object>): object {
+export const keysToCamel = function (o: any): any {
 	if (isObject(o)) {
 		const n = {};
 
 		Object.keys(o).forEach((k) => {
 			n[toCamel(k)] = keysToCamel(o[k]);
 		});
-
 		return n;
 	} else if (isArray(o)) {
 		return (o as Array<object>).map((i) => {
@@ -28,7 +27,7 @@ export const keysToCamel = function (o: object | Array<object>): object {
 	return o;
 };
 
-export const keysToSnake = function (o: object | Array<object>): object {
+export const keysToSnake = function (o: any): any {
 	if (isObject(o)) {
 		const n = {};
 
@@ -52,5 +51,5 @@ const isArray = function <T>(a: T): boolean {
 };
 
 const isObject = function <T>(o: T): boolean {
-	return o === Object(o) && !isArray(o) && typeof o !== 'function';
+	return o === Object(o) && !isArray(o) && typeof o !== 'function' && !(o instanceof Date);
 };

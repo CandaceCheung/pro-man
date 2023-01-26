@@ -54,7 +54,7 @@ export class TableController {
 		try {
 			const userId = req.params.userId;
 			const projectId = req.params.projectId;
-			const result = await this.tableService.getTableInfoV2(parseInt(userId), parseInt(projectId));
+			const result = await this.tableService.getTableInfo(parseInt(userId), parseInt(projectId));
 
 			const memberResult = await this.kanbanService.getMemberList(parseInt(projectId));
 			let memberList = {};

@@ -6,7 +6,6 @@ import { IconArrowBadgeLeft, IconArrowBadgeRight, IconPinned } from '@tabler/ico
 import { useEffect, useState } from 'react';
 import moment from 'moment';
 import { getTable, updateDatelineItem, updateTimelineItem } from '../redux/table/thunk';
-// import { AddNewItemModal } from '../components/TimelineComponents/TimelineAddNewItemModal'
 import ClockLoader from 'react-spinners/ClockLoader';
 import { setTargetUpdateElementAction, toggleLoadingAction, triggerUpdateTimelineModalAction } from '../redux/project/slice';
 import { ChangNameColorModal } from '../components/TimelineComponents/ChangeNameColorModal';
@@ -34,7 +33,7 @@ type ItemState = {
     id: number;
     group: number;
     title: string;
-    type_id: number;
+    typeId: number;
     start_time: number;
     end_time: number;
     color: string;
@@ -65,13 +64,13 @@ export function TimeFrame() {
     const itemHeight = useAppSelector((state) => state.project.setTimelineItemHeight);
 
     const unfilteredTimelineDetails = projectSummary
-        .filter((project) => project.project_id === targetProjectId && project.type_name === 'times' && !project.project_is_deleted && !project.item_is_deleted)
-        .sort((a, b) => a.item_group_id - b.item_group_id);
+        .filter((project) => project.projectId === targetProjectId && project.typeName === 'times' && !project.projectIsDeleted && !project.itemIsDeleted)
+        .sort((a, b) => a.itemGroupId - b.itemGroupId);
     const unfilteredDatelineDetails = projectSummary
-        .filter((project) => project.project_id === targetProjectId && project.type_name === 'dates' && !project.project_is_deleted && !project.item_is_deleted)
-        .sort((a, b) => a.item_group_id - b.item_group_id);
-    const timelineDetail = unfilteredTimelineDetails.filter((project) => (sortByPersonId ? project.item_person_user_id === sortByPersonId : project)).filter((project) => (sortByGroupId ? project.item_group_id === sortByGroupId : project));
-    const datelineDetail = unfilteredDatelineDetails.filter((project) => (sortByPersonId ? project.item_person_user_id === sortByPersonId : project)).filter((project) => (sortByGroupId ? project.item_group_id === sortByGroupId : project));
+        .filter((project) => project.projectId === targetProjectId && project.typeName === 'dates' && !project.projectIsDeleted && !project.itemIsDeleted)
+        .sort((a, b) => a.itemGroupId - b.itemGroupId);
+    const timelineDetail = unfilteredTimelineDetails.filter((project) => (sortByPersonId ? project.itemPersonUserId === sortByPersonId : project)).filter((project) => (sortByGroupId ? project.itemGroupId === sortByGroupId : project));
+    const datelineDetail = unfilteredDatelineDetails.filter((project) => (sortByPersonId ? project.itemPersonUserId === sortByPersonId : project)).filter((project) => (sortByGroupId ? project.itemGroupId === sortByGroupId : project));
 
     const minZoom = 1 * 24 * 60 * 60 * 1000;
     const maxZoom = 31 * 24 * 60 * 60 * 1000;
@@ -89,36 +88,36 @@ export function TimeFrame() {
 
     let checking: number[] = [];
     for (let item of timelineDetail) {
-        if (!checking.includes(item.item_id)) {
-            checking.push(item.item_id);
+        if (!checking.includes(item.itemId)) {
+            checking.push(item.itemId);
             groups.push({
-                id: item.item_id,
-                title: item.item_name,
-                groupId: item.item_group_id,
-                groupName: item.item_group_name
+                id: item.itemId,
+                title: item.itemName,
+                groupId: item.itemGroupId,
+                groupName: item.itemGroupName
             });
         }
     }
 
     checking = [];
     for (let item of timelineDetail) {
-        if (!checking.includes(item.item_times_id)) {
-            checking.push(item.item_times_id);
+        if (!checking.includes(item.itemTimesId)) {
+            checking.push(item.itemTimesId);
             items.push({
-                id: parseInt('1' + item.item_times_id),
-                group: item.item_id,
-                title: item.element_name,
-                type_id: item.horizontal_order_id,
-                start_time: item.item_times_start_date,
-                end_time: item.item_times_end_date,
-                color: item.item_times_color,
+                id: parseInt('1' + item.itemTimesId),
+                group: item.itemId,
+                title: item.elementName,
+                typeId: item.horizontalOrderId,
+                start_time: item.itemTimesStartDate,
+                end_time: item.itemTimesEndDate,
+                color: item.itemTimesColor,
                 canMove: true,
                 canChangeGroup: false,
                 itemProps: {
                     'aria-hidden': false,
                     className: 'time-block',
                     style: {
-                        background: item.item_times_color,
+                        background: item.itemTimesColor,
                         borderRadius: '5px',
                         border: 'none'
                     }
@@ -129,16 +128,16 @@ export function TimeFrame() {
 
     checking = [];
     for (let item of datelineDetail) {
-        if (!checking.includes(item.item_datetime_id)) {
-            checking.push(item.item_datetime_id);
+        if (!checking.includes(item.itemDatetimeId)) {
+            checking.push(item.itemDatetimeId);
             dateItems.push({
-                id: parseInt('2' + item.item_datetime_id),
-                group: item.item_id,
-                title: item.element_name,
-                type_id: item.horizontal_order_id,
-                start_time: new Date(item.item_dates_datetime).getTime(),
-                end_time: new Date(item.item_dates_datetime).getTime() + 8.64e7,
-                color: item.item_datetime_color,
+                id: parseInt('2' + item.itemDatetimeId),
+                group: item.itemId,
+                title: item.elementName,
+                typeId: item.horizontalOrderId,
+                start_time: new Date(item.itemDatesDatetime).getTime(),
+                end_time: new Date(item.itemDatesDatetime).getTime() + 8.64e7,
+                color: item.itemDatetimeColor,
                 canMove: true,
                 canResize: false,
                 canChangeGroup: false,
@@ -146,7 +145,7 @@ export function TimeFrame() {
                     'aria-hidden': false,
                     className: 'date-block',
                     style: {
-                        background: item.item_datetime_color,
+                        background: item.itemDatetimeColor,
                         border: '4px solid darkgrey'
                     }
                 }
@@ -156,13 +155,13 @@ export function TimeFrame() {
 
     let lastEndedTime = 0;
     for (let item of timelineDetail) {
-        lastEndedTime = Math.max(item.item_times_end_date, lastEndedTime);
-        lastEndedTime = Math.max(new Date(item.item_dates_datetime).getTime() + 8.64e7, lastEndedTime);
+        lastEndedTime = Math.max(item.itemTimesEndDate, lastEndedTime);
+        lastEndedTime = Math.max(new Date(item.itemDatesDatetime).getTime() + 8.64e7, lastEndedTime);
     }
     let firstStartedTime = lastEndedTime;
     for (let item of timelineDetail) {
-        firstStartedTime = Math.min(item.item_times_start_date, firstStartedTime);
-        firstStartedTime = Math.min(new Date(item.item_dates_datetime).getTime(), firstStartedTime);
+        firstStartedTime = Math.min(item.itemTimesStartDate, firstStartedTime);
+        firstStartedTime = Math.min(new Date(item.itemDatesDatetime).getTime(), firstStartedTime);
     }
 
     function handleItemResize(itemId: number, time: number, edge: 'left' | 'right') {
@@ -185,7 +184,6 @@ export function TimeFrame() {
     }
 
     function handleItemMove(itemId: number, newStartTime: number, index: number) {
-        // use T / D
         const id = parseInt(itemId.toString().slice(1));
         if (itemId.toString()[0] === '1') {
             const name = items.filter((x) => x.id === itemId)[0].title;
@@ -224,7 +222,7 @@ export function TimeFrame() {
             ) : (
                 <Timeline
                     groups={groups}
-                    items={!setHideByType ? [...items, ...dateItems] : setHideByType === 'dates' ? [...items] : [...dateItems]}
+                    items={setHideByType ? (setHideByType === 'dates' ? [...items] : [...dateItems]) : [...items, ...dateItems]}
                     defaultTimeStart={defaultTimeStart}
                     defaultTimeEnd={defaultTimeEnd}
                     visibleTimeStart={autofit ? firstStartedTime - 2.592e8 : now ? startPointAnchor : undefined}
@@ -371,7 +369,6 @@ export function TimeFrame() {
                 </Timeline>
             )}
             <ChangNameColorModal />
-            {/* <AddNewItemModal groups={groups} /> */}
         </div>
     );
 }

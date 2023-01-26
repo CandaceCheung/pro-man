@@ -15,22 +15,22 @@ export function ChangNameColorModal() {
     const page = useAppSelector((state) => state.project.activePage);
     const id = useId();
     const projectSummary = useAppSelector((state) => state.table.summary);
-    const dateItem = projectSummary.filter((project) => project.item_datetime_id === itemId && project.type_name === 'dates')[0];
-    const timeItem = projectSummary.filter((project) => project.item_times_id === itemId && project.type_name === 'times')[0];
+    const dateItem = projectSummary.filter((project) => project.itemDatetimeId === itemId && project.typeName === 'dates')[0];
+    const timeItem = projectSummary.filter((project) => project.itemTimesId === itemId && project.typeName === 'times')[0];
     const [color, setColor] = useState('#FFFFFF');
     const [name, setName] = useState<string>('');
 
     useEffect(() => {
         if (itemType === 'dates') {
             if (dateItem) {
-                setColor(dateItem.item_datetime_color);
-                setName(dateItem.element_name);
+                setColor(dateItem.itemDatetimeColor);
+                setName(dateItem.elementName);
             }
         }
         if (itemType === 'times') {
             if (timeItem) {
-                setColor(timeItem.item_times_color);
-                setName(timeItem.element_name);
+                setColor(timeItem.itemTimesColor);
+                setName(timeItem.elementName);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -39,11 +39,11 @@ export function ChangNameColorModal() {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (itemType === 'dates') {
-            const date = dateItem.item_dates_datetime;
+            const date = dateItem.itemDatesDatetime;
             dispatch(updateDatelineItem(itemId, new Date(date).getTime(), name, color));
         } else {
-            const start = timeItem.item_times_start_date;
-            const end = timeItem.item_times_end_date;
+            const start = timeItem.itemTimesStartDate;
+            const end = timeItem.itemTimesEndDate;
             dispatch(updateTimelineItem(itemId, start, end, name, color));
         }
         dispatch(toggleLoadingAction(true));

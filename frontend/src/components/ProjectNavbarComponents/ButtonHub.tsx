@@ -18,16 +18,16 @@ export function ButtonHub() {
     const typeColumn = ['dates', 'times'];
 
     // timeline logic
-    const groupSummary = projectSummary.filter((project, index, self) => project.joined_project_id === projectId && index === self.findIndex((obj) => obj.item_group_id === project.item_group_id));
-    const personsSummary = projectSummary.filter((project, index, self) => project.project_id === projectId && project.type_name === 'persons');
+    const groupSummary = projectSummary.filter((project, index, self) => project.joinedProjectId === projectId && index === self.findIndex((obj) => obj.itemGroupId === project.itemGroupId));
+    const personsSummary = projectSummary.filter((project, index, self) => project.projectId === projectId && project.typeName === 'persons');
     const personsSummaryArr = [];
     const checking: number[] = [];
     for (let item of personsSummary) {
-        if (!checking.includes(item.item_person_user_id)) {
-            checking.push(item.item_person_user_id);
+        if (!checking.includes(item.itemPersonUserId)) {
+            checking.push(item.itemPersonUserId);
             personsSummaryArr.push({
-                name: item.item_person_name,
-                userId: item.item_person_user_id
+                name: item.itemPersonName,
+                userId: item.itemPersonUserId
             });
         }
     }
@@ -105,8 +105,8 @@ export function ButtonHub() {
                             {page === 'timeline' &&
                                 groupSummary.map((group, index) => {
                                     return (
-                                        <Menu.Item key={index} value={group.item_group_id} icon={<IconColumns size={14} />} disabled={!!sortByGroupId} onClick={(e) => onSortByGroupClick(e)}>
-                                            {group.item_group_name}
+                                        <Menu.Item key={index} value={group.itemGroupId} icon={<IconColumns size={14} />} disabled={!!sortByGroupId} onClick={(e) => onSortByGroupClick(e)}>
+                                            {group.itemGroupName}
                                         </Menu.Item>
                                     );
                                 })}

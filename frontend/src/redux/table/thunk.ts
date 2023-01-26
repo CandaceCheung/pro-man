@@ -154,7 +154,7 @@ export function getTableList(userId: number) {
     };
 }
 
-export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
+export function updateTimelineItem(timelineId: number, startTime: number, endTime: number, name: string, color: string) {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem('token');
 
@@ -165,7 +165,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
                 Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
-                typeTimeId: timelineID,
+                typeTimeId: timelineId,
                 startTime,
                 endTime,
                 name,
@@ -177,7 +177,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
         if (result.success) {
             dispatch(
                 updateTimelineItemAction({
-                    timelineID,
+                    timelineId,
                     startTime,
                     endTime,
                     name,
@@ -198,7 +198,7 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
     };
 }
 
-export function updateDatelineItem(datelineID: number, date: number, name: string, color: string) {
+export function updateDatelineItem(datelineId: number, date: number, name: string, color: string) {
     return async (dispatch: Dispatch) => {
         const token = localStorage.getItem('token');
 
@@ -209,7 +209,7 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
                 Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({
-                typeDateId: datelineID,
+                typeDateId: datelineId,
                 date,
                 name,
                 color
@@ -220,7 +220,7 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
         if (result.success) {
             dispatch(
                 updateDatelineItemAction({
-                    datelineID,
+                    datelineId,
                     date,
                     name,
                     color,

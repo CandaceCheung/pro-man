@@ -37,44 +37,44 @@ export type StatusListState = {
 export interface StatusListStateArray extends Array<StatusListState> {}
 
 export interface TableState {
-    horizontal_order: number | null;
-    horizontal_order_id: number;
-    item_creator_id: number;
-    item_dates_datetime: string;
-    item_dates_date: string;
-    item_datetime_id: number;
-    item_datetime_color: string;
-    item_group_id: number;
-    item_group_name: string;
-    item_id: number;
-    item_is_deleted: boolean;
-    item_money_cashflow: number;
-    item_money_date: string;
-    item_name: string;
-    item_person_id: number;
-    item_person_user_id: number;
-    item_person_name: string;
-    item_status_color: string;
-    item_status_name: string;
-    item_text_id: number;
-    item_text_text: string;
-    item_times_end_date: number;
-    item_times_id: number;
-    item_times_start_date: number;
-    item_times_color: string;
-    joined_project_id: number;
-    project_creator_id: number;
-    project_id: number;
-    project_is_deleted: boolean;
+    horizontalOrder: number | null;
+    horizontalOrderId: number;
+    itemCreatorId: number;
+    itemDatesDatetime: string;
+    itemDatesDate: string;
+    itemDatetimeId: number;
+    itemDatetimeColor: string;
+    itemGroupId: number;
+    itemGroupName: string;
+    itemId: number;
+    itemIsDeleted: boolean;
+    itemMoneyCashflow: number;
+    itemMoneyDate: string;
+    itemName: string;
+    itemPersonId: number;
+    itemPersonUserId: number;
+    itemPersonName: string;
+    itemStatusColor: string;
+    itemStatusName: string;
+    itemTextId: number;
+    itemTextText: string;
+    itemTimesEndDate: number;
+    itemTimesId: number;
+    itemTimesStartDate: number;
+    itemTimesColor: string;
+    joinedProjectId: number;
+    projectCreatorId: number;
+    projectId: number;
+    projectIsDeleted: boolean;
     myFavoriteList?: number;
-    project_name: string;
-    user_id: number;
+    projectName: string;
+    userId: number;
     role: string;
-    state_id: number;
-    transaction_id: number;
-    vertical_order: number;
-    type_name: 'persons' | 'dates' | 'times' | 'money' | 'status' | 'text';
-    element_name: string;
+    stateId: number;
+    transactionId: number;
+    verticalOrder: number;
+    typeName: 'persons' | 'dates' | 'times' | 'money' | 'status' | 'text';
+    elementName: string;
 }
 
 export interface TableStateV2 {
@@ -201,44 +201,44 @@ const initialState: CombinedTableState = {
     ],
     summary: [
         {
-            horizontal_order: 0,
-            horizontal_order_id: 0,
-            item_creator_id: 0,
-            item_dates_datetime: '',
-            item_dates_date: '',
-            item_datetime_id: 0,
-            item_datetime_color: '#238BE6',
-            item_group_id: 0,
-            item_group_name: '',
-            item_id: 0,
-            item_is_deleted: false,
-            item_money_cashflow: 0,
-            item_money_date: '',
-            item_name: '',
-            item_person_id: 0,
-            item_person_user_id: 0,
-            item_person_name: '',
-            item_status_color: '',
-            item_status_name: '',
-            item_text_id: 0,
-            item_text_text: '',
-            item_times_end_date: 0,
-            item_times_id: 0,
-            item_times_start_date: 0,
-            item_times_color: '#238BE6',
-            joined_project_id: 0,
-            project_creator_id: 0,
-            project_id: 0,
-            project_is_deleted: false,
+            horizontalOrder: 0,
+            horizontalOrderId: 0,
+            itemCreatorId: 0,
+            itemDatesDatetime: '',
+            itemDatesDate: '',
+            itemDatetimeId: 0,
+            itemDatetimeColor: '#238BE6',
+            itemGroupId: 0,
+            itemGroupName: '',
+            itemId: 0,
+            itemIsDeleted: false,
+            itemMoneyCashflow: 0,
+            itemMoneyDate: '',
+            itemName: '',
+            itemPersonId: 0,
+            itemPersonUserId: 0,
+            itemPersonName: '',
+            itemStatusColor: '',
+            itemStatusName: '',
+            itemTextId: 0,
+            itemTextText: '',
+            itemTimesEndDate: 0,
+            itemTimesId: 0,
+            itemTimesStartDate: 0,
+            itemTimesColor: '#238BE6',
+            joinedProjectId: 0,
+            projectCreatorId: 0,
+            projectId: 0,
+            projectIsDeleted: false,
             myFavoriteList: undefined,
-            project_name: '',
-            user_id: 0,
+            projectName: '',
+            userId: 0,
             role: 'member',
-            state_id: 0,
-            transaction_id: 0,
-            vertical_order: 0,
-            type_name: 'persons',
-            element_name: ''
+            stateId: 0,
+            transactionId: 0,
+            verticalOrder: 0,
+            typeName: 'persons',
+            elementName: ''
         }
     ],
     itemCells: {
@@ -350,7 +350,7 @@ const setDeleteGroupModalOpened: CaseReducer<CombinedTableState, PayloadAction<I
 const updateTimelineItem: CaseReducer<
     CombinedTableState,
     PayloadAction<{
-        timelineID: number;
+        timelineId: number;
         startTime: number;
         endTime: number;
         name: string;
@@ -359,20 +359,20 @@ const updateTimelineItem: CaseReducer<
     }>
 > = (state, action) => {
     for (let item of state.summary) {
-        if (item.item_times_id === action.payload.timelineID) {
-            item.item_times_start_date = action.payload?.startTime;
-            item.item_times_end_date = action.payload?.endTime;
-            item.item_times_color = action.payload?.color;
+        if (item.itemTimesId === action.payload.timelineId) {
+            item.itemTimesStartDate = action.payload?.startTime;
+            item.itemTimesEndDate = action.payload?.endTime;
+            item.itemTimesColor = action.payload?.color;
         }
-        if (item.horizontal_order_id === action.payload.typeId) {
-            item.element_name = action.payload?.name;
+        if (item.horizontalOrderId === action.payload.typeId) {
+            item.elementName = action.payload?.name;
         }
     }
 };
 const updateDatelineItem: CaseReducer<
     CombinedTableState,
     PayloadAction<{
-        datelineID: number;
+        datelineId: number;
         date: number;
         name: string;
         color: string;
@@ -380,12 +380,12 @@ const updateDatelineItem: CaseReducer<
     }>
 > = (state, action) => {
     for (let item of state.summary) {
-        if (item.item_datetime_id === action.payload.datelineID) {
-            item.item_dates_datetime = new Date(action.payload.date).toDateString();
-            item.item_datetime_color = action.payload?.color;
+        if (item.itemDatetimeId === action.payload.datelineId) {
+            item.itemDatesDatetime = new Date(action.payload.date).toDateString();
+            item.itemDatetimeColor = action.payload?.color;
         }
-        if (item.horizontal_order_id === action.payload.typeId) {
-            item.element_name = action.payload?.name;
+        if (item.horizontalOrderId === action.payload.typeId) {
+            item.elementName = action.payload?.name;
         }
     }
 };
