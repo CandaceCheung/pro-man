@@ -420,7 +420,7 @@ export class TableService {
 						case "money":
 							itemCells[groupId!][itemId][typeId]['transactionId'] = [transactions.id];
 							itemCells[groupId!][itemId][typeId]['itemMoneyCashflow'] = [transactions.cashFlow];
-							itemCells[groupId!][itemId][typeId]['itemMoneyDate'] = transactions.date;
+							itemCells[groupId!][itemId][typeId]['itemMoneyDate'] = [transactions.date];
 							break;
 						case "status":
 							itemCells[groupId!][itemId][typeId]['itemStatusColor'] = stateColor;
