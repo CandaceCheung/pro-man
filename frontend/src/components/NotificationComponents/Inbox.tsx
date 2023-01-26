@@ -18,9 +18,11 @@ export function Inbox() {
         (message) => message.sender?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || new Date(message.createdAt).toLocaleString('en-us')?.includes(search)
     );
 
-    const rows = messages.map((message) => {
+    const rows = messages.map((message, index) => {
         const inviteMessage = (
-            <div>
+            <div
+                key={"message_no_" + index}
+            >
                 Hello, {message.receiver}. I want to invite you to join my project. Please click
                 <Button variant='subtle' value={parseInt(message.message)} onClick={(e) => onAcceptInvite(e)}>
                     Here
