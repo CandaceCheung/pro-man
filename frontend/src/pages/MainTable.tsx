@@ -118,7 +118,7 @@ export function MainTable() {
     };
 
     const onAddTransaction = (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => {
-        dispatch(addTransaction(groupId, itemId, itemId, date, cashFlow));
+        dispatch(addTransaction(groupId, itemId, typeId, date, cashFlow));
     };
 
     const onDeleteTransaction = (groupId: number, itemId: number, typeId: number, transactionId: number) => {

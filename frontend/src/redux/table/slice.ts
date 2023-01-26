@@ -77,65 +77,25 @@ export interface TableState {
     elementName: string;
 }
 
-export interface TableStateV2 {
-    horizontalOrder: number | null;
-    horizontalOrderId: number;
-    itemCreatorId: number;
-    itemDatesDatetime: string;
-    itemDatesDate: string;
-    itemDatetimeId: number;
-    itemDatetimeColor: string;
-    itemGroupId: number;
-    itemGroupName: string;
-    itemId: number;
-    itemIsDeleted: boolean;
-    itemMoneyCashflow: number;
-    itemMoneyDate: string;
-    itemName: string;
-    itemPersonId: number;
-    itemPersonUserId: number;
-    itemPersonName: string;
-    itemStatusColor: string;
-    itemStatusName: string;
-    itemTextId: number;
-    itemTextText: string;
-    itemTimesEndDate: number;
-    itemTimesId: number;
-    itemTimesStartDate: number;
-    itemTimesColor: string;
-    joinedProjectId: number;
-    projectCreatorId: number;
-    projectId: number;
-    projectIsDeleted: boolean;
-    myFavoriteList?: number;
-    projectName: string;
-    userId: number;
-    role: string;
-    stateId: number;
-    transactionId: number;
-    verticalOrder: number;
-    typeName: 'persons' | 'dates' | 'times' | 'money' | 'status' | 'text';
-    elementName: string;
-}
 export interface TableStateArray extends Array<TableState> {}
 
 export interface ItemCell {
-    itemId: TableStateV2['itemId'];
-    itemName: TableStateV2['itemName'];
-    typeId: TableStateV2['horizontalOrderId'];
-    typeName: TableStateV2['typeName'];
-    elementName: TableStateV2['elementName'];
-    itemDatesDatetime?: TableStateV2['itemDatesDatetime'];
-    itemDatesDate?: TableStateV2['itemDatesDate'];
-    transactionId?: Array<TableStateV2['transactionId']>;
-    itemMoneyCashflow?: Array<TableStateV2['itemMoneyCashflow']>;
-    itemMoneyDate?: Array<TableStateV2['itemMoneyDate']>;
-    itemPersonUserId?: Array<TableStateV2['itemPersonUserId']>;
-    itemStatusColor?: TableStateV2['itemStatusColor'];
-    itemStatusName?: TableStateV2['itemStatusName'];
-    itemTextText?: TableStateV2['itemTextText'];
-    itemTimesStartDate?: TableStateV2['itemTimesStartDate'];
-    itemTimesEndDate?: TableStateV2['itemTimesEndDate'];
+    itemId: TableState['itemId'];
+    itemName: TableState['itemName'];
+    typeId: TableState['horizontalOrderId'];
+    typeName: TableState['typeName'];
+    elementName: TableState['elementName'];
+    itemDatesDatetime?: TableState['itemDatesDatetime'];
+    itemDatesDate?: TableState['itemDatesDate'];
+    transactionId?: Array<TableState['transactionId']>;
+    itemMoneyCashflow?: Array<TableState['itemMoneyCashflow']>;
+    itemMoneyDate?: Array<TableState['itemMoneyDate']>;
+    itemPersonUserId?: Array<TableState['itemPersonUserId']>;
+    itemStatusColor?: TableState['itemStatusColor'];
+    itemStatusName?: TableState['itemStatusName'];
+    itemTextText?: TableState['itemTextText'];
+    itemTimesStartDate?: TableState['itemTimesStartDate'];
+    itemTimesEndDate?: TableState['itemTimesEndDate'];
 }
 export type ItemCells = {
     [keys in number]: {
@@ -144,8 +104,8 @@ export type ItemCells = {
 };
 
 export interface ItemGroup {
-    itemGroupId: TableStateV2['itemGroupId'];
-    itemGroupName: TableStateV2['itemGroupName'];
+    itemGroupId: TableState['itemGroupId'];
+    itemGroupName: TableState['itemGroupName'];
 }
 
 export type ItemsOrders = Record<number, Array<number>>;
@@ -477,11 +437,13 @@ const addTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: n
     const date = action.payload.date;
     const cashFlow = action.payload.cashFlow;
 
-    state.itemCells[groupId][itemId][typeId].itemMoneyDate!.forEach((i, each) => {
+    console.log(groupId, itemId, typeId)
+    console.log(state.itemCells[groupId][itemId][typeId])
+    state.itemCells[groupId][itemId][typeId].itemMoneyDate!.forEach((each, i) => {
         if (new Date(each) >= date) {
-            state.itemCells[groupId][itemId][typeId].transactionId!.splice(parseInt(i), 0, transactionId);
-            state.itemCells[groupId][itemId][typeId].itemMoneyCashflow!.splice(parseInt(i), 0, cashFlow);
-            state.itemCells[groupId][itemId][typeId].itemMoneyDate!.splice(parseInt(i), 0, date.toISOString());
+            state.itemCells[groupId][itemId][typeId].transactionId!.splice(i, 0, transactionId);
+            state.itemCells[groupId][itemId][typeId].itemMoneyCashflow!.splice(i, 0, cashFlow);
+            state.itemCells[groupId][itemId][typeId].itemMoneyDate!.splice(i, 0, date.toISOString());
             return;
         }
         state.itemCells[groupId][itemId][typeId].transactionId!.push(transactionId);
@@ -497,6 +459,8 @@ const removeTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId
 
     const i = state.itemCells[groupId][itemId][typeId].transactionId!.indexOf(transactionId);
     state.itemCells[groupId][itemId][typeId].transactionId!.splice(i, 1);
+    state.itemCells[groupId][itemId][typeId].itemMoneyCashflow!.splice(i, 1);
+    state.itemCells[groupId][itemId][typeId].itemMoneyDate!.splice(i, 1);
 };
 const reorderItems: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: number[]; groupId: number }>> = (state, action) => {
     state.itemsOrders[action.payload.groupId] = action.payload.newOrder;

@@ -329,7 +329,7 @@ export class TableService {
 					item_id: itemId
 				})
 				.into('type_persons');
-			const date = format(new Date(Date.now()), 'yyyy-MM-dd');
+			const date = format(new Date(), 'MMM dd, yyyy');
 			const [{ datetime }] = await txn
 				.insert({
 					datetime: date,
@@ -375,10 +375,10 @@ export class TableService {
 				})
 				.into('type_text')
 				.returning('text');
-
+			
 			const [transactions] = await txn
 				.insert({
-					date: format(new Date(Date.now()), 'yyyy-MM-dd'),
+					date: format(new Date(), 'yyyy-MM-dd'),
 					cash_flow: 0,
 					type_money_id: typeMoneyId
 				})
