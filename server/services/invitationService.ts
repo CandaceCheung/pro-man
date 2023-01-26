@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { keysToCamel } from '../utils/case';
 export class InvitationService {
 	constructor(private knex: Knex) {}
 
@@ -12,7 +13,7 @@ export class InvitationService {
 				.where('username', value);
 
 			await txn.commit();
-			return user;
+			return keysToCamel(user);
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -49,7 +50,7 @@ export class InvitationService {
 				.returning('*');
 
 			await txn.commit();
-			return invitation;
+			return keysToCamel(invitation);
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -67,7 +68,7 @@ export class InvitationService {
 				.orderBy('created_at', 'asc');
 
 			await txn.commit();
-			return invitationList;
+			return keysToCamel(invitationList);
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -87,7 +88,7 @@ export class InvitationService {
 				.orderBy('created_at', 'asc');
 
 			await txn.commit();
-			return invitationList;
+			return keysToCamel(invitationList);
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -145,7 +146,7 @@ export class InvitationService {
 				.returning('*');
 
 			await txn.commit();
-			return invitation;
+			return keysToCamel(invitation);
 		} catch (e) {
 			await txn.rollback();
 			throw e;

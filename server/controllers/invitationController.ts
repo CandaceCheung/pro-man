@@ -89,7 +89,7 @@ export class InvitationController {
 				jwt.jwtSecret!
 			);
 			const invitationId = invitationDetail.id;
-			const projectId = invitationDetail.project_id;
+			const projectId = invitationDetail.projectId;
 			const userId = req.body.userId;
 
 			if (invitationDetail) {
@@ -103,7 +103,7 @@ export class InvitationController {
 						success: false,
 						msg: 'Join Failed: Invitation expired'
 					});
-				} else if (check.project.is_deleted) {
+				} else if (check.project.isDeleted) {
 					res.json({
 						success: false,
 						msg: 'Join Failed: Target project no longer existed'

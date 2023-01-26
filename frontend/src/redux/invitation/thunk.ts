@@ -22,16 +22,12 @@ export function sendInvitation(projectId: number, userId: number, value: string)
 
         if (result.success) {
             dispatch(sendInviteAction(result.invitation));
-            showNotification({
-                title: 'Invitation notification',
-                message: result.msg
-            });
-        } else {
-            showNotification({
-                title: 'Invitation notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Invitation notification',
+            message: result.msg
+        });
     };
 }
 
@@ -55,16 +51,12 @@ export function acceptInvitation(token: string, userId: number) {
         if (result.success) {
             dispatch(acceptInviteAction(result.invitation));
             dispatch(getTableListAction(result.tableList));
-            showNotification({
-                title: 'Invitation notification',
-                message: result.msg
-            });
-        } else {
-            showNotification({
-                title: 'Invitation notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Invitation notification',
+            message: result.msg
+        });
     };
 }
 
@@ -87,16 +79,12 @@ export function acceptMemberInvitation(projectId: number, userId: number) {
 
         if (result.success) {
             dispatch(getTableListAction(result.tableList));
-            showNotification({
-                title: 'Invitation notification',
-                message: result.msg
-            });
-        } else {
-            showNotification({
-                title: 'Invitation notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Invitation notification',
+            message: result.msg
+        });
     };
 }
 
@@ -113,7 +101,6 @@ export function getInvitationList(projectId: number) {
 
         if (result.success) {
             dispatch(getInvitationListAction(result.invitationList));
-            console.log(result.msg);
         } else {
             showNotification({
                 title: 'Invitation notification',
@@ -137,15 +124,11 @@ export function deleteInvitation(invitationId: number, projectId: number) {
 
         if (result.success) {
             dispatch(deleteInvitationAction({ id: invitationId }));
-            showNotification({
-                title: 'Invitation notification',
-                message: result.msg
-            });
-        } else {
-            showNotification({
-                title: 'Invitation notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Invitation notification',
+            message: result.msg
+        });
     };
 }

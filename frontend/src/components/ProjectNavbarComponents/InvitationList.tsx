@@ -21,7 +21,7 @@ export function InvitationList() {
             const obj = {
                 id: item.id,
                 email: item.email,
-                updated_at: new Date(item.updated_at).toLocaleString('en-us'),
+                updated_at: new Date(item.updatedAt).toLocaleString('en-us'),
                 status: item.status
             };
             elements.push(obj);

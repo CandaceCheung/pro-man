@@ -2,12 +2,12 @@ import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type Invitation = {
     id: number | null;
-    user_id: number | null;
-    project_id: number | null;
+    userId: number | null;
+    projectId: number | null;
     email: string;
     status: 'pending' | 'accepted';
-    updated_at: string;
-    created_at: string;
+    updatedAt: string;
+    createdAt: string;
 };
 
 export type InvitationState = Invitation[];
@@ -15,19 +15,19 @@ export type InvitationState = Invitation[];
 const initialState: InvitationState = [
     {
         id: null,
-        user_id: null,
-        project_id: null,
+        userId: null,
+        projectId: null,
         email: '',
         status: 'pending',
-        updated_at: '',
-        created_at: ''
+        updatedAt: '',
+        createdAt: ''
     }
 ];
 
 const sendInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> = (state, action) => {
     for (let item of state) {
         if (item.id === action.payload.id) {
-            item.updated_at = action.payload.updated_at;
+            item.updatedAt = action.payload.updatedAt;
             return;
         }
     }
@@ -35,14 +35,14 @@ const sendInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> = (sta
 };
 const acceptInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> = (state, action) => {
     for (let invite of state) {
-        if (invite.email === action.payload.email && invite.project_id === action.payload.project_id) {
+        if (invite.email === action.payload.email && invite.projectId === action.payload.projectId) {
             invite.status = action.payload.status;
             break;
         }
     }
 };
 const getInvitationList: CaseReducer<InvitationState, PayloadAction<InvitationState>> = (state, action) => {
-    return (state = action.payload);
+    state = action.payload;
 };
 const deleteInvitation: CaseReducer<InvitationState, PayloadAction<{ id: number }>> = (state, action) => {
     for (let i = 0; i < state.length; i++) {
