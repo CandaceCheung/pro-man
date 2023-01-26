@@ -10,7 +10,7 @@ export function ReplyModal() {
     const userId = useAppSelector((state) => state.auth.userId);
     const sender = useAppSelector((state) => state.auth.username);
     const targetId = useAppSelector((state) => state.project.messageTarget);
-    const targetUser = useAppSelector((state) => state.project.messageSummary).filter((message) => message.sender_id === targetId)[0]?.sender;
+    const targetUser = useAppSelector((state) => state.project.messageSummary).filter((message) => message.senderId === targetId)[0]?.sender;
     const opened = useAppSelector((state) => state.project.toggleReplyModal);
     const [text, setText] = useState<string>('');
 

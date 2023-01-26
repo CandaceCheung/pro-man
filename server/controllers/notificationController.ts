@@ -94,14 +94,14 @@ export class NotificationController {
 		try {
 			const notificationId = req.params.notificationId;
 
-			const is_deleted = await this.notificationService.toggleDelete(
+			const isDeleted = await this.notificationService.toggleDelete(
 				parseInt(notificationId)
 			);
 
 			res.json({
 				success: true,
 				msg: 'Message Deleted',
-				is_deleted
+				isDeleted
 			});
 		} catch (e) {
 			console.error(e);
@@ -115,7 +115,7 @@ export class NotificationController {
 		try {
 			const notificationId = req.params.notificationId;
 
-			const is_deleted_receiver =
+			const isDeletedReceiver =
 				await this.notificationService.toggleReceiverDelete(
 					parseInt(notificationId)
 				);
@@ -123,7 +123,7 @@ export class NotificationController {
 			res.json({
 				success: true,
 				msg: 'Message Deleted',
-				is_deleted_receiver
+				isDeletedReceiver
 			});
 		} catch (e) {
 			console.error(e);

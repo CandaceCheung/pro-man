@@ -250,13 +250,12 @@ export function toggleRead(notificationId: number, checked: boolean) {
 
         if (result.success) {
             dispatch(toggleReadAction({ notificationId, checked: result.check }));
-            console.log(result.msg);
-        } else {
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Message Notification',
+            message: result.msg
+        });
     };
 }
 
@@ -275,19 +274,15 @@ export function toggleDelete(notificationId: number) {
             dispatch(
                 toggleDeleteAction({
                     notificationId,
-                    isDeleted: result.is_deleted
+                    isDeleted: result.isDeleted
                 })
             );
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
-        } else {
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Message Notification',
+            message: result.msg
+        });
     };
 }
 export function toggleReceiverDelete(notificationId: number) {
@@ -305,18 +300,14 @@ export function toggleReceiverDelete(notificationId: number) {
             dispatch(
                 toggleReceiverDeleteAction({
                     notificationId,
-                    isDeletedReceiver: result.is_deleted_receiver
+                    isDeletedReceiver: result.isDeletedReceiver
                 })
             );
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
-        } else {
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Message Notification',
+            message: result.msg
+        });
     };
 }

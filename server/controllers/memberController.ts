@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { tableService } from '../app';
 import { MemberService } from '../services/memberServices';
-import { keysToCamel } from '../utils/camelCase';
+import { keysToCamel } from '../utils/case';
 
 export class MemberController {
 	constructor(private memberService: MemberService) {}

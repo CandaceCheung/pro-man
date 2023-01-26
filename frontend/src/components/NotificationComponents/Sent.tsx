@@ -9,9 +9,9 @@ export function Sent() {
     const userId = useAppSelector((state) => state.auth.userId);
     const messageSummary = useAppSelector((state) => state.project.messageSummary);
     const [search, setSearch] = useState('');
-    let messages = messageSummary.filter((message) => message.sender_id === userId && !message.is_deleted_receiver);
+    let messages = messageSummary.filter((message) => message.senderId === userId && !message.isDeletedReceiver);
     messages = messages.filter(
-        (message) => message.receiver?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || new Date(message.created_at).toLocaleString('en-us')?.includes(search)
+        (message) => message.receiver?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || message.message?.toLocaleLowerCase().includes(search.toLocaleLowerCase()) || new Date(message.createdAt).toLocaleString('en-us')?.includes(search)
     );
 
     const rows = messages.map((message) => {
@@ -24,9 +24,9 @@ export function Sent() {
 
         return (
             <tr key={message.id} className={message.status ? 'read-message' : 'unread-message'}>
-                {message.message_type === 'message' ? <td>{message.message}</td> : <td>{inviteMessage}</td>}
+                {message.messageType === 'message' ? <td>{message.message}</td> : <td>{inviteMessage}</td>}
                 <td>{message.receiver}</td>
-                <td>{new Date(message.created_at).toLocaleString('en-us')}</td>
+                <td>{new Date(message.createdAt).toLocaleString('en-us')}</td>
                 <td>{message.status ? <IconChecks size={16} style={{ color: 'green' }} /> : <IconCheck size={16} style={{ color: 'grey' }} />}</td>
                 <td>
                     <Button onClick={(e) => onDelete(e)} value={message.id!} variant='subtle' leftIcon={<IconEraser size={16} />}></Button>

@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { keysToCamel } from '../utils/case';
 
 export class NotificationService {
 	constructor(private knex: Knex) {}
@@ -70,7 +71,7 @@ export class NotificationService {
 				.orderBy('created_at', 'desc');
 
 			await txn.commit();
-			return messages;
+			return keysToCamel(messages);
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -100,7 +101,7 @@ export class NotificationService {
 				.returning('*');
 
 			await txn.commit();
-			return message;
+			return keysToCamel(message);
 		} catch (e) {
 			await txn.rollback();
 			throw e;

@@ -8,16 +8,16 @@ export type ActivePageState = 'timeline' | 'mainTable' | 'kanban' | 'cashflow';
 export type MessageState = {
     id: number | null;
     sender: string | null;
-    sender_id: number | null;
+    senderId: number | null;
     receiver: string | null;
-    receiver_id: number | null;
+    receiverId: number | null;
     message: string;
-    message_type: 'message' | 'invite';
+    messageType: 'message' | 'invite';
     status: boolean;
-    is_deleted: boolean;
-    is_deleted_receiver: boolean;
-    created_at: Date;
-    updated_at: Date;
+    isDeleted: boolean;
+    isDeletedReceiver: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 };
 export type MessageStateArr = MessageState[];
 
@@ -102,16 +102,16 @@ const initialState: ActiveProjectState = {
         {
             id: null,
             sender: null,
-            sender_id: null,
+            senderId: null,
             receiver: null,
-            receiver_id: null,
+            receiverId: null,
             message: '',
-            message_type: 'message',
+            messageType: 'message',
             status: false,
-            is_deleted: false,
-            is_deleted_receiver: false,
-            created_at: new Date(),
-            updated_at: new Date()
+            isDeleted: false,
+            isDeletedReceiver: false,
+            createdAt: new Date(),
+            updatedAt: new Date()
         }
     ],
     memberList: [
@@ -234,7 +234,7 @@ const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notification
     for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
             message.status = true;
-            message.is_deleted = action.payload.isDeleted;
+            message.isDeleted = action.payload.isDeleted;
             return;
         }
     }
@@ -242,7 +242,7 @@ const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notification
 const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeletedReceiver: boolean }>> = (state, action) => {
     for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
-            message.is_deleted_receiver = action.payload.isDeletedReceiver;
+            message.isDeletedReceiver = action.payload.isDeletedReceiver;
             return;
         }
     }
