@@ -3,21 +3,13 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
 import {
-    addTransaction,
-    deleteItem,
     deleteItemGroup,
     getProjectStatusList,
-    getTable,
     getTableV2,
     insertItem,
-    removeTransaction,
-    renameItem,
-    renameType,
     reorderItems,
     reorderTypes,
-    updateItemGroupName,
-    updateState,
-    updateText
+    updateItemGroupName
 } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
