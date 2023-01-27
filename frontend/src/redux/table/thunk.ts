@@ -662,18 +662,26 @@ export function newState(projectId: number, name: string, color: string) {
 export function updateState(groupId: number, itemId: number, stateId: number, typeId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/state`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.put<
+            {
+                itemId: number;
+                stateId: number;
             },
-            body: JSON.stringify({ itemId, stateId })
+            {
+                success?: boolean;
+                name?: string;
+                color?: string;
+                msg?: string;
+            }
+        >(`/table/state`, {
+            itemId, stateId
         });
-        const result = await res.json();
+
         if (result.success) {
-            const name = result.name;
-            const color = result.color;
+            const name = result.name!;
+            const color = result.color!;
             dispatch(updateStateAction({ groupId, itemId, typeId, name, color }));
         } else {
             showNotification({
