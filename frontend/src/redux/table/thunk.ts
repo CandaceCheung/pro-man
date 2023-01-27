@@ -438,17 +438,18 @@ export function reorderItems(newOrder: number[], groupId: number, userId: number
         const token = localStorage.getItem('token');
         dispatch(reorderItemsAction({ newOrder, groupId }));
 
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemsOrder`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.put<
+            {
+                newOrder: number[]
             },
-            body: JSON.stringify({
-                newOrder
-            })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/itemsOrder`, {
+            newOrder
         });
-        let result = await res.json();
 
         if (!result.success) {
             showNotification({
@@ -466,17 +467,18 @@ export function reorderTypes(newOrder: number[], groupId: number, userId: number
 
         dispatch(reorderTypesAction({ newOrder, groupId }));
 
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/typesOrder`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.put<
+            {
+                newOrder: number[];
             },
-            body: JSON.stringify({
-                newOrder
-            })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/typesOrder`, {
+            newOrder
         });
-        let result = await res.json();
 
         if (!result.success) {
             showNotification({
@@ -491,20 +493,29 @@ export function reorderTypes(newOrder: number[], groupId: number, userId: number
 export function insertNewProject(userId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newProject`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.post<
+            {
+                userId: number;
             },
-            body: JSON.stringify({ userId })
+            {
+                success?: boolean;
+                projectId?: number;
+				projectName?: string;
+				memberTableId?: number;
+                username?: string;
+                msg?: string;
+            }
+        >(`/table/newProject`, {
+            userId
         });
-        const result = await res.json();
+
         if (result.success) {
-            const projectId = result.project_id;
-            const projectName = result.project_name;
-            const memberTableId = result.member_table_id;
-            const username = result.username;
+            const projectId = result.projectId!;
+            const projectName = result.projectName!;
+            const memberTableId = result.memberTableId!;
+            const username = result.username!;
             dispatch(setActiveProject(projectId, projectName));
             dispatch(
                 addProjectAction({

@@ -522,56 +522,56 @@ export class TableService {
 		const [{ username }] = await this.knex('users').select('username').where('id', userId);
 		const txn = await this.knex.transaction();
 		try {
-			const [{ project_id, project_name }] = await txn('projects')
+			const [{ projectId, projectName }] = await txn('projects')
 				.insert({
 					name: 'New Project',
 					creator_id: userId,
 					is_deleted: false
 				})
-				.returning(['id as project_id', 'name as project_name']);
-			const [{ member_table_id }] = await txn('members')
+				.returning(['id as projectId', 'name as projectName']);
+			const [{ memberTableId }] = await txn('members')
 				.insert({
 					user_id: userId,
-					project_id
+					project_id: projectId
 				})
-				.returning('id as member_table_id');
-			const [{ item_group_id }] = await txn('item_groups')
+				.returning('id as memberTableId');
+			const [{ itemGroupId }] = await txn('item_groups')
 				.insert({
-					project_id,
+					project_id: projectId,
 					name: 'New Group'
 				})
-				.returning('id as item_group_id');
+				.returning('id as itemGroupId');
 			const defaultStates = ['Empty', 'Stuck', 'Done', 'Working on it', 'Checking'];
 			const statusLabelsColor = ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875', '#0086C0', '#A25DDC', '#037F4C', '#579BFC', '#CAB641', '#FFCB00'];
-			let state_id = null;
+			let stateId = null;
 			for (let j in defaultStates) {
 				if (j === '0') {
-					[{ state_id }] = await txn('states')
+					[{ stateId }] = await txn('states')
 						.insert({
 							name: defaultStates[j],
 							color: statusLabelsColor[j],
-							project_id
+							project_id: projectId
 						})
-						.returning('id as state_id');
+						.returning('id as stateId');
 				} else {
 					await txn('states').insert({
 						name: defaultStates[j],
 						color: statusLabelsColor[j],
-						project_id
+						project_id: projectId
 					});
 				}
 			}
-			const [{ item_id }] = await txn('items')
+			const [{ itemId }] = await txn('items')
 				.insert({
 					name: 'New Item',
 					creator_id: userId,
-					project_id,
-					item_group_id,
+					project_id: projectId,
+					item_group_id: itemGroupId,
 					is_deleted: false,
 					order: 1
 				})
-				.returning('id as item_id');
-			const types_ids = await txn
+				.returning('id as itemId');
+			const typesIds = await txn
 				.insert([
 					{ type: 'persons', name: 'Persons', order: 1 },
 					{ type: 'dates', name: 'Dates', order: 2 },
@@ -582,26 +582,26 @@ export class TableService {
 				])
 				.into('types')
 				.returning('id');
-			const typesId_persons = types_ids[0].id;
-			const typesId_dates = types_ids[1].id;
-			const typesId_times = types_ids[2].id;
-			const typesId_money = types_ids[3].id;
-			const typesId_status = types_ids[4].id;
-			const typesId_text = types_ids[5].id;
+			const typesIdPersons = typesIds[0].id;
+			const typesIdDates = typesIds[1].id;
+			const typesIdTimes = typesIds[2].id;
+			const typesIdMoney = typesIds[3].id;
+			const typesIdStatus = typesIds[4].id;
+			const typesIdText = typesIds[5].id;
 			await txn
 				.insert({
 					name: username,
 					user_id: userId,
-					type_id: typesId_persons,
-					item_id
+					type_id: typesIdPersons,
+					item_id: itemId
 				})
 				.into('type_persons');
 			await txn
 				.insert({
 					datetime: format(new Date(Date.now()), 'yyyy-MM-dd'),
 					color: getRandomColor(),
-					type_id: typesId_dates,
-					item_id
+					type_id: typesIdDates,
+					item_id: itemId
 				})
 				.into('type_dates');
 			await txn
@@ -609,29 +609,29 @@ export class TableService {
 					start_date: new Date(new Date().toDateString()).getTime(),
 					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 					color: getRandomColor(),
-					type_id: typesId_times,
-					item_id
+					type_id: typesIdTimes,
+					item_id: itemId
 				})
 				.into('type_times');
 			const [{ typeMoneyId }] = await txn
 				.insert({
-					type_id: typesId_money,
-					item_id
+					type_id: typesIdMoney,
+					item_id: itemId
 				})
 				.into('type_money')
 				.returning('id as typeMoneyId');
 			await txn
 				.insert({
-					state_id,
-					type_id: typesId_status,
-					item_id
+					state_id: stateId,
+					type_id: typesIdStatus,
+					item_id: itemId
 				})
 				.into('type_status');
 			await txn
 				.insert({
 					text: '',
-					type_id: typesId_text,
-					item_id
+					type_id: typesIdText,
+					item_id: itemId
 				})
 				.into('type_text');
 			await txn
@@ -643,7 +643,7 @@ export class TableService {
 				.into('transactions');
 
 			await txn.commit();
-			return { project_id, project_name, member_table_id, username };
+			return { projectId, projectName, memberTableId, username };
 		} catch (e) {
 			await txn.rollback();
 			throw e;
