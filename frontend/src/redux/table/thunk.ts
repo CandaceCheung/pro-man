@@ -41,7 +41,7 @@ import {
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
 import { setActiveProject } from '../project/thunk';
-import { MakeRequest } from '../../utils';
+import { MakeRequest } from '../../utils/requestUtils';
 import { format } from 'date-fns';
 
 export function likeProject(projectId: number, userId: number) {
@@ -266,18 +266,22 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
         const token = localStorage.getItem('token');
         // Update frontend first to improve user experience
         dispatch(updateItemGroupNameAction({ itemGroupId, itemGroupName }));
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemGroupName`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.put<{
+            itemGroupId: number,
+            itemGroupName: string
+        },{
+            success?: boolean,
+            msg?: string
+        }>(
+            `/table/itemGroupName`,
+            {
                 itemGroupId,
                 itemGroupName
-            })
-        });
-        let result = await res.json();
+            }
+        );
+
         // If not successful, revert the frontend
         if (!result.success) {
             showNotification({
