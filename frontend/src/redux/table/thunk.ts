@@ -814,15 +814,21 @@ export function removeTransaction(groupId: number, itemId: number, typeId: numbe
 export function deleteItem(groupId: number, itemId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/item`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.delete<
+            {
+                itemId: number;
+                groupId: number;
             },
-            body: JSON.stringify({ itemId, groupId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/item`, {
+            itemId, groupId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(deleteItemAction({ groupId, itemId }));
             showNotification({
@@ -841,15 +847,21 @@ export function deleteItem(groupId: number, itemId: number) {
 export function deleteItemGroup(groupId: number, projectId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemGroup`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.delete<
+            {
+                groupId: number;
+                projectId: number;
             },
-            body: JSON.stringify({ groupId, projectId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/itemGroup`, {
+            groupId, projectId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(deleteGroupAction({ groupId }));
             showNotification({
