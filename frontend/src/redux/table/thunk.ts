@@ -567,15 +567,21 @@ export function renameItem(groupId: number, itemId: number, name: string) {
 export function renameType(groupId: number, typeId: number, name: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newTypeName`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.put<
+            {
+                typeId: number;
+                name: string;
             },
-            body: JSON.stringify({ typeId, name })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/newTypeName`, {
+            typeId, name
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(updateTypeNameAction({ groupId, typeId, name }));
         } else {
@@ -590,15 +596,21 @@ export function renameType(groupId: number, typeId: number, name: string) {
 export function updateText(groupId: number, itemId: number, typeId: number, text: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newText`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.put<
+            {
+                itemId: number;
+                text: string;
             },
-            body: JSON.stringify({ itemId, text })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/newText`, {
+            itemId, text
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(updateTextAction({ groupId, itemId, typeId, text }));
         } else {
@@ -613,19 +625,27 @@ export function updateText(groupId: number, itemId: number, typeId: number, text
 export function newState(projectId: number, name: string, color: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newState`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.post<
+            {
+                projectId: number;
+                name: string;
+                color: string;
             },
-            body: JSON.stringify({ projectId, name, color })
+            {
+                success?: boolean;
+                id?: number;
+                msg?: string;
+            }
+        >(`/table/newState`, {
+            projectId, name, color
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(
                 addStatusAction({
-                    id: result.id,
+                    id: result.id!,
                     name,
                     color
                 })
