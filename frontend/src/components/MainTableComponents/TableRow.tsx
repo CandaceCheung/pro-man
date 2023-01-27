@@ -20,8 +20,6 @@ export interface TableRowProps {
     cellDetails: { [key in number]: ItemCell };
     color: string;
     lastRow: boolean;
-    onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void;
-    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void;
     onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void;
     onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void;
     onDeleteItem: (groupId: number, itemId: number) => void;
@@ -34,8 +32,6 @@ export function TableRow({
     cellDetails,
     color,
     lastRow,
-    onTextChange,
-    onStatusChange,
     onAddTransaction,
     onDeleteTransaction,
     onDeleteItem
@@ -93,13 +89,13 @@ export function TableRow({
             case 'status':
                 return (
                     <div className={cx(classes.tableCell, classes.status)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Status groupId={groupId} itemId={itemId} typeId={cell.typeId} status={cell.itemStatusName!} color={cell.itemStatusColor!} onStatusChange={onStatusChange} />
+                        <Status groupId={groupId} itemId={itemId} typeId={cell.typeId} status={cell.itemStatusName!} color={cell.itemStatusColor!} />
                     </div>
                 );
             case 'text':
                 return (
                     <div className={cx(classes.tableCell, classes.text)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <TextCell groupId={groupId} itemId={itemId} typeId={cell.typeId} text={cell.itemTextText!} onTextChange={onTextChange} />
+                        <TextCell groupId={groupId} itemId={itemId} typeId={cell.typeId} text={cell.itemTextText!} />
                     </div>
                 );
             default:

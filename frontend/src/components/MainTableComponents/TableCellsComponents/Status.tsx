@@ -1,6 +1,6 @@
 import { Button, createStyles, Popover } from '@mantine/core';
 import { useState } from 'react';
-import { newState } from '../../../redux/table/thunk';
+import { newState, updateState } from '../../../redux/table/thunk';
 import { useAppDispatch, useAppSelector } from '../../../store';
 
 interface StatusProps {
@@ -9,7 +9,6 @@ interface StatusProps {
     typeId: number;
     status: string;
     color: string;
-    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void;
 }
 
 const useStyle = createStyles((theme, _params) => ({
@@ -79,7 +78,7 @@ const useStyle = createStyles((theme, _params) => ({
     }
 }));
 
-export function Status({ groupId, itemId, typeId, status, color, onStatusChange }: StatusProps) {
+export function Status({ groupId, itemId, typeId, status, color }: StatusProps) {
     const statusList = useAppSelector((state) => state.table.statusList);
     const projectId = useAppSelector((state) => state.project.projectId);
     const [opened, setOpened] = useState(false);
@@ -112,7 +111,7 @@ export function Status({ groupId, itemId, typeId, status, color, onStatusChange 
                             className={classes.statusTag}
                             style={{ backgroundColor: status.color }}
                             onClick={() => {
-                                onStatusChange(groupId, itemId, status.id!, typeId, status.name!, status.color!);
+                                dispatch(updateState(groupId, itemId, status.id!, typeId));
                                 setOpened((o) => !o);
                             }}
                         >

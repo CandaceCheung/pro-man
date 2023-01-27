@@ -101,14 +101,6 @@ export function MainTable() {
         }
     };
 
-    const onTextChange = (groupId: number, itemId: number, typeId: number, text: string) => {
-        dispatch(updateText(groupId, itemId, typeId, text));
-    };
-
-    const onStatusChange = (groupId: number, itemId: number, stateId: number, typeId: number) => {
-        dispatch(updateState(groupId, itemId, stateId, typeId));
-    };
-
     const onAddTransaction = (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => {
         dispatch(addTransaction(groupId, itemId, typeId, date, cashFlow));
     };
@@ -269,8 +261,6 @@ export function MainTable() {
                                                                     cellDetails={itemCellsState[itemGroupId][itemId]}
                                                                     color={theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]}
                                                                     lastRow={itemIndex === itemsOrdersState[itemGroupId].length - 1}
-                                                                    onTextChange={onTextChange}
-                                                                    onStatusChange={onStatusChange}
                                                                     onAddTransaction={onAddTransaction}
                                                                     onDeleteTransaction={onDeleteTransaction}
                                                                     onDeleteItem={onDeleteItem}
