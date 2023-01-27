@@ -879,15 +879,21 @@ export function deleteItemGroup(groupId: number, projectId: number) {
 export function deleteProject(userId: number, projectId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/project`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.delete<
+            {
+                projectId: number;
+                userId: number;
             },
-            body: JSON.stringify({ projectId, userId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/project`, {
+            projectId, userId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(getTableList(userId));
             showNotification({
