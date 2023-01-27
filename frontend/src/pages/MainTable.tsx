@@ -101,21 +101,6 @@ export function MainTable() {
         }
     };
 
-    const onAddTransaction = (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => {
-        dispatch(addTransaction(groupId, itemId, typeId, date, cashFlow));
-    };
-
-    const onDeleteTransaction = (groupId: number, itemId: number, typeId: number, transactionId: number) => {
-        if (itemCellsState[groupId][itemId][typeId].transactionId!.length <= 1) {
-            showNotification({
-                title: 'Delete transaction notification',
-                message: 'Failed to delete transaction! At least one transaction is required for items! 🤥'
-            });
-        } else {
-            dispatch(removeTransaction(groupId, itemId, typeId, transactionId));
-        }
-    };
-
     const toggleNewItemInputSelected = (index: number) => {
         dispatch(toggleNewItemsInputActiveAction(index));
     };
@@ -250,8 +235,6 @@ export function MainTable() {
                                                                     cellDetails={itemCellsState[itemGroupId][itemId]}
                                                                     color={theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]}
                                                                     lastRow={itemIndex === itemsOrdersState[itemGroupId].length - 1}
-                                                                    onAddTransaction={onAddTransaction}
-                                                                    onDeleteTransaction={onDeleteTransaction}
                                                                 />
                                                             ))}
                                                         </SortableContext>

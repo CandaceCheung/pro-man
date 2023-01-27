@@ -23,8 +23,6 @@ export interface TableRowProps {
     cellDetails: { [key in number]: ItemCell };
     color: string;
     lastRow: boolean;
-    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void;
-    onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void;
 }
 
 export function TableRow({
@@ -33,9 +31,7 @@ export function TableRow({
     typeOrder,
     cellDetails,
     color,
-    lastRow,
-    onAddTransaction,
-    onDeleteTransaction
+    lastRow
 }: TableRowProps) {
     const itemCellsState = useAppSelector((state) => state.table.itemCells);
     const [deleteItemModalOpened, setDeleteItemModalOpened] = useState(false);
@@ -77,8 +73,6 @@ export function TableRow({
                             transactionIds={cell.transactionId!}
                             cashFlows={cell.itemMoneyCashflow!}
                             transactionDates={cell.itemMoneyDate!}
-                            onAddTransaction={onAddTransaction}
-                            onDeleteTransaction={onDeleteTransaction}
                         />
                     </div>
                 );
