@@ -538,15 +538,21 @@ export function insertNewProject(userId: number) {
 export function renameItem(groupId: number, itemId: number, name: string) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newItemName`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.put<
+            {
+                itemId: number;
+                name: string;
             },
-            body: JSON.stringify({ itemId, name })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/newItemName`, {
+            itemId, name
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(updateItemNameAction({ groupId, itemId, name }));
         } else {
