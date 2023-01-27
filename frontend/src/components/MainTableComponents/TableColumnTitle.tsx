@@ -1,6 +1,8 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
+import { renameType } from '../../redux/table/thunk';
+import { useAppDispatch } from '../../store';
 import { useStyles } from './styles';
 
 export interface TableColumnTitleProps {
@@ -10,15 +12,16 @@ export interface TableColumnTitleProps {
     index: number;
     lastCell: boolean;
     groupId: number;
-    onTypeRename: (groupId: number, typeId: number, name: string) => void;
 }
 
-export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, index, lastCell, groupId, onTypeRename }: TableColumnTitleProps) {
+export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, index, lastCell, groupId }: TableColumnTitleProps) {
     const [typeNameInput, setTypeNameInput] = useState(cellColumnCustomName);
     const [typeNameInputSelected, setTypeNameInputSelected] = useState(false);
     const { classes, cx } = useStyles();
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: id });
+
+    const dispatch = useAppDispatch();
 
     const style = {
         transform: CSS.Translate.toString(transform),
@@ -63,7 +66,7 @@ export function TableColumnTitle({ id, cellColumnType, cellColumnCustomName, ind
     const deselectTypeNameInput = () => {
         if (typeNameInput !== cellColumnCustomName) {
             if (typeNameInput) {
-                onTypeRename(groupId, id, typeNameInput);
+                dispatch(renameType(groupId, id, typeNameInput));
             } else {
                 setTypeNameInput(cellColumnCustomName);
             }

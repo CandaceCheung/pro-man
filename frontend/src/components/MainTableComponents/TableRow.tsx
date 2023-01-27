@@ -20,7 +20,6 @@ export interface TableRowProps {
     cellDetails: { [key in number]: ItemCell };
     color: string;
     lastRow: boolean;
-    onItemRename: (groupId: number, itemId: number, name: string) => void;
     onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void;
     onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void;
     onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void;
@@ -35,7 +34,6 @@ export function TableRow({
     cellDetails,
     color,
     lastRow,
-    onItemRename,
     onTextChange,
     onStatusChange,
     onAddTransaction,
@@ -118,7 +116,7 @@ export function TableRow({
         <div className={cx(classes.tableRow, { [classes.lastRow]: lastRow })} ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div className={classes.tableCell} style={{ backgroundColor: color }}></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                <Item itemId={itemId} groupId={groupId} itemName={cellDetails[typeOrder[0]].itemName} onItemRename={onItemRename} />
+                <Item itemId={itemId} groupId={groupId} itemName={cellDetails[typeOrder[0]].itemName} />
             </div>
             {typeOrder.map((typeId, cellIndex) => {
                 return retrieveCellData(cellDetails[typeId], cellIndex);

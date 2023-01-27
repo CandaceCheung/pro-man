@@ -101,14 +101,6 @@ export function MainTable() {
         }
     };
 
-    const onItemRename = (groupId: number, itemId: number, name: string) => {
-        dispatch(renameItem(groupId, itemId, name));
-    };
-
-    const onTypeRename = (groupId: number, typeId: number, name: string) => {
-        dispatch(renameType(groupId, typeId, name));
-    };
-
     const onTextChange = (groupId: number, itemId: number, typeId: number, text: string) => {
         dispatch(updateText(groupId, itemId, typeId, text));
     };
@@ -259,7 +251,6 @@ export function MainTable() {
                                                                         index={index}
                                                                         lastCell={index === typesOrdersState[itemGroupId].length - 1}
                                                                         groupId={itemGroupId}
-                                                                        onTypeRename={onTypeRename}
                                                                     />
                                                                 ))}
                                                             </SortableContext>
@@ -278,7 +269,6 @@ export function MainTable() {
                                                                     cellDetails={itemCellsState[itemGroupId][itemId]}
                                                                     color={theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]}
                                                                     lastRow={itemIndex === itemsOrdersState[itemGroupId].length - 1}
-                                                                    onItemRename={onItemRename}
                                                                     onTextChange={onTextChange}
                                                                     onStatusChange={onStatusChange}
                                                                     onAddTransaction={onAddTransaction}
