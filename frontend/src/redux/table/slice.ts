@@ -437,8 +437,6 @@ const addTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: n
     const date = action.payload.date;
     const cashFlow = action.payload.cashFlow;
 
-    console.log(groupId, itemId, typeId)
-    console.log(state.itemCells[groupId][itemId][typeId])
     state.itemCells[groupId][itemId][typeId].itemMoneyDate!.forEach((each, i) => {
         if (new Date(each) >= date) {
             state.itemCells[groupId][itemId][typeId].transactionId!.splice(i, 0, transactionId);

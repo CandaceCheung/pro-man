@@ -695,15 +695,22 @@ export function updateState(groupId: number, itemId: number, stateId: number, ty
 export function addPerson(groupId: number, itemId: number, typeId: number, personId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/person`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.post<
+            {
+                itemId: number;
+                personId: number;
+                typeId: number;
             },
-            body: JSON.stringify({ itemId, personId, typeId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/person`, {
+            itemId, personId, typeId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(addPersonAction({ groupId, itemId, typeId, personId }));
         } else {
@@ -718,17 +725,25 @@ export function addPerson(groupId: number, itemId: number, typeId: number, perso
 export function addTransaction(groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.post<
+            {
+                itemId: number;
+                date: string;
+                cashFlow: number;
             },
-            body: JSON.stringify({ itemId, date: format(date, 'yyyy-MM-dd'), cashFlow })
+            {
+                success?: boolean;
+                transactionId?: number;
+                msg?: string;
+            }
+        >(`/table/transaction`, {
+            itemId, date: format(date, 'yyyy-MM-dd'), cashFlow
         });
-        const result = await res.json();
+
         if (result.success) {
-            dispatch(addTransactionAction({ groupId, itemId, typeId, transactionId: result.transactionId, date, cashFlow }));
+            dispatch(addTransactionAction({ groupId, itemId, typeId, transactionId: result.transactionId!, date, cashFlow }));
         } else {
             showNotification({
                 title: 'Add transaction notification',
@@ -741,15 +756,21 @@ export function addTransaction(groupId: number, itemId: number, typeId: number, 
 export function removePerson(groupId: number, itemId: number, typeId: number, personId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/person`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.delete<
+            {
+                itemId: number;
+                personId: number;
             },
-            body: JSON.stringify({ itemId, personId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/person`, {
+            itemId, personId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(removePersonAction({ groupId, itemId, typeId, personId }));
         } else {
@@ -764,15 +785,21 @@ export function removePerson(groupId: number, itemId: number, typeId: number, pe
 export function removeTransaction(groupId: number, itemId: number, typeId: number, transactionId: number) {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const makeRequest = new MakeRequest(token!);
+        const result = await makeRequest.delete<
+            {
+                itemId: number;
+                transactionId: number;
             },
-            body: JSON.stringify({ itemId, transactionId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/transaction`, {
+            itemId, transactionId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(removeTransactionAction({ groupId, itemId, typeId, transactionId }));
         } else {
