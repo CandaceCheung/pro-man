@@ -358,7 +358,7 @@ export class TableController {
 			const userId = req.body.userId;
 			const itemGroupId = req.body.itemGroupId;
 			const itemName = req.body.itemName;
-			const itemCells = await this.tableService.insertItem(projectId, userId, itemGroupId, undefined, itemName);
+			const itemCells = await this.tableService.insertItem({projectId, userId, itemGroupId, itemName});
 
 			res.json({ 
 				success: true ,

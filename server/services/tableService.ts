@@ -264,7 +264,25 @@ export class TableService {
 		};
 	}
 
-	async insertItem(projectId: number, userId: number, itemGroupId?: number, typesInput?: Array<{typesId: number; typesName: string; elementName: string}>, itemName?: string) {
+	async insertItem(
+		params: {
+			projectId: number, 
+			userId: number, 
+			itemGroupId?: number, 
+			types?: Array<{
+				typesId: number; 
+				typesName: string; 
+				elementName: string
+			}>, 
+			itemName?: string
+		}
+	) {
+		const projectId = params.projectId;
+		const userId = params.userId;
+		const itemGroupId = params.itemGroupId;
+		let types = params.types;
+		const itemName = params.itemName;
+
 		const [{ username }] = await this.knex('users').select('username').where('id', userId);
 		const [{ stateId }] = await this.knex('states').select('id as stateId').where('project_id', projectId).orderBy('stateId').limit(1);
 		let groupId = itemGroupId;
@@ -275,7 +293,6 @@ export class TableService {
 		const txn = await this.knex.transaction();
 
 		try {
-			let types = typesInput;
 			if (!types) {
 				const [{ previousItemId }] = await this.knex('items').select('id as previousItemId').where('item_group_id', groupId).limit(1);
 				types = await this.knex
@@ -445,7 +462,7 @@ export class TableService {
 		const txn = await this.knex.transaction();
 		let itemGroupId: number;
 		let itemGroupName: string;
-		let type: {
+		let types: {
 			typesId: number,
 			typesName: string,
 			elementName: string
@@ -462,7 +479,7 @@ export class TableService {
 					'name as itemGroupName'
 				]);
 
-			type = await txn
+			types = await txn
 				.insert([
 					{ type: 'persons', name: 'Persons', order: 1 },
 					{ type: 'dates', name: 'Dates', order: 2 },
@@ -482,8 +499,8 @@ export class TableService {
 			throw e;
 		}
 		try {
-			const itemCells = await this.insertItem(projectId, userId, itemGroupId, type);
-			const typeIds = type.map((each) => each.typesId);
+			const itemCells = await this.insertItem({projectId, userId, itemGroupId, types});
+			const typeIds = types.map((each) => each.typesId);
 			return {
 				itemCells,
 				itemGroupId,
@@ -492,7 +509,7 @@ export class TableService {
 			};
 		} catch(e) {
 			// Revert the previous inserts
-			for (let each of type) {
+			for (let each of types) {
 				const typeId = each.typesId;
 				await this.knex("types").where("id", typeId).del();
 			}
