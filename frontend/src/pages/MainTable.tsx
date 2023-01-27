@@ -138,17 +138,6 @@ export function MainTable() {
         }
     };
 
-    const onDeleteItem = (groupId: number, itemId: number) => {
-        if (Object.keys(itemCellsState[groupId]).length <= 1) {
-            showNotification({
-                title: 'Item delete notification',
-                message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
-            });
-        } else {
-            dispatch(deleteItem(groupId, itemId));
-        }
-    };
-
     const onDeleteGroup = (groupId: number, projectId: number) => {
         dispatch(toggleDeleteGroupModalAction(groupId));
         if (Object.keys(itemCellsState).length <= 1) {
@@ -263,7 +252,6 @@ export function MainTable() {
                                                                     lastRow={itemIndex === itemsOrdersState[itemGroupId].length - 1}
                                                                     onAddTransaction={onAddTransaction}
                                                                     onDeleteTransaction={onDeleteTransaction}
-                                                                    onDeleteItem={onDeleteItem}
                                                                 />
                                                             ))}
                                                         </SortableContext>

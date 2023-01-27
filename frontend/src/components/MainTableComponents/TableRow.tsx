@@ -12,6 +12,9 @@ import { IconX } from '@tabler/icons';
 import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
 import { ItemCell } from '../../redux/table/slice';
+import { showNotification } from '@mantine/notifications';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { deleteItem } from '../../redux/table/thunk';
 
 export interface TableRowProps {
     itemId: number;
@@ -22,7 +25,6 @@ export interface TableRowProps {
     lastRow: boolean;
     onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void;
     onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void;
-    onDeleteItem: (groupId: number, itemId: number) => void;
 }
 
 export function TableRow({
@@ -33,13 +35,13 @@ export function TableRow({
     color,
     lastRow,
     onAddTransaction,
-    onDeleteTransaction,
-    onDeleteItem
+    onDeleteTransaction
 }: TableRowProps) {
+    const itemCellsState = useAppSelector((state) => state.table.itemCells);
     const [deleteItemModalOpened, setDeleteItemModalOpened] = useState(false);
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: itemId });
-
+    const dispatch = useAppDispatch();
     const { classes, cx } = useStyles();
 
     const style = {
@@ -105,7 +107,14 @@ export function TableRow({
 
     const handleDeleteItem = () => {
         setDeleteItemModalOpened(false);
-        onDeleteItem(groupId, itemId);
+        if (Object.keys(itemCellsState[groupId]).length <= 1) {
+            showNotification({
+                title: 'Item delete notification',
+                message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
+            });
+        } else {
+            dispatch(deleteItem(groupId, itemId));
+        }
     };
 
     return (
