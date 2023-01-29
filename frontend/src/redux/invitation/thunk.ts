@@ -129,12 +129,16 @@ export function deleteInvitation(invitationId: number) {
 
         const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.delete<
-            {},
+            {
+                invitationId: number;
+            },
             {
                 success?: boolean;
                 msg: string;
             }
-        >(`/invitation/${invitationId}`);
+        >(`/invitation`,{
+            invitationId
+        });
 
         if (result.success) {
             dispatch(deleteInvitationAction({ id: invitationId }));

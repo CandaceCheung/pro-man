@@ -11,7 +11,7 @@ export class MakeRequest {
         return await res.json();
     };
 
-    post = async <T extends {}, R extends {}>(path: string, requestBody?: T): Promise<R> => {
+    post = async <T extends {}, R extends {}>(path: string, requestBody: T): Promise<R> => {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
             method: 'POST',
             headers: {
@@ -24,7 +24,7 @@ export class MakeRequest {
         return await res.json();
     };
 
-    put = async <T extends {}, R extends {}>(path: string, requestBody?: T): Promise<R> => {
+    put = async <T extends {}, R extends {}>(path: string, requestBody: T): Promise<R> => {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
             method: 'PUT',
             headers: {
@@ -37,7 +37,7 @@ export class MakeRequest {
         return await res.json();
     };
 
-    delete = async <T extends {}, R extends {}>(path: string, requestBody?: T): Promise<R> => {
+    delete = async <T extends {}, R extends {}>(path: string, requestBody: T): Promise<R> => {
         const res = await fetch(`${process.env.REACT_APP_API_SERVER}${path}`, {
             method: 'DELETE',
             headers: {

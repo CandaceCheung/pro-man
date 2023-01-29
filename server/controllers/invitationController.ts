@@ -34,10 +34,10 @@ export class InvitationController {
 
 	deleteInvitation = async (req: Request, res: Response) => {
 		try {
-			const invitationId = req.params.invitationId;
+			const invitationId = req.body.invitationId;
 
 			if (invitationId) {
-				await this.invitationService.deleteInvitation(parseInt(invitationId));
+				await this.invitationService.deleteInvitation(invitationId);
 
 				res.json({
 					success: true,
