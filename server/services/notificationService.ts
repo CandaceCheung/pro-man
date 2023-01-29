@@ -64,11 +64,7 @@ export class NotificationService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const messages = await txn('notifications')
-				.where('sender_id', userId)
-				.orWhere('receiver_id', userId)
-				.orderBy('status', 'asc')
-				.orderBy('created_at', 'desc');
+			const messages = await txn('notifications').where('sender_id', userId).orWhere('receiver_id', userId).orderBy('status', 'asc').orderBy('created_at', 'desc');
 
 			await txn.commit();
 			return keysToCamel(messages);
@@ -78,14 +74,7 @@ export class NotificationService {
 		}
 	}
 
-	async sendMessage(
-		sender: string,
-		sender_id: number,
-		receiver: string,
-		receiver_id: number,
-		text: string,
-		messageType: 'message' | 'invite'
-	) {
+	async sendMessage(sender: string, sender_id: number, receiver: string, receiver_id: number, text: string, messageType: 'message' | 'invite') {
 		const txn = await this.knex.transaction();
 
 		try {

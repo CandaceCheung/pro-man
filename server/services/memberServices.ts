@@ -6,20 +6,13 @@ export class MemberService {
 
 	async checkMember(projectId: number, userId: number) {
 		try {
-			const [member] = await this.knex
-				.select('*')
-				.from('members')
-				.where('user_id', userId)
-				.andWhere('project_id', projectId);
+			const [member] = await this.knex.select('*').from('members').where('user_id', userId).andWhere('project_id', projectId);
 
-			const [project] = await this.knex
-				.select('*')
-				.from('projects')
-				.where('id', projectId);
+			const [project] = await this.knex.select('*').from('projects').where('id', projectId);
 
-			return { 
-				member: keysToCamel(member), 
-				project: keysToCamel(project) 
+			return {
+				member: keysToCamel(member),
+				project: keysToCamel(project)
 			};
 		} catch (e) {
 			throw e;
@@ -47,10 +40,7 @@ export class MemberService {
 
 	async getMember(membershipId: number) {
 		try {
-			const [member] = await this.knex
-				.select('*')
-				.from('members')
-				.where('id', membershipId);
+			const [member] = await this.knex.select('*').from('members').where('id', membershipId);
 
 			return keysToCamel(member);
 		} catch (e) {
@@ -88,31 +78,12 @@ export class MemberService {
 		try {
 			const memberList = await txn
 				.with('projects', (qb) => {
-					qb.select(
-						'projects.id as project_id',
-						'projects.name as project_name',
-						'projects.creator_id',
-						'projects.is_deleted'
-					)
-						.from('projects')
-						.where('creator_id', userId);
+					qb.select('projects.id as project_id', 'projects.name as project_name', 'projects.creator_id', 'projects.is_deleted').from('projects').where('creator_id', userId);
 				})
 				.with('members', (qb) => {
-					qb.select(
-						'members.id as membership_id',
-						'members.project_id',
-						'members.user_id as member_user_id',
-						'members.avatar as avatar'
-					).from('members');
+					qb.select('members.id as membership_id', 'members.project_id', 'members.user_id as member_user_id', 'members.avatar as avatar').from('members');
 				})
-				.select(
-					'users.id as member_id',
-					'users.last_name',
-					'users.first_name',
-					'users.username',
-					txn.raw('JSON_agg(members.*) as members'),
-					txn.raw('JSON_agg(projects.*) as projects')
-				)
+				.select('users.id as member_id', 'users.last_name', 'users.first_name', 'users.username', txn.raw('JSON_agg(members.*) as members'), txn.raw('JSON_agg(projects.*) as projects'))
 				.from('projects')
 				.where('projects.creator_id', userId)
 				.where('projects.is_deleted', false)

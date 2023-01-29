@@ -63,9 +63,9 @@ export class TableController {
 					username: member.username,
 					firstName: member.firstName,
 					lastName: member.lastName
-				}
-			})
-			
+				};
+			});
+
 			let itemCells: {
 				[keys in number]: {
 					[keys in number]: { [keys in number]: itemCellsElement };
@@ -342,7 +342,7 @@ export class TableController {
 			const itemId = req.body.itemId;
 			const stateId = req.body.stateId;
 			const result = await this.tableService.updateState(itemId, stateId);
-			res.json({ 
+			res.json({
 				success: true,
 				name: result.name,
 				color: result.color
@@ -358,10 +358,10 @@ export class TableController {
 			const userId = req.body.userId;
 			const itemGroupId = req.body.itemGroupId;
 			const itemName = req.body.itemName;
-			const itemCells = await this.tableService.insertItem({projectId, userId, itemGroupId, itemName});
+			const itemCells = await this.tableService.insertItem({ projectId, userId, itemGroupId, itemName });
 
-			res.json({ 
-				success: true ,
+			res.json({
+				success: true,
 				itemCells
 			});
 		} catch (e) {
@@ -375,7 +375,7 @@ export class TableController {
 			const userId = req.body.userId;
 			const result = await this.tableService.insertItemGroup(projectId, userId);
 
-			res.json({ 
+			res.json({
 				success: true,
 				itemCells: result.itemCells,
 				itemGroupId: result.itemGroupId,

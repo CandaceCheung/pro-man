@@ -66,9 +66,7 @@ export async function seed(knex: Knex): Promise<void> {
 			is_deleted: false
 		});
 	}
-	const projectIDs = await knex('projects')
-		.insert(insertArray)
-		.returning('*');
+	const projectIDs = await knex('projects').insert(insertArray).returning('*');
 
 	insertArray = [];
 	for (const i of projectIDs) {
@@ -88,9 +86,7 @@ export async function seed(knex: Knex): Promise<void> {
 				is_deleted: false
 			});
 		}
-		const eachItemGroupIDs = await knex('item_groups')
-			.insert(insertArray)
-			.returning('*');
+		const eachItemGroupIDs = await knex('item_groups').insert(insertArray).returning('*');
 		itemGroupIDs.push(eachItemGroupIDs);
 	}
 
@@ -115,25 +111,8 @@ export async function seed(knex: Knex): Promise<void> {
 	}
 	const itemIDs = await knex('items').insert(insertArray).returning('*');
 
-	const defaultStates = [
-		'Empty',
-		'Stuck',
-		'Done',
-		'Working on it',
-		'Checking'
-	];
-	const statusLabelsColor = [
-		'#C4C4C4',
-		'#FDAB3D',
-		'#E2445C',
-		'#00C875',
-		'#0086C0',
-		'#A25DDC',
-		'#037F4C',
-		'#579BFC',
-		'#CAB641',
-		'#FFCB00'
-	];
+	const defaultStates = ['Empty', 'Stuck', 'Done', 'Working on it', 'Checking'];
+	const statusLabelsColor = ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875', '#0086C0', '#A25DDC', '#037F4C', '#579BFC', '#CAB641', '#FFCB00'];
 
 	insertArray = [];
 	for (let i of projectIDs) {
@@ -223,10 +202,7 @@ export async function seed(knex: Knex): Promise<void> {
 		insertArray.push({
 			item_id: itemIDs[i].id,
 			type_id: typeIDs[1 + counter].id,
-			datetime: format(
-				new Date(Date.now() + Math.ceil(Math.random() * 8.64e7) * 10),
-				'yyyy-MM-dd'
-			),
+			datetime: format(new Date(Date.now() + Math.ceil(Math.random() * 8.64e7) * 10), 'yyyy-MM-dd'),
 			color: getRandomColor()
 		});
 		await knex('type_dates').insert(insertArray);
@@ -235,12 +211,8 @@ export async function seed(knex: Knex): Promise<void> {
 		insertArray.push({
 			item_id: itemIDs[i].id,
 			type_id: typeIDs[2 + counter].id,
-			start_date:
-				new Date(new Date().toDateString()).getTime() -
-				Math.ceil(Math.random() * 10) * 8.64e7,
-			end_date:
-				new Date(new Date().toDateString()).getTime() +
-				Math.ceil(Math.random() * 10) * 8.64e7,
+			start_date: new Date(new Date().toDateString()).getTime() - Math.ceil(Math.random() * 10) * 8.64e7,
+			end_date: new Date(new Date().toDateString()).getTime() + Math.ceil(Math.random() * 10) * 8.64e7,
 			color: getRandomColor()
 		});
 		await knex('type_times').insert(insertArray);
@@ -250,41 +222,19 @@ export async function seed(knex: Knex): Promise<void> {
 			item_id: itemIDs[i].id,
 			type_id: typeIDs[3 + counter].id
 		});
-		const moneyID = await knex('type_money')
-			.insert(insertArray)
-			.returning('*');
+		const moneyID = await knex('type_money').insert(insertArray).returning('*');
 
 		insertArray = [];
 		insertArray.push(
 			{
 				type_money_id: moneyID[0].id,
-				date: format(
-					new Date(
-						Date.now() +
-							Math.floor(Math.random() * 300000000) +
-							100000000
-					),
-					'yyyy-MM-dd'
-				),
-				cash_flow:
-					Math.random() > 0.5
-						? 0 + Math.floor(Math.random() * 50000)
-						: 0 - Math.floor(Math.random() * 50000)
+				date: format(new Date(Date.now() + Math.floor(Math.random() * 300000000) + 100000000), 'yyyy-MM-dd'),
+				cash_flow: Math.random() > 0.5 ? 0 + Math.floor(Math.random() * 50000) : 0 - Math.floor(Math.random() * 50000)
 			},
 			{
 				type_money_id: moneyID[0].id,
-				date: format(
-					new Date(
-						Date.now() +
-							Math.floor(Math.random() * 300000000) +
-							100000000
-					),
-					'yyyy-MM-dd'
-				),
-				cash_flow:
-					Math.random() > 0.5
-						? 0 + Math.floor(Math.random() * 50000)
-						: 0 - Math.floor(Math.random() * 50000)
+				date: format(new Date(Date.now() + Math.floor(Math.random() * 300000000) + 100000000), 'yyyy-MM-dd'),
+				cash_flow: Math.random() > 0.5 ? 0 + Math.floor(Math.random() * 50000) : 0 - Math.floor(Math.random() * 50000)
 			}
 		);
 		await knex('transactions').insert(insertArray).returning('*');

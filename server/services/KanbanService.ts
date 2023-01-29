@@ -8,35 +8,18 @@ export class KanbanService {
 	async getKanbanInfo(project_Id: number) {
 		const kanbanDetail = await this.knex
 			.with('items', (qb) => {
-				qb.select(
-					'items.id as id',
-					'items.name as name',
-					'type_dates.datetime as date',
-					this.knex.raw(
-						'JSON_AGG(type_persons.name) as "membersList"'
-					)
-				)
+				qb.select('items.id as id', 'items.name as name', 'type_dates.datetime as date', this.knex.raw('JSON_AGG(type_persons.name) as "membersList"'))
 					.from('items')
 					.join('type_persons', 'type_persons.item_id', 'items.id')
 					.join('type_dates', 'type_dates.item_id', 'items.id')
-					.join(
-						'item_groups',
-						'items.item_group_id',
-						'item_groups.id'
-					)
+					.join('item_groups', 'items.item_group_id', 'item_groups.id')
 					.groupBy('items.id')
 					.groupBy('type_dates.datetime')
 					.where('items.project_id', project_Id)
 					.where('items.is_deleted', false)
 					.where('item_groups.is_deleted', false);
 			})
-			.select(
-				'states.id as id',
-				'states.name as name',
-				'states.color as color',
-				'states.status_order as order',
-				this.knex.raw('JSON_AGG(items.*) as "itemsList"')
-			)
+			.select('states.id as id', 'states.name as name', 'states.color as color', 'states.status_order as order', this.knex.raw('JSON_AGG(items.*) as "itemsList"'))
 			.from('states')
 			.join('projects', 'states.project_id', '=', 'projects.id')
 			.leftJoin('type_status', 'type_status.state_id', '=', 'states.id')
@@ -47,9 +30,7 @@ export class KanbanService {
 
 		// filter the deleted items (null)
 		for (const status of kanbanDetail) {
-			status.itemsList = status.itemsList.filter(
-				(item: any) => item !== null
-			);
+			status.itemsList = status.itemsList.filter((item: any) => item !== null);
 		}
 
 		// for null status
@@ -64,12 +45,7 @@ export class KanbanService {
 
 	async getMemberList(project_Id: number) {
 		const membersList = await this.knex
-			.select(
-				'users.id',
-				'users.username',
-				'users.first_name as firstName',
-				'users.last_name as lastName'
-			)
+			.select('users.id', 'users.username', 'users.first_name as firstName', 'users.last_name as lastName')
 			.from('users')
 			.join('members', 'members.user_id', '=', 'users.id')
 			.where('members.project_id', project_Id);
@@ -77,27 +53,12 @@ export class KanbanService {
 	}
 
 	async getGroupList(project_Id: number) {
-		const groupsList = await this.knex
-			.select('item_groups.id', 'item_groups.name')
-			.from('item_groups')
-			.where('item_groups.project_id', project_Id);
+		const groupsList = await this.knex.select('item_groups.id', 'item_groups.name').from('item_groups').where('item_groups.project_id', project_Id);
 		return groupsList;
 	}
 
-	async addKanbanitem(
-		projectId: number,
-		stateId: number,
-		userId: number,
-		itemName: string,
-		memberName: string[],
-		memberId: string[],
-		date: Date,
-		groupId: number
-	) {
-		const [{ previousItemId }] = await this.knex('items')
-			.select('id as previousItemId')
-			.where('item_group_id', groupId)
-			.limit(1);
+	async addKanbanitem(projectId: number, stateId: number, userId: number, itemName: string, memberName: string[], memberId: string[], date: Date, groupId: number) {
+		const [{ previousItemId }] = await this.knex('items').select('id as previousItemId').where('item_group_id', groupId).limit(1);
 
 		const types = await this.knex
 			.select('types.id as typesId')
@@ -129,9 +90,7 @@ export class KanbanService {
 
 		const txn = await this.knex.transaction();
 		try {
-			await txn('items')
-				.where('item_group_id', groupId)
-				.increment('order', 1);
+			await txn('items').where('item_group_id', groupId).increment('order', 1);
 
 			const [{ itemId }] = await txn
 				.insert({
@@ -169,9 +128,7 @@ export class KanbanService {
 			await txn
 				.insert({
 					start_date: new Date(new Date().toDateString()).getTime(),
-					end_date:
-						new Date(new Date().toDateString()).getTime() +
-						86400000,
+					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 					color: getRandomColor(),
 					type_id: typesId_times,
 					item_id: itemId

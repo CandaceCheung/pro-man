@@ -10,10 +10,7 @@ export class MemberController {
 			const userId = req.body.userId;
 			const projectId = req.body.projectId;
 
-			const check = await this.memberService.checkMember(
-				projectId,
-				userId
-			);
+			const check = await this.memberService.checkMember(projectId, userId);
 			if (check.member) {
 				res.json({
 					success: false,
@@ -25,10 +22,7 @@ export class MemberController {
 					msg: 'Target project no longer exist'
 				});
 			} else {
-				const member = await this.memberService.createMember(
-					projectId,
-					userId
-				);
+				const member = await this.memberService.createMember(projectId, userId);
 				if (member) {
 					const tableList = await tableService.getTableList(userId);
 					res.json({
@@ -54,24 +48,17 @@ export class MemberController {
 	deleteMember = async (req: Request, res: Response) => {
 		try {
 			const membershipId = req.body.membershipId;
-			const member = await this.memberService.getMember(
-				membershipId
-			);
-			console.log(member)
+			const member = await this.memberService.getMember(membershipId);
+			console.log(member);
 			if (member) {
-				const check = await this.memberService.checkLinkage(
-					member.projectId,
-					member.userId
-				);
+				const check = await this.memberService.checkLinkage(member.projectId, member.userId);
 				if (check) {
 					res.json({
 						success: false,
 						msg: 'Unable to remove member, please make sure there is no tasks assigned to this member and try again'
 					});
 				} else {
-					await this.memberService.deleteMember(
-						membershipId
-					);
+					await this.memberService.deleteMember(membershipId);
 					res.json({
 						success: true,
 						msg: 'Member deleted',
@@ -95,9 +82,7 @@ export class MemberController {
 	getMemberList = async (req: Request, res: Response) => {
 		try {
 			const userId = req.params.userId;
-			const memberList = await this.memberService.getMemberList(
-				parseInt(userId)
-			);
+			const memberList = await this.memberService.getMemberList(parseInt(userId));
 			if (memberList && memberList.length > 0) {
 				res.json({
 					success: true,

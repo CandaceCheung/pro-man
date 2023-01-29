@@ -264,19 +264,17 @@ export class TableService {
 		};
 	}
 
-	async insertItem(
-		params: {
-			projectId: number, 
-			userId: number, 
-			itemGroupId?: number, 
-			types?: Array<{
-				typesId: number; 
-				typesName: string; 
-				elementName: string
-			}>, 
-			itemName?: string
-		}
-	) {
+	async insertItem(params: {
+		projectId: number;
+		userId: number;
+		itemGroupId?: number;
+		types?: Array<{
+			typesId: number;
+			typesName: string;
+			elementName: string;
+		}>;
+		itemName?: string;
+	}) {
 		const projectId = params.projectId;
 		const userId = params.userId;
 		const itemGroupId = params.itemGroupId;
@@ -365,11 +363,8 @@ export class TableService {
 					item_id: itemId
 				})
 				.into('type_times')
-				.returning(
-					['start_date as startDate',
-					'end_date as endDate']
-				);
-				console.log(times)
+				.returning(['start_date as startDate', 'end_date as endDate']);
+			console.log(times);
 			const [{ typeMoneyId }] = await txn
 				.insert({
 					type_id: typesIdMoney,
@@ -384,7 +379,7 @@ export class TableService {
 					item_id: itemId
 				})
 				.into('type_status');
-			const [{text}] = await txn
+			const [{ text }] = await txn
 				.insert({
 					text: '',
 					type_id: typesIdText,
@@ -392,64 +387,58 @@ export class TableService {
 				})
 				.into('type_text')
 				.returning('text');
-			
+
 			const [transactions] = await txn
 				.insert({
 					date: format(new Date(), 'yyyy-MM-dd'),
 					cash_flow: 0,
 					type_money_id: typeMoneyId
 				})
-				.returning([
-					'id', 'cash_flow as cashFlow', 'date'
-				])
+				.returning(['id', 'cash_flow as cashFlow', 'date'])
 				.into('transactions');
 
-				const [{ stateColor, stateName }] = await this.knex.select(
-					'color as stateColor',
-					'name as stateName'
-				).from('states')
-				.where('id', stateId);
-	
-				let itemCells = {};
-				itemCells[groupId!] = {};
-				itemCells[groupId!][itemId] = {};
-				types.forEach((type) => {
-					const typeId = type.typesId;
-					itemCells[groupId!][itemId][typeId] = {
-						itemId: itemId,
-						itemName: itemName || 'New Item',
-						typeId: type.typesId,
-						typeName: type.typesName,
-						elementName: type.elementName
-					}
-					switch (type.typesName) {
-						case 'persons':
-							itemCells[groupId!][itemId][typeId]['itemPersonUserId'] = [userId];
-							break;
-						case 'dates':
-							itemCells[groupId!][itemId][typeId]['itemDatesDatetime'] = datetime;
-							itemCells[groupId!][itemId][typeId]['itemDatesDate'] = date;
-							break;
-						case 'times':
-							itemCells[groupId!][itemId][typeId]['itemTimesStartDate'] = times.startDate;
-							itemCells[groupId!][itemId][typeId]['itemTimesEndDate'] = times.endDate;
-							break;
-						case "money":
-							itemCells[groupId!][itemId][typeId]['transactionId'] = [transactions.id];
-							itemCells[groupId!][itemId][typeId]['itemMoneyCashflow'] = [transactions.cashFlow];
-							itemCells[groupId!][itemId][typeId]['itemMoneyDate'] = [transactions.date];
-							break;
-						case "status":
-							itemCells[groupId!][itemId][typeId]['itemStatusColor'] = stateColor;
-							itemCells[groupId!][itemId][typeId]['itemStatusName'] = stateName;
-							break;
-						case "text":
-							itemCells[groupId!][itemId][typeId]['itemTextText'] = text;
-							break;
-						default:
-							break
-					}
-				});
+			const [{ stateColor, stateName }] = await this.knex.select('color as stateColor', 'name as stateName').from('states').where('id', stateId);
+
+			let itemCells = {};
+			itemCells[groupId!] = {};
+			itemCells[groupId!][itemId] = {};
+			types.forEach((type) => {
+				const typeId = type.typesId;
+				itemCells[groupId!][itemId][typeId] = {
+					itemId: itemId,
+					itemName: itemName || 'New Item',
+					typeId: type.typesId,
+					typeName: type.typesName,
+					elementName: type.elementName
+				};
+				switch (type.typesName) {
+					case 'persons':
+						itemCells[groupId!][itemId][typeId]['itemPersonUserId'] = [userId];
+						break;
+					case 'dates':
+						itemCells[groupId!][itemId][typeId]['itemDatesDatetime'] = datetime;
+						itemCells[groupId!][itemId][typeId]['itemDatesDate'] = date;
+						break;
+					case 'times':
+						itemCells[groupId!][itemId][typeId]['itemTimesStartDate'] = times.startDate;
+						itemCells[groupId!][itemId][typeId]['itemTimesEndDate'] = times.endDate;
+						break;
+					case 'money':
+						itemCells[groupId!][itemId][typeId]['transactionId'] = [transactions.id];
+						itemCells[groupId!][itemId][typeId]['itemMoneyCashflow'] = [transactions.cashFlow];
+						itemCells[groupId!][itemId][typeId]['itemMoneyDate'] = [transactions.date];
+						break;
+					case 'status':
+						itemCells[groupId!][itemId][typeId]['itemStatusColor'] = stateColor;
+						itemCells[groupId!][itemId][typeId]['itemStatusName'] = stateName;
+						break;
+					case 'text':
+						itemCells[groupId!][itemId][typeId]['itemTextText'] = text;
+						break;
+					default:
+						break;
+				}
+			});
 			await txn.commit();
 			return itemCells;
 		} catch (e) {
@@ -463,21 +452,18 @@ export class TableService {
 		let itemGroupId: number;
 		let itemGroupName: string;
 		let types: {
-			typesId: number,
-			typesName: string,
-			elementName: string
+			typesId: number;
+			typesName: string;
+			elementName: string;
 		}[];
 		try {
-			[{itemGroupId, itemGroupName}] = await txn
+			[{ itemGroupId, itemGroupName }] = await txn
 				.insert({
 					project_id: projectId,
 					name: 'New Group'
 				})
 				.into('item_groups')
-				.returning([
-					'id as itemGroupId',
-					'name as itemGroupName'
-				]);
+				.returning(['id as itemGroupId', 'name as itemGroupName']);
 
 			types = await txn
 				.insert([
@@ -489,9 +475,7 @@ export class TableService {
 					{ type: 'text', name: 'Text', order: 6 }
 				])
 				.into('types')
-				.returning(
-					['id as typesId', 'type as typesName', 'name as elementName']
-				)
+				.returning(['id as typesId', 'type as typesName', 'name as elementName'])
 				.orderBy('typesId');
 			await txn.commit();
 		} catch (e) {
@@ -499,7 +483,7 @@ export class TableService {
 			throw e;
 		}
 		try {
-			const itemCells = await this.insertItem({projectId, userId, itemGroupId, types});
+			const itemCells = await this.insertItem({ projectId, userId, itemGroupId, types });
 			const typeIds = types.map((each) => each.typesId);
 			return {
 				itemCells,
@@ -507,14 +491,14 @@ export class TableService {
 				itemGroupName,
 				typeIds
 			};
-		} catch(e) {
+		} catch (e) {
 			// Revert the previous inserts
 			for (let each of types) {
 				const typeId = each.typesId;
-				await this.knex("types").where("id", typeId).del();
+				await this.knex('types').where('id', typeId).del();
 			}
-			await this.knex("item_groups").where("id", itemGroupId).del();
-			throw(e);
+			await this.knex('item_groups').where('id', itemGroupId).del();
+			throw e;
 		}
 	}
 

@@ -12,12 +12,9 @@ export class AuthController {
 				res.status(401).json({ msg: 'Wrong Username/Password' });
 				return;
 			}
-			const result = await this.authService.login(
-				req.body.username,
-				req.body.password
-			);
+			const result = await this.authService.login(req.body.username, req.body.password);
 			if (result) {
-				console.log(jwt)
+				console.log(jwt);
 				const token = jwtSimple.encode(result, jwt.jwtSecret!);
 				res.json({
 					success: true,
@@ -42,12 +39,7 @@ export class AuthController {
 				res.status(401).json({ msg: 'Missing Username/Password' });
 				return;
 			}
-			const result = await this.authService.signUp(
-				req.body.username,
-				req.body.password,
-				req.body.firstName,
-				req.body.lastName
-			);
+			const result = await this.authService.signUp(req.body.username, req.body.password, req.body.firstName, req.body.lastName);
 			if (result) {
 				res.json({
 					success: true

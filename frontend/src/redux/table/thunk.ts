@@ -63,12 +63,12 @@ export function likeProject(projectId: number, userId: number) {
             {
                 success?: boolean;
                 favorite?: Array<{
-                    creatorId: number,
-                    userId: number,
-                    projectId: number,
-                    projectName: string,
-                    favoriteId: number
-                }>
+                    creatorId: number;
+                    userId: number;
+                    projectId: number;
+                    projectName: string;
+                    favoriteId: number;
+                }>;
                 msg: string;
             }
         >(`/table/favorite`, {
@@ -403,10 +403,10 @@ export function insertItemGroup(projectId: number, userId: number) {
             },
             {
                 success?: boolean;
-				itemCells?: ItemCells;
-				itemGroupId?: number;
-				itemGroupName?: string;
-				typeIds?: number[];
+                itemCells?: ItemCells;
+                itemGroupId?: number;
+                itemGroupName?: string;
+                typeIds?: number[];
                 msg?: string;
             }
         >(`/table/itemGroup`, {
@@ -440,7 +440,7 @@ export function reorderItems(newOrder: number[], groupId: number, userId: number
         const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.put<
             {
-                newOrder: number[]
+                newOrder: number[];
             },
             {
                 success?: boolean;
@@ -501,8 +501,8 @@ export function insertNewProject(userId: number) {
             {
                 success?: boolean;
                 projectId?: number;
-				projectName?: string;
-				memberTableId?: number;
+                projectName?: string;
+                memberTableId?: number;
                 username?: string;
                 msg?: string;
             }
@@ -549,7 +549,8 @@ export function renameItem(groupId: number, itemId: number, name: string) {
                 msg?: string;
             }
         >(`/table/newItemName`, {
-            itemId, name
+            itemId,
+            name
         });
 
         if (result.success) {
@@ -578,7 +579,8 @@ export function renameType(groupId: number, typeId: number, name: string) {
                 msg?: string;
             }
         >(`/table/newTypeName`, {
-            typeId, name
+            typeId,
+            name
         });
 
         if (result.success) {
@@ -607,7 +609,8 @@ export function updateText(groupId: number, itemId: number, typeId: number, text
                 msg?: string;
             }
         >(`/table/newText`, {
-            itemId, text
+            itemId,
+            text
         });
 
         if (result.success) {
@@ -638,7 +641,9 @@ export function newState(projectId: number, name: string, color: string) {
                 msg?: string;
             }
         >(`/table/newState`, {
-            projectId, name, color
+            projectId,
+            name,
+            color
         });
 
         if (result.success) {
@@ -675,7 +680,8 @@ export function updateState(groupId: number, itemId: number, stateId: number, ty
                 msg?: string;
             }
         >(`/table/state`, {
-            itemId, stateId
+            itemId,
+            stateId
         });
 
         if (result.success) {
@@ -707,7 +713,9 @@ export function addPerson(groupId: number, itemId: number, typeId: number, perso
                 msg?: string;
             }
         >(`/table/person`, {
-            itemId, personId, typeId
+            itemId,
+            personId,
+            typeId
         });
 
         if (result.success) {
@@ -738,7 +746,9 @@ export function addTransaction(groupId: number, itemId: number, typeId: number, 
                 msg?: string;
             }
         >(`/table/transaction`, {
-            itemId, date: format(date, 'yyyy-MM-dd'), cashFlow
+            itemId,
+            date: format(date, 'yyyy-MM-dd'),
+            cashFlow
         });
 
         if (result.success) {
@@ -767,7 +777,8 @@ export function removePerson(groupId: number, itemId: number, typeId: number, pe
                 msg?: string;
             }
         >(`/table/person`, {
-            itemId, personId
+            itemId,
+            personId
         });
 
         if (result.success) {
@@ -796,7 +807,8 @@ export function removeTransaction(groupId: number, itemId: number, typeId: numbe
                 msg?: string;
             }
         >(`/table/transaction`, {
-            itemId, transactionId
+            itemId,
+            transactionId
         });
 
         if (result.success) {
@@ -825,7 +837,8 @@ export function deleteItem(groupId: number, itemId: number) {
                 msg?: string;
             }
         >(`/table/item`, {
-            itemId, groupId
+            itemId,
+            groupId
         });
 
         if (result.success) {
@@ -858,7 +871,8 @@ export function deleteItemGroup(groupId: number, projectId: number) {
                 msg?: string;
             }
         >(`/table/itemGroup`, {
-            groupId, projectId
+            groupId,
+            projectId
         });
 
         if (result.success) {
@@ -890,7 +904,8 @@ export function deleteProject(userId: number, projectId: number) {
                 msg?: string;
             }
         >(`/table/project`, {
-            projectId, userId
+            projectId,
+            userId
         });
 
         if (result.success) {

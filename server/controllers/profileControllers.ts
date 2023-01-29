@@ -8,9 +8,7 @@ export class ProfileController {
 		try {
 			const userId = req.user!.id;
 
-			const result = await this.profileService.getProfileInfo(
-				Number(userId)
-			);
+			const result = await this.profileService.getProfileInfo(Number(userId));
 
 			res.json({
 				success: true,
@@ -28,13 +26,13 @@ export class ProfileController {
 
 			const { putInfo } = req.body;
 			const { password, firstName, lastName } = putInfo;
-			
+
 			const result = await this.profileService.updateProfile(userId, {
 				password,
 				firstName,
 				lastName
 			});
-			
+
 			res.json({ result, success: true });
 		} catch (e) {
 			console.error(e);

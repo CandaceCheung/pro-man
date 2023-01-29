@@ -25,14 +25,7 @@ export interface TableRowProps {
     lastRow: boolean;
 }
 
-export function TableRow({
-    itemId,
-    groupId,
-    typeOrder,
-    cellDetails,
-    color,
-    lastRow
-}: TableRowProps) {
+export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastRow }: TableRowProps) {
     const itemCellsState = useAppSelector((state) => state.table.itemCells);
     const [deleteItemModalOpened, setDeleteItemModalOpened] = useState(false);
 
@@ -50,11 +43,7 @@ export function TableRow({
             case 'persons':
                 return (
                     <div className={cx(classes.tableCell, classes.persons)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Persons
-                            groupId={groupId}
-                            itemId={itemId}
-                            typeId={cell.typeId}
-                        />
+                        <Persons groupId={groupId} itemId={itemId} typeId={cell.typeId} />
                     </div>
                 );
             case 'dates':
@@ -66,14 +55,7 @@ export function TableRow({
             case 'money':
                 return (
                     <div className={cx(classes.tableCell, classes.money)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Money
-                            groupId={groupId}
-                            itemId={itemId}
-                            typeId={cell.typeId}
-                            transactionIds={cell.transactionId!}
-                            cashFlows={cell.itemMoneyCashflow!}
-                            transactionDates={cell.itemMoneyDate!}
-                        />
+                        <Money groupId={groupId} itemId={itemId} typeId={cell.typeId} transactionIds={cell.transactionId!} cashFlows={cell.itemMoneyCashflow!} transactionDates={cell.itemMoneyDate!} />
                     </div>
                 );
             case 'times':

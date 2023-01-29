@@ -387,7 +387,7 @@ const updateItemName: CaseReducer<CombinedTableState, PayloadAction<{ groupId: n
         itemCells[parseInt(typeId)].itemName = action.payload.name;
     }
 };
-const updateTypeName: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, typeId: number; name: string }>> = (state, action) => {
+const updateTypeName: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; typeId: number; name: string }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const typeId = action.payload.typeId;
     const name = action.payload.name;
@@ -508,7 +508,7 @@ const resetItemGroupInputValue: CaseReducer<CombinedTableState, PayloadAction<{ 
 const toggleNewItemsInputActive: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
     state.newItemsInputActive[action.payload] = !state.newItemsInputActive[action.payload];
 };
-const changeNewItemsInputValue: CaseReducer<CombinedTableState, PayloadAction<{index: number, value: string}>> = (state, action) => {
+const changeNewItemsInputValue: CaseReducer<CombinedTableState, PayloadAction<{ index: number; value: string }>> = (state, action) => {
     state.newItemsInputValue[action.payload.index] = action.payload.value;
 };
 const insertItem: CaseReducer<CombinedTableState, PayloadAction<ItemCells>> = (state, action) => {
@@ -519,7 +519,7 @@ const insertItem: CaseReducer<CombinedTableState, PayloadAction<ItemCells>> = (s
     state.itemCells[groupId][itemId] = action.payload[groupId][itemId];
     state.itemsOrders[groupId].unshift(itemId);
 };
-const insertItemGroup: CaseReducer<CombinedTableState, PayloadAction<{itemGroupId: number, itemGroupName: string, typeIds: number[]}>> = (state, action) => {
+const insertItemGroup: CaseReducer<CombinedTableState, PayloadAction<{ itemGroupId: number; itemGroupName: string; typeIds: number[] }>> = (state, action) => {
     const itemGroupId = action.payload.itemGroupId;
     const itemGroupName = action.payload.itemGroupName;
     const typeIds = action.payload.typeIds;
@@ -534,7 +534,7 @@ const insertItemGroup: CaseReducer<CombinedTableState, PayloadAction<{itemGroupI
     state.itemsOrders[itemGroupId] = [];
     state.typesOrders[itemGroupId] = typeIds;
     state.newItemsInputActive.unshift(false);
-    state.newItemsInputValue.unshift("");
+    state.newItemsInputValue.unshift('');
     state.deleteGroupModalOpened[itemGroupId] = false;
 };
 const toggleDeleteGroupModal: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {

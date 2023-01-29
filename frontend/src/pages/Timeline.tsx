@@ -63,12 +63,8 @@ export function TimeFrame() {
     const setHideByType = useAppSelector((state) => state.project.setHideByType);
     const itemHeight = useAppSelector((state) => state.project.setTimelineItemHeight);
 
-    const unfilteredTimelineDetails = projectSummary
-        .filter((project) => project.projectId === targetProjectId && project.typeName === 'times' && !project.projectIsDeleted && !project.itemIsDeleted)
-        .sort((a, b) => a.itemGroupId - b.itemGroupId);
-    const unfilteredDatelineDetails = projectSummary
-        .filter((project) => project.projectId === targetProjectId && project.typeName === 'dates' && !project.projectIsDeleted && !project.itemIsDeleted)
-        .sort((a, b) => a.itemGroupId - b.itemGroupId);
+    const unfilteredTimelineDetails = projectSummary.filter((project) => project.projectId === targetProjectId && project.typeName === 'times' && !project.projectIsDeleted && !project.itemIsDeleted).sort((a, b) => a.itemGroupId - b.itemGroupId);
+    const unfilteredDatelineDetails = projectSummary.filter((project) => project.projectId === targetProjectId && project.typeName === 'dates' && !project.projectIsDeleted && !project.itemIsDeleted).sort((a, b) => a.itemGroupId - b.itemGroupId);
     const timelineDetail = unfilteredTimelineDetails.filter((project) => (sortByPersonId ? project.itemPersonUserId === sortByPersonId : project)).filter((project) => (sortByGroupId ? project.itemGroupId === sortByGroupId : project));
     const datelineDetail = unfilteredDatelineDetails.filter((project) => (sortByPersonId ? project.itemPersonUserId === sortByPersonId : project)).filter((project) => (sortByGroupId ? project.itemGroupId === sortByGroupId : project));
 

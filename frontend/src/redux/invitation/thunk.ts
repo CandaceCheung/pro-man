@@ -136,7 +136,7 @@ export function deleteInvitation(invitationId: number) {
                 success?: boolean;
                 msg: string;
             }
-        >(`/invitation`,{
+        >(`/invitation`, {
             invitationId
         });
 

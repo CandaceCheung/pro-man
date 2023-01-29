@@ -15,12 +15,7 @@ export class AuthService {
 		}
 	}
 
-	async signUp(
-		username: string,
-		password: string,
-		firstName: string,
-		lastName: string
-	) {
+	async signUp(username: string, password: string, firstName: string, lastName: string) {
 		const [user] = await this.knex('users').where('username', username);
 		if (!user) {
 			const txn = await this.knex.transaction();
@@ -53,25 +48,8 @@ export class AuthService {
 							name: 'New Group'
 						})
 						.returning('id as item_group_id');
-					const defaultStates = [
-						'Empty',
-						'Stuck',
-						'Done',
-						'Working on it',
-						'Checking'
-					];
-					const statusLabelsColor = [
-						'#C4C4C4',
-						'#FDAB3D',
-						'#E2445C',
-						'#00C875',
-						'#0086C0',
-						'#A25DDC',
-						'#037F4C',
-						'#579BFC',
-						'#CAB641',
-						'#FFCB00'
-					];
+					const defaultStates = ['Empty', 'Stuck', 'Done', 'Working on it', 'Checking'];
+					const statusLabelsColor = ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875', '#0086C0', '#A25DDC', '#037F4C', '#579BFC', '#CAB641', '#FFCB00'];
 					let state_id = null;
 					for (let j in defaultStates) {
 						if (j === '0') {
@@ -127,10 +105,7 @@ export class AuthService {
 						.into('type_persons');
 					await txn
 						.insert({
-							datetime: format(
-								new Date(Date.now()),
-								'yyyy-MM-dd'
-							),
+							datetime: format(new Date(Date.now()), 'yyyy-MM-dd'),
 							color: getRandomColor(),
 							type_id: typesId_dates,
 							item_id
@@ -138,12 +113,8 @@ export class AuthService {
 						.into('type_dates');
 					await txn
 						.insert({
-							start_date: new Date(
-								new Date().toDateString()
-							).getTime(),
-							end_date:
-								new Date(new Date().toDateString()).getTime() +
-								86400000,
+							start_date: new Date(new Date().toDateString()).getTime(),
+							end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 							color: getRandomColor(),
 							type_id: typesId_times,
 							item_id

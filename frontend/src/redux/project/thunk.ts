@@ -200,7 +200,7 @@ export function deleteMember(membershipId: number) {
         const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.delete<
             {
-                membershipId: number
+                membershipId: number;
             },
             {
                 success?: boolean;

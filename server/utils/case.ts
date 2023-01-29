@@ -8,7 +8,7 @@ export const toSnake = (s: string): string => {
 	let separator = '_';
 	let split = /(?=[A-Z])/;
 	return s.split(split).join(separator).toLowerCase();
-  }
+};
 
 export const keysToCamel = function (o: any): any {
 	if (isObject(o)) {
@@ -44,7 +44,6 @@ export const keysToSnake = function (o: any): any {
 
 	return o;
 };
-
 
 const isArray = function <T>(a: T): boolean {
 	return Array.isArray(a);

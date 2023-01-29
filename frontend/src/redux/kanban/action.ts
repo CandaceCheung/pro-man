@@ -49,4 +49,4 @@ export function failKanbanAction() {
     };
 }
 
-export type KanbanAction = ReturnType<typeof setKanbanInfo> | ReturnType<typeof setKanbanMember> | ReturnType<typeof setKanbanGroup> | ReturnType<typeof addKanbanItem> | ReturnType<typeof putKanbanOrder> ;
+export type KanbanAction = ReturnType<typeof setKanbanInfo> | ReturnType<typeof setKanbanMember> | ReturnType<typeof setKanbanGroup> | ReturnType<typeof addKanbanItem> | ReturnType<typeof putKanbanOrder>;

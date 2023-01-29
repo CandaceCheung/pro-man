@@ -17,11 +17,7 @@ const permit = new Bearer({
 	query: 'access_token'
 });
 
-export async function isLoggedIn(
-	req: express.Request,
-	res: express.Response,
-	next: express.NextFunction
-) {
+export async function isLoggedIn(req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
 		const token = permit.check(req);
 		if (!token) {

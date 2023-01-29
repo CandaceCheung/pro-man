@@ -5,6 +5,6 @@ export interface AuthState {
 }
 
 export interface RetrieveLoginUserInfo {
-	id: number;
-	username: string;
+    id: number;
+    username: string;
 }

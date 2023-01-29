@@ -6,10 +6,7 @@ export const memberRoutes = () => {
 
 	memberRoutes.get('/:userId', memberController.getMemberList);
 	memberRoutes.put('/avatar', memberController.changeAvatar);
-	memberRoutes.post(
-		'/invitation',
-		memberController.acceptInvitationThroughMember
-	);
+	memberRoutes.post('/invitation', memberController.acceptInvitationThroughMember);
 	memberRoutes.delete('/', memberController.deleteMember);
 
 	return memberRoutes;

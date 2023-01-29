@@ -2,15 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import {
-    deleteItemGroup,
-    getProjectStatusList,
-    getTableV2,
-    insertItem,
-    reorderItems,
-    reorderTypes,
-    updateItemGroupName
-} from '../redux/table/thunk';
+import { deleteItemGroup, getProjectStatusList, getTableV2, insertItem, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -21,7 +13,18 @@ import { Button, Modal, ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
-import { changeItemGroupInputValueAction, changeNewItemsInputValueAction, deselectItemGroupInputAction, ItemCell, ItemGroup, resetItemGroupInputValueAction, selectItemGroupInputAction, toggleDeleteGroupModalAction, toggleItemGroupsCollapsedAction, toggleNewItemsInputActiveAction } from '../redux/table/slice';
+import {
+    changeItemGroupInputValueAction,
+    changeNewItemsInputValueAction,
+    deselectItemGroupInputAction,
+    ItemCell,
+    ItemGroup,
+    resetItemGroupInputValueAction,
+    selectItemGroupInputAction,
+    toggleDeleteGroupModalAction,
+    toggleItemGroupsCollapsedAction,
+    toggleNewItemsInputActiveAction
+} from '../redux/table/slice';
 
 export function MainTable() {
     const userId = useAppSelector((state) => state.auth.userId);
@@ -51,7 +54,7 @@ export function MainTable() {
     }, [userId, projectId, dispatch]);
 
     const changeItemGroupInputValue = (index: number, value: string) => {
-        dispatch(changeItemGroupInputValueAction({index, value}));
+        dispatch(changeItemGroupInputValueAction({ index, value }));
     };
 
     const deselectItemGroupInput = (index: number) => {
@@ -62,7 +65,7 @@ export function MainTable() {
                     // Fetch to the server
                     dispatch(updateItemGroupName(itemGroupsState[index].itemGroupId, itemGroupsInputValue[index], index, originalValue));
                 } else {
-                    dispatch(resetItemGroupInputValueAction({index, originalValue}));
+                    dispatch(resetItemGroupInputValueAction({ index, originalValue }));
                 }
             }
         }
@@ -98,7 +101,7 @@ export function MainTable() {
     };
 
     const updateNewItemInputValue = (index: number, value: string) => {
-        dispatch(changeNewItemsInputValueAction({index, value}));
+        dispatch(changeNewItemsInputValueAction({ index, value }));
     };
 
     const deselectNewItemNameInput = (index: number, groupId: number) => {
@@ -129,8 +132,7 @@ export function MainTable() {
 
     return (
         <>
-            {
-                !itemCellsState[0] &&
+            {!itemCellsState[0] && (
                 <ScrollArea
                     style={{
                         width: 'calc(100vw - 140px)',
@@ -160,7 +162,12 @@ export function MainTable() {
                                             </span>
                                         </Modal>
 
-                                        <span onClick={() => dispatch(toggleItemGroupsCollapsedAction(itemGroupArrayIndex))} className={classes.hovertext} data-hover={itemGroupsCollapsed[itemGroupArrayIndex] ? 'Expand' : 'Collapse'} key={itemGroupArrayIndex}>
+                                        <span
+                                            onClick={() => dispatch(toggleItemGroupsCollapsedAction(itemGroupArrayIndex))}
+                                            className={classes.hovertext}
+                                            data-hover={itemGroupsCollapsed[itemGroupArrayIndex] ? 'Expand' : 'Collapse'}
+                                            key={itemGroupArrayIndex}
+                                        >
                                             {<ItemGroupCollapser size={20} className={itemGroupsCollapsed[itemGroupArrayIndex] ? '' : classes.collapserButton} />}
                                         </span>
                                         <span className={classes.itemCount}>
@@ -265,7 +272,7 @@ export function MainTable() {
                         })}
                     </div>
                 </ScrollArea>
-            }
+            )}
         </>
     );
 }
