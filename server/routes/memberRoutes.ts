@@ -10,7 +10,7 @@ export const memberRoutes = () => {
 		'/invitation',
 		memberController.acceptInvitationThroughMember
 	);
-	memberRoutes.delete('/:membershipId', memberController.deleteMember);
+	memberRoutes.delete('/', memberController.deleteMember);
 
 	return memberRoutes;
 };

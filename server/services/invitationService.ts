@@ -13,7 +13,7 @@ export class InvitationService {
 				.where('username', value);
 
 			await txn.commit();
-			return keysToCamel(user);
+			return user;
 		} catch (e) {
 			await txn.rollback();
 			throw e;

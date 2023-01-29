@@ -8,9 +8,7 @@ export class NotificationController {
 		try {
 			const userId = req.params.userId;
 
-			const message = await this.notificationService.getMessages(
-				parseInt(userId)
-			);
+			const message = await this.notificationService.getMessages(parseInt(userId));
 			if (message) {
 				res.json({
 					success: true,
@@ -39,14 +37,7 @@ export class NotificationController {
 			const text = req.body.text;
 			const messageType = req.body.messageType;
 
-			const message = await this.notificationService.sendMessage(
-				sender,
-				senderId,
-				receiver,
-				receiverId,
-				text,
-				messageType
-			);
+			const message = await this.notificationService.sendMessage(sender, senderId, receiver, receiverId, text, messageType);
 			if (message) {
 				res.json({
 					success: true,
@@ -72,15 +63,12 @@ export class NotificationController {
 			const notificationId = req.body.notificationId;
 			const checked = req.body.checked;
 
-			const check = await this.notificationService.toggleRead(
-				notificationId,
-				checked
-			);
+			const checkStatus = await this.notificationService.toggleRead(notificationId, checked);
 
 			res.json({
 				success: true,
-				msg: check ? 'Message Read' : 'Message Unread',
-				check
+				msg: checkStatus ? 'Message Read' : 'Message Unread',
+				checkStatus
 			});
 		} catch (e) {
 			console.error(e);
@@ -92,11 +80,9 @@ export class NotificationController {
 
 	toggleDelete = async (req: Request, res: Response) => {
 		try {
-			const notificationId = req.params.notificationId;
+			const notificationId = req.body.notificationId;
 
-			const isDeleted = await this.notificationService.toggleDelete(
-				parseInt(notificationId)
-			);
+			const isDeleted = await this.notificationService.toggleDelete(notificationId);
 
 			res.json({
 				success: true,
@@ -113,17 +99,14 @@ export class NotificationController {
 
 	toggleReceiverDelete = async (req: Request, res: Response) => {
 		try {
-			const notificationId = req.params.notificationId;
+			const notificationId = req.body.notificationId;
 
-			const isDeletedReceiver =
-				await this.notificationService.toggleReceiverDelete(
-					parseInt(notificationId)
-				);
+			const isDeletedByReceiver = await this.notificationService.toggleReceiverDelete(notificationId);
 
 			res.json({
 				success: true,
 				msg: 'Message Deleted',
-				isDeletedReceiver
+				isDeletedByReceiver
 			});
 		} catch (e) {
 			console.error(e);

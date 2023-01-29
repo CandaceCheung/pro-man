@@ -19,7 +19,6 @@ export type MessageState = {
     createdAt: Date;
     updatedAt: Date;
 };
-export type MessageStateArr = MessageState[];
 
 export type MyMemberState = {
     memberId: number | null;
@@ -38,7 +37,6 @@ export type MyMemberState = {
         creatorId: number | null;
     }[];
 };
-export type MyMemberStateArr = MyMemberState[];
 
 export interface ActiveProjectState {
     projectId: number | null;
@@ -67,8 +65,8 @@ export interface ActiveProjectState {
     toggleReplyModal: boolean;
     checkUsername: boolean | null;
     messageTarget: number | null;
-    messageSummary: MessageStateArr;
-    memberList: MyMemberStateArr;
+    messageSummary: MessageState[];
+    memberList: MyMemberState[];
 }
 
 const initialState: ActiveProjectState = {
@@ -219,13 +217,13 @@ const setMessageTarget: CaseReducer<ActiveProjectState, PayloadAction<number>> =
 const sendMessage: CaseReducer<ActiveProjectState, PayloadAction<MessageState>> = (state, action) => {
     state.messageSummary.unshift(action.payload);
 };
-const getMessages: CaseReducer<ActiveProjectState, PayloadAction<MessageStateArr>> = (state, action) => {
+const getMessages: CaseReducer<ActiveProjectState, PayloadAction<MessageState[]>> = (state, action) => {
     state.messageSummary = action.payload;
 };
-const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; checked: boolean }>> = (state, action) => {
+const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; checkStatus: boolean }>> = (state, action) => {
     for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
-            message.status = action.payload.checked;
+            message.status = action.payload.checkStatus;
             return;
         }
     }
@@ -239,21 +237,21 @@ const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notification
         }
     }
 };
-const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeletedReceiver: boolean }>> = (state, action) => {
+const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeletedByReceiver: boolean }>> = (state, action) => {
     for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
-            message.isDeletedReceiver = action.payload.isDeletedReceiver;
+            message.isDeletedReceiver = action.payload.isDeletedByReceiver;
             return;
         }
     }
 };
-const getMemberList: CaseReducer<ActiveProjectState, PayloadAction<MyMemberStateArr>> = (state, action) => {
+const getMemberList: CaseReducer<ActiveProjectState, PayloadAction<MyMemberState[]>> = (state, action) => {
     state.memberList = action.payload;
 };
-const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number[]; avatar: number }>> = (state, action) => {
+const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipIds: number[]; avatar: number }>> = (state, action) => {
     for (let message of state.memberList) {
         for (let member of message.members) {
-            for (let id of action.payload.membershipId) {
+            for (let id of action.payload.membershipIds) {
                 if (member.membershipId === id) {
                     member.avatar = action.payload.avatar;
                 }

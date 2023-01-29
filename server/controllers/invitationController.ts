@@ -11,12 +11,12 @@ export class InvitationController {
 	checkUsername = async (req: Request, res: Response) => {
 		try {
 			const value = req.body.value;
-			const username = await this.invitationService.checkUsername(value);
-			if (username) {
+			const user = await this.invitationService.checkUsername(value);
+			if (user) {
 				res.json({
 					success: true,
 					msg: 'User found',
-					username
+					userId: user.id
 				});
 			} else {
 				res.json({

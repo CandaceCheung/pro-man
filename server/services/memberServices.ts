@@ -52,7 +52,7 @@ export class MemberService {
 				.from('members')
 				.where('id', membershipId);
 
-			return member && keysToCamel(member);
+			return keysToCamel(member);
 		} catch (e) {
 			throw e;
 		}

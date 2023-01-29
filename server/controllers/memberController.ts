@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { tableService } from '../app';
 import { MemberService } from '../services/memberServices';
-import { keysToCamel } from '../utils/case';
 
 export class MemberController {
 	constructor(private memberService: MemberService) {}
@@ -54,9 +53,9 @@ export class MemberController {
 
 	deleteMember = async (req: Request, res: Response) => {
 		try {
-			const membershipId = req.params.membershipId;
+			const membershipId = req.body.membershipId;
 			const member = await this.memberService.getMember(
-				parseInt(membershipId)
+				membershipId
 			);
 			console.log(member)
 			if (member) {
@@ -71,12 +70,12 @@ export class MemberController {
 					});
 				} else {
 					await this.memberService.deleteMember(
-						parseInt(membershipId)
+						membershipId
 					);
 					res.json({
 						success: true,
 						msg: 'Member deleted',
-						projectId: member.project_id
+						projectId: member.projectId
 					});
 				}
 			} else {
@@ -99,11 +98,11 @@ export class MemberController {
 			const memberList = await this.memberService.getMemberList(
 				parseInt(userId)
 			);
-			if (memberList.length > 0) {
+			if (memberList && memberList.length > 0) {
 				res.json({
 					success: true,
 					msg: 'Member List Retrieved Successfully',
-					memberList: keysToCamel(memberList)
+					memberList
 				});
 			} else {
 				res.json({
