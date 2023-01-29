@@ -55,7 +55,7 @@ export function Profile() {
     return (
         <div>
             <Group position='center' mb={20}>
-                <IconUserCircle stroke-width={1.0} size={150} />
+                <IconUserCircle strokeWidth={1.0} size={150} />
             </Group>
             <div className={classes.profileTable}>
                 <div className='username'>

@@ -5,7 +5,7 @@ export class ProfileService {
 	constructor(private knex: Knex) {}
 
 	async getProfileInfo(user_Id: number) {
-		const userDetail = await this.knex
+		const [userDetail] = await this.knex
 			.select(
 				'users.id',
 				'users.username',
@@ -14,7 +14,7 @@ export class ProfileService {
 			)
 			.from('users')
 			.where('id', user_Id);
-		return userDetail[0];
+		return userDetail;
 	}
 
 	async updateProfile(
@@ -33,7 +33,7 @@ export class ProfileService {
 				hashedPassword = bcrypt.hashSync(password, 10);
 			}
 			if (password || firstName || lastName) {
-				update = await txn
+				[update] = await txn
 					.update({
 						first_name: firstName,
 						last_name: lastName,
