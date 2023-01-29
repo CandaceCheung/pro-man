@@ -36,10 +36,6 @@ export const kanbanReducer = (state: KanbanState = initState, action: KanbanActi
             });
             return newStatus;
 
-        case 'KANBAN/FETCH_FAIL':
-            console.error('Failed');
-            return state;
-
         default:
             return state;
     }

@@ -339,7 +339,6 @@ export function getFavorite(userId: number) {
         const token = localStorage.getItem('token');
 
         const makeRequest = new MakeRequest(token!);
-
         const result = await makeRequest.get<{
             success?: boolean;
             favorite?: MyFavoriteListState;

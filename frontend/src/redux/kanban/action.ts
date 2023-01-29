@@ -1,4 +1,4 @@
-import { Item, Status } from './state';
+import { Group, Item, Member, Status } from './state';
 
 export function setKanbanInfo(statusList: Status[]) {
     return {
@@ -7,14 +7,14 @@ export function setKanbanInfo(statusList: Status[]) {
     };
 }
 
-export function setKanbanMember(memberList: []) {
+export function setKanbanMember(memberList: Member[]) {
     return {
         type: 'KANBAN/SET_MEMBER' as const,
         memberList
     };
 }
 
-export function setKanbanGroup(groupList: []) {
+export function setKanbanGroup(groupList: Group[]) {
     return {
         type: 'KANBAN/SET_GROUP' as const,
         groupList
@@ -49,4 +49,4 @@ export function failKanbanAction() {
     };
 }
 
-export type KanbanAction = ReturnType<typeof setKanbanInfo> | ReturnType<typeof setKanbanMember> | ReturnType<typeof setKanbanGroup> | ReturnType<typeof addKanbanItem> | ReturnType<typeof putKanbanOrder> | ReturnType<typeof failKanbanAction>;
+export type KanbanAction = ReturnType<typeof setKanbanInfo> | ReturnType<typeof setKanbanMember> | ReturnType<typeof setKanbanGroup> | ReturnType<typeof addKanbanItem> | ReturnType<typeof putKanbanOrder> ;
