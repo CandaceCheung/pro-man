@@ -8,7 +8,7 @@ export const invitationRoutes = () => {
 	invitationRoutes.put('/response', invitationController.acceptInvite);
 	invitationRoutes.get('/:projectId', invitationController.getInvitationList);
 	invitationRoutes.delete(
-		'/:projectId&:invitationId',
+		'/:invitationId',
 		invitationController.deleteInvitation
 	);
 

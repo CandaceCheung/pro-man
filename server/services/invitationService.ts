@@ -36,7 +36,7 @@ export class InvitationService {
 						.update({ updated_at: new Date() })
 						.where('id', check.id);
 				}
-				return check;
+				return keysToCamel(check);
 			}
 
 			const [invitation] = await txn
@@ -75,20 +75,13 @@ export class InvitationService {
 		}
 	}
 
-	async deleteInvitation(invitationId: number, projectId: number) {
+	async deleteInvitation(invitationId: number) {
 		const txn = await this.knex.transaction();
 
 		try {
 			await txn('invitations').where('id', invitationId).del();
-
-			const invitationList = await txn
-				.select('*')
-				.from('invitations')
-				.where('project_id', projectId)
-				.orderBy('created_at', 'asc');
-
 			await txn.commit();
-			return keysToCamel(invitationList);
+			return
 		} catch (e) {
 			await txn.rollback();
 			throw e;

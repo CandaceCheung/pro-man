@@ -40,7 +40,7 @@ export function InvitationList() {
 
     function onConfirmDelete() {
         setToggle(false);
-        dispatch(deleteInvitation(targetInvitationId, projectId!));
+        dispatch(deleteInvitation(targetInvitationId));
     }
 
     const rows = elements.map((element) => (

@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { keysToCamel } from '../utils/case';
 
 export class MemberService {
 	constructor(private knex: Knex) {}
@@ -16,7 +17,10 @@ export class MemberService {
 				.from('projects')
 				.where('id', projectId);
 
-			return { member, project };
+			return { 
+				member: keysToCamel(member), 
+				project: keysToCamel(project) 
+			};
 		} catch (e) {
 			throw e;
 		}
@@ -27,12 +31,15 @@ export class MemberService {
 			const [check] = await this.knex
 				.select('*')
 				.from('projects')
+				.join('items', 'items.project_id', 'projects.id')
+				.join('item_groups', 'items.item_group_id', 'item_groups.id')
+				.join('type_persons', 'type_persons.item_id', 'items.id')
 				.where('projects.id', projectId)
 				.where('type_persons.user_id', userId)
-				.join('items', 'items.project_id', 'projects.id')
-				.join('type_persons', 'type_persons.item_id', 'items.id');
+				.where('items.is_deleted', false)
+				.where('item_groups.is_deleted', false);
 
-			return check;
+			return !!check;
 		} catch (e) {
 			throw e;
 		}
@@ -45,7 +52,7 @@ export class MemberService {
 				.from('members')
 				.where('id', membershipId);
 
-			return member;
+			return member && keysToCamel(member);
 		} catch (e) {
 			throw e;
 		}
@@ -69,7 +76,7 @@ export class MemberService {
 				})
 				.returning('*');
 
-			return member;
+			return !!member;
 		} catch (e) {
 			throw e;
 		}
@@ -114,7 +121,7 @@ export class MemberService {
 				.groupBy('users.id');
 
 			await txn.commit();
-			return memberList;
+			return keysToCamel(memberList);
 		} catch (e) {
 			await txn.rollback();
 			throw e;

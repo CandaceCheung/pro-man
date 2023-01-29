@@ -35,7 +35,6 @@ export class MemberController {
 					res.json({
 						success: true,
 						msg: 'Joined Project Successfully',
-						member,
 						tableList
 					});
 				} else {
@@ -59,10 +58,11 @@ export class MemberController {
 			const member = await this.memberService.getMember(
 				parseInt(membershipId)
 			);
+			console.log(member)
 			if (member) {
 				const check = await this.memberService.checkLinkage(
-					member.project_id,
-					member.user_id
+					member.projectId,
+					member.userId
 				);
 				if (check) {
 					res.json({

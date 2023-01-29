@@ -35,19 +35,13 @@ export class InvitationController {
 	deleteInvitation = async (req: Request, res: Response) => {
 		try {
 			const invitationId = req.params.invitationId;
-			const projectId = req.params.projectId;
 
 			if (invitationId) {
-				const invitationList =
-					await this.invitationService.deleteInvitation(
-						parseInt(invitationId),
-						parseInt(projectId)
-					);
+				await this.invitationService.deleteInvitation(parseInt(invitationId));
 
 				res.json({
 					success: true,
-					msg: 'Delete Success',
-					invitationList
+					msg: 'Delete Success'
 				});
 			}
 		} catch (e) {
@@ -63,10 +57,7 @@ export class InvitationController {
 			const projectId = req.params.projectId;
 
 			if (projectId) {
-				const invitationList =
-					await this.invitationService.getInvitationList(
-						parseInt(projectId)
-					);
+				const invitationList = await this.invitationService.getInvitationList(parseInt(projectId));
 
 				res.json({
 					success: true,
@@ -84,20 +75,13 @@ export class InvitationController {
 
 	acceptInvite = async (req: Request, res: Response) => {
 		try {
-			const invitationDetail = jwtSimple.decode(
-				req.body.token,
-				jwt.jwtSecret!
-			);
+			const invitationDetail = jwtSimple.decode(req.body.token, jwt.jwtSecret!);
 			const invitationId = invitationDetail.id;
 			const projectId = invitationDetail.projectId;
 			const userId = req.body.userId;
 
 			if (invitationDetail) {
-				const check = await this.invitationService.checkValidity(
-					invitationId,
-					projectId,
-					userId
-				);
+				const check = await this.invitationService.checkValidity(invitationId, projectId, userId);
 				if (!check.invitation || !check.invitation.validity) {
 					res.json({
 						success: false,
@@ -114,12 +98,7 @@ export class InvitationController {
 						msg: 'Join Failed: You are already a member'
 					});
 				} else {
-					const invitation =
-						await this.invitationService.acceptInvite(
-							invitationId,
-							projectId,
-							userId
-						);
+					const invitation = await this.invitationService.acceptInvite(invitationId, projectId, userId);
 					const tableList = await tableService.getTableList(userId);
 					res.json({
 						success: true,
@@ -146,11 +125,7 @@ export class InvitationController {
 			const userId = req.body.userId;
 			const email = req.body.email.trim();
 
-			const invitation = await this.invitationService.inviteUser(
-				projectId,
-				userId,
-				email
-			);
+			const invitation = await this.invitationService.inviteUser(projectId, userId, email);
 
 			if (invitation) {
 				if (invitation.status === 'accepted') {
@@ -185,8 +160,7 @@ export class InvitationController {
 						{
 							from: `"Pro-man Admin" <${process.env.EMAIL_LOGIN}>`,
 							to: email,
-							subject:
-								'Hello, Someone Invited You to Join Pro-man!',
+							subject: 'Hello, Someone Invited You to Join Pro-man!',
 							text: 'Invitation',
 							html: emailContent
 						},
