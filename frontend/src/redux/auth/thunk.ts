@@ -1,7 +1,9 @@
 import { AppDispatch } from '../../store';
-import { failedLoginAction, loginAction, logoutAction } from './action';
+import { loginAction, logoutAction } from './action';
 import { showNotification } from '@mantine/notifications';
 import { clearActiveProject } from '../project/thunk';
+import { RetrieveLoginUserInfo } from './state';
+import { MakeRequest } from '../../utils/requestUtils';
 
 const { REACT_APP_API_SERVER } = process.env;
 
@@ -19,7 +21,6 @@ export function loginThunk(username: string, password: string) {
         });
         const result = await res.json();
         if (result.success) {
-            // here
             dispatch(loginAction(result.data.id, result.data.username));
             localStorage.setItem('token', result.token);
         } else {
@@ -27,7 +28,6 @@ export function loginThunk(username: string, password: string) {
                 title: 'Login notification',
                 message: 'Failed to login! 🤥'
             });
-            dispatch(failedLoginAction());
         }
     };
 }
@@ -73,12 +73,12 @@ export function retriveLogin() {
     return async (dispatch: AppDispatch) => {
         const token = localStorage.getItem('token');
         if (token) {
-            const res = await fetch(`${process.env.REACT_APP_API_SERVER}/auth/userRetrieval`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            const data = await res.json();
+            const makeRequest = new MakeRequest(token!);
+            const data = await makeRequest.get<{
+                payload?: RetrieveLoginUserInfo;
+                msg?: string;
+            }>(`/auth/userRetrieval`);
+
             if (data.payload) {
                 dispatch(loginAction(data.payload.id, data.payload.username));
             } else {

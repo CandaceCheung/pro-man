@@ -12,10 +12,4 @@ export function logoutAction() {
     };
 }
 
-export function failedLoginAction() {
-    return {
-        type: 'AUTH/FAILED' as const
-    };
-}
-
-export type AuthAction = ReturnType<typeof loginAction> | ReturnType<typeof logoutAction> | ReturnType<typeof failedLoginAction>;
+export type AuthAction = ReturnType<typeof loginAction> | ReturnType<typeof logoutAction>;

@@ -23,9 +23,6 @@ export const authReducer = (state: AuthState = initState, action: AuthAction): A
                 username: null,
                 isLoggedIn: false
             };
-        case 'AUTH/FAILED':
-            console.error('Failed');
-            return state;
         default:
             return state;
     }
