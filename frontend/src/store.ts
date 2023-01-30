@@ -1,6 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import logger from 'redux-logger';
 import { AuthAction } from './redux/auth/action';
 import { authReducer } from './redux/auth/reducer';
 import { AuthState } from './redux/auth/state';
@@ -9,13 +8,13 @@ import { KanbanAction } from './redux/kanban/action';
 import { kanbanReducer } from './redux/kanban/reducer';
 import { KanbanState } from './redux/kanban/state';
 import profileReducer, { ProfileState } from './redux/profile/slice';
-import projectReducer, { ActiveProjectState } from './redux/project/slice';
-import tableReducer, { CombinedTableState } from './redux/table/slice';
+import projectReducer, { ProjectState } from './redux/project/slice';
+import tableReducer, { TableState } from './redux/table/slice';
 
 export interface IRootState {
     auth: AuthState;
-    table: CombinedTableState;
-    project: ActiveProjectState;
+    table: TableState;
+    project: ProjectState;
     kanban: KanbanState;
     invitation: InvitationState;
     profile: ProfileState;

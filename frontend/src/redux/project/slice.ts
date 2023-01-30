@@ -38,7 +38,7 @@ export type MyMemberState = {
     }[];
 };
 
-export interface ActiveProjectState {
+export interface ProjectState {
     projectId: number | null;
     projectName: string | null;
     activePage: ActivePageState | null;
@@ -69,7 +69,7 @@ export interface ActiveProjectState {
     memberList: MyMemberState[];
 }
 
-const initialState: ActiveProjectState = {
+const initialState: ProjectState = {
     projectId: null,
     projectName: null,
     activePage: 'mainTable',
@@ -137,90 +137,90 @@ const initialState: ActiveProjectState = {
     ]
 };
 
-const setActiveProject: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
+const setActiveProject: CaseReducer<ProjectState, PayloadAction<number>> = (state, action) => {
     state.projectId = action.payload;
 };
-const setProjectName: CaseReducer<ActiveProjectState, PayloadAction<string>> = (state, action) => {
+const setProjectName: CaseReducer<ProjectState, PayloadAction<string>> = (state, action) => {
     state.projectName = action.payload;
 };
-const clearActiveProject: CaseReducer<ActiveProjectState, PayloadAction> = (state, action) => {
+const clearActiveProject: CaseReducer<ProjectState, PayloadAction> = (state, action) => {
     state.projectId = null;
 };
-const setTimeLineView: CaseReducer<ActiveProjectState, PayloadAction<{ value: TimeLineViewState; start: Moment; end: Moment }>> = (state, action) => {
+const setTimeLineView: CaseReducer<ProjectState, PayloadAction<{ value: TimeLineViewState; start: Moment; end: Moment }>> = (state, action) => {
     state.timeLineView = action.payload.value;
     state.timeLineStartAnchor = action.payload.start;
     state.timeLineEndAnchor = action.payload.end;
 };
-const setAutofit: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const setAutofit: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.timeLineAutofit = action.payload;
 };
-const setTimelineNow: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const setTimelineNow: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.timeLineNow = action.payload;
 };
-const setShowMarker: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const setShowMarker: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.timeLineShowMarker = action.payload;
 };
-const triggerWarningModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const triggerWarningModal: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.warningModalOpened = action.payload;
 };
-const toggleMessager: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const toggleMessager: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.toggleMessager = action.payload;
 };
-const setActivePage: CaseReducer<ActiveProjectState, PayloadAction<ActivePageState | null>> = (state, action) => {
+const setActivePage: CaseReducer<ProjectState, PayloadAction<ActivePageState | null>> = (state, action) => {
     state.activePage = action.payload;
 };
-const toggleSidePanel: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const toggleSidePanel: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.toggleSidePanel = action.payload;
 };
-const toggleFavorite: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const toggleFavorite: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.toggleFavorite = action.payload;
 };
-const triggerUpdateTimelineModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const triggerUpdateTimelineModal: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.updateTimeLineModalOpened = action.payload;
 };
-const setTargetUpdateElement: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
+const setTargetUpdateElement: CaseReducer<ProjectState, PayloadAction<number>> = (state, action) => {
     state.targetElementId = action.payload;
 };
-const toggleLoading: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const toggleLoading: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.toggleLoading = action.payload;
 };
-const toggleStackItem: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const toggleStackItem: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.timeLineStackItem = action.payload;
 };
-const setSortByPersonId: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
+const setSortByPersonId: CaseReducer<ProjectState, PayloadAction<number>> = (state, action) => {
     state.sortByPersonId = action.payload;
 };
-const setSortByGroupId: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
+const setSortByGroupId: CaseReducer<ProjectState, PayloadAction<number>> = (state, action) => {
     state.sortByGroupId = action.payload;
 };
-const setHideByType: CaseReducer<ActiveProjectState, PayloadAction<string>> = (state, action) => {
+const setHideByType: CaseReducer<ProjectState, PayloadAction<string>> = (state, action) => {
     state.setHideByType = action.payload;
 };
-const setTimelineItemHeight: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
+const setTimelineItemHeight: CaseReducer<ProjectState, PayloadAction<number>> = (state, action) => {
     state.setTimelineItemHeight = action.payload;
 };
-const toggleInvitationButton: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const toggleInvitationButton: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.toggleInvitationButton = action.payload;
 };
-const toggleIReplyModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const toggleIReplyModal: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.toggleReplyModal = action.payload;
 };
-const toggleInviteMemberModal: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const toggleInviteMemberModal: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.toggleInviteMemberModal = action.payload;
 };
-const checkUsername: CaseReducer<ActiveProjectState, PayloadAction<boolean>> = (state, action) => {
+const checkUsername: CaseReducer<ProjectState, PayloadAction<boolean>> = (state, action) => {
     state.checkUsername = action.payload;
 };
-const setMessageTarget: CaseReducer<ActiveProjectState, PayloadAction<number>> = (state, action) => {
+const setMessageTarget: CaseReducer<ProjectState, PayloadAction<number>> = (state, action) => {
     state.messageTarget = action.payload;
 };
-const sendMessage: CaseReducer<ActiveProjectState, PayloadAction<MessageState>> = (state, action) => {
+const sendMessage: CaseReducer<ProjectState, PayloadAction<MessageState>> = (state, action) => {
     state.messageSummary.unshift(action.payload);
 };
-const getMessages: CaseReducer<ActiveProjectState, PayloadAction<MessageState[]>> = (state, action) => {
+const getMessages: CaseReducer<ProjectState, PayloadAction<MessageState[]>> = (state, action) => {
     state.messageSummary = action.payload;
 };
-const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; checkStatus: boolean }>> = (state, action) => {
+const toggleRead: CaseReducer<ProjectState, PayloadAction<{ notificationId: number; checkStatus: boolean }>> = (state, action) => {
     for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
             message.status = action.payload.checkStatus;
@@ -228,7 +228,7 @@ const toggleRead: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId
         }
     }
 };
-const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeleted: boolean }>> = (state, action) => {
+const toggleDelete: CaseReducer<ProjectState, PayloadAction<{ notificationId: number; isDeleted: boolean }>> = (state, action) => {
     for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
             message.status = true;
@@ -237,7 +237,7 @@ const toggleDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notification
         }
     }
 };
-const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ notificationId: number; isDeletedByReceiver: boolean }>> = (state, action) => {
+const toggleReceiverDelete: CaseReducer<ProjectState, PayloadAction<{ notificationId: number; isDeletedByReceiver: boolean }>> = (state, action) => {
     for (let message of state.messageSummary) {
         if (message.id === action.payload.notificationId) {
             message.isDeletedReceiver = action.payload.isDeletedByReceiver;
@@ -245,10 +245,10 @@ const toggleReceiverDelete: CaseReducer<ActiveProjectState, PayloadAction<{ noti
         }
     }
 };
-const getMemberList: CaseReducer<ActiveProjectState, PayloadAction<MyMemberState[]>> = (state, action) => {
+const getMemberList: CaseReducer<ProjectState, PayloadAction<MyMemberState[]>> = (state, action) => {
     state.memberList = action.payload;
 };
-const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipIds: number[]; avatar: number }>> = (state, action) => {
+const changeAvatar: CaseReducer<ProjectState, PayloadAction<{ membershipIds: number[]; avatar: number }>> = (state, action) => {
     for (let message of state.memberList) {
         for (let member of message.members) {
             for (let id of action.payload.membershipIds) {
@@ -259,7 +259,7 @@ const changeAvatar: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId
         }
     }
 };
-const deleteMember: CaseReducer<ActiveProjectState, PayloadAction<{ membershipId: number; projectId: number }>> = (state, action) => {
+const deleteMember: CaseReducer<ProjectState, PayloadAction<{ membershipId: number; projectId: number }>> = (state, action) => {
     let i: number | null = null;
     state.memberList.forEach((person, index) => {
         for (let member of person.members) {

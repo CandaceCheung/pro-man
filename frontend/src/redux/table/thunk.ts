@@ -10,7 +10,6 @@ import {
     addProjectAction,
     getStatusListAction,
     addStatusAction,
-    MyFavoriteListState,
     setItemCellsAction,
     setItemGroupsAction,
     updateItemNameAction,
@@ -38,10 +37,10 @@ import {
     insertItemGroupAction,
     ItemCells,
     ItemGroup,
-    ItemsOrders,
-    TypesOrders,
-    TableMembers,
-    TableStateArray
+    TableSummary,
+    Orders,
+    TableMember,
+    MyFavorite
 } from './slice';
 import { showNotification } from '@mantine/notifications';
 import { AppDispatch } from '../../store';
@@ -97,7 +96,7 @@ export function getTable(userId: number, projectId: number) {
         const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             success?: boolean;
-            table?: TableStateArray;
+            table?: TableSummary[];
             msg?: string;
         }>(`/table/${userId}&${projectId}`);
 
@@ -121,9 +120,9 @@ export function getTableV2(userId: number, projectId: number) {
             success?: boolean;
             itemCells?: ItemCells;
             itemGroups?: ItemGroup[];
-            itemsOrders?: ItemsOrders;
-            typesOrders?: TypesOrders;
-            memberList?: TableMembers;
+            itemsOrders?: Orders;
+            typesOrders?: Orders;
+            memberList?: {[keys in number]: TableMember};
             msg?: string;
         }>(`/table/v2/${userId}&${projectId}`);
 
@@ -339,7 +338,7 @@ export function getFavorite(userId: number) {
         const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             success?: boolean;
-            favorite?: MyFavoriteListState;
+            favorite?: MyFavorite[];
             msg?: string;
         }>(`/table/favorite/${userId}`);
 

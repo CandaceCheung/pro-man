@@ -2,7 +2,7 @@ import '../styles/ProjectList.css';
 import { Button, Divider, Modal } from '@mantine/core';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setActiveProject } from '../../redux/project/thunk';
-import { MyTableListState } from '../../redux/table/slice';
+import { MyTable } from '../../redux/table/slice';
 import { IconPlus, IconX } from '@tabler/icons';
 import { deleteProject, insertNewProject } from '../../redux/table/thunk';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ export function ProjectList() {
     const dispatch = useAppDispatch();
 
     let projectIdList: [number?] = [];
-    let projectList: MyTableListState = [];
+    let projectList: MyTable[] = [];
     for (let item of projectSummary) {
         if (!projectIdList.includes(item.projectId)) {
             projectIdList.push(item.projectId);

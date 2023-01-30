@@ -1,7 +1,7 @@
 import { Dispatch } from '@reduxjs/toolkit';
 import { showNotification } from '@mantine/notifications';
 import { acceptInviteAction, deleteInvitationAction, getInvitationListAction, Invitation, sendInviteAction, InvitationState } from './slice';
-import { getTableListAction, MyTableListState } from '../table/slice';
+import { getTableListAction, MyTable } from '../table/slice';
 import { MakeRequest } from '../../utils/requestUtils';
 
 export function sendInvitation(projectId: number, userId: number, value: string) {
@@ -50,7 +50,7 @@ export function acceptInvitation(tokenInput: string, userId: number) {
             {
                 success?: boolean;
                 invitation?: Invitation;
-                tableList?: MyTableListState;
+                tableList?: MyTable[];
                 msg: string;
             }
         >(`/invitation/response`, {
@@ -82,7 +82,7 @@ export function acceptMemberInvitation(projectId: number, userId: number) {
             },
             {
                 success?: boolean;
-                tableList?: MyTableListState;
+                tableList?: MyTable[];
                 msg: string;
             }
         >(`/member/invitation`, {

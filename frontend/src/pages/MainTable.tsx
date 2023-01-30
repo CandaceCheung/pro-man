@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import { deleteItemGroup, getProjectStatusList, getTableV2, insertItem, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
+import { getProjectStatusList, getTableV2, insertItem, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
@@ -11,7 +11,6 @@ import { TableColumnTitle } from '../components/MainTableComponents/TableColumnT
 import { SmartPointerSensor } from '../pointerSensor';
 import { ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
-import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
 import {
     changeItemGroupInputValueAction,
@@ -251,7 +250,7 @@ export function MainTable() {
                     </div>
                 </ScrollArea>
             )}
-            
+
             <ItemGroupModal />
         </>
     );
