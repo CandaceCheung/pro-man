@@ -1,4 +1,4 @@
-import { toCamel, toSnake } from './case';
+import { isArray, isObject, toCamel, toSnake } from './case';
 
 describe('toCamel Case Conversion Function', () => {
 	it('should convert snake case to camel case', () => {
@@ -22,4 +22,66 @@ describe('toSnake Case Conversion Function', () => {
 		const input = 'not_a_camel_case';
 		expect(toSnake(input)).toBe(input);
 	});
+});
+
+describe('isArray Checking Function', () => {
+    it('should return true for array inputs', () => {
+        const inputs = [
+            [],
+            [1,2,3],
+            [[]],
+            [{a: 1}]
+        ];
+        inputs.forEach(input => {
+            expect(isArray(input)).toBeTruthy();
+        });
+    });
+    it('should return false for non-array inputs', () => {
+        const inputs = [
+            {},
+            "",
+            0,
+            false,
+            undefined,
+            null,
+            NaN,
+            {arr: []},
+            () => {return}
+        ];
+        inputs.forEach(input => {
+            expect(isArray(input)).toBeFalsy();
+        });
+    });
+});
+
+describe('isObject checking function', () => {
+    it('should return true for object inputs', () => {
+        const inputs = [
+            {},
+            {a: 1, b: 2},
+            {1:{2:3}}
+        ];
+        inputs.forEach(input => {
+            expect(isObject(input)).toBeTruthy();
+        });
+    });
+    it('should return false for non-object inputs', () => {
+        const inputs = [
+            0,
+            "",
+            false,
+            undefined,
+            null,
+            NaN,
+            [],
+            new Date(),
+            new String(),
+            new Number(),
+            new Boolean(),
+            () => {return}
+        ];
+        inputs.forEach(input => {
+            expect(isObject(input)).toBeFalsy();
+        })
+    });
 });

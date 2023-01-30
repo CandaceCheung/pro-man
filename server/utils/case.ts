@@ -10,6 +10,22 @@ export const toSnake = (s: string): string => {
 	return s.split(split).join(separator).toLowerCase();
 };
 
+export const isArray = function <T>(a: T): boolean {
+	return Array.isArray(a);
+};
+
+export const isObject = function <T>(o: T): boolean {
+	return (
+		o === Object(o) && 
+		!isArray(o) && 
+		typeof o !== 'function' && 
+		!(o instanceof Date) &&
+		!(o instanceof Boolean) &&
+		!(o instanceof String) &&
+		!(o instanceof Number)
+	);
+};
+
 export const keysToCamel = function (o: any): any {
 	if (isObject(o)) {
 		const n = {};
@@ -43,12 +59,4 @@ export const keysToSnake = function (o: any): any {
 	}
 
 	return o;
-};
-
-export const isArray = function <T>(a: T): boolean {
-	return Array.isArray(a);
-};
-
-export const isObject = function <T>(o: T): boolean {
-	return o === Object(o) && !isArray(o) && typeof o !== 'function' && !(o instanceof Date);
 };
