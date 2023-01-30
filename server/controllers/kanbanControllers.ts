@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { KanbanService } from '../services/KanbanService';
+import { KanbanService } from '../services/kanbanService';
 
 export class KanbanController {
 	constructor(private kanbanService: KanbanService) {}

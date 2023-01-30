@@ -3,7 +3,11 @@ import jwtSimple from 'jwt-simple';
 import express from 'express';
 import jwt from './jwt';
 import { authService } from './app';
-import { User } from './services/models';
+
+interface User {
+	id: number;
+	username: string;
+}
 
 declare global {
 	namespace Express {
