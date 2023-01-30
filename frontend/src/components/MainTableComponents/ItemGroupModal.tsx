@@ -1,5 +1,6 @@
 import { Button, Modal } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
+import { useState } from "react";
 import { closeItemGroupModalAction } from "../../redux/table/slice";
 import { deleteItemGroup } from "../../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";

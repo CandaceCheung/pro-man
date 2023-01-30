@@ -11,7 +11,8 @@ import { showNotification } from '@mantine/notifications';
 export function ProjectList() {
     const projectSummary = useAppSelector((state) => state.table.projectList);
     const userId = useAppSelector((state) => state.auth.userId);
-    const [opened, setOpened] = useState(false);
+    const [opened, setOpened] = useState<boolean>(false);
+    const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
     const dispatch = useAppDispatch();
 
     let projectIdList: [number?] = [];
@@ -48,6 +49,16 @@ export function ProjectList() {
         }
     };
 
+    const onOpenModal = (projectId: number) => {
+        setDeleteProjectId(projectId);
+        setOpened(true);
+    }
+
+    const onCloseModal = () => {
+        setOpened(false);
+        setDeleteProjectId(null);
+    }
+
     return (
         <div>
             <h2>Project List</h2>
@@ -64,15 +75,7 @@ export function ProjectList() {
                                 <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].projectName))} value={content?.projectId} className='' variant='subtle' key={index}>
                                     {content?.projectName}
                                 </Button>
-                                <IconX size={16} className='delete-icon' onClick={() => setOpened(true)} />
-                                <Modal centered opened={opened} onClose={() => setOpened(false)} title={<span className='modal-title'>{'Delete this project?'}</span>}>
-                                    <span className='modal-body'>{'The action cannot be reversed! Think twice! 🤔'}</span>
-                                    <span className='modal-footer'>
-                                        <Button color='red' onClick={() => content.projectId && handleDeleteProject(content.projectId)}>
-                                            Delete
-                                        </Button>
-                                    </span>
-                                </Modal>
+                                <IconX size={16} className='delete-icon' onClick={() => content.projectId && onOpenModal(content.projectId)} />
                             </div>
                         )
                 )}
@@ -88,6 +91,14 @@ export function ProjectList() {
                         )
                 )}
             </div>
+            <Modal centered opened={opened} onClose={onCloseModal} title={<span className='modal-title'>{'Delete this project?'}</span>}>
+                <span className='modal-body'>{'The action cannot be reversed! Think twice! 🤔'}</span>
+                <span className='modal-footer'>
+                    <Button color='red' onClick={() => deleteProjectId && handleDeleteProject(deleteProjectId)}>
+                        Delete
+                    </Button>
+                </span>
+            </Modal>
         </div>
     );
 }
