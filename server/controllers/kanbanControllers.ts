@@ -59,7 +59,6 @@ export class KanbanController {
 	postKanban = async (req: Request, res: Response) => {
 		try {
 			const { projectId, stateId, userId, itemName, memberName, memberId, date, groupId } = req.body;
-			console.log(req.body);
 			const itemId = await this.kanbanService.addKanbanitem(projectId, stateId, userId, itemName, memberName, memberId, date, groupId);
 
 			res.json({

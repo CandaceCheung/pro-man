@@ -49,7 +49,6 @@ export function Inbox() {
 
     function onAcceptInvite(e: MouseEvent<HTMLButtonElement>) {
         dispatch(acceptMemberInvitation(parseInt(e.currentTarget.value), userId!));
-        console.log(e.currentTarget.value);
     }
 
     function onReply(e: MouseEvent<HTMLButtonElement>) {

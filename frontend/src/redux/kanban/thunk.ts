@@ -55,7 +55,6 @@ export function getGroup(projectId: number) {
         if (result.success) {
             dispatch(setKanbanGroup(result.groupList!));
         } else {
-            dispatch(failKanbanAction());
             console.log('Get Kanban group list info fail');
         }
     };

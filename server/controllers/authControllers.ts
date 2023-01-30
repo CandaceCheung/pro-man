@@ -14,7 +14,6 @@ export class AuthController {
 			}
 			const result = await this.authService.login(req.body.username, req.body.password);
 			if (result) {
-				console.log(jwt);
 				const token = jwtSimple.encode(result, jwt.jwtSecret!);
 				res.json({
 					success: true,

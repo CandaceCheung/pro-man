@@ -49,7 +49,6 @@ export class MemberController {
 		try {
 			const membershipId = req.body.membershipId;
 			const member = await this.memberService.getMember(membershipId);
-			console.log(member);
 			if (member) {
 				const check = await this.memberService.checkLinkage(member.projectId, member.userId);
 				if (check) {

@@ -364,7 +364,6 @@ export class TableService {
 				})
 				.into('type_times')
 				.returning(['start_date as startDate', 'end_date as endDate']);
-			console.log(times);
 			const [{ typeMoneyId }] = await txn
 				.insert({
 					type_id: typesIdMoney,
