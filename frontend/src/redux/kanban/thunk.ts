@@ -1,6 +1,6 @@
 import { AppDispatch } from '../../store';
 import { MakeRequest } from '../../utils/requestUtils';
-import { addKanbanItem, failKanbanAction, setKanbanGroup, setKanbanInfo, setKanbanMember } from './action';
+import { addKanbanItem, setKanbanGroup, setKanbanInfo, setKanbanMember } from './action';
 import { Group, Member, Status } from './state';
 
 export function getKanbanItems(projectId: number) {

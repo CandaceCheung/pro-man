@@ -275,11 +275,8 @@ export class TableService {
 		}>;
 		itemName?: string;
 	}) {
-		const projectId = params.projectId;
-		const userId = params.userId;
-		const itemGroupId = params.itemGroupId;
 		let types = params.types;
-		const itemName = params.itemName;
+		const { projectId, userId, itemGroupId, itemName } = params;
 
 		const [{ username }] = await this.knex('users').select('username').where('id', userId);
 		const [{ stateId }] = await this.knex('states').select('id as stateId').where('project_id', projectId).orderBy('stateId').limit(1);
