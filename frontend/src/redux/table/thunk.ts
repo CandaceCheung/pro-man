@@ -35,7 +35,6 @@ import {
     setNewItemsInputActiveAction,
     setNewItemsInputValueAction,
     insertItemAction,
-    setDeleteGroupModalOpenedAction,
     insertItemGroupAction,
     ItemCells,
     ItemGroup,
@@ -139,7 +138,6 @@ export function getTableV2(userId: number, projectId: number) {
             dispatch(setItemGroupsInputValueAction(result.itemGroups!));
             dispatch(setNewItemsInputActiveAction(result.itemGroups!.length));
             dispatch(setNewItemsInputValueAction(result.itemGroups!.length));
-            dispatch(setDeleteGroupModalOpenedAction(result.itemGroups!));
         } else {
             showNotification({
                 title: 'Project Table notification',

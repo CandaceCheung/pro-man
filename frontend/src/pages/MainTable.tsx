@@ -9,7 +9,7 @@ import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useStyles } from '../components/MainTableComponents/styles';
 import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
 import { SmartPointerSensor } from '../pointerSensor';
-import { Button, Modal, ScrollArea } from '@mantine/core';
+import { ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
 import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
@@ -17,14 +17,13 @@ import {
     changeItemGroupInputValueAction,
     changeNewItemsInputValueAction,
     deselectItemGroupInputAction,
-    ItemCell,
-    ItemGroup,
+    openItemGroupModalAction,
     resetItemGroupInputValueAction,
     selectItemGroupInputAction,
-    toggleDeleteGroupModalAction,
     toggleItemGroupsCollapsedAction,
     toggleNewItemsInputActiveAction
 } from '../redux/table/slice';
+import { ItemGroupModal } from '../components/MainTableComponents/ItemGroupModal';
 
 export function MainTable() {
     const userId = useAppSelector((state) => state.auth.userId);
@@ -38,7 +37,6 @@ export function MainTable() {
     const itemGroupsInputValue = useAppSelector((state) => state.table.itemGroupsInputValue);
     const newItemsInputActive = useAppSelector((state) => state.table.newItemsInputActive);
     const newItemsInputValue = useAppSelector((state) => state.table.newItemsInputValue);
-    const deleteGroupModalOpened = useAppSelector((state) => state.table.deleteGroupModalOpened);
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -118,18 +116,6 @@ export function MainTable() {
         }
     };
 
-    const onDeleteGroup = (groupId: number, projectId: number) => {
-        dispatch(toggleDeleteGroupModalAction(groupId));
-        if (Object.keys(itemCellsState).length <= 1) {
-            showNotification({
-                title: 'Item delete notification',
-                message: 'Failed to delete group! Each project should have at least 1 item group! 🤥'
-            });
-        } else {
-            dispatch(deleteItemGroup(groupId, projectId));
-        }
-    };
-
     return (
         <>
             {!itemCellsState[0] && (
@@ -150,17 +136,9 @@ export function MainTable() {
                                             color: theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]
                                         }}
                                     >
-                                        <span className={classes.itemGroupIcon} onClick={() => dispatch(toggleDeleteGroupModalAction(itemGroupId))}>
+                                        <span className={classes.itemGroupIcon} onClick={() => dispatch(openItemGroupModalAction(itemGroupId))}>
                                             <IconX size={16} />
                                         </span>
-                                        <Modal opened={deleteGroupModalOpened[itemGroupId]} onClose={() => dispatch(toggleDeleteGroupModalAction(itemGroupId))} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
-                                            <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
-                                            <span className={classes.modalFooter}>
-                                                <Button color='red' onClick={() => onDeleteGroup(itemGroupId, projectId!)}>
-                                                    Delete
-                                                </Button>
-                                            </span>
-                                        </Modal>
 
                                         <span
                                             onClick={() => dispatch(toggleItemGroupsCollapsedAction(itemGroupArrayIndex))}
@@ -273,6 +251,8 @@ export function MainTable() {
                     </div>
                 </ScrollArea>
             )}
+            
+            <ItemGroupModal />
         </>
     );
 }

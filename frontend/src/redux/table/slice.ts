@@ -114,6 +114,11 @@ export type TypesOrders = Record<number, Array<number>>;
 
 export type DeleteGroupModal = Record<number, boolean>;
 
+export type ItemGroupModal = {
+    open: boolean;
+    itemGroupId: number | null;
+}
+
 export interface CombinedTableState {
     memberList: TableMembers;
     myFavoriteList: MyFavoriteListState;
@@ -129,7 +134,7 @@ export interface CombinedTableState {
     itemGroupsInputValue: string[];
     newItemsInputActive: boolean[];
     newItemsInputValue: string[];
-    deleteGroupModalOpened: DeleteGroupModal;
+    itemGroupModal: ItemGroupModal;
 }
 
 const initialState: CombinedTableState = {
@@ -242,7 +247,10 @@ const initialState: CombinedTableState = {
     itemGroupsInputValue: [],
     newItemsInputActive: [],
     newItemsInputValue: [],
-    deleteGroupModalOpened: {}
+    itemGroupModal: {
+        open: false,
+        itemGroupId: null
+    }
 };
 
 const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> = (state, action) => {
@@ -297,14 +305,6 @@ const setNewItemsInputActive: CaseReducer<CombinedTableState, PayloadAction<numb
 
 const setNewItemsInputValue: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
     state.newItemsInputValue = Array(action.payload).fill('');
-};
-
-const setDeleteGroupModalOpened: CaseReducer<CombinedTableState, PayloadAction<ItemGroup[]>> = (state, action) => {
-    let temp: DeleteGroupModal = {};
-    action.payload.forEach((each) => {
-        temp[each.itemGroupId] = false;
-    });
-    state.deleteGroupModalOpened = temp;
 };
 
 const updateTimelineItem: CaseReducer<
@@ -481,7 +481,6 @@ const deleteGroup: CaseReducer<CombinedTableState, PayloadAction<{ groupId: numb
     state.itemGroups = state.itemGroups.filter((each) => each.itemGroupId != groupId);
     delete state.itemsOrders[groupId];
     delete state.typesOrders[groupId];
-    delete state.deleteGroupModalOpened[groupId];
 
     state.itemGroupsCollapsed.splice(index, 1);
     state.itemGroupsInputActive.splice(index, 1);
@@ -535,10 +534,6 @@ const insertItemGroup: CaseReducer<CombinedTableState, PayloadAction<{ itemGroup
     state.typesOrders[itemGroupId] = typeIds;
     state.newItemsInputActive.unshift(false);
     state.newItemsInputValue.unshift('');
-    state.deleteGroupModalOpened[itemGroupId] = false;
-};
-const toggleDeleteGroupModal: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
-    state.deleteGroupModalOpened[action.payload] = !state.deleteGroupModalOpened[action.payload];
 };
 const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
     state.projectList.push(action.payload);
@@ -549,6 +544,14 @@ const addStatus: CaseReducer<CombinedTableState, PayloadAction<StatusListState>>
         name: action.payload.name,
         color: action.payload.color
     });
+};
+const closeItemGroupModal: CaseReducer<CombinedTableState> = (state) => {
+    state.itemGroupModal.itemGroupId = null;
+    state.itemGroupModal.open = false;
+};
+const openItemGroupModal: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+    state.itemGroupModal.itemGroupId = action.payload;
+    state.itemGroupModal.open = true;
 };
 
 const tableSlice = createSlice({
@@ -566,7 +569,6 @@ const tableSlice = createSlice({
         setItemGroupsInputValue,
         setNewItemsInputActive,
         setNewItemsInputValue,
-        setDeleteGroupModalOpened,
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
@@ -594,11 +596,12 @@ const tableSlice = createSlice({
         changeNewItemsInputValue,
         insertItem,
         insertItemGroup,
-        toggleDeleteGroupModal,
         addProject,
         updateTableList,
         renameProjectInTableList,
-        addStatus
+        addStatus,
+        closeItemGroupModal,
+        openItemGroupModal
     }
 });
 
@@ -614,7 +617,6 @@ export const {
     setItemGroupsInputValue: setItemGroupsInputValueAction,
     setNewItemsInputActive: setNewItemsInputActiveAction,
     setNewItemsInputValue: setNewItemsInputValueAction,
-    setDeleteGroupModalOpened: setDeleteGroupModalOpenedAction,
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
@@ -642,11 +644,12 @@ export const {
     changeNewItemsInputValue: changeNewItemsInputValueAction,
     insertItem: insertItemAction,
     insertItemGroup: insertItemGroupAction,
-    toggleDeleteGroupModal: toggleDeleteGroupModalAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
     renameProjectInTableList: renameProjectInTableListAction,
-    addStatus: addStatusAction
+    addStatus: addStatusAction,
+    closeItemGroupModal: closeItemGroupModalAction,
+    openItemGroupModal: openItemGroupModalAction
 } = tableSlice.actions;
 
 export default tableSlice.reducer;
