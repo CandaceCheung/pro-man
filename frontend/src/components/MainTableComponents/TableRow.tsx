@@ -9,12 +9,9 @@ import { DateCell } from './TableCellsComponents/Date';
 import { Money } from './TableCellsComponents/Money';
 import { Item } from './TableCellsComponents/Item';
 import { IconX } from '@tabler/icons';
-import { Button, Modal } from '@mantine/core';
 import { useState } from 'react';
-import { ItemCell } from '../../redux/table/slice';
-import { showNotification } from '@mantine/notifications';
+import { ItemCell, openItemModalAction } from '../../redux/table/slice';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { deleteItem } from '../../redux/table/thunk';
 
 export interface TableRowProps {
     itemId: number;
@@ -81,18 +78,6 @@ export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastR
         }
     };
 
-    const handleDeleteItem = () => {
-        setDeleteItemModalOpened(false);
-        if (Object.keys(itemCellsState[groupId]).length <= 1) {
-            showNotification({
-                title: 'Item delete notification',
-                message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
-            });
-        } else {
-            dispatch(deleteItem(groupId, itemId));
-        }
-    };
-
     return (
         <div className={cx(classes.tableRow, { [classes.lastRow]: lastRow })} ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div className={classes.tableCell} style={{ backgroundColor: color }}></div>
@@ -102,16 +87,8 @@ export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastR
             {typeOrder.map((typeId, cellIndex) => {
                 return retrieveCellData(cellDetails[typeId], cellIndex);
             })}
-            <Modal opened={deleteItemModalOpened} onClose={() => setDeleteItemModalOpened(false)} title={<span className={classes.modalTitle}>{'Delete this item?'}</span>} centered>
-                <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
-                <span className={classes.modalFooter}>
-                    <Button color='red' onClick={handleDeleteItem}>
-                        Delete
-                    </Button>
-                </span>
-            </Modal>
 
-            <span className={classes.rowIcon} onClick={() => setDeleteItemModalOpened(true)}>
+            <span className={classes.rowIcon} onClick={() => dispatch(openItemModalAction({groupId, itemId}))}>
                 <IconX size={16} />
             </span>
         </div>

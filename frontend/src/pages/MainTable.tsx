@@ -23,6 +23,7 @@ import {
     toggleNewItemsInputActiveAction
 } from '../redux/table/slice';
 import { ItemGroupModal } from '../components/MainTableComponents/ItemGroupModal';
+import { ItemModal } from '../components/MainTableComponents/ItemModal';
 
 export function MainTable() {
     const userId = useAppSelector((state) => state.auth.userId);
@@ -252,6 +253,7 @@ export function MainTable() {
             )}
 
             <ItemGroupModal />
+            <ItemModal />
         </>
     );
 }

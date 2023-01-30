@@ -17,6 +17,7 @@ export interface TableState {
     newItemsInputActive: boolean[];
     newItemsInputValue: string[];
     itemGroupModal: ItemGroupModal;
+    itemModal: ItemModal;
 }
 
 export interface TableMember {
@@ -124,6 +125,12 @@ export type Orders = Record<number, Array<number>>;
 export type ItemGroupModal = {
     open: boolean;
     itemGroupId: number | null;
+}
+
+export type ItemModal = {
+    open: boolean;
+    groupId: number | null;
+    itemId: number | null;
 }
 
 const initialState: TableState = {
@@ -239,6 +246,11 @@ const initialState: TableState = {
     itemGroupModal: {
         open: false,
         itemGroupId: null
+    },
+    itemModal: {
+        open: false,
+        groupId: null,
+        itemId: null
     }
 };
 
@@ -542,6 +554,16 @@ const openItemGroupModal: CaseReducer<TableState, PayloadAction<number>> = (stat
     state.itemGroupModal.itemGroupId = action.payload;
     state.itemGroupModal.open = true;
 };
+const closeItemModal: CaseReducer<TableState> = (state) => {
+    state.itemModal.itemId = null;
+    state.itemModal.groupId = null;
+    state.itemModal.open = false;
+};
+const openItemModal: CaseReducer<TableState, PayloadAction<{groupId: number, itemId: number}>> = (state, action) => {
+    state.itemModal.itemId = action.payload.itemId;
+    state.itemModal.groupId = action.payload.groupId;
+    state.itemModal.open = true;
+};
 
 const tableSlice = createSlice({
     name: 'table',
@@ -590,7 +612,9 @@ const tableSlice = createSlice({
         renameProjectInTableList,
         addStatus,
         closeItemGroupModal,
-        openItemGroupModal
+        openItemGroupModal,
+        closeItemModal,
+        openItemModal
     }
 });
 
@@ -638,7 +662,9 @@ export const {
     renameProjectInTableList: renameProjectInTableListAction,
     addStatus: addStatusAction,
     closeItemGroupModal: closeItemGroupModalAction,
-    openItemGroupModal: openItemGroupModalAction
+    openItemGroupModal: openItemGroupModalAction,
+    closeItemModal: closeItemModalAction,
+    openItemModal: openItemModalAction
 } = tableSlice.actions;
 
 export default tableSlice.reducer;
