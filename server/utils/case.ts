@@ -45,10 +45,10 @@ export const keysToSnake = function (o: any): any {
 	return o;
 };
 
-const isArray = function <T>(a: T): boolean {
+export const isArray = function <T>(a: T): boolean {
 	return Array.isArray(a);
 };
 
-const isObject = function <T>(o: T): boolean {
+export const isObject = function <T>(o: T): boolean {
 	return o === Object(o) && !isArray(o) && typeof o !== 'function' && !(o instanceof Date);
 };
