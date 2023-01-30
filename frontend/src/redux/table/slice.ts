@@ -16,8 +16,6 @@ export interface TableState {
     itemGroupsInputValue: string[];
     newItemsInputActive: boolean[];
     newItemsInputValue: string[];
-    itemGroupModal: ItemGroupModal;
-    itemModal: ItemModal;
 }
 
 export interface TableMember {
@@ -121,17 +119,6 @@ export interface ItemGroup {
 }
 
 export type Orders = Record<number, Array<number>>;
-
-export type ItemGroupModal = {
-    open: boolean;
-    itemGroupId: number | null;
-}
-
-export type ItemModal = {
-    open: boolean;
-    groupId: number | null;
-    itemId: number | null;
-}
 
 const initialState: TableState = {
     memberList: [],
@@ -242,16 +229,7 @@ const initialState: TableState = {
     itemGroupsInputActive: [],
     itemGroupsInputValue: [],
     newItemsInputActive: [],
-    newItemsInputValue: [],
-    itemGroupModal: {
-        open: false,
-        itemGroupId: null
-    },
-    itemModal: {
-        open: false,
-        groupId: null,
-        itemId: null
-    }
+    newItemsInputValue: []
 };
 
 const getTable: CaseReducer<TableState, PayloadAction<TableSummary[]>> = (state, action) => {
@@ -546,24 +524,6 @@ const addStatus: CaseReducer<TableState, PayloadAction<StatusList>> = (state, ac
         color: action.payload.color
     });
 };
-const closeItemGroupModal: CaseReducer<TableState> = (state) => {
-    state.itemGroupModal.itemGroupId = null;
-    state.itemGroupModal.open = false;
-};
-const openItemGroupModal: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
-    state.itemGroupModal.itemGroupId = action.payload;
-    state.itemGroupModal.open = true;
-};
-const closeItemModal: CaseReducer<TableState> = (state) => {
-    state.itemModal.itemId = null;
-    state.itemModal.groupId = null;
-    state.itemModal.open = false;
-};
-const openItemModal: CaseReducer<TableState, PayloadAction<{groupId: number, itemId: number}>> = (state, action) => {
-    state.itemModal.itemId = action.payload.itemId;
-    state.itemModal.groupId = action.payload.groupId;
-    state.itemModal.open = true;
-};
 
 const tableSlice = createSlice({
     name: 'table',
@@ -610,11 +570,7 @@ const tableSlice = createSlice({
         addProject,
         updateTableList,
         renameProjectInTableList,
-        addStatus,
-        closeItemGroupModal,
-        openItemGroupModal,
-        closeItemModal,
-        openItemModal
+        addStatus
     }
 });
 
@@ -660,11 +616,7 @@ export const {
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
     renameProjectInTableList: renameProjectInTableListAction,
-    addStatus: addStatusAction,
-    closeItemGroupModal: closeItemGroupModalAction,
-    openItemGroupModal: openItemGroupModalAction,
-    closeItemModal: closeItemModalAction,
-    openItemModal: openItemModalAction
+    addStatus: addStatusAction
 } = tableSlice.actions;
 
 export default tableSlice.reducer;

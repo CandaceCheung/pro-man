@@ -9,9 +9,7 @@ import { DateCell } from './TableCellsComponents/Date';
 import { Money } from './TableCellsComponents/Money';
 import { Item } from './TableCellsComponents/Item';
 import { IconX } from '@tabler/icons';
-import { useState } from 'react';
-import { ItemCell, openItemModalAction } from '../../redux/table/slice';
-import { useAppDispatch, useAppSelector } from '../../store';
+import { ItemCell } from '../../redux/table/slice';
 
 export interface TableRowProps {
     itemId: number;
@@ -20,14 +18,10 @@ export interface TableRowProps {
     cellDetails: { [key in number]: ItemCell };
     color: string;
     lastRow: boolean;
+    onOpenItemModal: (itemGroupId: number, itemId: number) => void;
 }
 
-export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastRow }: TableRowProps) {
-    const itemCellsState = useAppSelector((state) => state.table.itemCells);
-    const [deleteItemModalOpened, setDeleteItemModalOpened] = useState(false);
-
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: itemId });
-    const dispatch = useAppDispatch();
+export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastRow, onOpenItemModal }: TableRowProps) {const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: itemId });
     const { classes, cx } = useStyles();
 
     const style = {
@@ -88,7 +82,7 @@ export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastR
                 return retrieveCellData(cellDetails[typeId], cellIndex);
             })}
 
-            <span className={classes.rowIcon} onClick={() => dispatch(openItemModalAction({groupId, itemId}))}>
+            <span className={classes.rowIcon} onClick={() => onOpenItemModal(groupId, itemId)}>
                 <IconX size={16} />
             </span>
         </div>

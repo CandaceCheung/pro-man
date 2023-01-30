@@ -1,25 +1,27 @@
 import { Button, Modal } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { useState } from "react";
-import { closeItemGroupModalAction } from "../../redux/table/slice";
 import { deleteItemGroup } from "../../redux/table/thunk";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { useStyles } from "./styles";
 
-export function ItemGroupModal() {
+export interface ItemGroupModalProps {
+    opened: boolean;
+    itemGroupId: number | null;
+    onClose: () => void;
+}
+
+export function ItemGroupModal({opened, itemGroupId, onClose}: ItemGroupModalProps) {
     const projectId = useAppSelector((state) => state.project.projectId);
     const itemCellsState = useAppSelector((state) => state.table.itemCells);
-    const itemGroupModalState = useAppSelector((state) => state.table.itemGroupModal);
-    const { open, itemGroupId } = itemGroupModalState;
 
     const { classes } = useStyles();
     const dispatch = useAppDispatch();
 
-    const onDeleteGroup = (groupId: number | null, projectId: number) => {
-        if (!groupId) {
+    const onDeleteGroup = () => {
+        if (!itemGroupId || !projectId) {
             showNotification({
                 title: 'Item delete notification',
-                message: 'Failed to delete group! Each project should have at least 1 item group! 🤥'
+                message: 'Failed to delete group! 🤥'
             });
             return;
         }
@@ -30,16 +32,16 @@ export function ItemGroupModal() {
                 message: 'Failed to delete group! Each project should have at least 1 item group! 🤥'
             });
         } else {
-            dispatch(deleteItemGroup(groupId, projectId));
-            dispatch(closeItemGroupModalAction());
+            dispatch(deleteItemGroup(itemGroupId, projectId));
+            onClose();
         }
     };
 
     return (
-        <Modal opened={open} onClose={() => dispatch(closeItemGroupModalAction())} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
+        <Modal opened={opened} onClose={onClose} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
             <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
             <span className={classes.modalFooter}>
-                <Button color='red' onClick={() => onDeleteGroup(itemGroupId, projectId!)}>
+                <Button color='red' onClick={onDeleteGroup}>
                     Delete
                 </Button>
             </span>

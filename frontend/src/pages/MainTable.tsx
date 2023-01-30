@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
@@ -16,7 +16,6 @@ import {
     changeItemGroupInputValueAction,
     changeNewItemsInputValueAction,
     deselectItemGroupInputAction,
-    openItemGroupModalAction,
     resetItemGroupInputValueAction,
     selectItemGroupInputAction,
     toggleItemGroupsCollapsedAction,
@@ -37,6 +36,11 @@ export function MainTable() {
     const itemGroupsInputValue = useAppSelector((state) => state.table.itemGroupsInputValue);
     const newItemsInputActive = useAppSelector((state) => state.table.newItemsInputActive);
     const newItemsInputValue = useAppSelector((state) => state.table.newItemsInputValue);
+
+    const [itemGroupModalOpened, setItemGroupModalOpened] = useState<boolean>(false);
+    const [itemGroupModalId, setItemGroupModalId] = useState<number | null>(null);
+    const [itemModalOpened, setItemModalOpened] = useState<boolean>(false);
+    const [itemModalId, setItemModalId] = useState<number | null>(null);
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -116,6 +120,28 @@ export function MainTable() {
         }
     };
 
+    const onOpenItemGroupModal = (itemGroupId: number) => {
+        setItemGroupModalOpened(true);
+        setItemGroupModalId(itemGroupId);
+    }
+
+    const onCloseItemGroupModal = () => {
+        setItemGroupModalOpened(false);
+        setItemGroupModalId(null);
+    }
+
+    const onOpenItemModal = (itemGroupId: number, itemId: number) => {
+        setItemModalOpened(true);
+        setItemGroupModalId(itemGroupId);
+        setItemModalId(itemId);
+    }
+
+    const onCloseItemModal = () => {
+        setItemModalOpened(false);
+        setItemGroupModalId(null);
+        setItemModalId(null);
+    }
+
     return (
         <>
             {!itemCellsState[0] && (
@@ -136,7 +162,7 @@ export function MainTable() {
                                             color: theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]
                                         }}
                                     >
-                                        <span className={classes.itemGroupIcon} onClick={() => dispatch(openItemGroupModalAction(itemGroupId))}>
+                                        <span className={classes.itemGroupIcon} onClick={() => onOpenItemGroupModal(itemGroupId)}>
                                             <IconX size={16} />
                                         </span>
 
@@ -212,6 +238,7 @@ export function MainTable() {
                                                                     cellDetails={itemCellsState[itemGroupId][itemId]}
                                                                     color={theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]}
                                                                     lastRow={itemIndex === itemsOrdersState[itemGroupId].length - 1}
+                                                                    onOpenItemModal={onOpenItemModal}
                                                                 />
                                                             ))}
                                                         </SortableContext>
@@ -252,8 +279,8 @@ export function MainTable() {
                 </ScrollArea>
             )}
 
-            <ItemGroupModal />
-            <ItemModal />
+            <ItemGroupModal opened={itemGroupModalOpened} itemGroupId={itemGroupModalId} onClose={onCloseItemGroupModal} />
+            <ItemModal opened={itemModalOpened} itemGroupId={itemGroupModalId} itemId={itemModalId} onClose={onCloseItemModal} />
         </>
     );
 }
