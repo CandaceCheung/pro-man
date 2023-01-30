@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ProfileService } from '../services/profileService';
+import { ProfileService } from '../services/profileServices';
 
 export class ProfileController {
 	constructor(private profileService: ProfileService) {}

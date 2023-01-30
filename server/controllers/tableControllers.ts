@@ -1,7 +1,7 @@
-import { TableService } from '../services/tableService';
+import { TableService } from '../services/tableServices';
 import { Request, Response } from 'express';
 import { itemCellsElement, itemsGroupElement } from '../model';
-import { KanbanService } from '../services/kanbanService';
+import { KanbanService } from '../services/kanbanServices';
 
 export class TableController {
 	constructor(private tableService: TableService, private kanbanService: KanbanService) {}

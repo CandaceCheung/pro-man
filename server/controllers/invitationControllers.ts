@@ -1,7 +1,7 @@
 import jwtSimple from 'jwt-simple';
 import jwt from '../jwt';
 import { Request, Response } from 'express';
-import { InvitationService } from '../services/invitationService';
+import { InvitationService } from '../services/invitationServices';
 import nodemailer from 'nodemailer';
 import { tableService } from '../app';
 
