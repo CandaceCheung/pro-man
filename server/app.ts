@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import Knex from 'knex';
+import cors from 'cors';
 import { AuthService } from './services/authServices';
 import { AuthController } from './controllers/authControllers';
 import { authRoutes } from './routes/authRoutes';
@@ -8,22 +9,21 @@ import { TableService } from './services/tableServices';
 import { TableController } from './controllers/tableControllers';
 import { tableRoutes } from './routes/tableRoutes';
 import { KanbanService } from './services/kanbanServices';
-import { kanbanRoutes } from './routes/kanbanRoutes';
 import { KanbanController } from './controllers/kanbanControllers';
-import cors from 'cors';
+import { kanbanRoutes } from './routes/kanbanRoutes';
 import { InvitationService } from './services/invitationServices';
-import { NotificationController } from './controllers/notificationController';
+import { InvitationController } from './controllers/invitationControllers';
 import { invitationRoutes } from './routes/invitationRoutes';
 import { NotificationService } from './services/notificationServices';
-import { InvitationController } from './controllers/invitationControllers';
+import { NotificationController } from './controllers/notificationController';
 import { notificationRoutes } from './routes/notificationRoutes';
 import { ProfileService } from './services/profileServices';
 import { ProfileController } from './controllers/profileControllers';
 import { profileRoutes } from './routes/profileRoutes';
-import { isLoggedIn } from './guard';
 import { MemberService } from './services/memberServices';
 import { MemberController } from './controllers/memberControllers';
 import { memberRoutes } from './routes/memberRoutes';
+import { isLoggedIn } from './guard';
 
 dotenv.config();
 
