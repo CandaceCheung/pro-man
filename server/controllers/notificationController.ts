@@ -30,12 +30,7 @@ export class NotificationController {
 
 	sendMessage = async (req: Request, res: Response) => {
 		try {
-			const sender = req.body.sender;
-			const senderId = req.body.senderId;
-			const receiver = req.body.receiver;
-			const receiverId = req.body.receiverId;
-			const text = req.body.text;
-			const messageType = req.body.messageType;
+			const { sender, senderId, receiver, receiverId, text, messageType } = req.body;
 
 			const message = await this.notificationService.sendMessage(sender, senderId, receiver, receiverId, text, messageType);
 			if (message) {
@@ -60,8 +55,7 @@ export class NotificationController {
 
 	toggleRead = async (req: Request, res: Response) => {
 		try {
-			const notificationId = req.body.notificationId;
-			const checked = req.body.checked;
+			const { notificationId, checked } = req.body;
 
 			const checkStatus = await this.notificationService.toggleRead(notificationId, checked);
 

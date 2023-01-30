@@ -121,11 +121,10 @@ export class InvitationController {
 
 	sendInvite = async (req: Request, res: Response) => {
 		try {
-			const projectId = req.body.projectId;
-			const userId = req.body.userId;
-			const email = req.body.email.trim();
+			const { projectId, userId, email } = req.body;
+			const emailTrimmed = email.trim();
 
-			const invitation = await this.invitationService.inviteUser(projectId, userId, email);
+			const invitation = await this.invitationService.inviteUser(projectId, userId, emailTrimmed);
 
 			if (invitation) {
 				if (invitation.status === 'accepted') {
@@ -159,7 +158,7 @@ export class InvitationController {
 					await transporter.sendMail(
 						{
 							from: `"Pro-man Admin" <${process.env.EMAIL_LOGIN}>`,
-							to: email,
+							to: emailTrimmed,
 							subject: 'Hello, Someone Invited You to Join Pro-man!',
 							text: 'Invitation',
 							html: emailContent

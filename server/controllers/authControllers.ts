@@ -8,11 +8,12 @@ export class AuthController {
 
 	login = async (req: Request, res: Response) => {
 		try {
-			if (!req.body.username || !req.body.password) {
+			const { username, password } = req.body;
+			if (!username || !password) {
 				res.status(401).json({ msg: 'Wrong Username/Password' });
 				return;
 			}
-			const result = await this.authService.login(req.body.username, req.body.password);
+			const result = await this.authService.login(username, password);
 			if (result) {
 				const token = jwtSimple.encode(result, jwt.jwtSecret!);
 				res.json({
@@ -34,11 +35,12 @@ export class AuthController {
 
 	signUp = async (req: Request, res: Response) => {
 		try {
-			if (!req.body.username || !req.body.password) {
+			const { username, password, firstName, lastName } = req.body;
+			if (!username || !password) {
 				res.status(401).json({ msg: 'Missing Username/Password' });
 				return;
 			}
-			const result = await this.authService.signUp(req.body.username, req.body.password, req.body.firstName, req.body.lastName);
+			const result = await this.authService.signUp(username, password, firstName, lastName);
 			if (result) {
 				res.json({
 					success: true

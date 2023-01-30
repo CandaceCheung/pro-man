@@ -7,8 +7,7 @@ export class MemberController {
 
 	acceptInvitationThroughMember = async (req: Request, res: Response) => {
 		try {
-			const userId = req.body.userId;
-			const projectId = req.body.projectId;
+			const { userId, projectId } = req.body;
 
 			const check = await this.memberService.checkMember(projectId, userId);
 			if (check.member) {
@@ -104,8 +103,7 @@ export class MemberController {
 
 	changeAvatar = async (req: Request, res: Response) => {
 		try {
-			const membershipId = req.body.membershipId;
-			const avatar = req.body.avatar;
+			const { membershipId, avatar } = req.body;
 			await this.memberService.changeAvatar(membershipId, avatar);
 
 			res.json({

@@ -24,8 +24,7 @@ export class ProfileController {
 		try {
 			const userId = req.user!.id;
 
-			const { putInfo } = req.body;
-			const { password, firstName, lastName } = putInfo;
+			const { password, firstName, lastName } = req.body.putInfo;
 
 			const result = await this.profileService.updateProfile(userId, {
 				password,
