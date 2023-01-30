@@ -14,22 +14,10 @@ export function Home() {
         token && localStorage.removeItem('invitation');
     }, []);
 
-    // const opened = useAppSelector((state) => state.profile.deleteProjectModalOpen);
-    // const deleteProjectTragetId = useAppSelector((state) => state.profile.deleteProjectTragetId);
-    // const onConfirmDelete = () => dispatch(deleteProjectAction(targetProjectId))
-
     return (
         <div id='home-page'>
             <SidePanel />
             <ProjectNavbar />
-            {/* <Modal
-				centered
-				opened={opened}
-				onClose={() => setOpened(false)}
-			>
-                Delete Pro Modal
-                <button onClick={onConfirmDelete}
-			</Modal> */}
         </div>
     );
 }
