@@ -78,10 +78,11 @@ describe('isObject checking function', () => {
             new String(),
             new Number(),
             new Boolean(),
-            () => {return}
+            () => {return},
+            /([-_][a-z])/gi
         ];
         inputs.forEach(input => {
             expect(isObject(input)).toBeFalsy();
-        })
+        });
     });
 });

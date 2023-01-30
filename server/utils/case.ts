@@ -22,7 +22,8 @@ export const isObject = function <T>(o: T): boolean {
 		!(o instanceof Date) &&
 		!(o instanceof Boolean) &&
 		!(o instanceof String) &&
-		!(o instanceof Number)
+		!(o instanceof Number) &&
+		!(o instanceof RegExp)
 	);
 };
 
