@@ -3,11 +3,11 @@ import { MakeRequest } from '../../utils/requestUtils';
 import { addKanbanItem, setKanbanGroup, setKanbanInfo, setKanbanMember } from './action';
 import { Group, Member, Status } from './state';
 
+const token = localStorage.getItem('token');
+const makeRequest = new MakeRequest(token!);
+
 export function getKanbanItems(projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             projectInfo?: Status[];
             success?: boolean;
@@ -24,9 +24,6 @@ export function getKanbanItems(projectId: number) {
 
 export function getMember(projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             memberList?: Member[];
             success?: boolean;
@@ -43,9 +40,6 @@ export function getMember(projectId: number) {
 
 export function getGroup(projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             groupList?: Group[];
             success?: boolean;
@@ -62,9 +56,6 @@ export function getGroup(projectId: number) {
 
 export function postItem(projectId: number, stateId: number, userId: number, itemName: string, memberName: string[], memberId: string[], date: Date, groupId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.post<
             {
                 projectId: number;
@@ -102,9 +93,6 @@ export function postItem(projectId: number, stateId: number, userId: number, ite
 
 export function putOrder(statusList: Status[]) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.put<
             {
                 order: number[];
