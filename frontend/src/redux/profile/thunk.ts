@@ -2,11 +2,11 @@ import { AppDispatch } from '../../store';
 import { MakeRequest } from '../../utils/requestUtils';
 import { ProfileState, setInfoAction, updateInfoAction } from './slice';
 
+const token = localStorage.getItem('token');
+const makeRequest = new MakeRequest(token!);
+
 export function getProfile(userId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             success?: boolean;
             data?: ProfileState;
@@ -23,9 +23,6 @@ export function getProfile(userId: number) {
 
 export function putProfileInfo(putInfo: { firstName?: string; lastName?: string; password?: string }) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const data = await makeRequest.put<
             {
                 putInfo: { firstName?: string; lastName?: string; password?: string };
