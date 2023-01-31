@@ -20,6 +20,9 @@ import {
     toggleReceiverDeleteAction
 } from './slice';
 
+const token = localStorage.getItem('token');
+const makeRequest = new MakeRequest(token!);
+
 export function setActiveProject(projectId: number, projectName: string) {
     return async (dispatch: Dispatch) => {
         dispatch(setActiveProjectAction(projectId));
@@ -37,9 +40,6 @@ export function clearActiveProject() {
 
 export function renameProject(projectId: number, projectName: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.put<
             {
                 projectId: number;
@@ -73,9 +73,6 @@ export function renameProject(projectId: number, projectName: string) {
 
 export function checkUsername(value: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.post<
             {
                 value: string;
@@ -108,9 +105,6 @@ export function checkUsername(value: string) {
 
 export function sendMessage(sender: string, senderId: number, receiver: string, receiverId: number, text: string, messageType: 'invite' | 'message') {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.post<
             {
                 sender: string;
@@ -151,9 +145,6 @@ export function sendMessage(sender: string, senderId: number, receiver: string, 
 
 export function getMessages(userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             success?: boolean;
             message?: MessageState[];
@@ -173,9 +164,6 @@ export function getMessages(userId: number) {
 
 export function getMemberList(userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             success?: boolean;
             memberList?: MyMemberState[];
@@ -195,9 +183,6 @@ export function getMemberList(userId: number) {
 
 export function deleteMember(membershipId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.delete<
             {
                 membershipId: number;
@@ -233,9 +218,6 @@ export function deleteMember(membershipId: number) {
 
 export function changeAvatar(membershipIds: number[], avatar: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.put<
             {
                 membershipIds: number[];
@@ -263,9 +245,6 @@ export function changeAvatar(membershipIds: number[], avatar: number) {
 
 export function toggleRead(notificationId: number, checked: boolean) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.put<
             {
                 notificationId: number;
@@ -294,9 +273,6 @@ export function toggleRead(notificationId: number, checked: boolean) {
 
 export function toggleDelete(notificationId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.delete<
             {
                 notificationId: number;
@@ -327,9 +303,6 @@ export function toggleDelete(notificationId: number) {
 }
 export function toggleReceiverDelete(notificationId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.delete<
             {
                 notificationId: number;
