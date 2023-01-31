@@ -4,11 +4,11 @@ import { acceptInviteAction, deleteInvitationAction, getInvitationListAction, In
 import { getTableListAction, MyTable } from '../table/slice';
 import { MakeRequest } from '../../utils/requestUtils';
 
+const token = localStorage.getItem('token');
+const makeRequest = new MakeRequest(token!);
+
 export function sendInvitation(projectId: number, userId: number, value: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.post<
             {
                 projectId: number;
@@ -39,9 +39,6 @@ export function sendInvitation(projectId: number, userId: number, value: string)
 
 export function acceptInvitation(tokenInput: string, userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.put<
             {
                 userId: number;
@@ -72,9 +69,6 @@ export function acceptInvitation(tokenInput: string, userId: number) {
 
 export function acceptMemberInvitation(projectId: number, userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.post<
             {
                 userId: number;
@@ -103,9 +97,6 @@ export function acceptMemberInvitation(projectId: number, userId: number) {
 
 export function getInvitationList(projectId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.get<{
             success?: boolean;
             invitationList?: InvitationState;
@@ -125,9 +116,6 @@ export function getInvitationList(projectId: number) {
 
 export function deleteInvitation(invitationId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
         const result = await makeRequest.delete<
             {
                 invitationId: number;
