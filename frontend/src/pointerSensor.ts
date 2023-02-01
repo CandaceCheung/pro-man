@@ -6,7 +6,7 @@ export class SmartPointerSensor extends PointerSensor {
         {
             eventName: 'onPointerDown' as any,
             handler: ({ nativeEvent: event }: PointerEvent) => {
-                if (isInteractiveElement(event.target as Element)) {
+                if (isInteractiveElement(event.target as Element) || isTouchScreen()) {
                     return false;
                 }
                 return true;
@@ -29,4 +29,8 @@ function isInteractiveElement(element: Element | null) {
         }
     }
     return false;
+}
+
+function isTouchScreen(): boolean {
+    return "ontouchstart" in document.documentElement;
 }
