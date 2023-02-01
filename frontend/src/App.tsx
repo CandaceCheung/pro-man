@@ -45,7 +45,8 @@ function App() {
         } else if (isLoggedIn === null) {
             dispatch(retriveLogin());
         }
-    }, [isLoggedIn, landscape, dispatch, userId, projectId, navigate]);
+        // eslint-disable-next-line
+    }, [isLoggedIn, landscape, dispatch, userId, projectId]);
 
     const routes = [
         {
