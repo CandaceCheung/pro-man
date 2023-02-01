@@ -150,14 +150,14 @@ export class AuthService {
 						.into('transactions');
 
 					await txn.commit();
-					return 'success';
+					return true;
 				}
 			} catch (e) {
 				await txn.rollback();
 				throw e;
 			}
 		}
-		return;
+		return false;
 	}
 
 	async getUser(id: number) {

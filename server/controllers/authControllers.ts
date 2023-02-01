@@ -40,7 +40,7 @@ export class AuthController {
 				res.status(401).json({ msg: 'Missing Username/Password' });
 				return;
 			}
-			const result = await this.authService.signUp(username, password, firstName, lastName);
+			const result: boolean = await this.authService.signUp(username, password, firstName, lastName);
 			if (result) {
 				res.json({
 					success: true
