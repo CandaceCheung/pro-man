@@ -9,5 +9,5 @@ export const useOrientation = (setLandscape: React.Dispatch<React.SetStateAction
         return () => {
             window.removeEventListener('orientationchange', handleOrientationChange);
         };
-    },[]);
+    },[setLandscape]);
 };

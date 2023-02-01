@@ -31,20 +31,21 @@ function App() {
     useOrientation(setLandscape);
 
     useEffect(() => {
-        isLoggedIn === null && dispatch(retriveLogin());
-
-        if (isLoggedIn && landscape) {
+        if (isLoggedIn) {
             dispatch(getFavorite(userId!));
             dispatch(getMessages(userId!));
             dispatch(getMemberList(userId!));
             if (projectId) {
-                navigate('/');
+                if (landscape) {
+                    navigate('/');
+                }
             } else {
                 dispatch(getTableList(userId!));
             }
+        } else if (isLoggedIn === null) {
+            dispatch(retriveLogin());
         }
-        // eslint-disable-next-line
-    }, [isLoggedIn, landscape, dispatch, userId, projectId]);
+    }, [isLoggedIn, landscape, dispatch, userId, projectId, navigate]);
 
     const routes = [
         {
