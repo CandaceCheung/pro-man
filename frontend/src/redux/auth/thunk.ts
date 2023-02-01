@@ -86,6 +86,7 @@ export function retriveLogin() {
             }
         } else {
             dispatch(logoutAction());
+            dispatch(clearActiveProject());
         }
     };
 }
