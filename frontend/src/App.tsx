@@ -1,5 +1,5 @@
 import { Home } from './pages/Home';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.scss';
 import { Auth } from './pages/Auth';
@@ -15,16 +15,20 @@ import { LeftNavbar } from './components/LeftNavbar';
 import { getFavorite, getTableList } from './redux/table/thunk';
 import { getMemberList, getMessages } from './redux/project/thunk';
 import { useToken } from './hooks/useToken';
+import { useOrientation } from './hooks/useOrientation';
+import { Orientation } from './pages/Orientation';
 
 function App() {
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const userId = useAppSelector((state) => state.auth.userId);
     const projectId = useAppSelector((state) => state.project.projectId); //active project state
+    const [landscape, setLandscape] = useState(window.innerWidth > window.innerHeight);
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     useToken();
+    useOrientation(setLandscape);
 
     useEffect(() => {
         isLoggedIn === null && dispatch(retriveLogin());
@@ -75,7 +79,7 @@ function App() {
 
     return (
         <div className='App'>
-            {isLoggedIn && projectId && (
+            {isLoggedIn && projectId && landscape && (
                 <AppShell navbar={<LeftNavbar />}>
                     <Routes>
                         {routes.map((route) => (
@@ -85,6 +89,7 @@ function App() {
                 </AppShell>
             )}
             {isLoggedIn === false && <Auth />}
+            {!landscape && <Orientation />}
         </div>
     );
 }
