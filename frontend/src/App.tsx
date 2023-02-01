@@ -33,7 +33,7 @@ function App() {
     useEffect(() => {
         isLoggedIn === null && dispatch(retriveLogin());
 
-        if (isLoggedIn) {
+        if (isLoggedIn && landscape) {
             dispatch(getFavorite(userId!));
             dispatch(getMessages(userId!));
             dispatch(getMemberList(userId!));
@@ -44,7 +44,7 @@ function App() {
             }
         }
         // eslint-disable-next-line
-    }, [isLoggedIn, dispatch, userId, projectId]);
+    }, [isLoggedIn, landscape, dispatch, userId, projectId]);
 
     const routes = [
         {
