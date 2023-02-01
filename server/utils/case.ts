@@ -15,16 +15,7 @@ export const isArray = function <T>(input: T): boolean {
 };
 
 export const isObject = function <T>(input: T): boolean {
-	return (
-		input === Object(input) && 
-		!isArray(input) && 
-		typeof input !== 'function' && 
-		!(input instanceof Date) &&
-		!(input instanceof Boolean) &&
-		!(input instanceof String) &&
-		!(input instanceof Number) &&
-		!(input instanceof RegExp)
-	);
+	return input === Object(input) && !isArray(input) && typeof input !== 'function' && !(input instanceof Date) && !(input instanceof Boolean) && !(input instanceof String) && !(input instanceof Number) && !(input instanceof RegExp);
 };
 
 export const keysToCamel = function (input: any): any {
