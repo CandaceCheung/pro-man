@@ -1,54 +1,63 @@
-export const toCamel = (s: string): string => {
-    return s.replace(/([-_][a-z])/gi, ($1) => {
-        return $1.toUpperCase().replace('-', '').replace('_', '');
-    });
+export const toCamel = (input: string): string => {
+	return input.replace(/([-_][a-z])/gi, (separator) => {
+		return separator.toUpperCase().replace('-', '').replace('_', '');
+	});
 };
 
-export const toSnake = (s: string): string => {
-    let separator = '_';
-    let split = /(?=[A-Z])/;
-    return s.split(split).join(separator).toLowerCase();
+export const toSnake = (input: string): string => {
+	let separator = '_';
+	let split = /(?=[A-Z])/;
+	return input.split(split).join(separator).toLowerCase();
 };
 
-export const keysToCamel = function (o: any): any {
-    if (isObject(o)) {
-        const n = {};
-
-        Object.keys(o).forEach((k) => {
-            n[toCamel(k)] = keysToCamel(o[k]);
-        });
-        return n;
-    } else if (isArray(o)) {
-        return (o as Array<object>).map((i) => {
-            return keysToCamel(i);
-        });
-    }
-
-    return o;
+export const isArray = function <T>(input: T): boolean {
+	return Array.isArray(input);
 };
 
-export const keysToSnake = function (o: any): any {
-    if (isObject(o)) {
-        const n = {};
-
-        Object.keys(o).forEach((k) => {
-            n[toSnake(k)] = keysToSnake(o[k]);
-        });
-
-        return n;
-    } else if (isArray(o)) {
-        return (o as Array<object>).map((i) => {
-            return keysToSnake(i);
-        });
-    }
-
-    return o;
+export const isObject = function <T>(input: T): boolean {
+	return (
+		input === Object(input) && 
+		!isArray(input) && 
+		typeof input !== 'function' && 
+		!(input instanceof Date) &&
+		!(input instanceof Boolean) &&
+		!(input instanceof String) &&
+		!(input instanceof Number) &&
+		!(input instanceof RegExp)
+	);
 };
 
-const isArray = function <T>(a: T): boolean {
-    return Array.isArray(a);
+export const keysToCamel = function (input: any): any {
+	if (isObject(input)) {
+		const n = {};
+
+		Object.keys(input).forEach((key) => {
+			n[toCamel(key)] = keysToCamel(input[key]);
+		});
+		return n;
+	} else if (isArray(input)) {
+		return (input as Array<object>).map((each) => {
+			return keysToCamel(each);
+		});
+	}
+
+	return input;
 };
 
-const isObject = function <T>(o: T): boolean {
-    return o === Object(o) && !isArray(o) && typeof o !== 'function' && !(o instanceof Date);
+export const keysToSnake = function (input: any): any {
+	if (isObject(input)) {
+		const output = {};
+
+		Object.keys(input).forEach((key) => {
+			output[toSnake(key)] = keysToSnake(input[key]);
+		});
+
+		return output;
+	} else if (isArray(input)) {
+		return (input as Array<object>).map((each) => {
+			return keysToSnake(each);
+		});
+	}
+
+	return input;
 };
