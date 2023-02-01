@@ -4,12 +4,12 @@ import { acceptInviteAction, deleteInvitationAction, getInvitationListAction, In
 import { getTableListAction, MyTable } from '../table/slice';
 import { MakeRequest } from '../../utils/requestUtils';
 
-const token = localStorage.getItem('token');
-const makeRequest = new MakeRequest(token!);
+const makeRequest = (token: string) => new MakeRequest(token);
 
 export function sendInvitation(projectId: number, userId: number, value: string) {
     return async (dispatch: Dispatch) => {
-        const result = await makeRequest.post<
+        const token = localStorage.getItem('token');
+        const result = await makeRequest(token!).post<
             {
                 projectId: number;
                 userId: number;
@@ -39,7 +39,8 @@ export function sendInvitation(projectId: number, userId: number, value: string)
 
 export function acceptInvitation(tokenInput: string, userId: number) {
     return async (dispatch: Dispatch) => {
-        const result = await makeRequest.put<
+        const token = localStorage.getItem('token');
+        const result = await makeRequest(token!).put<
             {
                 userId: number;
                 tokenInput: string;
@@ -69,7 +70,8 @@ export function acceptInvitation(tokenInput: string, userId: number) {
 
 export function acceptMemberInvitation(projectId: number, userId: number) {
     return async (dispatch: Dispatch) => {
-        const result = await makeRequest.post<
+        const token = localStorage.getItem('token');
+        const result = await makeRequest(token!).post<
             {
                 userId: number;
                 projectId: number;
@@ -97,7 +99,8 @@ export function acceptMemberInvitation(projectId: number, userId: number) {
 
 export function getInvitationList(projectId: number) {
     return async (dispatch: Dispatch) => {
-        const result = await makeRequest.get<{
+        const token = localStorage.getItem('token');
+        const result = await makeRequest(token!).get<{
             success?: boolean;
             invitationList?: InvitationState;
             msg?: string;
@@ -116,7 +119,8 @@ export function getInvitationList(projectId: number) {
 
 export function deleteInvitation(invitationId: number) {
     return async (dispatch: Dispatch) => {
-        const result = await makeRequest.delete<
+        const token = localStorage.getItem('token');
+        const result = await makeRequest(token!).delete<
             {
                 invitationId: number;
             },

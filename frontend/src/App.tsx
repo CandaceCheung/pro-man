@@ -14,7 +14,7 @@ import { AppShell } from '@mantine/core';
 import { LeftNavbar } from './components/LeftNavbar';
 import { getFavorite, getTableList } from './redux/table/thunk';
 import { getMemberList, getMessages } from './redux/project/thunk';
-import { useToken } from './hooks/useToken';
+import { useInvitationToken } from './hooks/useInvitationToken';
 import { useOrientation } from './hooks/useOrientation';
 import { Orientation } from './pages/Orientation';
 
@@ -27,7 +27,7 @@ function App() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    useToken();
+    useInvitationToken();
     useOrientation(setLandscape);
 
     useEffect(() => {

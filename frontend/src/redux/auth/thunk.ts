@@ -21,8 +21,8 @@ export function loginThunk(username: string, password: string) {
         });
         const result = await res.json();
         if (result.success) {
-            dispatch(loginAction(result.data.id, result.data.username));
             localStorage.setItem('token', result.token);
+            dispatch(loginAction(result.data.id, result.data.username));
         } else {
             showNotification({
                 title: 'Login notification',
