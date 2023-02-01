@@ -81,7 +81,8 @@ function App() {
 
     return (
         <div className='App'>
-            {isLoggedIn && projectId && landscape && (
+            {isLoggedIn && !landscape && <Orientation />}
+            {isLoggedIn && landscape && projectId && (
                 <AppShell navbar={<LeftNavbar />}>
                     <Routes>
                         {routes.map((route) => (
@@ -91,7 +92,6 @@ function App() {
                 </AppShell>
             )}
             {isLoggedIn === false && <Auth />}
-            {!landscape && <Orientation />}
         </div>
     );
 }
