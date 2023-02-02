@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 export const useScreenSize = (setScreenSize: React.Dispatch<React.SetStateAction<string | null>>) => {
     useEffect(() => {
-        function handleOrientationChange() {
+        function handleScreenSize() {
             if (window.innerHeight <= 550) {
                 setScreenSize("s");
             } else if (window.innerHeight >= 800) {
@@ -11,9 +11,11 @@ export const useScreenSize = (setScreenSize: React.Dispatch<React.SetStateAction
                 setScreenSize("m");
             }
         }
-        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('load', handleScreenSize);
+        window.addEventListener('orientationchange', handleScreenSize);
         return () => {
-            window.removeEventListener('orientationchange', handleOrientationChange);
+            window.removeEventListener('load', handleScreenSize);
+            window.removeEventListener('orientationchange', handleScreenSize);
         };
     },[setScreenSize]);
 };
