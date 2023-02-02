@@ -64,7 +64,7 @@ const navButtons = [
 ];
 
 const responsiveSize = {
-    s: { iconSize: 12 },
+    s: { iconSize: 12 , marginTop: 25 },
     m: { iconSize: 24 },
     l: { iconSize: 32 }
 };
@@ -128,7 +128,7 @@ export function LeftNavbar({ screenSize }: LeftNavbarProps) {
                     deg: 45
                 })
             })}>
-            <Navbar.Section grow mt={50}>
+            <Navbar.Section grow mt={responsiveSize[screenSize].marginTop || 50}>
                 <Stack justify='center' spacing={0}>
                     {iconLinks}
                 </Stack>
