@@ -17,8 +17,11 @@ import { getMemberList, getMessages } from './redux/project/thunk';
 import { useInvitationToken } from './hooks/useInvitationToken';
 import { useOrientation } from './hooks/useOrientation';
 import { Orientation } from './pages/Orientation';
+import { useScreenSize } from './hooks/useScreenSize';
 
 function App() {
+    const [screenSize, setScreenSize] = useState<string | null>(null);
+
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const userId = useAppSelector((state) => state.auth.userId);
     const projectId = useAppSelector((state) => state.project.projectId); //active project state
@@ -26,9 +29,10 @@ function App() {
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
+    
     useInvitationToken();
     useOrientation(setLandscape);
+    useScreenSize(setScreenSize);
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -82,8 +86,8 @@ function App() {
     return (
         <div className='App'>
             {isLoggedIn && !landscape && <Orientation />}
-            {isLoggedIn && landscape && projectId && (
-                <AppShell navbar={<LeftNavbar />}>
+            {isLoggedIn && landscape && projectId && screenSize && (
+                <AppShell navbar={<LeftNavbar screenSize={screenSize} />}>
                     <Routes>
                         {routes.map((route) => (
                             <Route path={route.path} element={route.element} key={route.path} />

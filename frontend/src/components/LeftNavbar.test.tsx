@@ -1,4 +1,4 @@
-import { Button, MantineProvider } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { store } from '../store';
@@ -15,7 +15,7 @@ test('test Navbar', async () => {
         <Provider store={store}>
             {/* using the real store */}
             <MantineProvider>
-                <LeftNavbar />
+                <LeftNavbar screenSize={"l"} />
             </MantineProvider>
         </Provider>
     );
