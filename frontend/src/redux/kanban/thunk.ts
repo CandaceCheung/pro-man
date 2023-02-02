@@ -1,4 +1,4 @@
-import { AppDispatch } from '../../store';
+import { AppDispatch, getState } from '../../store';
 import { MakeRequest } from '../../utils/requestUtils';
 import { addKanbanItem, setKanbanGroup, setKanbanInfo, setKanbanMember } from './action';
 import { Group, Member, Status } from './state';
@@ -7,7 +7,7 @@ const makeRequest = (token: string) => new MakeRequest(token);
 
 export function getKanbanItems(projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             projectInfo?: Status[];
             success?: boolean;
@@ -24,7 +24,7 @@ export function getKanbanItems(projectId: number) {
 
 export function getMember(projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             memberList?: Member[];
             success?: boolean;
@@ -41,7 +41,7 @@ export function getMember(projectId: number) {
 
 export function getGroup(projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             groupList?: Group[];
             success?: boolean;
@@ -58,7 +58,7 @@ export function getGroup(projectId: number) {
 
 export function postItem(projectId: number, stateId: number, userId: number, itemName: string, memberName: string[], memberId: string[], date: Date, groupId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).post<
             {
                 projectId: number;
@@ -96,7 +96,7 @@ export function postItem(projectId: number, stateId: number, userId: number, ite
 
 export function putOrder(statusList: Status[]) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 order: number[];

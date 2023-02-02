@@ -1,4 +1,4 @@
-import { AppDispatch } from '../../store';
+import { AppDispatch, getState } from '../../store';
 import { MakeRequest } from '../../utils/requestUtils';
 import { ProfileState, setInfoAction, updateInfoAction } from './slice';
 
@@ -6,7 +6,7 @@ const makeRequest = (token: string) => new MakeRequest(token);
 
 export function getProfile(userId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             success?: boolean;
             data?: ProfileState;
@@ -23,7 +23,7 @@ export function getProfile(userId: number) {
 
 export function putProfileInfo(putInfo: { firstName?: string; lastName?: string; password?: string }) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const data = await makeRequest(token!).put<
             {
                 putInfo: { firstName?: string; lastName?: string; password?: string };

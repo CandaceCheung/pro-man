@@ -43,7 +43,7 @@ import {
     MyFavorite
 } from './slice';
 import { showNotification } from '@mantine/notifications';
-import { AppDispatch } from '../../store';
+import { AppDispatch, getState } from '../../store';
 import { setActiveProject } from '../project/thunk';
 import { MakeRequest } from '../../utils/requestUtils';
 import { format } from 'date-fns';
@@ -52,7 +52,7 @@ const makeRequest = (token: string) => new MakeRequest(token);
 
 export function likeProject(projectId: number, userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 projectId: number;
@@ -91,7 +91,7 @@ export function likeProject(projectId: number, userId: number) {
 
 export function getTable(userId: number, projectId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             success?: boolean;
             table?: TableSummary[];
@@ -111,7 +111,7 @@ export function getTable(userId: number, projectId: number) {
 
 export function getTableV2(userId: number, projectId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             success?: boolean;
             itemCells?: ItemCells;
@@ -144,7 +144,7 @@ export function getTableV2(userId: number, projectId: number) {
 
 export function getTableList(userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             success?: boolean;
             list?: Array<{
@@ -172,7 +172,7 @@ export function getTableList(userId: number) {
 
 export function updateTimelineItem(timelineId: number, startTime: number, endTime: number, name: string, color: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 typeTimeId: number;
@@ -220,7 +220,7 @@ export function updateTimelineItem(timelineId: number, startTime: number, endTim
 
 export function updateDatelineItem(datelineId: number, date: number, name: string, color: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 typeDateId: number;
@@ -265,7 +265,7 @@ export function updateDatelineItem(datelineId: number, date: number, name: strin
 
 export function getProjectStatusList(projectId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             success?: boolean;
             statusList?: Array<{
@@ -292,7 +292,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
         // Update frontend first to improve user experience
         dispatch(updateItemGroupNameAction({ itemGroupId, itemGroupName }));
 
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 itemGroupId: number;
@@ -320,7 +320,7 @@ export function updateItemGroupName(itemGroupId: number, itemGroupName: string, 
 
 export function getFavorite(userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).get<{
             success?: boolean;
             favorite?: MyFavorite[];
@@ -340,7 +340,7 @@ export function getFavorite(userId: number) {
 
 export function insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).post<
             {
                 projectId: number;
@@ -373,7 +373,7 @@ export function insertItem(projectId: number, userId: number, itemGroupId?: numb
 
 export function insertItemGroup(projectId: number, userId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).post<
             {
                 projectId: number;
@@ -414,7 +414,7 @@ export function reorderItems(newOrder: number[], groupId: number, userId: number
     return async (dispatch: AppDispatch) => {
         dispatch(reorderItemsAction({ newOrder, groupId }));
 
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 newOrder: number[];
@@ -441,7 +441,7 @@ export function reorderTypes(newOrder: number[], groupId: number, userId: number
     return async (dispatch: AppDispatch) => {
         dispatch(reorderTypesAction({ newOrder, groupId }));
 
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 newOrder: number[];
@@ -466,7 +466,7 @@ export function reorderTypes(newOrder: number[], groupId: number, userId: number
 
 export function insertNewProject(userId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).post<
             {
                 userId: number;
@@ -509,7 +509,7 @@ export function insertNewProject(userId: number) {
 
 export function renameItem(groupId: number, itemId: number, name: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 itemId: number;
@@ -537,7 +537,7 @@ export function renameItem(groupId: number, itemId: number, name: string) {
 
 export function renameType(groupId: number, typeId: number, name: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 typeId: number;
@@ -565,7 +565,7 @@ export function renameType(groupId: number, typeId: number, name: string) {
 
 export function updateText(groupId: number, itemId: number, typeId: number, text: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 itemId: number;
@@ -593,7 +593,7 @@ export function updateText(groupId: number, itemId: number, typeId: number, text
 
 export function newState(projectId: number, name: string, color: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).post<
             {
                 projectId: number;
@@ -630,7 +630,7 @@ export function newState(projectId: number, name: string, color: string) {
 
 export function updateState(groupId: number, itemId: number, stateId: number, typeId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).put<
             {
                 itemId: number;
@@ -662,7 +662,7 @@ export function updateState(groupId: number, itemId: number, stateId: number, ty
 
 export function addPerson(groupId: number, itemId: number, typeId: number, personId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).post<
             {
                 itemId: number;
@@ -692,7 +692,7 @@ export function addPerson(groupId: number, itemId: number, typeId: number, perso
 
 export function addTransaction(groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).post<
             {
                 itemId: number;
@@ -723,7 +723,7 @@ export function addTransaction(groupId: number, itemId: number, typeId: number, 
 
 export function removePerson(groupId: number, itemId: number, typeId: number, personId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).delete<
             {
                 itemId: number;
@@ -751,7 +751,7 @@ export function removePerson(groupId: number, itemId: number, typeId: number, pe
 
 export function removeTransaction(groupId: number, itemId: number, typeId: number, transactionId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).delete<
             {
                 itemId: number;
@@ -779,7 +779,7 @@ export function removeTransaction(groupId: number, itemId: number, typeId: numbe
 
 export function deleteItem(groupId: number, itemId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).delete<
             {
                 itemId: number;
@@ -811,7 +811,7 @@ export function deleteItem(groupId: number, itemId: number) {
 
 export function deleteItemGroup(groupId: number, projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).delete<
             {
                 groupId: number;
@@ -842,7 +842,7 @@ export function deleteItemGroup(groupId: number, projectId: number) {
 }
 export function deleteProject(userId: number, projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
+        const token = getState().auth.token;
         const result = await makeRequest(token!).delete<
             {
                 projectId: number;

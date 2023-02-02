@@ -22,7 +22,7 @@ export function loginThunk(username: string, password: string) {
         const result = await res.json();
         if (result.success) {
             localStorage.setItem('token', result.token);
-            dispatch(loginAction(result.data.id, result.data.username));
+            dispatch(loginAction(result.data.id, result.data.username, result.token));
         } else {
             showNotification({
                 title: 'Login notification',
@@ -80,7 +80,7 @@ export function retriveLogin() {
             }>(`/auth/userRetrieval`);
 
             if (data.payload) {
-                dispatch(loginAction(data.payload.id, data.payload.username));
+                dispatch(loginAction(data.payload.id, data.payload.username, token));
             } else {
                 dispatch(logout());
             }

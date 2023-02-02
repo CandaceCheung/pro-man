@@ -1,8 +1,9 @@
-export function loginAction(userId: number, username: string) {
+export function loginAction(userId: number, username: string, token: string) {
     return {
         type: 'AUTH/LOGIN' as const,
         userId,
-        username
+        username,
+        token
     };
 }
 
