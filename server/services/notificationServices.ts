@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { keysToCamel } from '../utils/case';
 
 export class NotificationService {
 	constructor(private knex: Knex) {}
@@ -7,15 +8,15 @@ export class NotificationService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const [check] = await txn('notifications')
+			const [checkStatus] = await txn('notifications')
 				.update({
 					status: checked
 				})
 				.where('id', notificationId)
-				.returning('*');
+				.returning('status');
 
 			await txn.commit();
-			return check.status;
+			return checkStatus;
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -25,16 +26,16 @@ export class NotificationService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const [check] = await txn('notifications')
+			const [notificationIsDeleted] = await txn('notifications')
 				.update({
 					is_deleted: true,
 					status: true
 				})
 				.where('id', notificationId)
-				.returning('*');
+				.returning('is_deleted');
 
 			await txn.commit();
-			return check.is_deleted;
+			return notificationIsDeleted;
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -44,15 +45,15 @@ export class NotificationService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const [check] = await txn('notifications')
+			const [notificationIsDeletedByReceiver] = await txn('notifications')
 				.update({
 					is_deleted_receiver: true
 				})
 				.where('id', notificationId)
-				.returning('*');
+				.returning('is_deleted_receiver');
 
 			await txn.commit();
-			return check.is_deleted_receiver;
+			return notificationIsDeletedByReceiver;
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -63,28 +64,17 @@ export class NotificationService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const messages = await txn('notifications')
-				.where('sender_id', userId)
-				.orWhere('receiver_id', userId)
-				.orderBy('status', 'asc')
-				.orderBy('created_at', 'desc');
+			const messages = await txn('notifications').where('sender_id', userId).orWhere('receiver_id', userId).orderBy('status', 'asc').orderBy('created_at', 'desc');
 
 			await txn.commit();
-			return messages;
+			return keysToCamel(messages);
 		} catch (e) {
 			await txn.rollback();
 			throw e;
 		}
 	}
 
-	async sendMessage(
-		sender: string,
-		sender_id: number,
-		receiver: string,
-		receiver_id: number,
-		text: string,
-		messageType: 'message' | 'invite'
-	) {
+	async sendMessage(sender: string, sender_id: number, receiver: string, receiver_id: number, text: string, messageType: 'message' | 'invite') {
 		const txn = await this.knex.transaction();
 
 		try {
@@ -100,7 +90,7 @@ export class NotificationService {
 				.returning('*');
 
 			await txn.commit();
-			return message;
+			return keysToCamel(message);
 		} catch (e) {
 			await txn.rollback();
 			throw e;

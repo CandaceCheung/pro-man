@@ -16,10 +16,10 @@ export function FavoriteProject() {
                         <Divider labelPosition='center' my='md' label='My Projects' color={'dark'} />
                         {projectSummary.map(
                             (content, index) =>
-                                content?.creator_id === userId && (
-                                    <div key={content.project_id}>
-                                        <Button onClick={() => dispatch(setActiveProject(content.project_id!, content.project_name))} value={content.project_id} className='' variant='subtle' key={index}>
-                                            {content?.project_name}
+                                content?.creatorId === userId && (
+                                    <div key={content.projectId}>
+                                        <Button onClick={() => dispatch(setActiveProject(content.projectId!, content.projectName))} value={content.projectId} className='' variant='subtle' key={index}>
+                                            {content?.projectName}
                                         </Button>
                                     </div>
                                 )
@@ -27,10 +27,10 @@ export function FavoriteProject() {
                         <Divider labelPosition='center' my='md' label='Other Projects' color={'dark'} />
                         {projectSummary.map(
                             (content, index) =>
-                                content?.creator_id !== userId && (
-                                    <div key={content.project_id}>
-                                        <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectSummary[index].project_name))} value={content.project_id} className='' variant='subtle' key={index}>
-                                            {content?.project_name}
+                                content?.creatorId !== userId && (
+                                    <div key={content.projectId}>
+                                        <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectSummary[index].projectName))} value={content.projectId} className='' variant='subtle' key={index}>
+                                            {content?.projectName}
                                         </Button>
                                     </div>
                                 )

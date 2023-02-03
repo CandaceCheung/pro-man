@@ -7,10 +7,7 @@ export const invitationRoutes = () => {
 	invitationRoutes.post('/username', invitationController.checkUsername);
 	invitationRoutes.put('/response', invitationController.acceptInvite);
 	invitationRoutes.get('/:projectId', invitationController.getInvitationList);
-	invitationRoutes.delete(
-		'/:projectId&:invitationId',
-		invitationController.deleteInvitation
-	);
+	invitationRoutes.delete('/', invitationController.deleteInvitation);
 
 	return invitationRoutes;
 };

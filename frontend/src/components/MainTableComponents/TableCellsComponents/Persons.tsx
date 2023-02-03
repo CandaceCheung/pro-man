@@ -120,8 +120,8 @@ const useStyles = createStyles(() => ({
 
 export function Persons({ groupId, itemId, typeId }: PersonsProps) {
     const members = useAppSelector((state) => state.table.memberList);
-    const itemPersonsIds = useAppSelector((state) => state.table.itemCells[groupId][itemId][typeId].item_person_user_id!);
-    
+    const itemPersonsIds = useAppSelector((state) => state.table.itemCells[groupId][itemId][typeId].itemPersonUserId!);
+
     const [opened, setOpened] = useState(false);
     const { classes, cx } = useStyles();
     const dispatch = useAppDispatch();
@@ -158,10 +158,7 @@ export function Persons({ groupId, itemId, typeId }: PersonsProps) {
                                         backgroundColor: members[itemPersonsIds[index]].color
                                     }}
                                 >
-                                    {members[id] &&
-                                        (members[id].firstName && members[id].lastName
-                                            ? members[id].firstName![0].toUpperCase() + members[id].lastName![0].toUpperCase()
-                                            : members[id].username[0].toUpperCase())}
+                                    {members[id] && (members[id].firstName && members[id].lastName ? members[id].firstName![0].toUpperCase() + members[id].lastName![0].toUpperCase() : members[id].username[0].toUpperCase())}
                                 </span>
                             );
                         })}

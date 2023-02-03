@@ -14,7 +14,9 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "suppressImplicitAnyIndexErrors": true
     },
-    "include": ["src", "local-testing/TableRow.tsx"]
+    "include": ["src", "local-testing/TableRow.tsx"],
+    "exclude": ["node_modules", "build", "scripts", "index.js"]
 }

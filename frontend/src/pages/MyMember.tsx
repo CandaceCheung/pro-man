@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../store';
 export function MyMember() {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
-    const memberList = useAppSelector((state) => state.project.member_list);
+    const memberList = useAppSelector((state) => state.project.memberList);
 
     function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         dispatch(toggleInviteMemberModalAction(true));
@@ -37,8 +37,8 @@ export function MyMember() {
             <Grid grow justify='space-between'>
                 {memberList.map((member) => {
                     return (
-                        <Grid.Col span={4} key={member.member_id}>
-                            <NameCard member_id={member.member_id} username={member.username} last_name={member.last_name} first_name={member.first_name} projects={member.projects} members={member.members} />
+                        <Grid.Col span={4} key={member.memberId}>
+                            <NameCard memberId={member.memberId} username={member.username} lastName={member.lastName} firstName={member.firstName} projects={member.projects} members={member.members} />
                         </Grid.Col>
                     );
                 })}

@@ -1,7 +1,10 @@
 import { Button, createStyles, Input, Popover, Table } from '@mantine/core';
 import { Calendar } from '@mantine/dates';
+import { showNotification } from '@mantine/notifications';
 import { IconBrandCashapp, IconX } from '@tabler/icons';
 import { useState } from 'react';
+import { addTransaction, removeTransaction } from '../../../redux/table/thunk';
+import { useAppDispatch, useAppSelector } from '../../../store';
 
 interface MoneyProps {
     groupId: number;
@@ -10,8 +13,6 @@ interface MoneyProps {
     transactionIds: Array<number>;
     cashFlows: Array<number>;
     transactionDates: Array<string>;
-    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void;
-    onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void;
 }
 
 const useStyle = createStyles((theme, _params, getRef) => ({
@@ -51,22 +52,35 @@ const useStyle = createStyles((theme, _params, getRef) => ({
     }
 }));
 
-export function Money({ groupId, itemId, typeId, transactionIds, cashFlows, transactionDates, onAddTransaction, onDeleteTransaction }: MoneyProps) {
+export function Money({ groupId, itemId, typeId, transactionIds, cashFlows, transactionDates }: MoneyProps) {
+    const itemCellsState = useAppSelector((state) => state.table.itemCells);
     const [opened, setOpened] = useState(false);
     const [editStatus, setEditStatus] = useState(false);
     const [dateValue, setDateValue] = useState<Date | null>(new Date());
     const [inputValue, setInputValue] = useState<string>('');
 
+    const dispatch = useAppDispatch();
     const { classes } = useStyle();
 
     const handleKeyDown = (key: string) => {
         if (key === 'Enter') {
             if (dateValue && !isNaN(parseInt(inputValue))) {
-                onAddTransaction(groupId, itemId, typeId, dateValue, parseInt(inputValue));
+                dispatch(addTransaction(groupId, itemId, typeId, dateValue, parseInt(inputValue)));
                 setInputValue('');
                 setDateValue(new Date());
                 setEditStatus(false);
             }
+        }
+    };
+
+    const onDeleteTransaction = (groupId: number, itemId: number, typeId: number, transactionId: number) => {
+        if (itemCellsState[groupId][itemId][typeId].transactionId!.length <= 1) {
+            showNotification({
+                title: 'Delete transaction notification',
+                message: 'Failed to delete transaction! At least one transaction is required for items! 🤥'
+            });
+        } else {
+            dispatch(removeTransaction(groupId, itemId, typeId, transactionId));
         }
     };
 

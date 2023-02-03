@@ -1,5 +1,7 @@
 import { showNotification } from '@mantine/notifications';
 import { Dispatch } from '@reduxjs/toolkit';
+import { getState } from '../../store';
+import { MakeRequest } from '../../utils/requestUtils';
 import { renameProjectInTableListAction } from '../table/slice';
 import {
     changeAvatarAction,
@@ -8,6 +10,8 @@ import {
     deleteMemberAction,
     getMemberListAction,
     getMessagesAction,
+    MessageState,
+    MyMemberState,
     sendMessageAction,
     setActiveProjectAction,
     setMessageTargetAction,
@@ -16,6 +20,8 @@ import {
     toggleReadAction,
     toggleReceiverDeleteAction
 } from './slice';
+
+const makeRequest = (token: string) => new MakeRequest(token);
 
 export function setActiveProject(projectId: number, projectName: string) {
     return async (dispatch: Dispatch) => {
@@ -34,19 +40,21 @@ export function clearActiveProject() {
 
 export function renameProject(projectId: number, projectName: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newProjectName`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                projectId: number;
+                projectName: string;
             },
-            body: JSON.stringify({
-                projectId,
-                projectName
-            })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/newProjectName`, {
+            projectId,
+            projectName
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(setProjectNameAction(projectName));
             dispatch(
@@ -66,23 +74,23 @@ export function renameProject(projectId: number, projectName: string) {
 
 export function checkUsername(value: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/invitation/username`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).post<
+            {
+                value: string;
             },
-            body: JSON.stringify({
-                value
-            })
+            {
+                success?: boolean;
+                userId?: number;
+                msg: string;
+            }
+        >(`/invitation/username`, {
+            value
         });
-        const result = await res.json();
 
         if (result.success) {
             dispatch(checkUsernameAction(true));
-            dispatch(setMessageTargetAction(result.username.id));
+            dispatch(setMessageTargetAction(result.userId!));
             showNotification({
                 title: 'Username Format Notification',
                 message: result.msg
@@ -99,26 +107,32 @@ export function checkUsername(value: string) {
 
 export function sendMessage(sender: string, senderId: number, receiver: string, receiverId: number, text: string, messageType: 'invite' | 'message') {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).post<
+            {
+                sender: string;
+                senderId: number;
+                receiver: string;
+                receiverId: number;
+                text: string;
+                messageType: 'invite' | 'message';
             },
-            body: JSON.stringify({
-                sender,
-                senderId,
-                receiver,
-                receiverId,
-                text,
-                messageType
-            })
+            {
+                success?: boolean;
+                message?: MessageState;
+                msg: string;
+            }
+        >(`/notification`, {
+            sender,
+            senderId,
+            receiver,
+            receiverId,
+            text,
+            messageType
         });
-        const result = await res.json();
 
         if (result.success) {
-            dispatch(sendMessageAction(result.message));
+            dispatch(sendMessageAction(result.message!));
             showNotification({
                 title: 'Message Notification',
                 message: result.msg
@@ -134,16 +148,15 @@ export function sendMessage(sender: string, senderId: number, receiver: string, 
 
 export function getMessages(userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const result = await res.json();
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).get<{
+            success?: boolean;
+            message?: MessageState[];
+            msg?: string;
+        }>(`/notification/${userId}`);
 
         if (result.success) {
-            dispatch(getMessagesAction(result.message));
+            dispatch(getMessagesAction(result.message!));
         } else {
             showNotification({
                 title: 'Message Box Notification',
@@ -155,16 +168,15 @@ export function getMessages(userId: number) {
 
 export function getMemberList(userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/member/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const result = await res.json();
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).get<{
+            success?: boolean;
+            memberList?: MyMemberState[];
+            msg: string;
+        }>(`/member/${userId}`);
 
         if (result.success) {
-            dispatch(getMemberListAction(result.memberList));
+            dispatch(getMemberListAction(result.memberList!));
         } else {
             showNotification({
                 title: 'Member List Notification',
@@ -176,20 +188,25 @@ export function getMemberList(userId: number) {
 
 export function deleteMember(membershipId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/member/${membershipId}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).delete<
+            {
+                membershipId: number;
+            },
+            {
+                success?: boolean;
+                projectId?: number;
+                msg: string;
             }
+        >(`/member`, {
+            membershipId
         });
-        const result = await res.json();
 
         if (result.success) {
             dispatch(
                 deleteMemberAction({
                     membershipId,
-                    projectId: result.projectId
+                    projectId: result.projectId!
                 })
             );
             showNotification({
@@ -205,24 +222,25 @@ export function deleteMember(membershipId: number) {
     };
 }
 
-export function changeAvatar(membershipId: number[], avatar: number) {
+export function changeAvatar(membershipIds: number[], avatar: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/member/avatar`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                membershipIds: number[];
+                avatar: number;
             },
-            body: JSON.stringify({
-                membershipId,
-                avatar
-            })
+            {
+                success?: boolean;
+                msg: string;
+            }
+        >(`/member/avatar`, {
+            membershipIds,
+            avatar
         });
-        const result = await res.json();
 
         if (result.success) {
-            dispatch(changeAvatarAction({ membershipId, avatar }));
+            dispatch(changeAvatarAction({ membershipIds, avatar }));
         } else {
             showNotification({
                 title: 'Member List Notification',
@@ -234,89 +252,92 @@ export function changeAvatar(membershipId: number[], avatar: number) {
 
 export function toggleRead(notificationId: number, checked: boolean) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                notificationId: number;
+                checked: boolean;
             },
-            body: JSON.stringify({
-                notificationId,
-                checked
-            })
+            {
+                success?: boolean;
+                checkStatus?: boolean;
+                msg: string;
+            }
+        >(`/notification`, {
+            notificationId,
+            checked
         });
-        const result = await res.json();
 
         if (result.success) {
-            dispatch(toggleReadAction({ notificationId, checked: result.check }));
-            console.log(result.msg);
-        } else {
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
+            dispatch(toggleReadAction({ notificationId, checkStatus: result.checkStatus! }));
         }
+
+        showNotification({
+            title: 'Message Notification',
+            message: result.msg
+        });
     };
 }
 
 export function toggleDelete(notificationId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/${notificationId}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).delete<
+            {
+                notificationId: number;
+            },
+            {
+                success?: boolean;
+                isDeleted?: boolean;
+                msg: string;
             }
+        >(`/notification`, {
+            notificationId
         });
-        const result = await res.json();
 
         if (result.success) {
             dispatch(
                 toggleDeleteAction({
                     notificationId,
-                    isDeleted: result.is_deleted
+                    isDeleted: result.isDeleted!
                 })
             );
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
-        } else {
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Message Notification',
+            message: result.msg
+        });
     };
 }
 export function toggleReceiverDelete(notificationId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/receiver/${notificationId}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).delete<
+            {
+                notificationId: number;
+            },
+            {
+                success?: boolean;
+                isDeletedByReceiver?: boolean;
+                msg: string;
             }
+        >(`/notification/receiver`, {
+            notificationId
         });
-        const result = await res.json();
 
         if (result.success) {
             dispatch(
                 toggleReceiverDeleteAction({
                     notificationId,
-                    isDeletedReceiver: result.is_deleted_receiver
+                    isDeletedByReceiver: result.isDeletedByReceiver!
                 })
             );
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
-        } else {
-            showNotification({
-                title: 'Message Notification',
-                message: result.msg
-            });
         }
+
+        showNotification({
+            title: 'Message Notification',
+            message: result.msg
+        });
     };
 }

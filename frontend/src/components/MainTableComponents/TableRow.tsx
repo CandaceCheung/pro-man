@@ -9,8 +9,6 @@ import { DateCell } from './TableCellsComponents/Date';
 import { Money } from './TableCellsComponents/Money';
 import { Item } from './TableCellsComponents/Item';
 import { IconX } from '@tabler/icons';
-import { Button, Modal } from '@mantine/core';
-import { useState } from 'react';
 import { ItemCell } from '../../redux/table/slice';
 
 export interface TableRowProps {
@@ -20,32 +18,10 @@ export interface TableRowProps {
     cellDetails: { [key in number]: ItemCell };
     color: string;
     lastRow: boolean;
-    onItemRename: (groupId: number, itemId: number, name: string) => void;
-    onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void;
-    onStatusChange: (groupId: number, itemId: number, stateId: number, typeId: number, name: string, color: string) => void;
-    onAddTransaction: (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => void;
-    onDeleteTransaction: (groupId: number, itemId: number, typeId: number, transactionId: number) => void;
-    onDeleteItem: (groupId: number, itemId: number) => void;
+    onOpenItemModal: (itemGroupId: number, itemId: number) => void;
 }
 
-export function TableRow({
-    itemId,
-    groupId,
-    typeOrder,
-    cellDetails,
-    color,
-    lastRow,
-    onItemRename,
-    onTextChange,
-    onStatusChange,
-    onAddTransaction,
-    onDeleteTransaction,
-    onDeleteItem
-}: TableRowProps) {
-    const [deleteItemModalOpened, setDeleteItemModalOpened] = useState(false);
-
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: itemId });
-
+export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastRow, onOpenItemModal }: TableRowProps) {const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: itemId });
     const { classes, cx } = useStyles();
 
     const style = {
@@ -54,54 +30,41 @@ export function TableRow({
     };
 
     const retrieveCellData = (cell: ItemCell, cellIndex: number): JSX.Element => {
-        switch (cell.type_name) {
+        switch (cell.typeName) {
             case 'persons':
                 return (
                     <div className={cx(classes.tableCell, classes.persons)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Persons
-                            groupId={groupId}
-                            itemId={itemId}
-                            typeId={cell.type_id}
-                        />
+                        <Persons groupId={groupId} itemId={itemId} typeId={cell.typeId} />
                     </div>
                 );
             case 'dates':
                 return (
                     <div className={cx(classes.tableCell, classes.dates)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <DateCell date={cell.item_dates_date!} />
+                        <DateCell date={cell.itemDatesDate!} />
                     </div>
                 );
             case 'money':
                 return (
                     <div className={cx(classes.tableCell, classes.money)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Money
-                            groupId={groupId}
-                            itemId={itemId}
-                            typeId={cell.type_id}
-                            transactionIds={cell.transaction_id!}
-                            cashFlows={cell.item_money_cashflow!}
-                            transactionDates={cell.item_money_date!}
-                            onAddTransaction={onAddTransaction}
-                            onDeleteTransaction={onDeleteTransaction}
-                        />
+                        <Money groupId={groupId} itemId={itemId} typeId={cell.typeId} transactionIds={cell.transactionId!} cashFlows={cell.itemMoneyCashflow!} transactionDates={cell.itemMoneyDate!} />
                     </div>
                 );
             case 'times':
                 return (
                     <div className={cx(classes.tableCell, classes.times)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Times startDate={cell.item_times_start_date} endDate={cell.item_times_end_date} />
+                        <Times startDate={cell.itemTimesStartDate} endDate={cell.itemTimesEndDate} />
                     </div>
                 );
             case 'status':
                 return (
                     <div className={cx(classes.tableCell, classes.status)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <Status groupId={groupId} itemId={itemId} typeId={cell.type_id} status={cell.item_status_name!} color={cell.item_status_color!} onStatusChange={onStatusChange} />
+                        <Status groupId={groupId} itemId={itemId} typeId={cell.typeId} status={cell.itemStatusName!} color={cell.itemStatusColor!} />
                     </div>
                 );
             case 'text':
                 return (
                     <div className={cx(classes.tableCell, classes.text)} key={'item' + itemId + 'cell' + cellIndex}>
-                        <TextCell groupId={groupId} itemId={itemId} typeId={cell.type_id} text={cell.item_text_text!} onTextChange={onTextChange} />
+                        <TextCell groupId={groupId} itemId={itemId} typeId={cell.typeId} text={cell.itemTextText!} />
                     </div>
                 );
             default:
@@ -109,30 +72,17 @@ export function TableRow({
         }
     };
 
-    const handleDeleteItem = () => {
-        setDeleteItemModalOpened(false);
-        onDeleteItem(groupId, itemId);
-    };
-
     return (
         <div className={cx(classes.tableRow, { [classes.lastRow]: lastRow })} ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <div className={classes.tableCell} style={{ backgroundColor: color }}></div>
             <div className={cx(classes.tableCell, classes.item)}>
-                <Item itemId={itemId} groupId={groupId} itemName={cellDetails[typeOrder[0]].item_name} onItemRename={onItemRename} />
+                <Item itemId={itemId} groupId={groupId} itemName={cellDetails[typeOrder[0]].itemName} />
             </div>
             {typeOrder.map((typeId, cellIndex) => {
                 return retrieveCellData(cellDetails[typeId], cellIndex);
             })}
-            <Modal opened={deleteItemModalOpened} onClose={() => setDeleteItemModalOpened(false)} title={<span className={classes.modalTitle}>{'Delete this item?'}</span>} centered>
-                <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
-                <span className={classes.modalFooter}>
-                    <Button color='red' onClick={handleDeleteItem}>
-                        Delete
-                    </Button>
-                </span>
-            </Modal>
 
-            <span className={classes.rowIcon} onClick={() => setDeleteItemModalOpened(true)}>
+            <span className={classes.rowIcon} onClick={() => onOpenItemModal(groupId, itemId)}>
                 <IconX size={16} />
             </span>
         </div>

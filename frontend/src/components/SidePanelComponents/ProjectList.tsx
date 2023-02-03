@@ -2,7 +2,7 @@ import '../styles/ProjectList.css';
 import { Button, Divider, Modal } from '@mantine/core';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setActiveProject } from '../../redux/project/thunk';
-import { MyTableListState } from '../../redux/table/slice';
+import { MyTable } from '../../redux/table/slice';
 import { IconPlus, IconX } from '@tabler/icons';
 import { deleteProject, insertNewProject } from '../../redux/table/thunk';
 import { useState } from 'react';
@@ -11,20 +11,21 @@ import { showNotification } from '@mantine/notifications';
 export function ProjectList() {
     const projectSummary = useAppSelector((state) => state.table.projectList);
     const userId = useAppSelector((state) => state.auth.userId);
-    const [opened, setOpened] = useState(false);
+    const [opened, setOpened] = useState<boolean>(false);
+    const [deleteProjectId, setDeleteProjectId] = useState<number | null>(null);
     const dispatch = useAppDispatch();
 
     let projectIdList: [number?] = [];
-    let projectList: MyTableListState = [];
+    let projectList: MyTable[] = [];
     for (let item of projectSummary) {
-        if (!projectIdList.includes(item.project_id)) {
-            projectIdList.push(item.project_id);
+        if (!projectIdList.includes(item.projectId)) {
+            projectIdList.push(item.projectId);
             const obj = {
-                project_name: item.project_name,
+                projectName: item.projectName,
                 username: item.username,
-                project_id: item.project_id,
-                creator_id: item.creator_id,
-                member_table_id: item.member_table_id
+                projectId: item.projectId,
+                creatorId: item.creatorId,
+                memberTableId: item.memberTableId
             };
             projectList.push(obj);
         }
@@ -37,7 +38,7 @@ export function ProjectList() {
     const handleDeleteProject = (projectId: number) => {
         setOpened(false);
         if (userId) {
-            if (projectSummary.filter((each) => each.creator_id === userId).length <= 1) {
+            if (projectSummary.filter((each) => each.creatorId === userId).length <= 1) {
                 showNotification({
                     title: 'Delete project notification',
                     message: 'Failed to delete project! You must have at least 1 project! 🤥'
@@ -47,6 +48,16 @@ export function ProjectList() {
             }
         }
     };
+
+    const onOpenModal = (projectId: number) => {
+        setDeleteProjectId(projectId);
+        setOpened(true);
+    }
+
+    const onCloseModal = () => {
+        setOpened(false);
+        setDeleteProjectId(null);
+    }
 
     return (
         <div>
@@ -59,35 +70,35 @@ export function ProjectList() {
                 <Divider labelPosition='center' my='md' label='Your Projects' color={'dark'} />
                 {projectList.map(
                     (content, index) =>
-                        content?.creator_id === userId && (
-                            <div key={content.project_id} className='my-project-container'>
-                                <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].project_name))} value={content?.project_id} className='' variant='subtle' key={index}>
-                                    {content?.project_name}
+                        content?.creatorId === userId && (
+                            <div key={content.projectId} className='my-project-container'>
+                                <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].projectName))} value={content?.projectId} className='' variant='subtle' key={index}>
+                                    {content?.projectName}
                                 </Button>
-                                <IconX size={16} className='delete-icon' onClick={() => setOpened(true)} />
-                                <Modal centered opened={opened} onClose={() => setOpened(false)} title={<span className='modal-title'>{'Delete this project?'}</span>}>
-                                    <span className='modal-body'>{'The action cannot be reversed! Think twice! 🤔'}</span>
-                                    <span className='modal-footer'>
-                                        <Button color='red' onClick={() => content.project_id && handleDeleteProject(content.project_id)}>
-                                            Delete
-                                        </Button>
-                                    </span>
-                                </Modal>
+                                <IconX size={16} className='delete-icon' onClick={() => content.projectId && onOpenModal(content.projectId)} />
                             </div>
                         )
                 )}
                 <Divider labelPosition='center' my='md' label='Joined Projects' color={'dark'} />
                 {projectList.map(
                     (content, index) =>
-                        content?.creator_id !== userId && (
-                            <div key={content?.project_id}>
-                                <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].project_name))} value={content?.project_id} className='' variant='subtle' key={index}>
-                                    {content?.project_name}
+                        content?.creatorId !== userId && (
+                            <div key={content?.projectId}>
+                                <Button onClick={(e) => dispatch(setActiveProject(parseInt(e.currentTarget.value), projectList[index].projectName))} value={content?.projectId} className='' variant='subtle' key={index}>
+                                    {content?.projectName}
                                 </Button>
                             </div>
                         )
                 )}
             </div>
+            <Modal centered opened={opened} onClose={onCloseModal} title={<span className='modal-title'>{'Delete this project?'}</span>}>
+                <span className='modal-body'>{'The action cannot be reversed! Think twice! 🤔'}</span>
+                <span className='modal-footer'>
+                    <Button color='red' onClick={() => deleteProjectId && handleDeleteProject(deleteProjectId)}>
+                        Delete
+                    </Button>
+                </span>
+            </Modal>
         </div>
     );
 }

@@ -7,8 +7,8 @@ import './styles/SidePanel.css';
 
 export function SidePanel() {
     const dispatch = useAppDispatch();
-    const toggle = useAppSelector((state) => state.project.toggle_side_panel);
-    const favorite = useAppSelector((state) => state.project.toggle_favorite);
+    const toggle = useAppSelector((state) => state.project.toggleSidePanel);
+    const favorite = useAppSelector((state) => state.project.toggleFavorite);
 
     const clickHandler = () => {
         dispatch(toggleSidePanelAction(!toggle));

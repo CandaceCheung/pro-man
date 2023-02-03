@@ -1,11 +1,12 @@
 import { createStyles } from '@mantine/core';
 import { useState } from 'react';
+import { renameItem } from '../../../redux/table/thunk';
+import { useAppDispatch } from '../../../store';
 
 interface ItemProps {
     itemId: number;
     groupId: number;
     itemName: string;
-    onItemRename: (groupId: number, itemId: number, name: string) => void;
 }
 
 const useStyle = createStyles((theme) => ({
@@ -62,11 +63,12 @@ const useStyle = createStyles((theme) => ({
     }
 }));
 
-export function Item({ itemId, groupId, itemName, onItemRename }: ItemProps) {
+export function Item({ itemId, groupId, itemName }: ItemProps) {
     const [selectedItemNameInput, setSelectedItemNameInput] = useState(false);
     const [itemNameInput, setItemNameInput] = useState(itemName);
 
     const { classes } = useStyle();
+    const dispatch = useAppDispatch();
 
     const deselectItemNameInput = () => {
         if (itemNameInput !== itemName) {
@@ -87,6 +89,10 @@ export function Item({ itemId, groupId, itemName, onItemRename }: ItemProps) {
 
     const onSelectItemNameInput = () => {
         setSelectedItemNameInput(true);
+    };
+
+    const onItemRename = (groupId: number, itemId: number, name: string) => {
+        dispatch(renameItem(groupId, itemId, name));
     };
 
     return (

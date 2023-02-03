@@ -15,9 +15,9 @@ type InvitationDrawerProps = {
 export default function InvitationDrawer(props: InvitationDrawerProps) {
     const dispatch = useAppDispatch();
     const [value, setValue] = useInputState('');
-    const projectId = useAppSelector((state) => state.project.project_id);
+    const projectId = useAppSelector((state) => state.project.projectId);
     const userId = useAppSelector((state) => state.auth.userId);
-    const toggle = useAppSelector((state) => state.project.toggle_invitation_button);
+    const toggle = useAppSelector((state) => state.project.toggleInvitationButton);
 
     useEffect(() => {
         let timer = setTimeout(() => dispatch(toggleInvitationButtonAction(false)), 10000);

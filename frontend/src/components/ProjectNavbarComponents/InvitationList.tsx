@@ -10,9 +10,9 @@ export function InvitationList() {
     const dispatch = useAppDispatch();
     const invitationList = useAppSelector((state) => state.invitation);
     const userID = useAppSelector((state) => state.auth.userId);
-    const projectId = useAppSelector((state) => state.project.project_id);
+    const projectId = useAppSelector((state) => state.project.projectId);
     const [toggle, setToggle] = useState(false);
-    const loading = useAppSelector((state) => state.project.toggle_invitation_button);
+    const loading = useAppSelector((state) => state.project.toggleInvitationButton);
     const [targetInvitationId, setTargetInvitationId] = useState(0);
 
     const elements = [];
@@ -21,7 +21,7 @@ export function InvitationList() {
             const obj = {
                 id: item.id,
                 email: item.email,
-                updated_at: new Date(item.updated_at).toLocaleString('en-us'),
+                updated_at: new Date(item.updatedAt).toLocaleString('en-us'),
                 status: item.status
             };
             elements.push(obj);
@@ -40,7 +40,7 @@ export function InvitationList() {
 
     function onConfirmDelete() {
         setToggle(false);
-        dispatch(deleteInvitation(targetInvitationId, projectId!));
+        dispatch(deleteInvitation(targetInvitationId));
     }
 
     const rows = elements.map((element) => (

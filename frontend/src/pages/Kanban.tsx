@@ -15,7 +15,7 @@ export function Kanban() {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
     const statusList = useAppSelector((state) => state.kanban.statusList);
-    const projectId = useAppSelector((state) => state.project.project_id);
+    const projectId = useAppSelector((state) => state.project.projectId);
     const sensors = useSensors(useSensor(SmartPointerSensor));
 
     useEffect(() => {

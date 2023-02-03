@@ -5,26 +5,11 @@ export class ProfileService {
 	constructor(private knex: Knex) {}
 
 	async getProfileInfo(user_Id: number) {
-		const userDetail = await this.knex
-			.select(
-				'users.id',
-				'users.username',
-				'users.first_name as firstName',
-				'users.last_name as lastName'
-			)
-			.from('users')
-			.where('id', user_Id);
-		return userDetail[0];
+		const [userDetail] = await this.knex.select('users.id', 'users.username', 'users.first_name as firstName', 'users.last_name as lastName').from('users').where('id', user_Id);
+		return userDetail;
 	}
 
-	async updateProfile(
-		user_Id: number,
-		{
-			password,
-			firstName,
-			lastName
-		}: { password?: string; firstName?: string; lastName?: string }
-	) {
+	async updateProfile(user_Id: number, { password, firstName, lastName }: { password?: string; firstName?: string; lastName?: string }) {
 		const txn = await this.knex.transaction();
 		try {
 			let update;
@@ -33,7 +18,7 @@ export class ProfileService {
 				hashedPassword = bcrypt.hashSync(password, 10);
 			}
 			if (password || firstName || lastName) {
-				update = await txn
+				[update] = await txn
 					.update({
 						first_name: firstName,
 						last_name: lastName,
@@ -41,10 +26,7 @@ export class ProfileService {
 					})
 					.from('users')
 					.where('id', user_Id)
-					.returning([
-						'first_name as firstName',
-						'last_name as lastName'
-					]);
+					.returning(['first_name as firstName', 'last_name as lastName']);
 			}
 			await txn.commit();
 			return update;

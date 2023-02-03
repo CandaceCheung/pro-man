@@ -9,9 +9,9 @@ export function ReplyModal() {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
     const sender = useAppSelector((state) => state.auth.username);
-    const targetId = useAppSelector((state) => state.project.message_target);
-    const targetUser = useAppSelector((state) => state.project.message_summary).filter((message) => message.sender_id === targetId)[0]?.sender;
-    const opened = useAppSelector((state) => state.project.toggle_reply_modal);
+    const targetId = useAppSelector((state) => state.project.messageTarget);
+    const targetUser = useAppSelector((state) => state.project.messageSummary).filter((message) => message.senderId === targetId)[0]?.sender;
+    const opened = useAppSelector((state) => state.project.toggleReplyModal);
     const [text, setText] = useState<string>('');
 
     function handleSubmit(e: FormEvent<HTMLFormElement>) {

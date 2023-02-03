@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { keysToCamel } from '../utils/case';
 export class InvitationService {
 	constructor(private knex: Knex) {}
 
@@ -6,10 +7,7 @@ export class InvitationService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const [user] = await txn
-				.select('*')
-				.from('users')
-				.where('username', value);
+			const [user] = await txn.select('*').from('users').where('username', value);
 
 			await txn.commit();
 			return user;
@@ -23,19 +21,13 @@ export class InvitationService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const [check] = await txn
-				.select('*')
-				.from('invitations')
-				.where('email', email)
-				.where('project_id', projectId);
+			const [check] = await txn.select('*').from('invitations').where('email', email).where('project_id', projectId);
 
 			if (check) {
 				if (check.status !== 'accepted') {
-					await txn('invitations')
-						.update({ updated_at: new Date() })
-						.where('id', check.id);
+					await txn('invitations').update({ updated_at: new Date() }).where('id', check.id);
 				}
-				return check;
+				return keysToCamel(check);
 			}
 
 			const [invitation] = await txn
@@ -49,7 +41,7 @@ export class InvitationService {
 				.returning('*');
 
 			await txn.commit();
-			return invitation;
+			return keysToCamel(invitation);
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -60,57 +52,34 @@ export class InvitationService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const invitationList = await txn
-				.select('*')
-				.from('invitations')
-				.where('project_id', projectId)
-				.orderBy('created_at', 'asc');
+			const invitationList = await txn.select('*').from('invitations').where('project_id', projectId).orderBy('created_at', 'asc');
 
 			await txn.commit();
-			return invitationList;
+			return keysToCamel(invitationList);
 		} catch (e) {
 			await txn.rollback();
 			throw e;
 		}
 	}
 
-	async deleteInvitation(invitationId: number, projectId: number) {
+	async deleteInvitation(invitationId: number) {
 		const txn = await this.knex.transaction();
 
 		try {
 			await txn('invitations').where('id', invitationId).del();
-
-			const invitationList = await txn
-				.select('*')
-				.from('invitations')
-				.where('project_id', projectId)
-				.orderBy('created_at', 'asc');
-
 			await txn.commit();
-			return invitationList;
+			return;
 		} catch (e) {
 			await txn.rollback();
 			throw e;
 		}
 	}
 
-	async checkValidity(
-		invitationId: number,
-		projectId: number,
-		userId: number
-	) {
+	async checkValidity(invitationId: number, projectId: number, userId: number) {
 		try {
-			const [member] = await this.knex('members')
-				.where('user_id', userId)
-				.where('project_id', projectId);
-			const [invitation] = await this.knex('invitations').where(
-				'id',
-				invitationId
-			);
-			const [project] = await this.knex('projects').where(
-				'id',
-				projectId
-			);
+			const [member] = await this.knex('members').where('user_id', userId).where('project_id', projectId);
+			const [invitation] = await this.knex('invitations').where('id', invitationId);
+			const [project] = await this.knex('projects').where('id', projectId);
 
 			return { invitation, member, project };
 		} catch (e) {
@@ -118,17 +87,11 @@ export class InvitationService {
 		}
 	}
 
-	async acceptInvite(
-		invitationId: number,
-		projectId: number,
-		userId: number
-	) {
+	async acceptInvite(invitationId: number, projectId: number, userId: number) {
 		const txn = await this.knex.transaction();
 
 		try {
-			const [member] = await txn('members')
-				.where('user_id', userId)
-				.where('project_id', projectId);
+			const [member] = await txn('members').where('user_id', userId).where('project_id', projectId);
 
 			if (!member) {
 				await txn('members').insert({
@@ -145,7 +108,7 @@ export class InvitationService {
 				.returning('*');
 
 			await txn.commit();
-			return invitation;
+			return keysToCamel(invitation);
 		} catch (e) {
 			await txn.rollback();
 			throw e;

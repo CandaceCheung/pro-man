@@ -8,13 +8,13 @@ import { KanbanAction } from './redux/kanban/action';
 import { kanbanReducer } from './redux/kanban/reducer';
 import { KanbanState } from './redux/kanban/state';
 import profileReducer, { ProfileState } from './redux/profile/slice';
-import projectReducer, { ActiveProjectState } from './redux/project/slice';
-import tableReducer, { CombinedTableState } from './redux/table/slice';
+import projectReducer, { ProjectState } from './redux/project/slice';
+import tableReducer, { TableState } from './redux/table/slice';
 
 export interface IRootState {
     auth: AuthState;
-    table: CombinedTableState;
-    project: ActiveProjectState;
+    table: TableState;
+    project: ProjectState;
     kanban: KanbanState;
     invitation: InvitationState;
     profile: ProfileState;
@@ -40,3 +40,4 @@ export const store = configureStore({
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<IRootState> = useSelector;
+export const getState = () => store.getState();

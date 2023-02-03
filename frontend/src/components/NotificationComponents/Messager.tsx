@@ -8,12 +8,12 @@ import { showNotification } from '@mantine/notifications';
 
 export function Messager() {
     const dispatch = useAppDispatch();
-    const opened = useAppSelector((state) => state.project.toggle_messager);
-    const inviteMemberOpened = useAppSelector((state) => state.project.toggle_invite_member_modal);
+    const opened = useAppSelector((state) => state.project.toggleMessager);
+    const inviteMemberOpened = useAppSelector((state) => state.project.toggleInviteMemberModal);
     const name = useAppSelector((state) => state.auth.username);
     const userId = useAppSelector((state) => state.auth.userId);
-    const check = useAppSelector((state) => state.project.check_username);
-    const targetUser = useAppSelector((state) => state.project.message_target);
+    const check = useAppSelector((state) => state.project.checkUsername);
+    const targetUser = useAppSelector((state) => state.project.messageTarget);
     const projectList = useAppSelector((state) => state.table.projectList);
 
     const [messageType, setMessageType] = useState<'invite' | 'message' | undefined>(undefined);
@@ -133,11 +133,11 @@ export function Messager() {
                                     <Input value={project} component='select' onChange={(e) => setProject(parseInt(e.target.value))} rightSection={<IconChevronDown size={14} stroke={1.5} />}>
                                         <option value={undefined}>Choose a Project</option>
                                         {projectList
-                                            .filter((project) => project.creator_id === userId)
+                                            .filter((project) => project.creatorId === userId)
                                             .map((project, index) => {
                                                 return (
-                                                    <option key={index} value={project.project_id}>
-                                                        {project.project_name}
+                                                    <option key={index} value={project.projectId}>
+                                                        {project.projectName}
                                                     </option>
                                                 );
                                             })}

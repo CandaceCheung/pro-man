@@ -1,21 +1,20 @@
-import { AppDispatch } from '../../store';
-import { setInfoAction, updateInfoAction } from './slice';
+import { AppDispatch, getState } from '../../store';
+import { MakeRequest } from '../../utils/requestUtils';
+import { ProfileState, setInfoAction, updateInfoAction } from './slice';
+
+const makeRequest = (token: string) => new MakeRequest(token);
 
 export function getProfile(userId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/profile/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-
-        const result = await res.json();
-        console.log(result);
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).get<{
+            success?: boolean;
+            data?: ProfileState;
+            msg?: string;
+        }>(`/profile/${userId}`);
 
         if (result.success) {
-            dispatch(setInfoAction(result.data));
+            dispatch(setInfoAction(result.data!));
         } else {
             console.log('Get profile info fail');
         }
@@ -24,19 +23,22 @@ export function getProfile(userId: number) {
 
 export function putProfileInfo(putInfo: { firstName?: string; lastName?: string; password?: string }) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/profile/update`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const data = await makeRequest(token!).put<
+            {
+                putInfo: { firstName?: string; lastName?: string; password?: string };
             },
-            body: JSON.stringify(putInfo)
+            {
+                success?: boolean;
+                result?: { firstName: string; lastName: string };
+                msg: string;
+            }
+        >(`/profile/update`, {
+            putInfo
         });
-        const data = await res.json();
 
         if (data.success) {
-            dispatch(updateInfoAction(data.result));
+            dispatch(updateInfoAction(data.result!));
         } else {
             console.log('Update Profile info fail');
         }

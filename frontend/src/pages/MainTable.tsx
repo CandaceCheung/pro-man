@@ -1,41 +1,32 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { ItemGroupCollapser } from '../components/MainTableComponents/ItemGroupCollapser';
-import {
-    addTransaction,
-    deleteItem,
-    deleteItemGroup,
-    getProjectStatusList,
-    getTable,
-    insertItem,
-    removeTransaction,
-    renameItem,
-    renameType,
-    reorderItems,
-    reorderTypes,
-    updateItemGroupName,
-    updateState,
-    updateText
-} from '../redux/table/thunk';
+import { getProjectStatusList, getTableV2, insertItem, reorderItems, reorderTypes, updateItemGroupName } from '../redux/table/thunk';
 import { closestCenter, DndContext, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { TableRow } from '../components/MainTableComponents/TableRow';
 import { useStyles } from '../components/MainTableComponents/styles';
 import { TableColumnTitle } from '../components/MainTableComponents/TableColumnTitle';
 import { SmartPointerSensor } from '../pointerSensor';
-import produce from 'immer';
-import { Button, Modal, ScrollArea } from '@mantine/core';
+import { ScrollArea } from '@mantine/core';
 import { getMember } from '../redux/kanban/thunk';
-import { showNotification } from '@mantine/notifications';
 import { IconX } from '@tabler/icons';
-import { changeItemGroupInputValueAction, deselectItemGroupInputAction, ItemCell, ItemGroup, resetItemGroupInputValueAction, selectItemGroupInputAction, toggleItemGroupsCollapsedAction } from '../redux/table/slice';
+import {
+    changeItemGroupInputValueAction,
+    changeNewItemsInputValueAction,
+    deselectItemGroupInputAction,
+    resetItemGroupInputValueAction,
+    selectItemGroupInputAction,
+    toggleItemGroupsCollapsedAction,
+    toggleNewItemsInputActiveAction
+} from '../redux/table/slice';
+import { ItemGroupModal } from '../components/MainTableComponents/ItemGroupModal';
+import { ItemModal } from '../components/MainTableComponents/ItemModal';
 
 export function MainTable() {
     const userId = useAppSelector((state) => state.auth.userId);
-    const projectId = useAppSelector((state) => state.project.project_id);
-    const tableSummary = useAppSelector((state) => state.table.summary);
-
+    const projectId = useAppSelector((state) => state.project.projectId);
     const itemCellsState = useAppSelector((state) => state.table.itemCells);
     const itemGroupsState = useAppSelector((state) => state.table.itemGroups);
     const itemsOrdersState = useAppSelector((state) => state.table.itemsOrders);
@@ -43,11 +34,13 @@ export function MainTable() {
     const itemGroupsCollapsed = useAppSelector((state) => state.table.itemGroupsCollapsed);
     const itemGroupsInputActive = useAppSelector((state) => state.table.itemGroupsInputActive);
     const itemGroupsInputValue = useAppSelector((state) => state.table.itemGroupsInputValue);
+    const newItemsInputActive = useAppSelector((state) => state.table.newItemsInputActive);
+    const newItemsInputValue = useAppSelector((state) => state.table.newItemsInputValue);
 
-    const [newItemInputSelected, setNewItemInputSelected] = useState<Record<number, boolean>>({});
-    const [newItemInputValue, setNewItemInputValue] = useState<Record<number, string>>({});
-
-    const [deleteGroupModalOpened, setDeleteGroupModalOpened] = useState<Record<number, boolean>>({});
+    const [itemGroupModalOpened, setItemGroupModalOpened] = useState<boolean>(false);
+    const [itemGroupModalId, setItemGroupModalId] = useState<number | null>(null);
+    const [itemModalOpened, setItemModalOpened] = useState<boolean>(false);
+    const [itemModalId, setItemModalId] = useState<number | null>(null);
 
     const dispatch = useAppDispatch();
     const { classes, theme, cx } = useStyles();
@@ -58,155 +51,23 @@ export function MainTable() {
         if (projectId) {
             dispatch(getMember(projectId));
             dispatch(getProjectStatusList(projectId));
-            dispatch(getTable(userId!, projectId));
+            dispatch(getTableV2(userId!, projectId));
         }
     }, [userId, projectId, dispatch]);
 
-    useEffect(() => {
-        let itemCells: {
-            [keys in number]: {
-                [keys in number]: { [keys in number]: ItemCell };
-            };
-        } = {};
-        let itemGroups: ItemGroup[] = [];
-        let itemGroupsCollapsed: boolean[] = [];
-        let itemGroupsInputSelected: boolean[] = [];
-        let itemGroupsInputValue: string[] = [];
-        let itemsOrders: Record<number, Array<number>> = {};
-        let typesOrders: Record<number, Array<number>> = {};
-        let typesOrderSet: Set<number> = new Set();
-
-        let personsColorsTemp: Record<number, string> = {};
-        let personsMembers: Set<number> = new Set();
-
-        let newItemInputSelectedTemp: Record<number, boolean> = {};
-        let newItemInputValueTemp: Record<number, string> = {};
-
-        let deleteGroupModalOpenedTemp: Record<number, boolean> = {};
-
-        for (const cell of tableSummary) {
-            if (cell.project_id) {
-                const itemGroupId = cell.item_group_id;
-                const itemId = cell.item_id;
-                const typeId = cell.horizontal_order_id;
-                let itemCell: ItemCell = {
-                    item_id: cell.item_id,
-                    item_name: cell.item_name,
-                    type_id: cell.horizontal_order_id,
-                    type_name: cell.type_name,
-                    element_name: cell.element_name
-                };
-
-                if (itemCells[itemGroupId]) {
-                    if (!itemCells[itemGroupId][itemId]) {
-                        itemCells[itemGroupId][itemId] = {};
-                        itemsOrders[itemGroupId].push(itemId);
-                    }
-                } else {
-                    itemCells[itemGroupId] = {};
-                    itemCells[itemGroupId][itemId] = {};
-                    itemGroups.push({
-                        item_group_id: cell.item_group_id,
-                        item_group_name: cell.item_group_name
-                    });
-                    itemGroupsCollapsed.push(false);
-                    itemGroupsInputSelected.push(false);
-                    itemGroupsInputValue.push(cell.item_group_name);
-                    itemsOrders[itemGroupId] = [itemId];
-                }
-
-                switch (cell.type_name) {
-                    case 'dates':
-                        itemCell['item_dates_datetime'] = cell.item_dates_datetime;
-                        itemCell['item_dates_date'] = cell.item_dates_date;
-                        itemCells[itemGroupId][itemId][typeId] = itemCell;
-                        break;
-                    case 'money':
-                        if (itemCells[itemGroupId][itemId][typeId]) {
-                            if (!itemCells[itemGroupId][itemId][typeId]!.transaction_id!.includes(cell.transaction_id)) {
-                                itemCells[itemGroupId][itemId][typeId]!.transaction_id!.push(cell.transaction_id);
-                                itemCells[itemGroupId][itemId][typeId]!.item_money_cashflow!.push(cell.item_money_cashflow);
-                                itemCells[itemGroupId][itemId][typeId]!.item_money_date!.push(cell.item_money_date);
-                            }
-                        } else {
-                            itemCell['transaction_id'] = [cell.transaction_id];
-                            itemCell['item_money_cashflow'] = [cell.item_money_cashflow];
-                            itemCell['item_money_date'] = [cell.item_money_date];
-                            itemCells[itemGroupId][itemId][typeId] = itemCell;
-                        }
-                        break;
-                    case 'persons':
-                        if (itemCells[itemGroupId][itemId][typeId]) {
-                            if (!itemCells[itemGroupId][itemId][typeId].item_person_user_id!.includes(cell.item_person_user_id)) {
-                                itemCells[itemGroupId][itemId][typeId].item_person_user_id!.push(cell.item_person_user_id);
-                            }
-                        } else {
-                            itemCell.item_person_user_id = [cell.item_person_user_id];
-                            itemCells[itemGroupId][itemId][typeId] = itemCell;
-                        }
-                        personsMembers.add(cell.item_person_user_id);
-                        break;
-                    case 'status':
-                        itemCell['item_status_color'] = cell.item_status_color;
-                        itemCell['item_status_name'] = cell.item_status_name;
-                        itemCells[itemGroupId][itemId][typeId] = itemCell;
-                        break;
-                    case 'text':
-                        itemCell['item_text_text'] = cell.item_text_text;
-                        itemCells[itemGroupId][itemId][typeId] = itemCell;
-                        break;
-                    case 'times':
-                        itemCell['item_times_start_date'] = cell.item_times_start_date;
-                        itemCell['item_times_end_date'] = cell.item_times_end_date;
-                        itemCells[itemGroupId][itemId][typeId] = itemCell;
-                        break;
-                    default:
-                        break;
-                }
-
-                if (!typesOrders[itemGroupId]) {
-                    typesOrderSet = new Set();
-                }
-                typesOrderSet.add(typeId);
-                typesOrders[itemGroupId] = Array.from(typesOrderSet);
-
-                if (!newItemInputSelectedTemp[itemGroupId]) {
-                    newItemInputSelectedTemp[itemGroupId] = false;
-                }
-                if (!newItemInputValueTemp[itemGroupId]) {
-                    newItemInputValueTemp[itemGroupId] = '';
-                }
-                if (!deleteGroupModalOpenedTemp[itemGroupId]) {
-                    deleteGroupModalOpenedTemp[itemGroupId] = false;
-                }
-            }
-        }
-
-        // Set type_persons members initials colors
-        let personsMembersArray = Array.from(personsMembers).sort();
-        personsMembersArray.forEach((id, index) => {
-            personsColorsTemp[id] = theme.colors.personsTypeComponentColor[index % theme.colors.personsTypeComponentColor.length];
-        });
-
-        setNewItemInputSelected(newItemInputSelectedTemp);
-        setNewItemInputValue(newItemInputValueTemp);
-
-        setDeleteGroupModalOpened(deleteGroupModalOpenedTemp);
-    }, [tableSummary, projectId, theme.colors.personsTypeComponentColor]);
-
     const changeItemGroupInputValue = (index: number, value: string) => {
-        dispatch(changeItemGroupInputValueAction({index, value}));
+        dispatch(changeItemGroupInputValueAction({ index, value }));
     };
 
     const deselectItemGroupInput = (index: number) => {
         if (userId && projectId) {
-            if (itemGroupsInputValue[index] !== itemGroupsState[index].item_group_name) {
-                const originalValue = itemGroupsState[index].item_group_name;
+            if (itemGroupsInputValue[index] !== itemGroupsState[index].itemGroupName) {
+                const originalValue = itemGroupsState[index].itemGroupName;
                 if (itemGroupsInputValue[index].length) {
                     // Fetch to the server
-                    dispatch(updateItemGroupName(itemGroupsState[index].item_group_id, itemGroupsInputValue[index], index, originalValue));
+                    dispatch(updateItemGroupName(itemGroupsState[index].itemGroupId, itemGroupsInputValue[index], index, originalValue));
                 } else {
-                    dispatch(resetItemGroupInputValueAction({index, originalValue}));
+                    dispatch(resetItemGroupInputValueAction({ index, originalValue }));
                 }
             }
         }
@@ -237,99 +98,53 @@ export function MainTable() {
         }
     };
 
-    const onItemRename = (groupId: number, itemId: number, name: string) => {
-        dispatch(renameItem(groupId, itemId, name));
+    const toggleNewItemInputSelected = (index: number) => {
+        dispatch(toggleNewItemsInputActiveAction(index));
     };
 
-    const onTypeRename = (groupId: number, typeId: number, name: string) => {
-        dispatch(renameType(groupId, typeId, name));
+    const updateNewItemInputValue = (index: number, value: string) => {
+        dispatch(changeNewItemsInputValueAction({ index, value }));
     };
 
-    const onTextChange = (groupId: number, itemId: number, typeId: number, text: string) => {
-        dispatch(updateText(groupId, itemId, typeId, text));
-    };
-
-    const onStatusChange = (groupId: number, itemId: number, stateId: number, typeId: number) => {
-        dispatch(updateState(groupId, itemId, stateId, typeId));
-    };
-
-    const onAddTransaction = (groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) => {
-        dispatch(addTransaction(groupId, itemId, itemId, date, cashFlow));
-    };
-
-    const onDeleteTransaction = (groupId: number, itemId: number, typeId: number, transactionId: number) => {
-        if (itemCellsState[groupId][itemId][typeId].transaction_id!.length <= 1) {
-            showNotification({
-                title: 'Delete transaction notification',
-                message: 'Failed to delete transaction! At least one transaction is required for items! 🤥'
-            });
-        } else {
-            dispatch(removeTransaction(groupId, itemId, typeId, transactionId));
+    const deselectNewItemNameInput = (index: number, groupId: number) => {
+        if (newItemsInputValue[index].length) {
+            dispatch(insertItem(projectId!, userId!, groupId, newItemsInputValue[index]));
         }
+        updateNewItemInputValue(index, '');
+        toggleNewItemInputSelected(index);
     };
 
-    const toggleNewItemInputSelected = (groupId: number) => {
-        const newState = produce(newItemInputSelected, (draftState) => {
-            draftState[groupId] = !draftState[groupId];
-        });
-        setNewItemInputSelected(newState);
-    };
-
-    const updateNewItemInputValue = (groupId: number, value: string) => {
-        const newState = produce(newItemInputValue, (draftState) => {
-            draftState[groupId] = value;
-        });
-        setNewItemInputValue(newState);
-    };
-
-    const deselectNewItemNameInput = (groupId: number) => {
-        if (newItemInputValue[groupId].length) {
-            projectId && userId && dispatch(insertItem(projectId, userId, groupId, newItemInputValue[groupId]));
-        }
-        updateNewItemInputValue(groupId, '');
-        toggleNewItemInputSelected(groupId);
-    };
-
-    const handleNewItemNameInputKeyDown = (key: string, groupId: number) => {
+    const handleNewItemNameInputKeyDown = (key: string, index: number, groupId: number) => {
         if (key === 'Enter') {
-            deselectNewItemNameInput(groupId);
+            deselectNewItemNameInput(index, groupId);
         }
     };
 
-    const toggleDeleteGroupModalSelected = (groupId: number) => {
-        const newState = produce(deleteGroupModalOpened, (draftState) => {
-            draftState[groupId] = !draftState[groupId];
-        });
-        setDeleteGroupModalOpened(newState);
-    };
+    const onOpenItemGroupModal = (itemGroupId: number) => {
+        setItemGroupModalOpened(true);
+        setItemGroupModalId(itemGroupId);
+    }
 
-    const onDeleteItem = (groupId: number, itemId: number) => {
-        if (Object.keys(itemCellsState[groupId]).length <= 1) {
-            showNotification({
-                title: 'Item delete notification',
-                message: 'Failed to delete item! Each group should have at least 1 item! 🤥'
-            });
-        } else {
-            dispatch(deleteItem(groupId, itemId));
-        }
-    };
+    const onCloseItemGroupModal = () => {
+        setItemGroupModalOpened(false);
+        setItemGroupModalId(null);
+    }
 
-    const onDeleteGroup = (groupId: number, projectId: number) => {
-        toggleDeleteGroupModalSelected(groupId);
-        if (Object.keys(itemCellsState).length <= 1) {
-            showNotification({
-                title: 'Item delete notification',
-                message: 'Failed to delete group! Each project should have at least 1 item group! 🤥'
-            });
-        } else {
-            dispatch(deleteItemGroup(groupId, projectId));
-        }
-    };
+    const onOpenItemModal = (itemGroupId: number, itemId: number) => {
+        setItemModalOpened(true);
+        setItemGroupModalId(itemGroupId);
+        setItemModalId(itemId);
+    }
+
+    const onCloseItemModal = () => {
+        setItemModalOpened(false);
+        setItemGroupModalId(null);
+        setItemModalId(null);
+    }
 
     return (
         <>
-            {
-                !itemCellsState[0] &&
+            {!itemCellsState[0] && (
                 <ScrollArea
                     style={{
                         width: 'calc(100vw - 140px)',
@@ -338,28 +153,25 @@ export function MainTable() {
                     type='auto'
                 >
                     <div className='main-table'>
-                        {itemGroupsState.map(({ item_group_id, item_group_name }, itemGroupArrayIndex) => {
+                        {itemGroupsState.map(({ itemGroupId, itemGroupName }, itemGroupArrayIndex) => {
                             return (
                                 <div className={classes.itemGroup} key={itemGroupArrayIndex}>
                                     <div
                                         className={classes.itemGroupBar}
                                         style={{
-                                            color: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                            color: theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]
                                         }}
                                     >
-                                        <span className={classes.itemGroupIcon} onClick={() => toggleDeleteGroupModalSelected(item_group_id)}>
+                                        <span className={classes.itemGroupIcon} onClick={() => onOpenItemGroupModal(itemGroupId)}>
                                             <IconX size={16} />
                                         </span>
-                                        <Modal opened={deleteGroupModalOpened[item_group_id]} onClose={() => toggleDeleteGroupModalSelected(item_group_id)} title={<span className={classes.modalTitle}>{'Delete this item group?'}</span>} centered>
-                                            <span className={classes.modalBody}>{'The action cannot be reversed! Think twice! 🤔'}</span>
-                                            <span className={classes.modalFooter}>
-                                                <Button color='red' onClick={() => onDeleteGroup(item_group_id, projectId!)}>
-                                                    Delete
-                                                </Button>
-                                            </span>
-                                        </Modal>
 
-                                        <span onClick={() => dispatch(toggleItemGroupsCollapsedAction(itemGroupArrayIndex))} className={classes.hovertext} data-hover={itemGroupsCollapsed[itemGroupArrayIndex] ? 'Expand' : 'Collapse'} key={itemGroupArrayIndex}>
+                                        <span
+                                            onClick={() => dispatch(toggleItemGroupsCollapsedAction(itemGroupArrayIndex))}
+                                            className={classes.hovertext}
+                                            data-hover={itemGroupsCollapsed[itemGroupArrayIndex] ? 'Expand' : 'Collapse'}
+                                            key={itemGroupArrayIndex}
+                                        >
                                             {<ItemGroupCollapser size={20} className={itemGroupsCollapsed[itemGroupArrayIndex] ? '' : classes.collapserButton} />}
                                         </span>
                                         <span className={classes.itemCount}>
@@ -370,7 +182,7 @@ export function MainTable() {
                                                     autoFocus
                                                     className={classes.groupNameInput}
                                                     style={{
-                                                        borderColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                        borderColor: theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]
                                                     }}
                                                     value={itemGroupsInputValue[itemGroupArrayIndex]}
                                                     onChange={(e) => changeItemGroupInputValue(itemGroupArrayIndex, e.target.value)}
@@ -381,34 +193,33 @@ export function MainTable() {
                                                     onClick={() => dispatch(selectItemGroupInputAction(itemGroupArrayIndex))}
                                                     className={cx(classes.groupName, classes.hovertext, classes.itemCount)}
                                                     data-hover='Click to edit'
-                                                    item-count={itemsOrdersState[item_group_id].length ? itemsOrdersState[item_group_id].length + ' item' + `${itemsOrdersState[item_group_id].length === 1 ? '' : 's'}` : 'No items'}
+                                                    item-count={itemsOrdersState[itemGroupId].length ? itemsOrdersState[itemGroupId].length + ' item' + `${itemsOrdersState[itemGroupId].length === 1 ? '' : 's'}` : 'No items'}
                                                 >
-                                                    {item_group_name}
+                                                    {itemGroupName}
                                                 </span>
                                             )}
                                         </span>
                                     </div>
                                     {!itemGroupsCollapsed[itemGroupArrayIndex] && (
                                         <div>
-                                            <div id={`table_group_${item_group_id}`} className={classes.tableGroup}>
+                                            <div id={`table_group_${itemGroupId}`} className={classes.tableGroup}>
                                                 <div className={classes.tableHead}>
                                                     <div className={classes.tableRow}>
                                                         <div className={classes.tableCell}></div>
                                                         <div className={cx(classes.tableCell, classes.item)}>
                                                             <span>Item</span>
                                                         </div>
-                                                        <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, item_group_id)}>
-                                                            <SortableContext items={typesOrdersState[item_group_id]} strategy={horizontalListSortingStrategy}>
-                                                                {typesOrdersState[item_group_id].map((typeId, index) => (
+                                                        <DndContext sensors={sensors} onDragEnd={(event) => handleDragEndColumn(event, itemGroupId)}>
+                                                            <SortableContext items={typesOrdersState[itemGroupId]} strategy={horizontalListSortingStrategy}>
+                                                                {typesOrdersState[itemGroupId].map((typeId, index) => (
                                                                     <TableColumnTitle
                                                                         key={typeId}
                                                                         id={typeId}
-                                                                        cellColumnType={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].type_name}
-                                                                        cellColumnCustomName={itemCellsState[item_group_id][itemsOrdersState[item_group_id][0]][typeId].element_name}
+                                                                        cellColumnType={itemCellsState[itemGroupId][itemsOrdersState[itemGroupId][0]][typeId].typeName}
+                                                                        cellColumnCustomName={itemCellsState[itemGroupId][itemsOrdersState[itemGroupId][0]][typeId].elementName}
                                                                         index={index}
-                                                                        lastCell={index === typesOrdersState[item_group_id].length - 1}
-                                                                        groupId={item_group_id}
-                                                                        onTypeRename={onTypeRename}
+                                                                        lastCell={index === typesOrdersState[itemGroupId].length - 1}
+                                                                        groupId={itemGroupId}
                                                                     />
                                                                 ))}
                                                             </SortableContext>
@@ -416,23 +227,18 @@ export function MainTable() {
                                                     </div>
                                                 </div>
                                                 <div className={classes.tableBody}>
-                                                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, item_group_id)}>
-                                                        <SortableContext items={itemsOrdersState[item_group_id]} strategy={verticalListSortingStrategy}>
-                                                            {itemsOrdersState[item_group_id].map((itemId, itemIndex) => (
+                                                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => handleDragEndRow(event, itemGroupId)}>
+                                                        <SortableContext items={itemsOrdersState[itemGroupId]} strategy={verticalListSortingStrategy}>
+                                                            {itemsOrdersState[itemGroupId].map((itemId, itemIndex) => (
                                                                 <TableRow
                                                                     key={'group_' + itemGroupArrayIndex + '_item_' + itemId}
                                                                     itemId={itemId}
-                                                                    groupId={item_group_id}
-                                                                    typeOrder={typesOrdersState[item_group_id]}
-                                                                    cellDetails={itemCellsState[item_group_id][itemId]}
-                                                                    color={theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]}
-                                                                    lastRow={itemIndex === itemsOrdersState[item_group_id].length - 1}
-                                                                    onItemRename={onItemRename}
-                                                                    onTextChange={onTextChange}
-                                                                    onStatusChange={onStatusChange}
-                                                                    onAddTransaction={onAddTransaction}
-                                                                    onDeleteTransaction={onDeleteTransaction}
-                                                                    onDeleteItem={onDeleteItem}
+                                                                    groupId={itemGroupId}
+                                                                    typeOrder={typesOrdersState[itemGroupId]}
+                                                                    cellDetails={itemCellsState[itemGroupId][itemId]}
+                                                                    color={theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]}
+                                                                    lastRow={itemIndex === itemsOrdersState[itemGroupId].length - 1}
+                                                                    onOpenItemModal={onOpenItemModal}
                                                                 />
                                                             ))}
                                                         </SortableContext>
@@ -443,22 +249,22 @@ export function MainTable() {
                                                 <div
                                                     className={classes.tableCell}
                                                     style={{
-                                                        backgroundColor: theme.colors.groupTag[item_group_id % theme.colors.groupTag.length]
+                                                        backgroundColor: theme.colors.groupTag[itemGroupId % theme.colors.groupTag.length]
                                                     }}
                                                 ></div>
                                                 <div className={cx(classes.tableCell, classes.item)}>
-                                                    {newItemInputSelected[item_group_id] ? (
+                                                    {newItemsInputActive[itemGroupArrayIndex] ? (
                                                         <input
-                                                            onBlur={() => deselectNewItemNameInput(item_group_id)}
+                                                            onBlur={() => deselectNewItemNameInput(itemGroupArrayIndex, itemGroupId)}
                                                             type='text'
                                                             autoFocus
                                                             className={classes.newItemNameInput}
-                                                            value={newItemInputValue[item_group_id]}
-                                                            onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, item_group_id)}
-                                                            onChange={(e) => updateNewItemInputValue(item_group_id, e.target.value)}
+                                                            value={newItemsInputValue[itemGroupArrayIndex]}
+                                                            onKeyDown={(e) => handleNewItemNameInputKeyDown(e.key, itemGroupArrayIndex, itemGroupId)}
+                                                            onChange={(e) => updateNewItemInputValue(itemGroupArrayIndex, e.target.value)}
                                                         ></input>
                                                     ) : (
-                                                        <div className={classes.typeName} onClick={() => toggleNewItemInputSelected(item_group_id)}>
+                                                        <div className={classes.typeName} onClick={() => toggleNewItemInputSelected(itemGroupArrayIndex)}>
                                                             + Add Item
                                                         </div>
                                                     )}
@@ -471,7 +277,10 @@ export function MainTable() {
                         })}
                     </div>
                 </ScrollArea>
-            }
+            )}
+
+            <ItemGroupModal opened={itemGroupModalOpened} itemGroupId={itemGroupModalId} onClose={onCloseItemGroupModal} />
+            <ItemModal opened={itemModalOpened} itemGroupId={itemGroupModalId} itemId={itemModalId} onClose={onCloseItemModal} />
         </>
     );
 }

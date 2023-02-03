@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { showNotification } from '@mantine/notifications';
 
-export const useToken = () => {
+export const useInvitationToken = () => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
     useEffect(() => {

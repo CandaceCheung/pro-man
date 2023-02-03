@@ -1,5 +1,5 @@
 import { Home } from './pages/Home';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import './App.scss';
 import { Auth } from './pages/Auth';
@@ -14,33 +14,43 @@ import { AppShell } from '@mantine/core';
 import { LeftNavbar } from './components/LeftNavbar';
 import { getFavorite, getTableList } from './redux/table/thunk';
 import { getMemberList, getMessages } from './redux/project/thunk';
-import { useToken } from './hooks/useToken';
+import { useInvitationToken } from './hooks/useInvitationToken';
+import { useOrientation } from './hooks/useOrientation';
+import { Orientation } from './pages/Orientation';
+import { useScreenSize } from './hooks/useScreenSize';
 
 function App() {
+    const [screenSize, setScreenSize] = useState<string | null>(null);
+
     const isLoggedIn = useAppSelector((state) => state.auth.isLoggedIn);
     const userId = useAppSelector((state) => state.auth.userId);
-    const projectId = useAppSelector((state) => state.project.project_id); //active project state
+    const projectId = useAppSelector((state) => state.project.projectId); //active project state
+    const [landscape, setLandscape] = useState(window.innerWidth > window.innerHeight);
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
-    useToken();
+    
+    useInvitationToken();
+    useOrientation(setLandscape);
+    useScreenSize(setScreenSize);
 
     useEffect(() => {
-        isLoggedIn === null && dispatch(retriveLogin());
-
         if (isLoggedIn) {
             dispatch(getFavorite(userId!));
             dispatch(getMessages(userId!));
             dispatch(getMemberList(userId!));
             if (projectId) {
-                navigate('/');
+                if (landscape) {
+                    navigate('/');
+                }
             } else {
                 dispatch(getTableList(userId!));
             }
+        } else if (isLoggedIn === null) {
+            dispatch(retriveLogin());
         }
         // eslint-disable-next-line
-    }, [isLoggedIn, dispatch, userId, projectId]);
+    }, [isLoggedIn, landscape, dispatch, userId, projectId]);
 
     const routes = [
         {
@@ -75,11 +85,12 @@ function App() {
 
     return (
         <div className='App'>
-            {isLoggedIn && projectId && (
-                <AppShell navbar={<LeftNavbar />}>
+            {isLoggedIn && !landscape && <Orientation />}
+            {isLoggedIn && landscape && projectId && screenSize && (
+                <AppShell navbar={<LeftNavbar screenSize={screenSize} />}>
                     <Routes>
                         {routes.map((route) => (
-                            <Route path={route.path} element={route.element} key={route.path}/>
+                            <Route path={route.path} element={route.element} key={route.path} />
                         ))}
                     </Routes>
                 </AppShell>

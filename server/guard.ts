@@ -3,7 +3,11 @@ import jwtSimple from 'jwt-simple';
 import express from 'express';
 import jwt from './jwt';
 import { authService } from './app';
-import { User } from './services/models';
+
+interface User {
+	id: number;
+	username: string;
+}
 
 declare global {
 	namespace Express {
@@ -17,18 +21,13 @@ const permit = new Bearer({
 	query: 'access_token'
 });
 
-export async function isLoggedIn(
-	req: express.Request,
-	res: express.Response,
-	next: express.NextFunction
-) {
+export async function isLoggedIn(req: express.Request, res: express.Response, next: express.NextFunction) {
 	try {
 		const token = permit.check(req);
 		if (!token) {
 			return res.status(401).json({ msg: 'Permission Denied' });
 		}
 		const payload = jwtSimple.decode(token, jwt.jwtSecret!);
-		// Querying Database is not compulsory
 		const user: User = await authService.getUser(payload.id);
 		if (user) {
 			req.user = user;

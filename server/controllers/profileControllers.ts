@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ProfileService } from '../services/ProfileService';
+import { ProfileService } from '../services/profileServices';
 
 export class ProfileController {
 	constructor(private profileService: ProfileService) {}
@@ -8,9 +8,7 @@ export class ProfileController {
 		try {
 			const userId = req.user!.id;
 
-			const result = await this.profileService.getProfileInfo(
-				Number(userId)
-			);
+			const result = await this.profileService.getProfileInfo(Number(userId));
 
 			res.json({
 				success: true,
@@ -26,7 +24,7 @@ export class ProfileController {
 		try {
 			const userId = req.user!.id;
 
-			const { password, firstName, lastName } = req.body;
+			const { password, firstName, lastName } = req.body.putInfo;
 
 			const result = await this.profileService.updateProfile(userId, {
 				password,
@@ -34,7 +32,7 @@ export class ProfileController {
 				lastName
 			});
 
-			res.json({ result: result?.[0], success: true });
+			res.json({ result, success: true });
 		} catch (e) {
 			console.error(e);
 			res.status(500).json({ msg: '[PRO02] Fail to Put Data.' });

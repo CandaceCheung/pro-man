@@ -51,7 +51,7 @@ export function StatusColumn(props: StatusProps) {
     const { classes } = useStyles(props.color);
     const memberList = useAppSelector((state) => state.kanban.memberList);
     const groupList = useAppSelector((state) => state.kanban.groupList);
-    const projectId = useAppSelector((state) => state.project.project_id)!;
+    const projectId = useAppSelector((state) => state.project.projectId)!;
     const userId = useAppSelector((state) => state.auth.userId)!;
     const [itemName, setItemName] = useState('');
     const [memberId, setMemberId] = useState<string[]>([]);

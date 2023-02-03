@@ -15,7 +15,7 @@ test('test Navbar', async () => {
         <Provider store={store}>
             {/* using the real store */}
             <MantineProvider>
-                <LeftNavbar />
+                <LeftNavbar screenSize={"l"} />
             </MantineProvider>
         </Provider>
     );

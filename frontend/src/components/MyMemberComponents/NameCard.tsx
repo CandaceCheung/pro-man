@@ -14,14 +14,14 @@ import { ConfirmationHub } from '../ProjectNavbarComponents/ConfirmationHub';
 export function NameCard(props: MyMemberState) {
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.userId);
-    const isCreator = props.member_id === userId;
+    const isCreator = props.memberId === userId;
     const [targetId, setTargetId] = useState<number | null>(null);
     const [opened, setOpened] = useState(false);
     const [show, setShow] = useState(false);
     const avatar = [image_1, image_2, image_3, image_4, image_5];
     const idList: number[] = [];
     for (let item of props.members) {
-        idList.push(item.membership_id!);
+        idList.push(item.membershipId!);
     }
 
     function clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -85,10 +85,10 @@ export function NameCard(props: MyMemberState) {
 
             <Group position='apart' mt='md' mb='xs'>
                 <Text weight={500}>
-                    {props.first_name} {props.last_name}
+                    {props.firstName} {props.lastName}
                 </Text>
-                <Badge color={props.member_id === userId ? 'pink' : 'blue'} variant='light'>
-                    {props.member_id === userId ? 'Project Owner' : 'Member'}
+                <Badge color={props.memberId === userId ? 'pink' : 'blue'} variant='light'>
+                    {props.memberId === userId ? 'Project Owner' : 'Member'}
                 </Badge>
             </Group>
 
@@ -104,11 +104,11 @@ export function NameCard(props: MyMemberState) {
                             }}
                         >
                             <Text size='sm' color='dimmed'>
-                                {project.project_name}
+                                {project.projectName}
                             </Text>
                             {!isCreator && (
                                 <Tooltip label='Remove from project' color='red' position='right' withArrow>
-                                    <Button value={props.members[index].membership_id!} onClick={(e) => clickHandler(e)} variant='subtle' style={{ height: '20px' }}>
+                                    <Button value={props.members[index].membershipId!} onClick={(e) => clickHandler(e)} variant='subtle' style={{ height: '20px' }}>
                                         <IconBackspace size={20} />
                                     </Button>
                                 </Tooltip>

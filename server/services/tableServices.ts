@@ -8,44 +8,44 @@ export class TableService {
 	async getTableInfo(userID: number, projectID: number) {
 		const projectsDetail = await this.knex
 			.select(
-				'projects.name as project_name',
-				'projects.id as project_id',
-				'projects.is_deleted as project_is_deleted',
-				'users.id as user_id',
+				'projects.name as projectName',
+				'projects.id as projectId',
+				'projects.is_deleted as projectIsDeleted',
+				'users.id as userId',
 				'users.role',
-				'projects.creator_id as project_creator_id',
-				'members.project_id as joined_project_id',
-				'items.id as item_id',
-				'items.name as item_name',
-				'items.creator_id as item_creator_id',
-				'items.is_deleted as item_is_deleted',
-				'items.order as vertical_order',
-				'items.item_group_id',
-				'item_groups.name as item_group_name',
-				'type_persons.name as item_person_name',
-				'type_persons.id as item_person_id',
-				'type_persons.user_id as item_person_user_id',
-				'type_dates.datetime as item_dates_datetime',
-				'type_dates.color as item_datetime_color',
-				'type_dates.id as item_datetime_id',
-				'type_times.start_date as item_times_start_date',
-				'type_times.end_date as item_times_end_date',
-				'type_times.color as item_times_color',
-				'type_times.id as item_times_id',
-				'transactions.date as item_money_date',
-				'transactions.cash_flow as item_money_cashflow',
-				'transactions.id as transaction_id',
-				'states.name as item_status_name',
-				'states.color as item_status_color',
-				'states.id as state_id',
-				'type_text.id as item_text_id',
-				'type_text.text as item_text_text',
-				'types.order as horizontal_order',
-				'types.name as element_name',
-				'types.type as type_name',
-				'types.id as horizontal_order_id'
+				'projects.creator_id as projectCreatorId',
+				'members.project_id as joinedProjectId',
+				'items.id as itemId',
+				'items.name as itemName',
+				'items.creator_id as itemCreatorId',
+				'items.is_deleted as itemIsDeleted',
+				'items.order as verticalOrder',
+				'items.item_group_id as itemGroupId',
+				'item_groups.name as itemGroupName',
+				'type_persons.name as itemPersonName',
+				'type_persons.id as itemPersonId',
+				'type_persons.user_id as itemPersonUserId',
+				'type_dates.datetime as itemDatesDatetime',
+				'type_dates.color as itemDatetimeColor',
+				'type_dates.id as itemDatetimeId',
+				'type_times.start_date as itemTimesStartDate',
+				'type_times.end_date as itemTimesEndDate',
+				'type_times.color as itemTimesColor',
+				'type_times.id as itemTimesId',
+				'transactions.date as itemMoneyDate',
+				'transactions.cash_flow as itemMoneyCashflow',
+				'transactions.id as transactionId',
+				'states.name as itemStatusName',
+				'states.color as itemStatusColor',
+				'states.id as stateId',
+				'type_text.id as itemTextId',
+				'type_text.text as itemTextText',
+				'types.order as horizontalOrder',
+				'types.name as elementName',
+				'types.type as typeName',
+				'types.id as horizontalOrderId'
 			)
-			.select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD, YYYY') as item_dates_date`))
+			.select(this.knex.raw(`to_char(type_dates.datetime, 'Mon DD, YYYY') as "itemDatesDate"`))
 			.from('members')
 			.join('users', 'members.user_id', '=', 'users.id')
 			.join('projects', 'members.project_id', '=', 'projects.id')
@@ -72,19 +72,19 @@ export class TableService {
 			.andWhere('items.is_deleted', false)
 			.andWhere('item_groups.is_deleted', false)
 			.andWhere('projects.is_deleted', false)
-			.orderBy('project_id', 'asc')
-			.orderBy('item_group_id', 'desc')
-			.orderBy('vertical_order', 'asc')
-			.orderBy('horizontal_order', 'asc')
-			.orderBy('item_person_id', 'asc')
-			.orderBy('item_money_date', 'asc');
+			.orderBy('projectId', 'asc')
+			.orderBy('itemGroupId', 'desc')
+			.orderBy('verticalOrder', 'asc')
+			.orderBy('horizontalOrder', 'asc')
+			.orderBy('itemPersonId', 'asc')
+			.orderBy('itemMoneyDate', 'asc');
 
 		return projectsDetail;
 	}
 
 	async getTableList(userId: number) {
 		const tableList = await this.knex
-			.select('projects.creator_id as creator_id', 'projects.id as project_id', 'projects.name as project_name', 'members.id as member_table_id', 'users.username as username')
+			.select('projects.creator_id as creatorId', 'projects.id as projectId', 'projects.name as projectName', 'members.id as memberTableId', 'users.username as username')
 			.from('members')
 			.join('users', 'members.user_id', '=', 'users.id')
 			.join('projects', 'members.project_id', '=', 'projects.id')
@@ -115,7 +115,7 @@ export class TableService {
 
 	async getFavorite(userId: number) {
 		const favoriteList = await this.knex
-			.select('projects.creator_id as creator_id', 'favorite.user_id as user_id', 'projects.id as project_id', 'projects.name as project_name', 'favorite.id as favorite_id')
+			.select('projects.creator_id as creatorId', 'favorite.user_id as userId', 'projects.id as projectId', 'projects.name as projectName', 'favorite.id as favoriteId')
 			.from('favorite')
 			.join('projects', 'favorite.project_id', '=', 'projects.id')
 			.where('favorite.user_id', '=', userId);
@@ -261,10 +261,23 @@ export class TableService {
 		return {
 			name: state.name,
 			color: state.color
-		}
+		};
 	}
 
-	async insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
+	async insertItem(params: {
+		projectId: number;
+		userId: number;
+		itemGroupId?: number;
+		types?: Array<{
+			typesId: number;
+			typesName: string;
+			elementName: string;
+		}>;
+		itemName?: string;
+	}) {
+		let types = params.types;
+		const { projectId, userId, itemGroupId, itemName } = params;
+
 		const [{ username }] = await this.knex('users').select('username').where('id', userId);
 		const [{ stateId }] = await this.knex('states').select('id as stateId').where('project_id', projectId).orderBy('stateId').limit(1);
 		let groupId = itemGroupId;
@@ -275,33 +288,36 @@ export class TableService {
 		const txn = await this.knex.transaction();
 
 		try {
-			const [{ previousItemId }] = await this.knex('items').select('id as previousItemId').where('item_group_id', groupId).limit(1);
-			const types = await this.knex
-				.select('types.id as typesId')
-				.distinctOn('typesId')
-				.from('items')
-				.join('type_persons', 'type_persons.item_id', '=', 'items.id')
-				.join('type_dates', 'type_dates.item_id', '=', 'items.id')
-				.join('type_times', 'type_times.item_id', '=', 'items.id')
-				.join('type_money', 'type_money.item_id', '=', 'items.id')
-				.join('type_status', 'type_status.item_id', '=', 'items.id')
-				.join('type_text', 'type_text.item_id', '=', 'items.id')
-				.join('types', function () {
-					this.on('type_text.type_id', '=', 'types.id')
-						.orOn('type_status.type_id', '=', 'types.id')
-						.orOn('type_money.type_id', '=', 'types.id')
-						.orOn('type_times.type_id', '=', 'types.id')
-						.orOn('type_dates.type_id', '=', 'types.id')
-						.orOn('type_persons.type_id', '=', 'types.id');
-				})
-				.where('items.id', previousItemId)
-				.orderBy('types.id', 'asc');
-			const typesId_persons = types[0].typesId;
-			const typesId_dates = types[1].typesId;
-			const typesId_times = types[2].typesId;
-			const typesId_money = types[3].typesId;
-			const typesId_status = types[4].typesId;
-			const typesId_text = types[5].typesId;
+			if (!types) {
+				const [{ previousItemId }] = await this.knex('items').select('id as previousItemId').where('item_group_id', groupId).limit(1);
+				types = await this.knex
+					.select('types.id as typesId', 'types.type as typesName', 'types.name as elementName')
+					.distinctOn('typesId')
+					.from('items')
+					.join('type_persons', 'type_persons.item_id', '=', 'items.id')
+					.join('type_dates', 'type_dates.item_id', '=', 'items.id')
+					.join('type_times', 'type_times.item_id', '=', 'items.id')
+					.join('type_money', 'type_money.item_id', '=', 'items.id')
+					.join('type_status', 'type_status.item_id', '=', 'items.id')
+					.join('type_text', 'type_text.item_id', '=', 'items.id')
+					.join('types', function () {
+						this.on('type_text.type_id', '=', 'types.id')
+							.orOn('type_status.type_id', '=', 'types.id')
+							.orOn('type_money.type_id', '=', 'types.id')
+							.orOn('type_times.type_id', '=', 'types.id')
+							.orOn('type_dates.type_id', '=', 'types.id')
+							.orOn('type_persons.type_id', '=', 'types.id');
+					})
+					.where('items.id', previousItemId)
+					.orderBy('types.id', 'asc');
+			}
+
+			const typesIdPersons = types[0].typesId;
+			const typesIdDates = types[1].typesId;
+			const typesIdTimes = types[2].typesId;
+			const typesIdMoney = types[3].typesId;
+			const typesIdStatus = types[4].typesId;
+			const typesIdText = types[5].typesId;
 
 			await txn('items').where('item_group_id', groupId).increment('order', 1);
 
@@ -321,30 +337,33 @@ export class TableService {
 				.insert({
 					name: username,
 					user_id: userId,
-					type_id: typesId_persons,
+					type_id: typesIdPersons,
 					item_id: itemId
 				})
 				.into('type_persons');
-			await txn
+			const date = format(new Date(), 'MMM dd, yyyy');
+			const [{ datetime }] = await txn
 				.insert({
-					datetime: format(new Date(Date.now()), 'yyyy-MM-dd'),
+					datetime: date,
 					color: getRandomColor(),
-					type_id: typesId_dates,
+					type_id: typesIdDates,
 					item_id: itemId
 				})
-				.into('type_dates');
-			await txn
+				.into('type_dates')
+				.returning('datetime');
+			const [times] = await txn
 				.insert({
 					start_date: new Date(new Date().toDateString()).getTime(),
 					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 					color: getRandomColor(),
-					type_id: typesId_times,
+					type_id: typesIdTimes,
 					item_id: itemId
 				})
-				.into('type_times');
+				.into('type_times')
+				.returning(['start_date as startDate', 'end_date as endDate']);
 			const [{ typeMoneyId }] = await txn
 				.insert({
-					type_id: typesId_money,
+					type_id: typesIdMoney,
 					item_id: itemId
 				})
 				.into('type_money')
@@ -352,27 +371,72 @@ export class TableService {
 			await txn
 				.insert({
 					state_id: stateId,
-					type_id: typesId_status,
+					type_id: typesIdStatus,
 					item_id: itemId
 				})
 				.into('type_status');
-			await txn
+			const [{ text }] = await txn
 				.insert({
 					text: '',
-					type_id: typesId_text,
+					type_id: typesIdText,
 					item_id: itemId
 				})
-				.into('type_text');
+				.into('type_text')
+				.returning('text');
 
-			await txn
+			const [transactions] = await txn
 				.insert({
-					date: format(new Date(Date.now()), 'yyyy-MM-dd'),
+					date: format(new Date(), 'yyyy-MM-dd'),
 					cash_flow: 0,
 					type_money_id: typeMoneyId
 				})
+				.returning(['id', 'cash_flow as cashFlow', 'date'])
 				.into('transactions');
 
+			const [{ stateColor, stateName }] = await this.knex.select('color as stateColor', 'name as stateName').from('states').where('id', stateId);
+
+			let itemCells = {};
+			itemCells[groupId!] = {};
+			itemCells[groupId!][itemId] = {};
+			types.forEach((type) => {
+				const typeId = type.typesId;
+				itemCells[groupId!][itemId][typeId] = {
+					itemId: itemId,
+					itemName: itemName || 'New Item',
+					typeId: type.typesId,
+					typeName: type.typesName,
+					elementName: type.elementName
+				};
+				switch (type.typesName) {
+					case 'persons':
+						itemCells[groupId!][itemId][typeId]['itemPersonUserId'] = [userId];
+						break;
+					case 'dates':
+						itemCells[groupId!][itemId][typeId]['itemDatesDatetime'] = datetime;
+						itemCells[groupId!][itemId][typeId]['itemDatesDate'] = date;
+						break;
+					case 'times':
+						itemCells[groupId!][itemId][typeId]['itemTimesStartDate'] = times.startDate;
+						itemCells[groupId!][itemId][typeId]['itemTimesEndDate'] = times.endDate;
+						break;
+					case 'money':
+						itemCells[groupId!][itemId][typeId]['transactionId'] = [transactions.id];
+						itemCells[groupId!][itemId][typeId]['itemMoneyCashflow'] = [transactions.cashFlow];
+						itemCells[groupId!][itemId][typeId]['itemMoneyDate'] = [transactions.date];
+						break;
+					case 'status':
+						itemCells[groupId!][itemId][typeId]['itemStatusColor'] = stateColor;
+						itemCells[groupId!][itemId][typeId]['itemStatusName'] = stateName;
+						break;
+					case 'text':
+						itemCells[groupId!][itemId][typeId]['itemTextText'] = text;
+						break;
+					default:
+						break;
+				}
+			});
 			await txn.commit();
+			return itemCells;
 		} catch (e) {
 			await txn.rollback();
 			throw e;
@@ -381,16 +445,23 @@ export class TableService {
 
 	async insertItemGroup(projectId: number, userId: number) {
 		const txn = await this.knex.transaction();
+		let itemGroupId: number;
+		let itemGroupName: string;
+		let types: {
+			typesId: number;
+			typesName: string;
+			elementName: string;
+		}[];
 		try {
-			const [{ itemGroupId }] = await txn
+			[{ itemGroupId, itemGroupName }] = await txn
 				.insert({
 					project_id: projectId,
 					name: 'New Group'
 				})
 				.into('item_groups')
-				.returning('id as itemGroupId');
+				.returning(['id as itemGroupId', 'name as itemGroupName']);
 
-			await txn
+			types = await txn
 				.insert([
 					{ type: 'persons', name: 'Persons', order: 1 },
 					{ type: 'dates', name: 'Dates', order: 2 },
@@ -399,89 +470,30 @@ export class TableService {
 					{ type: 'status', name: 'Status', order: 5 },
 					{ type: 'text', name: 'Text', order: 6 }
 				])
-				.into('types');
-
-			const [{ username }] = await this.knex('users').select('username').where('id', userId);
-			const [{ stateId }] = await this.knex('states').select('id as stateId').where('project_id', projectId).orderBy('stateId', 'asc').limit(1);
-
-			const types = await this.knex('types').select('id').orderBy('id', 'desc').limit(6);
-			const typesId_persons = types[5].id;
-			const typesId_dates = types[4].id;
-			const typesId_times = types[3].id;
-			const typesId_money = types[2].id;
-			const typesId_status = types[1].id;
-			const typesId_text = types[0].id;
-
-			const [{ itemId }] = await txn
-				.insert({
-					name: 'New Item',
-					creator_id: userId,
-					project_id: projectId,
-					item_group_id: itemGroupId,
-					is_deleted: false,
-					order: 1
-				})
-				.into('items')
-				.returning('id as itemId');
-
-			await txn
-				.insert({
-					name: username,
-					user_id: userId,
-					type_id: typesId_persons,
-					item_id: itemId
-				})
-				.into('type_persons');
-			await txn
-				.insert({
-					datetime: format(new Date(Date.now()), 'yyyy-MM-dd'),
-					color: getRandomColor(),
-					type_id: typesId_dates,
-					item_id: itemId
-				})
-				.into('type_dates');
-			await txn
-				.insert({
-					start_date: new Date(new Date().toDateString()).getTime(),
-					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
-					color: getRandomColor(),
-					type_id: typesId_times,
-					item_id: itemId
-				})
-				.into('type_times');
-			const [{ typeMoneyId }] = await txn
-				.insert({
-					type_id: typesId_money,
-					item_id: itemId
-				})
-				.into('type_money')
-				.returning('id as typeMoneyId');
-			await txn
-				.insert({
-					state_id: stateId,
-					type_id: typesId_status,
-					item_id: itemId
-				})
-				.into('type_status');
-			await txn
-				.insert({
-					text: '',
-					type_id: typesId_text,
-					item_id: itemId
-				})
-				.into('type_text');
-
-			await txn
-				.insert({
-					date: format(new Date(Date.now()), 'yyyy-MM-dd'),
-					cash_flow: 0,
-					type_money_id: typeMoneyId
-				})
-				.into('transactions');
-
+				.into('types')
+				.returning(['id as typesId', 'type as typesName', 'name as elementName'])
+				.orderBy('typesId');
 			await txn.commit();
 		} catch (e) {
 			await txn.rollback();
+			throw e;
+		}
+		try {
+			const itemCells = await this.insertItem({ projectId, userId, itemGroupId, types });
+			const typeIds = types.map((each) => each.typesId);
+			return {
+				itemCells,
+				itemGroupId,
+				itemGroupName,
+				typeIds
+			};
+		} catch (e) {
+			// Revert the previous inserts
+			for (let each of types) {
+				const typeId = each.typesId;
+				await this.knex('types').where('id', typeId).del();
+			}
+			await this.knex('item_groups').where('id', itemGroupId).del();
 			throw e;
 		}
 	}
@@ -490,56 +502,56 @@ export class TableService {
 		const [{ username }] = await this.knex('users').select('username').where('id', userId);
 		const txn = await this.knex.transaction();
 		try {
-			const [{ project_id, project_name }] = await txn('projects')
+			const [{ projectId, projectName }] = await txn('projects')
 				.insert({
 					name: 'New Project',
 					creator_id: userId,
 					is_deleted: false
 				})
-				.returning(['id as project_id', 'name as project_name']);
-			const [{ member_table_id }] = await txn('members')
+				.returning(['id as projectId', 'name as projectName']);
+			const [{ memberTableId }] = await txn('members')
 				.insert({
 					user_id: userId,
-					project_id
+					project_id: projectId
 				})
-				.returning('id as member_table_id');
-			const [{ item_group_id }] = await txn('item_groups')
+				.returning('id as memberTableId');
+			const [{ itemGroupId }] = await txn('item_groups')
 				.insert({
-					project_id,
+					project_id: projectId,
 					name: 'New Group'
 				})
-				.returning('id as item_group_id');
+				.returning('id as itemGroupId');
 			const defaultStates = ['Empty', 'Stuck', 'Done', 'Working on it', 'Checking'];
 			const statusLabelsColor = ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875', '#0086C0', '#A25DDC', '#037F4C', '#579BFC', '#CAB641', '#FFCB00'];
-			let state_id = null;
+			let stateId = null;
 			for (let j in defaultStates) {
 				if (j === '0') {
-					[{ state_id }] = await txn('states')
+					[{ stateId }] = await txn('states')
 						.insert({
 							name: defaultStates[j],
 							color: statusLabelsColor[j],
-							project_id
+							project_id: projectId
 						})
-						.returning('id as state_id');
+						.returning('id as stateId');
 				} else {
 					await txn('states').insert({
 						name: defaultStates[j],
 						color: statusLabelsColor[j],
-						project_id
+						project_id: projectId
 					});
 				}
 			}
-			const [{ item_id }] = await txn('items')
+			const [{ itemId }] = await txn('items')
 				.insert({
 					name: 'New Item',
 					creator_id: userId,
-					project_id,
-					item_group_id,
+					project_id: projectId,
+					item_group_id: itemGroupId,
 					is_deleted: false,
 					order: 1
 				})
-				.returning('id as item_id');
-			const types_ids = await txn
+				.returning('id as itemId');
+			const typesIds = await txn
 				.insert([
 					{ type: 'persons', name: 'Persons', order: 1 },
 					{ type: 'dates', name: 'Dates', order: 2 },
@@ -550,26 +562,26 @@ export class TableService {
 				])
 				.into('types')
 				.returning('id');
-			const typesId_persons = types_ids[0].id;
-			const typesId_dates = types_ids[1].id;
-			const typesId_times = types_ids[2].id;
-			const typesId_money = types_ids[3].id;
-			const typesId_status = types_ids[4].id;
-			const typesId_text = types_ids[5].id;
+			const typesIdPersons = typesIds[0].id;
+			const typesIdDates = typesIds[1].id;
+			const typesIdTimes = typesIds[2].id;
+			const typesIdMoney = typesIds[3].id;
+			const typesIdStatus = typesIds[4].id;
+			const typesIdText = typesIds[5].id;
 			await txn
 				.insert({
 					name: username,
 					user_id: userId,
-					type_id: typesId_persons,
-					item_id
+					type_id: typesIdPersons,
+					item_id: itemId
 				})
 				.into('type_persons');
 			await txn
 				.insert({
 					datetime: format(new Date(Date.now()), 'yyyy-MM-dd'),
 					color: getRandomColor(),
-					type_id: typesId_dates,
-					item_id
+					type_id: typesIdDates,
+					item_id: itemId
 				})
 				.into('type_dates');
 			await txn
@@ -577,29 +589,29 @@ export class TableService {
 					start_date: new Date(new Date().toDateString()).getTime(),
 					end_date: new Date(new Date().toDateString()).getTime() + 86400000,
 					color: getRandomColor(),
-					type_id: typesId_times,
-					item_id
+					type_id: typesIdTimes,
+					item_id: itemId
 				})
 				.into('type_times');
 			const [{ typeMoneyId }] = await txn
 				.insert({
-					type_id: typesId_money,
-					item_id
+					type_id: typesIdMoney,
+					item_id: itemId
 				})
 				.into('type_money')
 				.returning('id as typeMoneyId');
 			await txn
 				.insert({
-					state_id,
-					type_id: typesId_status,
-					item_id
+					state_id: stateId,
+					type_id: typesIdStatus,
+					item_id: itemId
 				})
 				.into('type_status');
 			await txn
 				.insert({
 					text: '',
-					type_id: typesId_text,
-					item_id
+					type_id: typesIdText,
+					item_id: itemId
 				})
 				.into('type_text');
 			await txn
@@ -611,7 +623,7 @@ export class TableService {
 				.into('transactions');
 
 			await txn.commit();
-			return { project_id, project_name, member_table_id, username };
+			return { projectId, projectName, memberTableId, username };
 		} catch (e) {
 			await txn.rollback();
 			throw e;

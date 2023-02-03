@@ -10,7 +10,6 @@ import {
     addProjectAction,
     getStatusListAction,
     addStatusAction,
-    MyFavoriteListState,
     setItemCellsAction,
     setItemGroupsAction,
     updateItemNameAction,
@@ -31,32 +30,52 @@ import {
     setItemGroupsCollapsedAction,
     setItemGroupsInputActiveAction,
     setItemGroupsInputValueAction,
-    resetItemGroupInputValueAction
+    resetItemGroupInputValueAction,
+    setNewItemsInputActiveAction,
+    setNewItemsInputValueAction,
+    insertItemAction,
+    insertItemGroupAction,
+    ItemCells,
+    ItemGroup,
+    TableSummary,
+    Orders,
+    TableMember,
+    MyFavorite
 } from './slice';
 import { showNotification } from '@mantine/notifications';
-import { AppDispatch } from '../../store';
+import { AppDispatch, getState } from '../../store';
 import { setActiveProject } from '../project/thunk';
-import { MakeRequest } from '../../utils';
+import { MakeRequest } from '../../utils/requestUtils';
 import { format } from 'date-fns';
+
+const makeRequest = (token: string) => new MakeRequest(token);
 
 export function likeProject(projectId: number, userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/favorite`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                projectId: number;
+                userId: number;
             },
-            body: JSON.stringify({
-                projectId,
-                userId
-            })
+            {
+                success?: boolean;
+                favorite?: Array<{
+                    creatorId: number;
+                    userId: number;
+                    projectId: number;
+                    projectName: string;
+                    favoriteId: number;
+                }>;
+                msg: string;
+            }
+        >(`/table/favorite`, {
+            projectId,
+            userId
         });
-        const result = await res.json();
 
         if (result.success) {
-            dispatch(getFavoriteAction(result.favorite));
+            dispatch(getFavoriteAction(result.favorite!));
             showNotification({
                 title: 'Like Project notification',
                 message: result.msg
@@ -70,27 +89,50 @@ export function likeProject(projectId: number, userId: number) {
     };
 }
 
-export function getTable(userID: number, projectID: number) {
+export function getTable(userId: number, projectId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/v2/${userID}&${projectID}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const result = await res.json();
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).get<{
+            success?: boolean;
+            table?: TableSummary[];
+            msg?: string;
+        }>(`/table/${userId}&${projectId}`);
 
         if (result.success) {
-            dispatch(getTableAction(result.table));
-            dispatch(setItemCellsAction(result.itemCells));
-            dispatch(setItemGroupsAction(result.itemGroups));
-            dispatch(setItemsOrdersAction(result.itemsOrders));
-            dispatch(setTypesOrdersAction(result.typesOrders));
-            dispatch(setMemberListAction(result.memberList));
-            dispatch(setItemGroupsCollapsedAction(result.itemGroups.length));
-            dispatch(setItemGroupsInputActiveAction(result.itemGroups.length));
-            dispatch(setItemGroupsInputValueAction(result.itemGroups));
+            dispatch(getTableAction(result.table!));
+        } else {
+            showNotification({
+                title: 'Project Table notification',
+                message: 'Fail to obtain table information'
+            });
+        }
+    };
+}
+
+export function getTableV2(userId: number, projectId: number) {
+    return async (dispatch: Dispatch) => {
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).get<{
+            success?: boolean;
+            itemCells?: ItemCells;
+            itemGroups?: ItemGroup[];
+            itemsOrders?: Orders;
+            typesOrders?: Orders;
+            memberList?: {[keys in number]: TableMember};
+            msg?: string;
+        }>(`/table/v2/${userId}&${projectId}`);
+
+        if (result.success) {
+            dispatch(setItemCellsAction(result.itemCells!));
+            dispatch(setItemGroupsAction(result.itemGroups!));
+            dispatch(setItemsOrdersAction(result.itemsOrders!));
+            dispatch(setTypesOrdersAction(result.typesOrders!));
+            dispatch(setMemberListAction(result.memberList!));
+            dispatch(setItemGroupsCollapsedAction(result.itemGroups!.length));
+            dispatch(setItemGroupsInputActiveAction(result.itemGroups!.length));
+            dispatch(setItemGroupsInputValueAction(result.itemGroups!));
+            dispatch(setNewItemsInputActiveAction(result.itemGroups!.length));
+            dispatch(setNewItemsInputValueAction(result.itemGroups!.length));
         } else {
             showNotification({
                 title: 'Project Table notification',
@@ -102,19 +144,23 @@ export function getTable(userID: number, projectID: number) {
 
 export function getTableList(userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/list/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const result = await res.json();
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).get<{
+            success?: boolean;
+            list?: Array<{
+                creatorId: number;
+                projectId: number;
+                projectName: string;
+                memberTableId: number;
+                username: string;
+            }>;
+            msg?: string;
+        }>(`/table/list/${userId}`);
 
         if (result.success) {
-            dispatch(getTableListAction(result.list));
-            dispatch(setActiveProjectAction(result.list[0].project_id));
-            dispatch(setProjectNameAction(result.list[0].project_name));
+            dispatch(getTableListAction(result.list!));
+            dispatch(setActiveProjectAction(result.list![0].projectId));
+            dispatch(setProjectNameAction(result.list![0].projectName));
         } else {
             showNotification({
                 title: 'Project List notification',
@@ -124,35 +170,39 @@ export function getTableList(userId: number) {
     };
 }
 
-export function updateTimelineItem(timelineID: number, startTime: number, endTime: number, name: string, color: string) {
+export function updateTimelineItem(timelineId: number, startTime: number, endTime: number, name: string, color: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/updateTimeline`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                typeTimeId: number;
+                startTime: number;
+                endTime: number;
+                name: string;
+                color: string;
             },
-            body: JSON.stringify({
-                typeTimeId: timelineID,
-                startTime,
-                endTime,
-                name,
-                color
-            })
+            {
+                success?: boolean;
+                typeId?: number;
+                msg: string;
+            }
+        >(`/table/updateTimeline`, {
+            typeTimeId: timelineId,
+            startTime,
+            endTime,
+            name,
+            color
         });
-        const result = await res.json();
 
         if (result.success) {
             dispatch(
                 updateTimelineItemAction({
-                    timelineID,
+                    timelineId,
                     startTime,
                     endTime,
                     name,
                     color,
-                    typeId: result.typeId
+                    typeId: result.typeId!
                 })
             );
             showNotification({
@@ -168,33 +218,36 @@ export function updateTimelineItem(timelineID: number, startTime: number, endTim
     };
 }
 
-export function updateDatelineItem(datelineID: number, date: number, name: string, color: string) {
+export function updateDatelineItem(datelineId: number, date: number, name: string, color: string) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/updateDateline`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                typeDateId: number;
+                date: number;
+                name: string;
+                color: string;
             },
-            body: JSON.stringify({
-                typeDateId: datelineID,
-                date,
-                name,
-                color
-            })
+            {
+                success?: boolean;
+                typeId?: number;
+                msg: string;
+            }
+        >(`/table/updateDateline`, {
+            typeDateId: datelineId,
+            date,
+            name,
+            color
         });
-        const result = await res.json();
 
         if (result.success) {
             dispatch(
                 updateDatelineItemAction({
-                    datelineID,
+                    datelineId,
                     date,
                     name,
                     color,
-                    typeId: result.typeId
+                    typeId: result.typeId!
                 })
             );
             showNotification({
@@ -212,16 +265,19 @@ export function updateDatelineItem(datelineID: number, date: number, name: strin
 
 export function getProjectStatusList(projectId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/status/${projectId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        const result = await res.json();
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).get<{
+            success?: boolean;
+            statusList?: Array<{
+                id: number;
+                name: string;
+                color: string;
+            }>;
+            msg?: string;
+        }>(`/table/status/${projectId}`);
 
         if (result.success) {
-            dispatch(getStatusListAction(result.statusList));
+            dispatch(getStatusListAction(result.statusList!));
         } else {
             showNotification({
                 title: 'Data retrieve notification',
@@ -233,55 +289,46 @@ export function getProjectStatusList(projectId: number) {
 
 export function updateItemGroupName(itemGroupId: number, itemGroupName: string, index: number, originalValue: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
         // Update frontend first to improve user experience
         dispatch(updateItemGroupNameAction({ itemGroupId, itemGroupName }));
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemGroupName`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                itemGroupId: number;
+                itemGroupName: string;
             },
-            body: JSON.stringify({
-                itemGroupId,
-                itemGroupName
-            })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/itemGroupName`, {
+            itemGroupId,
+            itemGroupName
         });
-        let result = await res.json();
+
         // If not successful, revert the frontend
         if (!result.success) {
             showNotification({
                 title: 'Data update notification',
                 message: 'Failed to update group item name! 🤥'
             });
-            dispatch(resetItemGroupInputValueAction({index, originalValue}));
+            dispatch(resetItemGroupInputValueAction({ index, originalValue }));
         }
     };
 }
 
 export function getFavorite(userId: number) {
     return async (dispatch: Dispatch) => {
-        const token = localStorage.getItem('token');
-
-        const makeRequest = new MakeRequest(token!);
-
-        const result = await makeRequest.get<{
-            success: Boolean;
-            favorite: MyFavoriteListState;
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).get<{
+            success?: boolean;
+            favorite?: MyFavorite[];
+            msg?: string;
         }>(`/table/favorite/${userId}`);
 
-        // const res = await fetch(
-        // 	`${process.env.REACT_APP_API_SERVER}/table/favorite/${userId}`,
-        // 	{
-        // 		headers: {
-        // 			Authorization: `Bearer ${token}`,
-        // 		},
-        // 	}
-        // );
-        // const result = await res.json();
-
         if (result.success) {
-            dispatch(getFavoriteAction(result.favorite));
+            dispatch(getFavoriteAction(result.favorite!));
         } else {
             showNotification({
                 title: 'Favorite projects notification',
@@ -293,24 +340,28 @@ export function getFavorite(userId: number) {
 
 export function insertItem(projectId: number, userId: number, itemGroupId?: number, itemName?: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/item`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).post<
+            {
+                projectId: number;
+                userId: number;
+                itemGroupId?: number;
+                itemName?: string;
             },
-            body: JSON.stringify({
-                projectId,
-                userId,
-                itemGroupId,
-                itemName
-            })
+            {
+                success?: boolean;
+                itemCells?: ItemCells;
+                msg?: string;
+            }
+        >(`/table/item`, {
+            projectId,
+            userId,
+            itemGroupId,
+            itemName
         });
-        const result = await res.json();
 
         if (result.success) {
-            dispatch(getTable(userId, projectId));
+            dispatch(insertItemAction(result.itemCells!));
         } else {
             showNotification({
                 title: 'Insert data notification',
@@ -322,22 +373,34 @@ export function insertItem(projectId: number, userId: number, itemGroupId?: numb
 
 export function insertItemGroup(projectId: number, userId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemGroup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).post<
+            {
+                projectId: number;
+                userId: number;
             },
-            body: JSON.stringify({
-                projectId,
-                userId
-            })
+            {
+                success?: boolean;
+                itemCells?: ItemCells;
+                itemGroupId?: number;
+                itemGroupName?: string;
+                typeIds?: number[];
+                msg?: string;
+            }
+        >(`/table/itemGroup`, {
+            projectId,
+            userId
         });
-        const result = await res.json();
 
         if (result.success) {
-            dispatch(getTable(userId, projectId));
+            dispatch(
+                insertItemGroupAction({
+                    itemGroupId: result.itemGroupId!,
+                    itemGroupName: result.itemGroupName!,
+                    typeIds: result.typeIds!
+                })
+            );
+            dispatch(insertItemAction(result.itemCells!));
         } else {
             showNotification({
                 title: 'Insert data notification',
@@ -349,20 +412,20 @@ export function insertItemGroup(projectId: number, userId: number) {
 
 export function reorderItems(newOrder: number[], groupId: number, userId: number, projectID: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
         dispatch(reorderItemsAction({ newOrder, groupId }));
 
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemsOrder`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                newOrder: number[];
             },
-            body: JSON.stringify({
-                newOrder
-            })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/itemsOrder`, {
+            newOrder
         });
-        let result = await res.json();
 
         if (!result.success) {
             showNotification({
@@ -376,21 +439,20 @@ export function reorderItems(newOrder: number[], groupId: number, userId: number
 
 export function reorderTypes(newOrder: number[], groupId: number, userId: number, projectID: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-
         dispatch(reorderTypesAction({ newOrder, groupId }));
 
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/typesOrder`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                newOrder: number[];
             },
-            body: JSON.stringify({
-                newOrder
-            })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/typesOrder`, {
+            newOrder
         });
-        let result = await res.json();
 
         if (!result.success) {
             showNotification({
@@ -404,29 +466,36 @@ export function reorderTypes(newOrder: number[], groupId: number, userId: number
 
 export function insertNewProject(userId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newProject`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).post<
+            {
+                userId: number;
             },
-            body: JSON.stringify({ userId })
+            {
+                success?: boolean;
+                projectId?: number;
+                projectName?: string;
+                memberTableId?: number;
+                username?: string;
+                msg?: string;
+            }
+        >(`/table/newProject`, {
+            userId
         });
-        const result = await res.json();
+
         if (result.success) {
-            const projectId = result.project_id;
-            const projectName = result.project_name;
-            const memberTableId = result.member_table_id;
-            const username = result.username;
+            const projectId = result.projectId!;
+            const projectName = result.projectName!;
+            const memberTableId = result.memberTableId!;
+            const username = result.username!;
             dispatch(setActiveProject(projectId, projectName));
             dispatch(
                 addProjectAction({
-                    creator_id: userId,
-                    project_id: projectId,
-                    member_table_id: memberTableId,
+                    creatorId: userId,
+                    projectId: projectId,
+                    memberTableId: memberTableId,
                     username: username,
-                    project_name: projectName
+                    projectName: projectName
                 })
             );
         } else {
@@ -440,16 +509,21 @@ export function insertNewProject(userId: number) {
 
 export function renameItem(groupId: number, itemId: number, name: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newItemName`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                itemId: number;
+                name: string;
             },
-            body: JSON.stringify({ itemId, name })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/newItemName`, {
+            itemId,
+            name
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(updateItemNameAction({ groupId, itemId, name }));
         } else {
@@ -463,16 +537,21 @@ export function renameItem(groupId: number, itemId: number, name: string) {
 
 export function renameType(groupId: number, typeId: number, name: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newTypeName`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                typeId: number;
+                name: string;
             },
-            body: JSON.stringify({ typeId, name })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/newTypeName`, {
+            typeId,
+            name
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(updateTypeNameAction({ groupId, typeId, name }));
         } else {
@@ -486,16 +565,21 @@ export function renameType(groupId: number, typeId: number, name: string) {
 
 export function updateText(groupId: number, itemId: number, typeId: number, text: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newText`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                itemId: number;
+                text: string;
             },
-            body: JSON.stringify({ itemId, text })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/newText`, {
+            itemId,
+            text
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(updateTextAction({ groupId, itemId, typeId, text }));
         } else {
@@ -509,20 +593,28 @@ export function updateText(groupId: number, itemId: number, typeId: number, text
 
 export function newState(projectId: number, name: string, color: string) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/newState`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).post<
+            {
+                projectId: number;
+                name: string;
+                color: string;
             },
-            body: JSON.stringify({ projectId, name, color })
+            {
+                success?: boolean;
+                id?: number;
+                msg?: string;
+            }
+        >(`/table/newState`, {
+            projectId,
+            name,
+            color
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(
                 addStatusAction({
-                    id: result.id,
+                    id: result.id!,
                     name,
                     color
                 })
@@ -538,19 +630,26 @@ export function newState(projectId: number, name: string, color: string) {
 
 export function updateState(groupId: number, itemId: number, stateId: number, typeId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/state`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).put<
+            {
+                itemId: number;
+                stateId: number;
             },
-            body: JSON.stringify({ itemId, stateId })
+            {
+                success?: boolean;
+                name?: string;
+                color?: string;
+                msg?: string;
+            }
+        >(`/table/state`, {
+            itemId,
+            stateId
         });
-        const result = await res.json();
+
         if (result.success) {
-            const name = result.name;
-            const color = result.color;
+            const name = result.name!;
+            const color = result.color!;
             dispatch(updateStateAction({ groupId, itemId, typeId, name, color }));
         } else {
             showNotification({
@@ -563,16 +662,23 @@ export function updateState(groupId: number, itemId: number, stateId: number, ty
 
 export function addPerson(groupId: number, itemId: number, typeId: number, personId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/person`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).post<
+            {
+                itemId: number;
+                personId: number;
+                typeId: number;
             },
-            body: JSON.stringify({ itemId, personId, typeId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/person`, {
+            itemId,
+            personId,
+            typeId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(addPersonAction({ groupId, itemId, typeId, personId }));
         } else {
@@ -586,18 +692,26 @@ export function addPerson(groupId: number, itemId: number, typeId: number, perso
 
 export function addTransaction(groupId: number, itemId: number, typeId: number, date: Date, cashFlow: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).post<
+            {
+                itemId: number;
+                date: string;
+                cashFlow: number;
             },
-            body: JSON.stringify({ itemId, date: format(date, 'yyyy-MM-dd'), cashFlow })
+            {
+                success?: boolean;
+                transactionId?: number;
+                msg?: string;
+            }
+        >(`/table/transaction`, {
+            itemId,
+            date: format(date, 'yyyy-MM-dd'),
+            cashFlow
         });
-        const result = await res.json();
+
         if (result.success) {
-            dispatch(addTransactionAction({ groupId, itemId, typeId, transactionId: result.transactionId, date, cashFlow }));
+            dispatch(addTransactionAction({ groupId, itemId, typeId, transactionId: result.transactionId!, date, cashFlow }));
         } else {
             showNotification({
                 title: 'Add transaction notification',
@@ -609,16 +723,21 @@ export function addTransaction(groupId: number, itemId: number, typeId: number, 
 
 export function removePerson(groupId: number, itemId: number, typeId: number, personId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/person`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).delete<
+            {
+                itemId: number;
+                personId: number;
             },
-            body: JSON.stringify({ itemId, personId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/person`, {
+            itemId,
+            personId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(removePersonAction({ groupId, itemId, typeId, personId }));
         } else {
@@ -632,16 +751,21 @@ export function removePerson(groupId: number, itemId: number, typeId: number, pe
 
 export function removeTransaction(groupId: number, itemId: number, typeId: number, transactionId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/transaction`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).delete<
+            {
+                itemId: number;
+                transactionId: number;
             },
-            body: JSON.stringify({ itemId, transactionId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/transaction`, {
+            itemId,
+            transactionId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(removeTransactionAction({ groupId, itemId, typeId, transactionId }));
         } else {
@@ -655,16 +779,21 @@ export function removeTransaction(groupId: number, itemId: number, typeId: numbe
 
 export function deleteItem(groupId: number, itemId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/item`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).delete<
+            {
+                itemId: number;
+                groupId: number;
             },
-            body: JSON.stringify({ itemId, groupId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/item`, {
+            itemId,
+            groupId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(deleteItemAction({ groupId, itemId }));
             showNotification({
@@ -682,16 +811,21 @@ export function deleteItem(groupId: number, itemId: number) {
 
 export function deleteItemGroup(groupId: number, projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/itemGroup`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).delete<
+            {
+                groupId: number;
+                projectId: number;
             },
-            body: JSON.stringify({ groupId, projectId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/itemGroup`, {
+            groupId,
+            projectId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(deleteGroupAction({ groupId }));
             showNotification({
@@ -708,16 +842,21 @@ export function deleteItemGroup(groupId: number, projectId: number) {
 }
 export function deleteProject(userId: number, projectId: number) {
     return async (dispatch: AppDispatch) => {
-        const token = localStorage.getItem('token');
-        const res = await fetch(`${process.env.REACT_APP_API_SERVER}/table/project`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
+        const token = getState().auth.token;
+        const result = await makeRequest(token!).delete<
+            {
+                projectId: number;
+                userId: number;
             },
-            body: JSON.stringify({ projectId, userId })
+            {
+                success?: boolean;
+                msg?: string;
+            }
+        >(`/table/project`, {
+            projectId,
+            userId
         });
-        const result = await res.json();
+
         if (result.success) {
             dispatch(getTableList(userId));
             showNotification({

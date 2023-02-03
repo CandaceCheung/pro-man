@@ -1,12 +1,13 @@
 import { createStyles } from '@mantine/core';
 import { useState } from 'react';
+import { updateText } from '../../../redux/table/thunk';
+import { useAppDispatch } from '../../../store';
 
 interface TextProps {
     groupId: number;
     itemId: number;
     typeId: number;
     text: string;
-    onTextChange: (groupId: number, itemId: number, typeId: number, text: string) => void;
 }
 
 const useStyle = createStyles((theme) => ({
@@ -64,15 +65,16 @@ const useStyle = createStyles((theme) => ({
     }
 }));
 
-export function TextCell({ groupId, itemId, typeId, text, onTextChange }: TextProps) {
+export function TextCell({ groupId, itemId, typeId, text }: TextProps) {
     const [selectedTextInput, setSelectedTextInput] = useState(false);
     const [textInput, setTextInput] = useState(text);
 
     const { classes } = useStyle();
+    const dispatch = useAppDispatch();
 
     const deselectTextInput = () => {
         if (textInput !== text) {
-            onTextChange(groupId, itemId, typeId, textInput);
+            dispatch(updateText(groupId, itemId, typeId, textInput));
         }
         setSelectedTextInput(false);
     };

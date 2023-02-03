@@ -9,16 +9,18 @@ describe('Auth Reducer', () => {
         initState = {
             userId: null,
             username: null,
-            isLoggedIn: null
+            isLoggedIn: null,
+            token: null
         };
     });
 
     it('should log in', () => {
-        const finalState = authReducer(initState, loginAction(1, 'Testing'));
+        const finalState = authReducer(initState, loginAction(1, 'Testing', 'tokenString'));
         expect(finalState).toEqual({
             userId: 1,
             username: 'Testing',
-            isLoggedIn: true
+            isLoggedIn: true,
+            token: 'tokenString'
         });
     });
 });

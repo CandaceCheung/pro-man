@@ -19,15 +19,15 @@ import { renameProject } from '../redux/project/thunk';
 
 export default function ProjectNavbar() {
     const dispatch = useAppDispatch();
-    const projectId = useAppSelector((state) => state.project.project_id)!;
-    const projectName = useAppSelector((state) => state.project.project_name);
+    const projectId = useAppSelector((state) => state.project.projectId)!;
+    const projectName = useAppSelector((state) => state.project.projectName);
     const userId = useAppSelector((state) => state.auth.userId)!;
     const [invitationOpen, setInvitationOpen] = useState<boolean>(false);
     const [projectTitleInputSelected, setProjectTitleInputSelected] = useState(false);
     const [projectTitleInputValue, setProjectTitleInputValue] = useState('');
     // should be handel by backend
-    const like = useAppSelector((state) => state.table.myFavoriteList).filter((project) => project.project_id === projectId && project.user_id === userId);
-    const page = useAppSelector((state) => state.project.active_page);
+    const like = useAppSelector((state) => state.table.myFavoriteList).filter((project) => project.projectId === projectId && project.userId === userId);
+    const page = useAppSelector((state) => state.project.activePage);
     const navigate = useNavigate();
 
     useEffect(() => {

@@ -1,108 +1,22 @@
 import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { themeObject } from '../../theme';
 
-export type TableMembers = {
-    [keys in number]: TableMember;
-};
-
-export type MyFavoriteListState = {
-    user_id?: number;
-    creator_id?: number;
-    project_id?: number;
-    favorite_id?: number;
-    project_name: string;
-}[];
-
-export type MyTableState = {
-    creator_id?: number;
-    project_id?: number;
-    member_table_id?: number;
-    username: string;
-    project_name: string;
-};
-export interface MyTableListState extends Array<MyTableState> {}
-
-export type StatusListState = {
-    id?: number;
-    name?: string;
-    color?: string;
-};
-export interface StatusListStateArray extends Array<StatusListState> {}
-
 export interface TableState {
-    horizontal_order: number | null;
-    horizontal_order_id: number;
-    item_creator_id: number;
-    item_dates_datetime: string;
-    item_dates_date: string;
-    item_datetime_id: number;
-    item_datetime_color: string;
-    item_group_id: number;
-    item_group_name: string;
-    item_id: number;
-    item_is_deleted: boolean;
-    item_money_cashflow: number;
-    item_money_date: string;
-    item_name: string;
-    item_person_id: number;
-    item_person_user_id: number;
-    item_person_name: string;
-    item_status_color: string;
-    item_status_name: string;
-    item_text_id: number;
-    item_text_text: string;
-    item_times_end_date: number;
-    item_times_id: number;
-    item_times_start_date: number;
-    item_times_color: string;
-    joined_project_id: number;
-    project_creator_id: number;
-    project_id: number;
-    project_is_deleted: boolean;
-    myFavoriteList?: number;
-    project_name: string;
-    user_id: number;
-    role: string;
-    state_id: number;
-    transaction_id: number;
-    vertical_order: number;
-    type_name: 'persons' | 'dates' | 'times' | 'money' | 'status' | 'text';
-    element_name: string;
+    memberList: {[keys in number]: TableMember};
+    myFavoriteList: MyFavorite[];
+    projectList: MyTable[];
+    statusList: StatusList[];
+    summary: TableSummary[];
+    itemCells: ItemCells;
+    itemGroups: ItemGroup[];
+    itemsOrders: Orders;
+    typesOrders: Orders;
+    itemGroupsCollapsed: boolean[];
+    itemGroupsInputActive: boolean[];
+    itemGroupsInputValue: string[];
+    newItemsInputActive: boolean[];
+    newItemsInputValue: string[];
 }
-export interface TableStateArray extends Array<TableState> {}
-
-export interface ItemCell {
-    item_id: TableState['item_id'];
-    item_name: TableState['item_name'];
-    type_id: TableState['horizontal_order_id'];
-    type_name: TableState['type_name'];
-    element_name: TableState['element_name'];
-    item_dates_datetime?: TableState['item_dates_datetime'];
-    item_dates_date?: TableState['item_dates_date'];
-    transaction_id?: Array<TableState['transaction_id']>;
-    item_money_cashflow?: Array<TableState['item_money_cashflow']>;
-    item_money_date?: Array<TableState['item_money_date']>;
-    item_person_user_id?: Array<TableState['item_person_user_id']>;
-    item_status_color?: TableState['item_status_color'];
-    item_status_name?: TableState['item_status_name'];
-    item_text_text?: TableState['item_text_text'];
-    item_times_start_date?: TableState['item_times_start_date'];
-    item_times_end_date?: TableState['item_times_end_date'];
-}
-export type ItemCells = {
-    [keys in number]: {
-        [keys in number]: { [keys in number]: ItemCell };
-    };
-};
-
-export interface ItemGroup {
-    item_group_id: TableState['item_group_id'];
-    item_group_name: TableState['item_group_name'];
-}
-
-export type ItemsOrders = Record<number, Array<number>>;
-
-export type TypesOrders = Record<number, Array<number>>;
 
 export interface TableMember {
     username: string;
@@ -111,39 +25,119 @@ export interface TableMember {
     color?: string;
 }
 
-export interface CombinedTableState {
-    memberList: TableMembers;
-    myFavoriteList: MyFavoriteListState;
-    projectList: MyTableListState;
-    statusList: StatusListStateArray;
-    summary: TableStateArray;
-    itemCells: ItemCells;
-    itemGroups: ItemGroup[];
-    itemsOrders: ItemsOrders;
-    typesOrders: TypesOrders;
-    itemGroupsCollapsed: boolean[];
-    itemGroupsInputActive: boolean[];
-    itemGroupsInputValue: string[];
+export type MyFavorite = {
+    userId?: number;
+    creatorId?: number;
+    projectId?: number;
+    favoriteId?: number;
+    projectName: string;
+};
+
+export type MyTable = {
+    creatorId?: number;
+    projectId?: number;
+    memberTableId?: number;
+    username: string;
+    projectName: string;
+};
+
+export type StatusList = {
+    id?: number;
+    name?: string;
+    color?: string;
+};
+
+export interface TableSummary {
+    horizontalOrder: number | null;
+    horizontalOrderId: number;
+    itemCreatorId: number;
+    itemDatesDatetime: string;
+    itemDatesDate: string;
+    itemDatetimeId: number;
+    itemDatetimeColor: string;
+    itemGroupId: number;
+    itemGroupName: string;
+    itemId: number;
+    itemIsDeleted: boolean;
+    itemMoneyCashflow: number;
+    itemMoneyDate: string;
+    itemName: string;
+    itemPersonId: number;
+    itemPersonUserId: number;
+    itemPersonName: string;
+    itemStatusColor: string;
+    itemStatusName: string;
+    itemTextId: number;
+    itemTextText: string;
+    itemTimesEndDate: number;
+    itemTimesId: number;
+    itemTimesStartDate: number;
+    itemTimesColor: string;
+    joinedProjectId: number;
+    projectCreatorId: number;
+    projectId: number;
+    projectIsDeleted: boolean;
+    myFavoriteList?: number;
+    projectName: string;
+    userId: number;
+    role: string;
+    stateId: number;
+    transactionId: number;
+    verticalOrder: number;
+    typeName: 'persons' | 'dates' | 'times' | 'money' | 'status' | 'text';
+    elementName: string;
 }
 
-const initialState: CombinedTableState = {
+export interface ItemCell {
+    itemId: TableSummary['itemId'];
+    itemName: TableSummary['itemName'];
+    typeId: TableSummary['horizontalOrderId'];
+    typeName: TableSummary['typeName'];
+    elementName: TableSummary['elementName'];
+    itemDatesDatetime?: TableSummary['itemDatesDatetime'];
+    itemDatesDate?: TableSummary['itemDatesDate'];
+    transactionId?: Array<TableSummary['transactionId']>;
+    itemMoneyCashflow?: Array<TableSummary['itemMoneyCashflow']>;
+    itemMoneyDate?: Array<TableSummary['itemMoneyDate']>;
+    itemPersonUserId?: Array<TableSummary['itemPersonUserId']>;
+    itemStatusColor?: TableSummary['itemStatusColor'];
+    itemStatusName?: TableSummary['itemStatusName'];
+    itemTextText?: TableSummary['itemTextText'];
+    itemTimesStartDate?: TableSummary['itemTimesStartDate'];
+    itemTimesEndDate?: TableSummary['itemTimesEndDate'];
+}
+
+export type ItemCells = {
+    [keys in number]: {
+        [keys in number]: { [keys in number]: ItemCell };
+    };
+};
+
+export interface ItemGroup {
+    itemGroupId: TableSummary['itemGroupId'];
+    itemGroupName: TableSummary['itemGroupName'];
+}
+
+export type Orders = Record<number, Array<number>>;
+
+const initialState: TableState = {
     memberList: [],
     projectList: [
         {
-            creator_id: undefined,
-            project_id: undefined,
-            member_table_id: undefined,
+            creatorId: undefined,
+            projectId: undefined,
+            memberTableId: undefined,
             username: '',
-            project_name: ''
+            projectName: ''
         }
     ],
     myFavoriteList: [
         {
-            user_id: undefined,
-            creator_id: undefined,
-            project_id: undefined,
-            favorite_id: undefined,
-            project_name: ''
+            userId: undefined,
+            creatorId: undefined,
+            projectId: undefined,
+            favoriteId: undefined,
+            projectName: ''
         }
     ],
     statusList: [
@@ -155,74 +149,74 @@ const initialState: CombinedTableState = {
     ],
     summary: [
         {
-            horizontal_order: 0,
-            horizontal_order_id: 0,
-            item_creator_id: 0,
-            item_dates_datetime: '',
-            item_dates_date: '',
-            item_datetime_id: 0,
-            item_datetime_color: '#238BE6',
-            item_group_id: 0,
-            item_group_name: '',
-            item_id: 0,
-            item_is_deleted: false,
-            item_money_cashflow: 0,
-            item_money_date: '',
-            item_name: '',
-            item_person_id: 0,
-            item_person_user_id: 0,
-            item_person_name: '',
-            item_status_color: '',
-            item_status_name: '',
-            item_text_id: 0,
-            item_text_text: '',
-            item_times_end_date: 0,
-            item_times_id: 0,
-            item_times_start_date: 0,
-            item_times_color: '#238BE6',
-            joined_project_id: 0,
-            project_creator_id: 0,
-            project_id: 0,
-            project_is_deleted: false,
+            horizontalOrder: 0,
+            horizontalOrderId: 0,
+            itemCreatorId: 0,
+            itemDatesDatetime: '',
+            itemDatesDate: '',
+            itemDatetimeId: 0,
+            itemDatetimeColor: '#238BE6',
+            itemGroupId: 0,
+            itemGroupName: '',
+            itemId: 0,
+            itemIsDeleted: false,
+            itemMoneyCashflow: 0,
+            itemMoneyDate: '',
+            itemName: '',
+            itemPersonId: 0,
+            itemPersonUserId: 0,
+            itemPersonName: '',
+            itemStatusColor: '',
+            itemStatusName: '',
+            itemTextId: 0,
+            itemTextText: '',
+            itemTimesEndDate: 0,
+            itemTimesId: 0,
+            itemTimesStartDate: 0,
+            itemTimesColor: '#238BE6',
+            joinedProjectId: 0,
+            projectCreatorId: 0,
+            projectId: 0,
+            projectIsDeleted: false,
             myFavoriteList: undefined,
-            project_name: '',
-            user_id: 0,
+            projectName: '',
+            userId: 0,
             role: 'member',
-            state_id: 0,
-            transaction_id: 0,
-            vertical_order: 0,
-            type_name: 'persons',
-            element_name: ''
+            stateId: 0,
+            transactionId: 0,
+            verticalOrder: 0,
+            typeName: 'persons',
+            elementName: ''
         }
     ],
     itemCells: {
         0: {
             0: {
                 0: {
-                    item_id: 0,
-                    item_name: '',
-                    type_id: 0,
-                    type_name: 'persons',
-                    element_name: '',
-                    item_dates_datetime: '',
-                    item_dates_date: '',
-                    transaction_id: [0],
-                    item_money_cashflow: [0],
-                    item_money_date: [''],
-                    item_person_user_id: [0],
-                    item_status_color: '',
-                    item_status_name: '',
-                    item_text_text: '',
-                    item_times_start_date: 0,
-                    item_times_end_date: 0
+                    itemId: 0,
+                    itemName: '',
+                    typeId: 0,
+                    typeName: 'persons',
+                    elementName: '',
+                    itemDatesDatetime: '',
+                    itemDatesDate: '',
+                    transactionId: [0],
+                    itemMoneyCashflow: [0],
+                    itemMoneyDate: [''],
+                    itemPersonUserId: [0],
+                    itemStatusColor: '',
+                    itemStatusName: '',
+                    itemTextText: '',
+                    itemTimesStartDate: 0,
+                    itemTimesEndDate: 0
                 }
             }
         }
     },
     itemGroups: [
         {
-            item_group_id: 0,
-            item_group_name: ''
+            itemGroupId: 0,
+            itemGroupName: ''
         }
     ],
     itemsOrders: {
@@ -233,30 +227,32 @@ const initialState: CombinedTableState = {
     },
     itemGroupsCollapsed: [],
     itemGroupsInputActive: [],
-    itemGroupsInputValue: []
+    itemGroupsInputValue: [],
+    newItemsInputActive: [],
+    newItemsInputValue: []
 };
 
-const getTable: CaseReducer<CombinedTableState, PayloadAction<TableStateArray>> = (state, action) => {
+const getTable: CaseReducer<TableState, PayloadAction<TableSummary[]>> = (state, action) => {
     state.summary = action.payload;
 };
 
-const setItemCells: CaseReducer<CombinedTableState, PayloadAction<ItemCells>> = (state, action) => {
+const setItemCells: CaseReducer<TableState, PayloadAction<ItemCells>> = (state, action) => {
     state.itemCells = action.payload;
 };
 
-const setItemGroups: CaseReducer<CombinedTableState, PayloadAction<ItemGroup[]>> = (state, action) => {
+const setItemGroups: CaseReducer<TableState, PayloadAction<ItemGroup[]>> = (state, action) => {
     state.itemGroups = action.payload;
 };
 
-const setItemsOrders: CaseReducer<CombinedTableState, PayloadAction<ItemsOrders>> = (state, action) => {
+const setItemsOrders: CaseReducer<TableState, PayloadAction<Orders>> = (state, action) => {
     state.itemsOrders = action.payload;
 };
 
-const setTypesOrders: CaseReducer<CombinedTableState, PayloadAction<TypesOrders>> = (state, action) => {
+const setTypesOrders: CaseReducer<TableState, PayloadAction<Orders>> = (state, action) => {
     state.typesOrders = action.payload;
 };
 
-const setMemberList: CaseReducer<CombinedTableState, PayloadAction<TableMembers>> = (state, action) => {
+const setMemberList: CaseReducer<TableState, PayloadAction<{[keys in number]: TableMember}>> = (state, action) => {
     const colors = themeObject.colors!.personsTypeComponentColor!;
     let i = 0;
     for (let id of Object.keys(action.payload)) {
@@ -266,26 +262,34 @@ const setMemberList: CaseReducer<CombinedTableState, PayloadAction<TableMembers>
     state.memberList = action.payload;
 };
 
-const setItemGroupsCollapsed: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+const setItemGroupsCollapsed: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
     state.itemGroupsCollapsed = Array(action.payload).fill(false);
 };
 
-const setItemGroupsInputActive: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+const setItemGroupsInputActive: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
     state.itemGroupsInputActive = Array(action.payload).fill(false);
 };
 
-const setItemGroupsInputValue: CaseReducer<CombinedTableState, PayloadAction<ItemGroup[]>> = (state, action) => {
+const setItemGroupsInputValue: CaseReducer<TableState, PayloadAction<ItemGroup[]>> = (state, action) => {
     let temp: string[] = [];
     action.payload.forEach((each) => {
-        temp.push(each.item_group_name);
+        temp.push(each.itemGroupName);
     });
     state.itemGroupsInputValue = temp;
 };
 
+const setNewItemsInputActive: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
+    state.newItemsInputActive = Array(action.payload).fill(false);
+};
+
+const setNewItemsInputValue: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
+    state.newItemsInputValue = Array(action.payload).fill('');
+};
+
 const updateTimelineItem: CaseReducer<
-    CombinedTableState,
+    TableState,
     PayloadAction<{
-        timelineID: number;
+        timelineId: number;
         startTime: number;
         endTime: number;
         name: string;
@@ -294,20 +298,20 @@ const updateTimelineItem: CaseReducer<
     }>
 > = (state, action) => {
     for (let item of state.summary) {
-        if (item.item_times_id === action.payload.timelineID) {
-            item.item_times_start_date = action.payload?.startTime;
-            item.item_times_end_date = action.payload?.endTime;
-            item.item_times_color = action.payload?.color;
+        if (item.itemTimesId === action.payload.timelineId) {
+            item.itemTimesStartDate = action.payload?.startTime;
+            item.itemTimesEndDate = action.payload?.endTime;
+            item.itemTimesColor = action.payload?.color;
         }
-        if (item.horizontal_order_id === action.payload.typeId) {
-            item.element_name = action.payload?.name;
+        if (item.horizontalOrderId === action.payload.typeId) {
+            item.elementName = action.payload?.name;
         }
     }
 };
 const updateDatelineItem: CaseReducer<
-    CombinedTableState,
+    TableState,
     PayloadAction<{
-        datelineID: number;
+        datelineId: number;
         date: number;
         name: string;
         color: string;
@@ -315,96 +319,96 @@ const updateDatelineItem: CaseReducer<
     }>
 > = (state, action) => {
     for (let item of state.summary) {
-        if (item.item_datetime_id === action.payload.datelineID) {
-            item.item_dates_datetime = new Date(action.payload.date).toDateString();
-            item.item_datetime_color = action.payload?.color;
+        if (item.itemDatetimeId === action.payload.datelineId) {
+            item.itemDatesDatetime = new Date(action.payload.date).toDateString();
+            item.itemDatetimeColor = action.payload?.color;
         }
-        if (item.horizontal_order_id === action.payload.typeId) {
-            item.element_name = action.payload?.name;
+        if (item.horizontalOrderId === action.payload.typeId) {
+            item.elementName = action.payload?.name;
         }
     }
 };
 
-const getFavorite: CaseReducer<CombinedTableState, PayloadAction<MyFavoriteListState>> = (state, action) => {
+const getFavorite: CaseReducer<TableState, PayloadAction<MyFavorite[]>> = (state, action) => {
     state.myFavoriteList = action.payload;
 };
-const getTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableListState>> = (state, action) => {
+const getTableList: CaseReducer<TableState, PayloadAction<MyTable[]>> = (state, action) => {
     state.projectList = action.payload;
 };
-const getStatusList: CaseReducer<CombinedTableState, PayloadAction<StatusListStateArray>> = (state, action) => {
+const getStatusList: CaseReducer<TableState, PayloadAction<StatusList[]>> = (state, action) => {
     state.statusList = action.payload;
 };
-const updateTableList: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
+const updateTableList: CaseReducer<TableState, PayloadAction<MyTable>> = (state, action) => {
     state.projectList.push(action.payload);
 };
-const renameProjectInTableList: CaseReducer<CombinedTableState, PayloadAction<{ projectId: number; projectName: string }>> = (state, action) => {
+const renameProjectInTableList: CaseReducer<TableState, PayloadAction<{ projectId: number; projectName: string }>> = (state, action) => {
     state.projectList.forEach((project) => {
-        if (project.project_id === action.payload.projectId) {
-            project.project_name = action.payload.projectName;
+        if (project.projectId === action.payload.projectId) {
+            project.projectName = action.payload.projectName;
         }
     });
     state.myFavoriteList.forEach((project) => {
-        if (project.project_id === action.payload.projectId) {
-            project.project_name = action.payload.projectName;
+        if (project.projectId === action.payload.projectId) {
+            project.projectName = action.payload.projectName;
         }
     });
 };
-const updateItemGroupName: CaseReducer<CombinedTableState, PayloadAction<{ itemGroupId: number; itemGroupName: string }>> = (state, action) => {
+const updateItemGroupName: CaseReducer<TableState, PayloadAction<{ itemGroupId: number; itemGroupName: string }>> = (state, action) => {
     for (let itemGroup of state.itemGroups) {
-        if (itemGroup.item_group_id === action.payload.itemGroupId) {
-            itemGroup.item_group_name = action.payload.itemGroupName;
+        if (itemGroup.itemGroupId === action.payload.itemGroupId) {
+            itemGroup.itemGroupName = action.payload.itemGroupName;
         }
     }
 };
-const updateItemName: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; name: string }>> = (state, action) => {
+const updateItemName: CaseReducer<TableState, PayloadAction<{ groupId: number; itemId: number; name: string }>> = (state, action) => {
     const itemCells = state.itemCells[action.payload.groupId][action.payload.itemId];
     for (let typeId of Object.keys(itemCells)) {
-        itemCells[parseInt(typeId)].item_name = action.payload.name;
+        itemCells[parseInt(typeId)].itemName = action.payload.name;
     }
 };
-const updateTypeName: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number, typeId: number; name: string }>> = (state, action) => {
+const updateTypeName: CaseReducer<TableState, PayloadAction<{ groupId: number; typeId: number; name: string }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const typeId = action.payload.typeId;
     const name = action.payload.name;
 
     for (let itemId of Object.keys(state.itemCells[groupId])) {
-        state.itemCells[groupId][parseInt(itemId)][typeId].element_name = name;
+        state.itemCells[groupId][parseInt(itemId)][typeId].elementName = name;
     }
 };
-const updateText: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; text: string }>> = (state, action) => {
+const updateText: CaseReducer<TableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; text: string }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
     const text = action.payload.text;
-    state.itemCells[groupId][itemId][typeId].item_text_text = text;
+    state.itemCells[groupId][itemId][typeId].itemTextText = text;
 };
-const updateState: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; name: string; color: string }>> = (state, action) => {
+const updateState: CaseReducer<TableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; name: string; color: string }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
     const name = action.payload.name;
     const color = action.payload.color;
-    state.itemCells[groupId][itemId][typeId].item_status_name = name;
-    state.itemCells[groupId][itemId][typeId].item_status_color = color;
+    state.itemCells[groupId][itemId][typeId].itemStatusName = name;
+    state.itemCells[groupId][itemId][typeId].itemStatusColor = color;
 };
-const removePerson: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; personId: number }>> = (state, action) => {
+const removePerson: CaseReducer<TableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; personId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
     const personId = action.payload.personId;
 
-    const i = state.itemCells[groupId][itemId][typeId].item_person_user_id!.indexOf(personId);
-    state.itemCells[groupId][itemId][typeId].item_person_user_id!.splice(i, 1);
+    const i = state.itemCells[groupId][itemId][typeId].itemPersonUserId!.indexOf(personId);
+    state.itemCells[groupId][itemId][typeId].itemPersonUserId!.splice(i, 1);
 };
-const addPerson: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; personId: number }>> = (state, action) => {
+const addPerson: CaseReducer<TableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; personId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
     const personId = action.payload.personId;
 
-    state.itemCells[groupId][itemId][typeId].item_person_user_id!.push(personId);
+    state.itemCells[groupId][itemId][typeId].itemPersonUserId!.push(personId);
 };
-const addTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; transactionId: number; date: Date; cashFlow: number }>> = (state, action) => {
+const addTransaction: CaseReducer<TableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; transactionId: number; date: Date; cashFlow: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
@@ -412,67 +416,108 @@ const addTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: n
     const date = action.payload.date;
     const cashFlow = action.payload.cashFlow;
 
-    state.itemCells[groupId][itemId][typeId].item_money_date!.forEach((i, each) => {
+    state.itemCells[groupId][itemId][typeId].itemMoneyDate!.forEach((each, i) => {
         if (new Date(each) >= date) {
-            state.itemCells[groupId][itemId][typeId].transaction_id!.splice(parseInt(i), 0, transactionId);
-            state.itemCells[groupId][itemId][typeId].item_money_cashflow!.splice(parseInt(i), 0, cashFlow);
-            state.itemCells[groupId][itemId][typeId].item_money_date!.splice(parseInt(i), 0, date.toISOString());
+            state.itemCells[groupId][itemId][typeId].transactionId!.splice(i, 0, transactionId);
+            state.itemCells[groupId][itemId][typeId].itemMoneyCashflow!.splice(i, 0, cashFlow);
+            state.itemCells[groupId][itemId][typeId].itemMoneyDate!.splice(i, 0, date.toISOString());
             return;
         }
-        state.itemCells[groupId][itemId][typeId].transaction_id!.push(transactionId);
-        state.itemCells[groupId][itemId][typeId].item_money_cashflow!.push(cashFlow);
-        state.itemCells[groupId][itemId][typeId].item_money_date!.push(date.toISOString());
+        state.itemCells[groupId][itemId][typeId].transactionId!.push(transactionId);
+        state.itemCells[groupId][itemId][typeId].itemMoneyCashflow!.push(cashFlow);
+        state.itemCells[groupId][itemId][typeId].itemMoneyDate!.push(date.toISOString());
     });
 };
-const removeTransaction: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; transactionId: number }>> = (state, action) => {
+const removeTransaction: CaseReducer<TableState, PayloadAction<{ groupId: number; itemId: number; typeId: number; transactionId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     const typeId = action.payload.typeId;
     const transactionId = action.payload.transactionId;
 
-    const i = state.itemCells[groupId][itemId][typeId].transaction_id!.indexOf(transactionId);
-    state.itemCells[groupId][itemId][typeId].transaction_id!.splice(i, 1);
+    const i = state.itemCells[groupId][itemId][typeId].transactionId!.indexOf(transactionId);
+    state.itemCells[groupId][itemId][typeId].transactionId!.splice(i, 1);
+    state.itemCells[groupId][itemId][typeId].itemMoneyCashflow!.splice(i, 1);
+    state.itemCells[groupId][itemId][typeId].itemMoneyDate!.splice(i, 1);
 };
-const reorderItems: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: number[]; groupId: number }>> = (state, action) => {
+const reorderItems: CaseReducer<TableState, PayloadAction<{ newOrder: number[]; groupId: number }>> = (state, action) => {
     state.itemsOrders[action.payload.groupId] = action.payload.newOrder;
 };
-const reorderTypes: CaseReducer<CombinedTableState, PayloadAction<{ newOrder: number[]; groupId: number }>> = (state, action) => {
+const reorderTypes: CaseReducer<TableState, PayloadAction<{ newOrder: number[]; groupId: number }>> = (state, action) => {
     state.typesOrders[action.payload.groupId] = action.payload.newOrder;
 };
-const deleteItem: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number; itemId: number }>> = (state, action) => {
+const deleteItem: CaseReducer<TableState, PayloadAction<{ groupId: number; itemId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
     const itemId = action.payload.itemId;
     delete state.itemCells[groupId][itemId];
     const i = state.itemsOrders[groupId].indexOf(itemId);
     state.itemsOrders[groupId].splice(i, 1);
 };
-const deleteGroup: CaseReducer<CombinedTableState, PayloadAction<{ groupId: number }>> = (state, action) => {
+const deleteGroup: CaseReducer<TableState, PayloadAction<{ groupId: number }>> = (state, action) => {
     const groupId = action.payload.groupId;
+    const groupIds = state.itemGroups.map((each) => each.itemGroupId);
+    const index = groupIds.indexOf(groupId);
     delete state.itemCells[groupId];
-    state.itemGroups = state.itemGroups.filter((each) => each.item_group_id != groupId);
+    state.itemGroups = state.itemGroups.filter((each) => each.itemGroupId != groupId);
     delete state.itemsOrders[groupId];
     delete state.typesOrders[groupId];
+
+    state.itemGroupsCollapsed.splice(index, 1);
+    state.itemGroupsInputActive.splice(index, 1);
+    state.itemGroupsInputValue.splice(index, 1);
+    state.newItemsInputActive.splice(index, 1);
+    state.newItemsInputValue.splice(index, 1);
 };
-const toggleItemGroupsCollapsed: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+const toggleItemGroupsCollapsed: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
     state.itemGroupsCollapsed[action.payload] = !state.itemGroupsCollapsed[action.payload];
 };
-const selectItemGroupInput: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+const selectItemGroupInput: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
     state.itemGroupsInputActive[action.payload] = true;
 };
-const deselectItemGroupInput: CaseReducer<CombinedTableState, PayloadAction<number>> = (state, action) => {
+const deselectItemGroupInput: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
     state.itemGroupsInputActive[action.payload] = false;
 };
-const changeItemGroupInputValue: CaseReducer<CombinedTableState, PayloadAction<{ index: number; value: string }>> = (state, action) => {
+const changeItemGroupInputValue: CaseReducer<TableState, PayloadAction<{ index: number; value: string }>> = (state, action) => {
     state.itemGroupsInputValue[action.payload.index] = action.payload.value;
 };
-const resetItemGroupInputValue: CaseReducer<CombinedTableState, PayloadAction<{ index: number; originalValue: string }>> = (state, action) => {
+const resetItemGroupInputValue: CaseReducer<TableState, PayloadAction<{ index: number; originalValue: string }>> = (state, action) => {
     state.itemGroupsInputValue[action.payload.index] = action.payload.originalValue;
-    state.itemGroups[action.payload.index].item_group_name = action.payload.originalValue;
+    state.itemGroups[action.payload.index].itemGroupName = action.payload.originalValue;
 };
-const addProject: CaseReducer<CombinedTableState, PayloadAction<MyTableState>> = (state, action) => {
+const toggleNewItemsInputActive: CaseReducer<TableState, PayloadAction<number>> = (state, action) => {
+    state.newItemsInputActive[action.payload] = !state.newItemsInputActive[action.payload];
+};
+const changeNewItemsInputValue: CaseReducer<TableState, PayloadAction<{ index: number; value: string }>> = (state, action) => {
+    state.newItemsInputValue[action.payload.index] = action.payload.value;
+};
+const insertItem: CaseReducer<TableState, PayloadAction<ItemCells>> = (state, action) => {
+    const [groupIdString] = Object.keys(action.payload);
+    const groupId = parseInt(groupIdString);
+    const [itemIdString] = Object.keys(action.payload[groupId]);
+    const itemId = parseInt(itemIdString);
+    state.itemCells[groupId][itemId] = action.payload[groupId][itemId];
+    state.itemsOrders[groupId].unshift(itemId);
+};
+const insertItemGroup: CaseReducer<TableState, PayloadAction<{ itemGroupId: number; itemGroupName: string; typeIds: number[] }>> = (state, action) => {
+    const itemGroupId = action.payload.itemGroupId;
+    const itemGroupName = action.payload.itemGroupName;
+    const typeIds = action.payload.typeIds;
+    state.itemCells[itemGroupId] = {};
+    state.itemGroups.unshift({
+        itemGroupId: itemGroupId,
+        itemGroupName: itemGroupName
+    });
+    state.itemGroupsCollapsed.unshift(false);
+    state.itemGroupsInputActive.unshift(false);
+    state.itemGroupsInputValue.unshift(itemGroupName);
+    state.itemsOrders[itemGroupId] = [];
+    state.typesOrders[itemGroupId] = typeIds;
+    state.newItemsInputActive.unshift(false);
+    state.newItemsInputValue.unshift('');
+};
+const addProject: CaseReducer<TableState, PayloadAction<MyTable>> = (state, action) => {
     state.projectList.push(action.payload);
 };
-const addStatus: CaseReducer<CombinedTableState, PayloadAction<StatusListState>> = (state, action) => {
+const addStatus: CaseReducer<TableState, PayloadAction<StatusList>> = (state, action) => {
     state.statusList.push({
         id: action.payload.id,
         name: action.payload.name,
@@ -493,6 +538,8 @@ const tableSlice = createSlice({
         setItemGroupsCollapsed,
         setItemGroupsInputActive,
         setItemGroupsInputValue,
+        setNewItemsInputActive,
+        setNewItemsInputValue,
         updateTimelineItem,
         updateDatelineItem,
         getFavorite,
@@ -516,6 +563,10 @@ const tableSlice = createSlice({
         deselectItemGroupInput,
         changeItemGroupInputValue,
         resetItemGroupInputValue,
+        toggleNewItemsInputActive,
+        changeNewItemsInputValue,
+        insertItem,
+        insertItemGroup,
         addProject,
         updateTableList,
         renameProjectInTableList,
@@ -533,6 +584,8 @@ export const {
     setItemGroupsCollapsed: setItemGroupsCollapsedAction,
     setItemGroupsInputActive: setItemGroupsInputActiveAction,
     setItemGroupsInputValue: setItemGroupsInputValueAction,
+    setNewItemsInputActive: setNewItemsInputActiveAction,
+    setNewItemsInputValue: setNewItemsInputValueAction,
     updateTimelineItem: updateTimelineItemAction,
     updateDatelineItem: updateDatelineItemAction,
     getFavorite: getFavoriteAction,
@@ -556,6 +609,10 @@ export const {
     deselectItemGroupInput: deselectItemGroupInputAction,
     changeItemGroupInputValue: changeItemGroupInputValueAction,
     resetItemGroupInputValue: resetItemGroupInputValueAction,
+    toggleNewItemsInputActive: toggleNewItemsInputActiveAction,
+    changeNewItemsInputValue: changeNewItemsInputValueAction,
+    insertItem: insertItemAction,
+    insertItemGroup: insertItemGroupAction,
     addProject: addProjectAction,
     updateTableList: updateTableListAction,
     renameProjectInTableList: renameProjectInTableListAction,

@@ -7,13 +7,9 @@ export class MemberController {
 
 	acceptInvitationThroughMember = async (req: Request, res: Response) => {
 		try {
-			const userId = req.body.userId;
-			const projectId = req.body.projectId;
+			const { userId, projectId } = req.body;
 
-			const check = await this.memberService.checkMember(
-				projectId,
-				userId
-			);
+			const check = await this.memberService.checkMember(projectId, userId);
 			if (check.member) {
 				res.json({
 					success: false,
@@ -25,16 +21,12 @@ export class MemberController {
 					msg: 'Target project no longer exist'
 				});
 			} else {
-				const member = await this.memberService.createMember(
-					projectId,
-					userId
-				);
+				const member = await this.memberService.createMember(projectId, userId);
 				if (member) {
 					const tableList = await tableService.getTableList(userId);
 					res.json({
 						success: true,
 						msg: 'Joined Project Successfully',
-						member,
 						tableList
 					});
 				} else {
@@ -54,28 +46,21 @@ export class MemberController {
 
 	deleteMember = async (req: Request, res: Response) => {
 		try {
-			const membershipId = req.params.membershipId;
-			const member = await this.memberService.getMember(
-				parseInt(membershipId)
-			);
+			const membershipId = req.body.membershipId;
+			const member = await this.memberService.getMember(membershipId);
 			if (member) {
-				const check = await this.memberService.checkLinkage(
-					member.project_id,
-					member.user_id
-				);
+				const check = await this.memberService.checkLinkage(member.projectId, member.userId);
 				if (check) {
 					res.json({
 						success: false,
 						msg: 'Unable to remove member, please make sure there is no tasks assigned to this member and try again'
 					});
 				} else {
-					await this.memberService.deleteMember(
-						parseInt(membershipId)
-					);
+					await this.memberService.deleteMember(membershipId);
 					res.json({
 						success: true,
 						msg: 'Member deleted',
-						projectId: member.project_id
+						projectId: member.projectId
 					});
 				}
 			} else {
@@ -95,10 +80,8 @@ export class MemberController {
 	getMemberList = async (req: Request, res: Response) => {
 		try {
 			const userId = req.params.userId;
-			const memberList = await this.memberService.getMemberList(
-				parseInt(userId)
-			);
-			if (memberList.length > 0) {
+			const memberList = await this.memberService.getMemberList(parseInt(userId));
+			if (memberList && memberList.length > 0) {
 				res.json({
 					success: true,
 					msg: 'Member List Retrieved Successfully',
@@ -120,8 +103,7 @@ export class MemberController {
 
 	changeAvatar = async (req: Request, res: Response) => {
 		try {
-			const membershipId = req.body.membershipId;
-			const avatar = req.body.avatar;
+			const { membershipId, avatar } = req.body;
 			await this.memberService.changeAvatar(membershipId, avatar);
 
 			res.json({

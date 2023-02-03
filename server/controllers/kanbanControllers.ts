@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { KanbanService } from '../services/KanbanService';
+import { KanbanService } from '../services/kanbanServices';
 
 export class KanbanController {
 	constructor(private kanbanService: KanbanService) {}
@@ -8,9 +8,7 @@ export class KanbanController {
 		try {
 			const projectId = req.params.projectId;
 
-			const result = await this.kanbanService.getKanbanInfo(
-				Number(projectId)
-			);
+			const result = await this.kanbanService.getKanbanInfo(Number(projectId));
 
 			res.json({
 				success: true,
@@ -26,9 +24,7 @@ export class KanbanController {
 		try {
 			const projectId = req.params.projectId;
 
-			const result = await this.kanbanService.getMemberList(
-				Number(projectId)
-			);
+			const result = await this.kanbanService.getMemberList(Number(projectId));
 
 			res.json({
 				success: true,
@@ -46,9 +42,7 @@ export class KanbanController {
 		try {
 			const projectId = req.params.projectId;
 
-			const result = await this.kanbanService.getGroupList(
-				Number(projectId)
-			);
+			const result = await this.kanbanService.getGroupList(Number(projectId));
 
 			res.json({
 				success: true,
@@ -64,27 +58,8 @@ export class KanbanController {
 
 	postKanban = async (req: Request, res: Response) => {
 		try {
-			const {
-				projectId,
-				stateId,
-				userId,
-				itemName,
-				memberName,
-				memberId,
-				date,
-				groupId
-			} = req.body;
-			console.log(req.body);
-			const itemId = await this.kanbanService.addKanbanitem(
-				projectId,
-				stateId,
-				userId,
-				itemName,
-				memberName,
-				memberId,
-				date,
-				groupId
-			);
+			const { projectId, stateId, userId, itemName, memberName, memberId, date, groupId } = req.body;
+			const itemId = await this.kanbanService.addKanbanitem(projectId, stateId, userId, itemName, memberName, memberId, date, groupId);
 
 			res.json({
 				success: true,
