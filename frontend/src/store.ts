@@ -1,6 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import logger from 'redux-logger';
 import { AuthAction } from './redux/auth/action';
 import { authReducer } from './redux/auth/reducer';
 import { AuthState } from './redux/auth/state';
