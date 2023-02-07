@@ -1,15 +1,11 @@
 import Knex from 'knex';
 import { AuthService } from './authServices';
 import bcrypt from 'bcryptjs';
-// import { format } from 'date-fns';
-// import { getRandomColor } from '../seeds/users-info';
 
 const knexConfig = require('../knexfile');
 const knex = Knex(knexConfig['test']);
 
 jest.mock('bcryptjs');
-// jest.mock('date-fns');
-// jest.mock('../seeds/users-info');
 
 describe('AuthService', () => {
 	let authService: AuthService;
@@ -18,7 +14,7 @@ describe('AuthService', () => {
 	beforeEach(async () => {
 		(bcrypt.compareSync as jest.Mock).mockReset();
 		(bcrypt.compareSync as jest.Mock).mockClear();
-		
+
 		authService = new AuthService(knex);
 		authIds = (await knex.insert([
 			{
