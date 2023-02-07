@@ -6,29 +6,26 @@ export class SmartPointerSensor extends PointerSensor {
         {
             eventName: 'onPointerDown' as any,
             handler: ({ nativeEvent: event }: PointerEvent) => {
-                if (isNotMovableElement(event.target as Element) || isTouchScreen()) {
-                    return false;
-                }
-                return true;
+                return isMovableElement(event.target as Element) && !isTouchScreen();
             }
         }
     ];
 }
 
-function isNotMovableElement(element: Element | null) {
+function isMovableElement(element: Element | null) {
     const notMovableElements = ['button', 'input', 'textarea', 'span', 'svg', 'th', 'tr', 'td', 'line', 'circle', 'path'];
     const classNameElements = ['mantine-Popover-dropdown'];
     if (element?.tagName && notMovableElements.includes(element.tagName.toLowerCase())) {
-        return true;
+        return false;
     }
     if (element?.classList) {
         for (const classNameElement of classNameElements) {
             if (element.classList.contains(classNameElement)) {
-                return true;
+                return false;
             }
         }
     }
-    return false;
+    return true;
 }
 
 function isTouchScreen(): boolean {
