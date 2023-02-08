@@ -29,7 +29,7 @@ function App() {
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    
+
     useInvitationToken();
     useOrientation(setLandscape);
     useScreenSize(setScreenSize);

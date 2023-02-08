@@ -1,8 +1,8 @@
-import { Button, Modal } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
-import { deleteItem } from "../../redux/table/thunk";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { useStyles } from "./styles";
+import { Button, Modal } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
+import { deleteItem } from '../../redux/table/thunk';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { useStyles } from './styles';
 
 export interface ItemModalProps {
     opened: boolean;
@@ -11,7 +11,7 @@ export interface ItemModalProps {
     onClose: () => void;
 }
 
-export function ItemModal({opened, itemId, itemGroupId, onClose}: ItemModalProps) {
+export function ItemModal({ opened, itemId, itemGroupId, onClose }: ItemModalProps) {
     const itemCellsState = useAppSelector((state) => state.table.itemCells);
 
     const { classes } = useStyles();
@@ -21,7 +21,7 @@ export function ItemModal({opened, itemId, itemGroupId, onClose}: ItemModalProps
         if (!itemGroupId || !itemId) {
             return;
         }
-        
+
         if (Object.keys(itemCellsState[itemGroupId]).length <= 1) {
             showNotification({
                 title: 'Item delete notification',

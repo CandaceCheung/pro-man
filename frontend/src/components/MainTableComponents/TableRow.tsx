@@ -21,7 +21,8 @@ export interface TableRowProps {
     onOpenItemModal: (itemGroupId: number, itemId: number) => void;
 }
 
-export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastRow, onOpenItemModal }: TableRowProps) {const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: itemId });
+export function TableRow({ itemId, groupId, typeOrder, cellDetails, color, lastRow, onOpenItemModal }: TableRowProps) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: itemId });
     const { classes, cx } = useStyles();
 
     const style = {

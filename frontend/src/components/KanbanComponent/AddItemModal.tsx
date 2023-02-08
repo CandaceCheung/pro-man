@@ -1,7 +1,3 @@
-export function AddItemModal () {
-
-    return (
-        <>
-        </>
-    )
+export function AddItemModal() {
+    return <></>;
 }

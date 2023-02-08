@@ -1,8 +1,8 @@
-import { Button, Modal } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
-import { deleteItemGroup } from "../../redux/table/thunk";
-import { useAppDispatch, useAppSelector } from "../../store";
-import { useStyles } from "./styles";
+import { Button, Modal } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
+import { deleteItemGroup } from '../../redux/table/thunk';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { useStyles } from './styles';
 
 export interface ItemGroupModalProps {
     opened: boolean;
@@ -10,7 +10,7 @@ export interface ItemGroupModalProps {
     onClose: () => void;
 }
 
-export function ItemGroupModal({opened, itemGroupId, onClose}: ItemGroupModalProps) {
+export function ItemGroupModal({ opened, itemGroupId, onClose }: ItemGroupModalProps) {
     const projectId = useAppSelector((state) => state.project.projectId);
     const itemCellsState = useAppSelector((state) => state.table.itemCells);
 

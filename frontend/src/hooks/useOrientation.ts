@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export const useOrientation = (setLandscape: React.Dispatch<React.SetStateAction<boolean>>) => {
     useEffect(() => {
@@ -9,5 +9,5 @@ export const useOrientation = (setLandscape: React.Dispatch<React.SetStateAction
         return () => {
             window.removeEventListener('orientationchange', handleOrientationChange);
         };
-    },[setLandscape]);
+    }, [setLandscape]);
 };

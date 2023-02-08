@@ -118,7 +118,7 @@ export function getTableV2(userId: number, projectId: number) {
             itemGroups?: ItemGroup[];
             itemsOrders?: Orders;
             typesOrders?: Orders;
-            memberList?: {[keys in number]: TableMember};
+            memberList?: { [keys in number]: TableMember };
             msg?: string;
         }>(`/table/v2/${userId}&${projectId}`);
 

@@ -52,12 +52,12 @@ export function ProjectList() {
     const onOpenModal = (projectId: number) => {
         setDeleteProjectId(projectId);
         setOpened(true);
-    }
+    };
 
     const onCloseModal = () => {
         setOpened(false);
         setDeleteProjectId(null);
-    }
+    };
 
     return (
         <div>

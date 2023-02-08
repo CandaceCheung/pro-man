@@ -29,5 +29,5 @@ function isMovableElement(element: Element | null) {
 }
 
 function isTouchScreen(): boolean {
-    return "ontouchstart" in document.documentElement;
+    return 'ontouchstart' in document.documentElement;
 }

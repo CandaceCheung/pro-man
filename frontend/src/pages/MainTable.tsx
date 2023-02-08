@@ -123,24 +123,24 @@ export function MainTable() {
     const onOpenItemGroupModal = (itemGroupId: number) => {
         setItemGroupModalOpened(true);
         setItemGroupModalId(itemGroupId);
-    }
+    };
 
     const onCloseItemGroupModal = () => {
         setItemGroupModalOpened(false);
         setItemGroupModalId(null);
-    }
+    };
 
     const onOpenItemModal = (itemGroupId: number, itemId: number) => {
         setItemModalOpened(true);
         setItemGroupModalId(itemGroupId);
         setItemModalId(itemId);
-    }
+    };
 
     const onCloseItemModal = () => {
         setItemModalOpened(false);
         setItemGroupModalId(null);
         setItemModalId(null);
-    }
+    };
 
     return (
         <>

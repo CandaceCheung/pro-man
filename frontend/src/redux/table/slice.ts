@@ -2,7 +2,7 @@ import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { themeObject } from '../../theme';
 
 export interface TableState {
-    memberList: {[keys in number]: TableMember};
+    memberList: { [keys in number]: TableMember };
     myFavoriteList: MyFavorite[];
     projectList: MyTable[];
     statusList: StatusList[];
@@ -252,7 +252,7 @@ const setTypesOrders: CaseReducer<TableState, PayloadAction<Orders>> = (state, a
     state.typesOrders = action.payload;
 };
 
-const setMemberList: CaseReducer<TableState, PayloadAction<{[keys in number]: TableMember}>> = (state, action) => {
+const setMemberList: CaseReducer<TableState, PayloadAction<{ [keys in number]: TableMember }>> = (state, action) => {
     const colors = themeObject.colors!.personsTypeComponentColor!;
     let i = 0;
     for (let id of Object.keys(action.payload)) {
