@@ -10,7 +10,7 @@ env:
   POSTGRES_DB: postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
-  TEST_DB: postgres_test
+  TEST_DB: postgres
   SERVER_HOST: 3.99.24.127
   SERVER_USER: ubuntu
   SERVER_DIR: /home/ubuntu/
