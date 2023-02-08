@@ -5,40 +5,39 @@ import bcrypt from 'bcryptjs';
 const knexConfig = require('../knexfile');
 const knex = Knex(knexConfig['test']);
 
-jest.mock('bcryptjs');
-
 describe('AuthService', () => {
 	let authService: AuthService;
 	let authIds: number[];
 
 	beforeEach(async () => {
 		jest.resetAllMocks();
-		jest.clearAllMocks();
-
 		authService = new AuthService(knex);
-		authIds = (await knex.insert([
-			{
-				username: 'test1',
-				password: 'abcd',
-				role: 'admin',
-				first_name: 'Test',
-				last_name: 'One'
-			},
-			{
-				username: 'test2',
-				password: 'efgh',
-				role: 'admin',
-				first_name: 'Test',
-				last_name: 'Two'
-			},
-		]).into('users')
-		.returning('id'))
-		.map(user => user.id);
+		authIds = (
+			await knex
+				.insert([
+					{
+						username: 'test1',
+						password: 'abcd',
+						role: 'admin',
+						first_name: 'Test',
+						last_name: 'One'
+					},
+					{
+						username: 'test2',
+						password: 'efgh',
+						role: 'admin',
+						first_name: 'Test',
+						last_name: 'Two'
+					}
+				])
+				.into('users')
+				.returning('id')
+		).map((user) => user.id);
 	});
 
 	describe('login', () => {
 		it('should return user details when password is correct', async () => {
-			(bcrypt.compareSync as jest.Mock).mockReturnValue(true);
+			jest.spyOn(bcrypt, 'compareSync').mockReturnValue(true);
 			const user = await authService.login('test1', 'abcd');
 
 			expect(user).toHaveProperty('id');
@@ -53,7 +52,7 @@ describe('AuthService', () => {
 			expect(bcrypt.compareSync).toBeCalledTimes(1);
 		});
 		it('should return nothing when login is not success', async () => {
-			(bcrypt.compareSync as jest.Mock).mockReturnValue(false);
+			jest.spyOn(bcrypt, 'compareSync').mockReturnValue(false);
 			const user = await authService.login('test1', 'wrong password');
 
 			expect(user).toBeUndefined();
@@ -68,4 +67,4 @@ describe('AuthService', () => {
 	afterAll(async () => {
 		await knex.destroy();
 	});
-})
+});
