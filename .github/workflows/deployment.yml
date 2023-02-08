@@ -10,6 +10,7 @@ env:
   POSTGRES_DB: postgres
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
+  TEST_DB: postgres_test
   SERVER_HOST: 3.99.24.127
   SERVER_USER: ubuntu
   SERVER_DIR: /home/ubuntu/
@@ -73,6 +74,7 @@ jobs:
             POSTGRES_DB: ${{env.POSTGRES_DB}}
             POSTGRES_USER: ${{env.POSTGRES_USER}}
             POSTGRES_PASSWORD: ${{env.POSTGRES_PASSWORD}}
+            TEST_DB: ${{env.TEST_DB}}
           ports:
             - 5432:5432
       env:
@@ -100,6 +102,7 @@ jobs:
           working-directory: server
           run: |
             yarn knex migrate:latest
+            yarn knex migrate:latest --env test
         - name: run test
           working-directory: server
           run: |
