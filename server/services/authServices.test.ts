@@ -12,8 +12,8 @@ describe('AuthService', () => {
 	let authIds: number[];
 
 	beforeEach(async () => {
-		(bcrypt.compareSync as jest.Mock).mockReset();
-		(bcrypt.compareSync as jest.Mock).mockClear();
+		jest.resetAllMocks();
+		jest.clearAllMocks();
 
 		authService = new AuthService(knex);
 		authIds = (await knex.insert([

@@ -102,7 +102,6 @@ jobs:
           working-directory: server
           run: |
             yarn knex migrate:latest
-            yarn knex migrate:latest --env test
         - name: run test
           working-directory: server
           run: |
