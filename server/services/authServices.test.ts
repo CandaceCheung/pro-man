@@ -69,7 +69,9 @@ describe('AuthService', () => {
 
 			expect(result).toBeTruthy();
 			expect(bcrypt.hashSync).toBeCalledTimes(1);
-		})
+
+			// Clean up created database
+		});
 	});
 
 	afterEach(async () => {
