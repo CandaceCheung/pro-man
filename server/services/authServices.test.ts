@@ -60,6 +60,18 @@ describe('AuthService', () => {
 		});
 	});
 
+	describe('signup', () => {
+		it('should return true when signup is successful', async () => {
+			jest.spyOn(bcrypt, 'hashSync').mockReturnValue('hashedPassword');
+			const result = await authService.signUp('test3', 'password', 'Test', 'Three');
+
+			// Check DB for the inserts
+
+			expect(result).toBeTruthy();
+			expect(bcrypt.hashSync).toBeCalledTimes(1);
+		})
+	});
+
 	afterEach(async () => {
 		await knex('users').whereIn('id', authIds).del();
 	});
