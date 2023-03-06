@@ -28,8 +28,7 @@ describe('AuthService', () => {
 					last_name: 'Two'
 				}
 			])
-			.into('users')
-			.returning('id');
+			.into('users');
 	});
 
 	describe('login', () => {
@@ -131,18 +130,51 @@ describe('AuthService', () => {
 			const newTypeText = await knex('type_text');
 			const newTransactions = await knex('transactions');
 
-			expect(newTypes.length).toBe(types.length+6);
-			expect(newTypePersons.length).toBe(typePersons.length+1);
-			expect(newTypeDates.length).toBe(typeDates.length+1);
-			expect(newTypeTimes.length).toBe(typeTimes.length+1);
-			expect(newTypeMoney.length).toBe(typeMoney.length+1);
-			expect(newTypeStatus.length).toBe(typeStatus.length+1);
-			expect(newTypeText.length).toBe(typeText.length+1);
-			expect(newTransactions.length).toBe(transactions.length+1);
+			expect(newTypes.length).toBe(types.length + 6);
+			expect(newTypePersons.length).toBe(typePersons.length + 1);
+			expect(newTypeDates.length).toBe(typeDates.length + 1);
+			expect(newTypeTimes.length).toBe(typeTimes.length + 1);
+			expect(newTypeMoney.length).toBe(typeMoney.length + 1);
+			expect(newTypeStatus.length).toBe(typeStatus.length + 1);
+			expect(newTypeText.length).toBe(typeText.length + 1);
+			expect(newTransactions.length).toBe(transactions.length + 1);
 
 			// Check service output
 			expect(result).toBeTruthy();
 			expect(bcrypt.hashSync).toBeCalledTimes(1);
+		});
+
+		it('should return false when signup is not successful', async () => {
+			jest.spyOn(bcrypt, 'hashSync').mockReturnValue('hashedPassword');
+			const result = await authService.signUp('test1', 'password', 'first', 'last');
+			expect(result).toBeFalsy();
+			expect(bcrypt.hashSync).toBeCalledTimes(0);
+		});
+	});
+
+	describe('getUser', () => {
+		it('should return a user by id', async () => {
+			// Insert the data for testing
+			const insertUser = {
+				username: 'testGetUser',
+				password: 'abcd',
+				role: 'admin',
+				first_name: 'Test',
+				last_name: 'One'
+			}
+			const id = (await knex('users').insert(insertUser).returning('id'))[0].id;
+			
+			// Removing password field to set expectedUser
+			const { password, ...expectedUser } = insertUser;
+			const actualUser = await authService.getUser(id);
+			expect(actualUser).toMatchObject(expectedUser);
+		});
+
+		it('should return undefined when user does not exist', async () => {
+			const id = -1;
+			const actualUser = await authService.getUser(id);
+
+			expect(actualUser).toBeUndefined();
 		});
 	});
 
