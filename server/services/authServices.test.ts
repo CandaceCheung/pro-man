@@ -60,8 +60,20 @@ describe('AuthService', () => {
 	describe('signup', () => {
 		it('should return true when signup is successful', async () => {
 			jest.spyOn(bcrypt, 'hashSync').mockReturnValue('hashedPassword');
+
+			// Record tables content before calling service for comparison
+			const types = await knex('types');
+			const typePersons = await knex('type_persons');
+			const typeDates = await knex('type_dates');
+			const typeTimes = await knex('type_times');
+			const typeMoney = await knex('type_money');
+			const typeStatus = await knex('type_status');
+			const typeText = await knex('type_text');
+			const transactions = await knex('transactions');
+
 			const result = await authService.signUp('test3', 'password', 'Test', 'Three');
 
+			// Check database
 			const users = await knex('users').where('username', 'test3');
 			expect(users.length).toBe(1);
 			expect(users[0]).toMatchObject({
@@ -109,8 +121,26 @@ describe('AuthService', () => {
 				order: 1
 			});
 
-			// test types next
+			// table content after calling the service to compare
+			const newTypes = await knex('types');
+			const newTypePersons = await knex('type_persons');
+			const newTypeDates = await knex('type_dates');
+			const newTypeTimes = await knex('type_times');
+			const newTypeMoney = await knex('type_money');
+			const newTypeStatus = await knex('type_status');
+			const newTypeText = await knex('type_text');
+			const newTransactions = await knex('transactions');
 
+			expect(newTypes.length).toBe(types.length+6);
+			expect(newTypePersons.length).toBe(typePersons.length+1);
+			expect(newTypeDates.length).toBe(typeDates.length+1);
+			expect(newTypeTimes.length).toBe(typeTimes.length+1);
+			expect(newTypeMoney.length).toBe(typeMoney.length+1);
+			expect(newTypeStatus.length).toBe(typeStatus.length+1);
+			expect(newTypeText.length).toBe(typeText.length+1);
+			expect(newTransactions.length).toBe(transactions.length+1);
+
+			// Check service output
 			expect(result).toBeTruthy();
 			expect(bcrypt.hashSync).toBeCalledTimes(1);
 		});
