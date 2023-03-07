@@ -15,9 +15,6 @@ export function InvitationList() {
     const loading = useAppSelector((state) => state.project.toggleInvitationButton);
     const [targetInvitationId, setTargetInvitationId] = useState(0);
 
-    console.log(invitationList)
-
-
     const elements = [];
     for (let item of invitationList) {
         if (item.email) {
