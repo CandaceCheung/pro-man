@@ -15,8 +15,6 @@ export function MyMember() {
         dispatch(toggleInviteMemberModalAction(true));
     }
 
-    console.log(memberList)
-
     useEffect(() => {
         userId && dispatch(getMemberList(userId!));
     }, [userId, dispatch]);
