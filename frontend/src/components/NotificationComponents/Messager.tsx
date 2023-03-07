@@ -56,6 +56,7 @@ export function Messager() {
     }
 
     const onClose = () => {
+        setLoading(false)
         setText('');
         setUsername('');
         setProject(undefined);

@@ -75,7 +75,7 @@ export class InvitationController {
 
 	acceptInvite = async (req: Request, res: Response) => {
 		try {
-			const invitationDetail = jwtSimple.decode(req.body.token, jwt.jwtSecret!);
+			const invitationDetail = jwtSimple.decode(req.body.tokenInput, jwt.jwtSecret!);
 			const invitationId = invitationDetail.id;
 			const projectId = invitationDetail.projectId;
 			const userId = req.body.userId;
