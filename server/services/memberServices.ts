@@ -108,8 +108,7 @@ export class MemberService {
 					.update({
 						avatar
 					})
-					.where('id', id)
-					.returning('*');
+					.where('id', id);
 			}
 
 			await txn.commit();

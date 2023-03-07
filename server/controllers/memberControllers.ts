@@ -103,8 +103,8 @@ export class MemberController {
 
 	changeAvatar = async (req: Request, res: Response) => {
 		try {
-			const { membershipId, avatar } = req.body;
-			await this.memberService.changeAvatar(membershipId, avatar);
+			const { membershipIds, avatar } = req.body;
+			await this.memberService.changeAvatar(membershipIds, avatar);
 
 			res.json({
 				success: true,
