@@ -15,6 +15,9 @@ export function InvitationList() {
     const loading = useAppSelector((state) => state.project.toggleInvitationButton);
     const [targetInvitationId, setTargetInvitationId] = useState(0);
 
+    console.log(invitationList)
+
+
     const elements = [];
     for (let item of invitationList) {
         if (item.email) {
@@ -27,6 +30,9 @@ export function InvitationList() {
             elements.push(obj);
         }
     }
+
+    
+    console.log(elements)
 
     function clickHandler(e: MouseEvent<HTMLButtonElement>) {
         dispatch(sendInvitation(projectId!, userID!, e.currentTarget.value));
@@ -44,7 +50,7 @@ export function InvitationList() {
     }
 
     const rows = elements.map((element) => (
-        <tr key={element.email}>
+        <tr key={element.id}>
             <td>{element.email}</td>
             <td>{element.updated_at}</td>
             <td>

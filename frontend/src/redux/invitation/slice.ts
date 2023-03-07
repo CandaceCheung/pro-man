@@ -6,6 +6,7 @@ export type Invitation = {
     projectId: number | null;
     email: string;
     status: 'pending' | 'accepted';
+    validity: boolean;
     updatedAt: string;
     createdAt: string;
 };
@@ -19,6 +20,7 @@ const initialState: InvitationState = [
         projectId: null,
         email: '',
         status: 'pending',
+        validity: false,
         updatedAt: '',
         createdAt: ''
     }
@@ -42,7 +44,7 @@ const acceptInvite: CaseReducer<InvitationState, PayloadAction<Invitation>> = (s
     }
 };
 const getInvitationList: CaseReducer<InvitationState, PayloadAction<InvitationState>> = (state, action) => {
-    state = action.payload;
+    return state = action.payload;
 };
 const deleteInvitation: CaseReducer<InvitationState, PayloadAction<{ id: number }>> = (state, action) => {
     for (let i = 0; i < state.length; i++) {

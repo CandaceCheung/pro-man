@@ -26,6 +26,7 @@ export default function InvitationDrawer(props: InvitationDrawerProps) {
         // eslint-disable-next-line
     }, [toggle]);
 
+
     const submitHandler = () => {
         dispatch(toggleInvitationButtonAction(true));
         dispatch(sendInvitation(projectId!, userId!, value));

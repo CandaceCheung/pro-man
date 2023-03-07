@@ -108,6 +108,7 @@ export function getInvitationList(projectId: number) {
         }>(`/invitation/${projectId}`);
 
         if (result.success) {
+            console.log(result.invitationList!)
             dispatch(getInvitationListAction(result.invitationList!));
         } else {
             showNotification({
